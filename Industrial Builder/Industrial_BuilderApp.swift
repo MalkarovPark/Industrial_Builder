@@ -10,21 +10,27 @@ import SwiftData
 import UniformTypeIdentifiers
 
 @main
-struct Industrial_BuilderApp: App {
-    var body: some Scene {
-        DocumentGroup(editing: .itemDocument, migrationPlan: Industrial_BuilderMigrationPlan.self) {
+struct Industrial_BuilderApp: App
+{
+    var body: some Scene
+    {
+        DocumentGroup(editing: .itemDocument, migrationPlan: Industrial_BuilderMigrationPlan.self)
+        {
             ContentView()
         }
     }
 }
 
-extension UTType {
-    static var itemDocument: UTType {
+extension UTType
+{
+    static var itemDocument: UTType
+    {
         UTType(importedAs: "com.example.item-document")
     }
 }
 
-struct Industrial_BuilderMigrationPlan: SchemaMigrationPlan {
+struct Industrial_BuilderMigrationPlan: SchemaMigrationPlan
+{
     static var schemas: [VersionedSchema.Type] = [
         Industrial_BuilderVersionedSchema.self,
     ]
@@ -34,7 +40,8 @@ struct Industrial_BuilderMigrationPlan: SchemaMigrationPlan {
     ]
 }
 
-struct Industrial_BuilderVersionedSchema: VersionedSchema {
+struct Industrial_BuilderVersionedSchema: VersionedSchema
+{
     static var versionIdentifier = Schema.Version(1, 0, 0)
 
     static var models: [any PersistentModel.Type] = [
