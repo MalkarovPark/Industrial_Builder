@@ -9,20 +9,20 @@
 /* Begin PBXBuildFile section */
 		6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */; };
 		6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCC82AD0398100BB7F5E /* ContentView.swift */; };
-		6289FCCB2AD0398100BB7F5E /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCCA2AD0398100BB7F5E /* Item.swift */; };
 		6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6289FCCC2AD0398300BB7F5E /* Assets.xcassets */; };
 		6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */; };
+		6289FCF82AD1EBAE00BB7F5E /* Industrial_BuilderDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCF62AD1EB2600BB7F5E /* Industrial_BuilderDocument.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6289FCC32AD0398100BB7F5E /* Industrial Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Industrial Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Industrial_BuilderApp.swift; sourceTree = "<group>"; };
 		6289FCC82AD0398100BB7F5E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		6289FCCA2AD0398100BB7F5E /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		6289FCCC2AD0398300BB7F5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6289FCCE2AD0398300BB7F5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6289FCCF2AD0398300BB7F5E /* Industrial_Builder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Industrial_Builder.entitlements; sourceTree = "<group>"; };
 		6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		6289FCF62AD1EB2600BB7F5E /* Industrial_BuilderDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Industrial_BuilderDocument.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 			children = (
 				6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */,
 				6289FCC82AD0398100BB7F5E /* ContentView.swift */,
-				6289FCCA2AD0398100BB7F5E /* Item.swift */,
+				6289FCF62AD1EB2600BB7F5E /* Industrial_BuilderDocument.swift */,
 				6289FCCC2AD0398300BB7F5E /* Assets.xcassets */,
 				6289FCCE2AD0398300BB7F5E /* Info.plist */,
 				6289FCCF2AD0398300BB7F5E /* Industrial_Builder.entitlements */,
@@ -145,7 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */,
-				6289FCCB2AD0398100BB7F5E /* Item.swift in Sources */,
+				6289FCF82AD1EBAE00BB7F5E /* Industrial_BuilderDocument.swift in Sources */,
 				6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

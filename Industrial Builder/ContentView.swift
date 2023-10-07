@@ -10,8 +10,9 @@ import SwiftData
 
 struct ContentView: View
 {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    //@Environment(\.modelContext) private var modelContext
+    //@Query private var items: [Item]
+    @Binding var document: Industrial_BuilderDocument
 
     var body: some View
     {
@@ -19,7 +20,7 @@ struct ContentView: View
         {
             List
             {
-                ForEach(items)
+                /*ForEach(items)
                 { item in
                     NavigationLink
                     {
@@ -30,7 +31,7 @@ struct ContentView: View
                         Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
                     }
                 }
-                .onDelete(perform: deleteItems)
+                .onDelete(perform: deleteItems)*/
             }
             #if os(macOS)
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
@@ -55,6 +56,7 @@ struct ContentView: View
     detail:
         {
             Text("Select an item")
+            TextEditor(text: $document.document.title)
         }
     }
 
@@ -62,8 +64,8 @@ struct ContentView: View
     {
         withAnimation
         {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+            //let newItem = Item(timestamp: Date())
+            //modelContext.insert(newItem)
         }
     }
 
@@ -73,7 +75,7 @@ struct ContentView: View
         {
             for index in offsets
             {
-                modelContext.delete(items[index])
+                //modelContext.delete(items[index])
             }
         }
     }
@@ -81,6 +83,5 @@ struct ContentView: View
 
 #Preview
 {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+    ContentView(document: .constant(Industrial_BuilderDocument()))
 }
