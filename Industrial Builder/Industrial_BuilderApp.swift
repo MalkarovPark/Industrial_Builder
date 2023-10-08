@@ -14,7 +14,7 @@ struct Industrial_BuilderApp: App
 {
     var body: some Scene
     {
-        DocumentGroup(newDocument: Industrial_BuilderDocument())
+        DocumentGroup(newDocument: STCDocument())
         { file in
             ContentView(document: file.$document)
         }

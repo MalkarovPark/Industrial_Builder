@@ -10,9 +10,11 @@ import SwiftData
 
 struct ContentView: View
 {
-    //@Environment(\.modelContext) private var modelContext
-    //@Query private var items: [Item]
-    @Binding var document: Industrial_BuilderDocument
+    @Binding var document: STCDocument
+    
+    @State var first_loaded = true
+    
+    @StateObject private var base_stc = StandardTemplateConstruct()
 
     var body: some View
     {
@@ -55,8 +57,23 @@ struct ContentView: View
         }
     detail:
         {
-            Text("Select an item")
-            TextEditor(text: $document.document.title)
+            //Text("Select an item")
+            TextEditor(text: $base_stc.package.title)
+        }
+        .onAppear
+        {
+            base_stc.document_view(document.package)
+        }
+        .onChange(of: base_stc.package.title)
+        { oldValue, newValue in
+            if first_loaded
+            {
+                first_loaded = false
+            }
+            else
+            {
+                document.package.title = newValue
+            }
         }
     }
 
@@ -83,5 +100,5 @@ struct ContentView: View
 
 #Preview
 {
-    ContentView(document: .constant(Industrial_BuilderDocument()))
+    ContentView(document: .constant(STCDocument()))
 }
