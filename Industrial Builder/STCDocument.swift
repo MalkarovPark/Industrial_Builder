@@ -71,7 +71,7 @@ struct STCDocument: FileDocument
         {
             switch wrapper.filename
             {
-            case "package.json":
+            case "package.info":
                 package_process()
             default:
                 break
@@ -97,7 +97,7 @@ struct STCDocument: FileDocument
         {
             let data = try make_document_data()
             let jsonFileWrapper = FileWrapper(regularFileWithContents: data)
-            let filename = "package.json"
+            let filename = "package.info"
             jsonFileWrapper.filename = filename
             
             //TODO: store images to this imagesFileWrapper
@@ -107,7 +107,7 @@ struct STCDocument: FileDocument
                 filename: jsonFileWrapper,
                 "images": imagesFileWrapper
             ])
-                
+            
             return fileWrapper
         }
         catch

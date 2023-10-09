@@ -13,6 +13,7 @@ struct ContentView: View
     @Binding var document: STCDocument
     
     @State var first_loaded = true
+    @State var sidebar_selection: navigation_item? = .PackageView //Selected sidebar item
     
     @StateObject private var base_stc = StandardTemplateConstruct()
 
@@ -22,25 +23,38 @@ struct ContentView: View
         {
             List
             {
-                /*ForEach(items)
-                { item in
+                ForEach(navigation_item.allCases)
+                { selection in
                     NavigationLink
                     {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        //Text("Item at \(selection.image_name)")
+                        switch selection
+                        {
+                        case .PackageView:
+                            PackageView()
+                        case .ComponentsView:
+                            PackageView()
+                        case .PreferencesView:
+                            PackageView()
+                        case .ProgramsView:
+                            PackageView()
+                        case .TargetsView:
+                            PackageView()
+                        }
                     }
                 label:
                     {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        Label(selection.localizedName, systemImage: selection.image_name)
                     }
                 }
-                .onDelete(perform: deleteItems)*/
+                .onDelete(perform: deleteItems)
             }
             #if os(macOS)
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
             #endif
             .toolbar
             {
-                #if os(iOS)
+                /*#if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing)
                 {
                     EditButton()
@@ -52,7 +66,7 @@ struct ContentView: View
                     {
                         Label("Add Item", systemImage: "plus")
                     }
-                }
+                }*/
             }
         }
     detail:
@@ -94,6 +108,46 @@ struct ContentView: View
             {
                 //modelContext.delete(items[index])
             }
+        }
+    }
+}
+
+enum navigation_item: Int, Hashable, CaseIterable, Identifiable
+{
+    case PackageView, ComponentsView, PreferencesView, ProgramsView, TargetsView //Sidebar items
+    
+    var id: Int { rawValue }
+    var localizedName: LocalizedStringKey //Names of sidebar items
+    {
+        switch self
+        {
+        case .PackageView:
+            return "Package"
+        case .ComponentsView:
+            return "Components"
+        case .PreferencesView:
+            return "Preferences"
+        case .ProgramsView:
+            return "Programs"
+        case .TargetsView:
+            return "Targets"
+        }
+    }
+    
+    var image_name: String //Names of sidebar items symbols
+    {
+        switch self
+        {
+        case .PackageView:
+            "shippingbox"
+        case .ComponentsView:
+            "square.stack.3d.down.forward"
+        case .PreferencesView:
+            "slider.horizontal.2.square.on.square"
+        case .ProgramsView:
+            "scroll"
+        case .TargetsView:
+            "target"
         }
     }
 }
