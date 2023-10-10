@@ -19,76 +19,75 @@ struct ContentView: View
 
     var body: some View
     {
-        NavigationSplitView
+        VStack(spacing: 0)
         {
-            List
+            NavigationSplitView
             {
-                ForEach(navigation_item.allCases)
-                { selection in
-                    NavigationLink
-                    {
-                        //Text("Item at \(selection.image_name)")
-                        switch selection
+                List
+                {
+                    ForEach(navigation_item.allCases)
+                    { selection in
+                        NavigationLink
                         {
-                        case .PackageView:
-                            PackageView()
-                        case .ComponentsView:
-                            PackageView()
-                        case .PreferencesView:
-                            PackageView()
-                        case .ProgramsView:
-                            PackageView()
-                        case .TargetsView:
-                            PackageView()
+                            //Text("Item at \(selection.image_name)")
+                            switch selection
+                            {
+                            case .PackageView:
+                                PackageView(document: $document)
+                            case .ComponentsView:
+                                Text(selection.localizedName)
+                            case .PreferencesView:
+                                Text(selection.localizedName)
+                            case .ProgramsView:
+                                Text(selection.localizedName)
+                            case .TargetsView:
+                                Text(selection.localizedName)
+                            }
+                        }
+                    label:
+                        {
+                            Label(selection.localizedName, systemImage: selection.image_name)
                         }
                     }
-                label:
-                    {
-                        Label(selection.localizedName, systemImage: selection.image_name)
-                    }
+                    .onDelete(perform: deleteItems)
                 }
-                .onDelete(perform: deleteItems)
-            }
-            #if os(macOS)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            #endif
-            .toolbar
-            {
-                /*#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing)
-                {
-                    EditButton()
-                }
+                #if os(macOS)
+                .navigationSplitViewColumnWidth(min: 180, ideal: 200)
                 #endif
-                ToolbarItem
+                .toolbar
                 {
-                    Button(action: addItem)
+                    /*#if os(iOS)
+                    ToolbarItem(placement: .navigationBarTrailing)
                     {
-                        Label("Add Item", systemImage: "plus")
+                        EditButton()
                     }
-                }*/
+                    #endif
+                    ToolbarItem
+                    {
+                        Button(action: addItem)
+                        {
+                            Label("Add Item", systemImage: "plus")
+                        }
+                    }*/
+                }
             }
-        }
-    detail:
-        {
-            //Text("Select an item")
-            TextEditor(text: $base_stc.package.title)
-        }
-        .onAppear
-        {
-            base_stc.document_view(document.package)
-        }
-        .onChange(of: base_stc.package.title)
-        { oldValue, newValue in
-            if first_loaded
+        detail:
             {
-                first_loaded = false
+                Text("Select an item")
+                    .font(.largeTitle)
+                #if os(macOS)
+                    .foregroundColor(Color(NSColor.quaternaryLabelColor))
+                #else
+                    .foregroundColor(Color(UIColor.quaternaryLabel))
+                #endif
+                    .padding(16)
             }
-            else
+            .onAppear
             {
-                document.package.title = newValue
+                base_stc.document_view(document.package, images: document.images)
             }
         }
+        .environmentObject(base_stc)
     }
 
     private func addItem()

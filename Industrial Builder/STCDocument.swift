@@ -23,11 +23,31 @@ public class StandardTemplateConstruct: ObservableObject
         self.package = STCPackage()
     }
     
-    func document_view(_ info: STCPackage)
+    func document_view(_ info: STCPackage, images: [UIImage])
     {
         self.package = info
+        self.images = images
+    }
+    
+    @Published var images = [UIImage]()
+}
+
+#if os(macOS)
+typealias UIImage = NSImage
+
+extension UIImage
+{
+    func pngData() -> Data?
+    {
+        if let tiffRepresentation = self.tiffRepresentation, let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
+        {
+            return bitmapImage.representation(using: .png, properties: [:])
+        }
+
+        return nil
     }
 }
+#endif
 
 struct STCPackage: Codable
 {
@@ -50,6 +70,7 @@ struct STCPackage: Codable
 struct STCDocument: FileDocument
 {
     var package = STCPackage()
+    var images = [UIImage]()
     
     static var readableContentTypes = [UTType.stc_document]
     
@@ -73,6 +94,8 @@ struct STCDocument: FileDocument
             {
             case "package.info":
                 package_process()
+            case "images":
+                images_process()
             default:
                 break
             }
@@ -87,6 +110,20 @@ struct STCDocument: FileDocument
                 
                 package = try! JSONDecoder().decode(STCPackage.self, from: data)
             }
+            
+            func images_process()
+            {
+                if let file_wrappers = wrapper.fileWrappers
+                {
+                    for (_, file_wrapper) in file_wrappers
+                    {
+                        if let filename = file_wrapper.filename, filename.hasSuffix(".png")
+                        {
+                            images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -96,19 +133,20 @@ struct STCDocument: FileDocument
         do
         {
             let data = try make_document_data()
-            let jsonFileWrapper = FileWrapper(regularFileWithContents: data)
+            let json_file_wrapper = FileWrapper(regularFileWithContents: data)
             let filename = "package.info"
-            jsonFileWrapper.filename = filename
+            json_file_wrapper.filename = filename
             
-            //TODO: store images to this imagesFileWrapper
-            let imagesFileWrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
+            //Store images to this imagesFileWrapper
+            var images_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
+            images_file_wrapper = try prepare_image_file_wrapper(from: images)
             
-            let fileWrapper = FileWrapper(directoryWithFileWrappers: [
-                filename: jsonFileWrapper,
-                "images": imagesFileWrapper
+            let file_wrapper = FileWrapper(directoryWithFileWrappers: [
+                filename: json_file_wrapper,
+                "images": images_file_wrapper
             ])
             
-            return fileWrapper
+            return file_wrapper
         }
         catch
         {
@@ -129,5 +167,30 @@ struct STCDocument: FileDocument
         {
             throw error
         }
+    }
+    
+    func prepare_image_file_wrapper(from images: [UIImage]) throws -> FileWrapper
+    {
+        var fileWrappers = [String: FileWrapper]()
+        var index = 0
+        //print("🔮 \(images.count)")
+        for image in images
+        {
+            guard let data = image.pngData() else
+            {
+                break
+            }
+            
+            let name = (index > 0) ? "GalleryImage\(index + 1).png" : "GalleryImage.png"
+            let fileWrapper = FileWrapper(regularFileWithContents: data)
+            fileWrapper.filename = name
+            fileWrapper.preferredFilename = name
+            
+            fileWrappers[name] = fileWrapper
+            index += 1
+        }
+        
+        let directoryFileWrapper = FileWrapper(directoryWithFileWrappers: fileWrappers)
+        return directoryFileWrapper
     }
 }

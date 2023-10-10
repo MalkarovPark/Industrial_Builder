@@ -78,8 +78,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "fileWrapper(configuration:)"
             landmarkType = "7">
             <Locations>
@@ -156,8 +156,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -219,8 +219,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -282,8 +282,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -338,22 +338,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "70FC1C3F-CE2B-42CE-8B48-62FA54C0E40E"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/STCDocument.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "document_view(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "72FCCE14-352B-4457-9A69-FF628C0D816F"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -361,8 +345,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -445,6 +429,69 @@
             endingLineNumber = "76"
             landmarkName = "ContentView"
             landmarkType = "14">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3253345A-6043-44D9-AD85-0E2953DDB851"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Industrial Builder/STCDocument.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "prepare_image_file_wrapper(from:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3253345A-6043-44D9-AD85-0E2953DDB851 - d04abfb695fd1a2e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Industrial_Builder.STCDocument.prepare_image_file_wrapper(from: Swift.Array&lt;__C.NSImage&gt;) throws -&gt; __C.NSFileWrapper"
+                  moduleName = "Industrial Builder"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/malkarovpark/Documents/Xcode%20Projects/Industrial%20Builder/Industrial%20Builder/STCDocument.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "190"
+                  endingLineNumber = "190"
+                  offsetFromSymbolStart = "140">
+               </Location>
+               <Location
+                  uuid = "3253345A-6043-44D9-AD85-0E2953DDB851 - d04abfb695fd1a2e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Industrial_Builder.STCDocument.prepare_image_file_wrapper(from: Swift.Array&lt;__C.NSImage&gt;) throws -&gt; __C.NSFileWrapper"
+                  moduleName = "Industrial Builder"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/malkarovpark/Documents/Xcode%20Projects/Industrial%20Builder/Industrial%20Builder/STCDocument.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "190"
+                  endingLineNumber = "190"
+                  offsetFromSymbolStart = "96">
+               </Location>
+               <Location
+                  uuid = "3253345A-6043-44D9-AD85-0E2953DDB851 - d04abfb695fd1574"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Industrial_Builder.STCDocument.prepare_image_file_wrapper(from: Swift.Array&lt;__C.NSImage&gt;) throws -&gt; __C.NSFileWrapper"
+                  moduleName = "Industrial Builder"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/malkarovpark/Documents/Xcode%20Projects/Industrial%20Builder/Industrial%20Builder/STCDocument.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "96">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

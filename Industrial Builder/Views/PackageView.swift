@@ -9,6 +9,10 @@ import SwiftUI
 
 struct PackageView: View
 {
+    @Binding var document: STCDocument
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -21,21 +25,29 @@ struct PackageView: View
                 
                 HStack(spacing: 8)
                 {
-                    Text("Name")
-                    TextField("Name", text: .constant(""))
+                    Text("Title")
+                    TextField("Title", text: $base_stc.package.title)
                         .textFieldStyle(.roundedBorder)
                 }
                 .padding([.bottom, .horizontal])
+                .onChange(of: base_stc.package.title)
+                { oldValue, newValue in
+                    document.package.title = newValue
+                }
                 
                 VStack(alignment: .leading, spacing: 8)
                 {
                     Text("Description")
-                    TextEditor(text: .constant(""))
+                    TextEditor(text: $base_stc.package.description)
                         .frame(minHeight: 192)
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .shadow(radius: 1)
                 }
                 .padding([.bottom, .horizontal])
+                .onChange(of: base_stc.package.description)
+                { oldValue, newValue in
+                    document.package.description = newValue
+                }
                 
                 //Divider()
                 
@@ -43,7 +55,7 @@ struct PackageView: View
                     .font(.title2)
                     .padding([.bottom, .horizontal])
                 
-                GalleryView()
+                GalleryView(document: $document)
                     .padding([.bottom, .horizontal])
             }
         }
@@ -57,6 +69,6 @@ struct PackageView: View
 
 #Preview
 {
-    PackageView()
+    PackageView(document: .constant(STCDocument()))
         .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600)
 }

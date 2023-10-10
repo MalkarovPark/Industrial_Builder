@@ -9,38 +9,26 @@ import SwiftUI
 
 struct GalleryView: View
 {
-    #if os(macOS)
-    @State private var images: [NSImage] = []
-    #else
-    @State private var images: [UIImage] = []
-    #endif
+    @Binding var document: STCDocument
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
+    //@State private var images: [UImage] = []
     @State private var is_targeted = false
     
     var body: some View
     {
         HStack(spacing: 0)
         {
-            if images.count > 0
+            if base_stc.images.count > 0
             {
                 ScrollView(.horizontal)
                 {
                     LazyHGrid(rows: [GridItem(.adaptive(minimum: 240))], spacing: 16)
                     {
-                        ForEach(images, id: \.self)
+                        ForEach(base_stc.images, id: \.self)
                         { image in
-                            #if os(macOS)
-                            Image(nsImage: image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 240)
-                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                            #else
-                            Image(uiImage: image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 240)
-                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                            #endif
+                            ImageCard(image: image)
                         }
                     }
                 }
@@ -49,8 +37,17 @@ struct GalleryView: View
             {
                 VStack(spacing: 0)
                 {
-                    Text("None")
-                        .padding()
+                    Text("No Images")
+                        .font(.largeTitle)
+                    #if os(macOS)
+                        .foregroundColor(Color(NSColor.quaternaryLabelColor))
+                    #else
+                        .foregroundColor(Color(UIColor.quaternaryLabel))
+                    #endif
+                        .padding(16)
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.6)))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
                 }
                 .frame(maxWidth: .infinity, minHeight: 240)
             }
@@ -63,7 +60,6 @@ struct GalleryView: View
                 {
                     Text("Drop images here")
                         .foregroundColor(.secondary)
-                        .background(.thinMaterial)
                         .padding()
                 }
                 .background(.thinMaterial)
@@ -81,21 +77,6 @@ struct GalleryView: View
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
-        #if os(macOS)
-        for provider in providers
-        {
-            provider.loadObject(ofClass: NSImage.self)
-            { image, error in
-                if let image = image as? NSImage
-                {
-                    DispatchQueue.main.async
-                    {
-                        images.append(image)
-                    }
-                }
-            }
-        }
-        #else
         for provider in providers
         {
             provider.loadObject(ofClass: UIImage.self)
@@ -104,17 +85,43 @@ struct GalleryView: View
                 {
                     DispatchQueue.main.async
                     {
-                        images.append(image)
+                        base_stc.images.append(image)
+                        document.images.append(image)
+                        //print(image.name())
                     }
                 }
             }
         }
-        #endif
+        
+        //document.images = base_stc.images
+        
         return true
+    }
+}
+
+struct ImageCard: View
+{
+    @State var image: UIImage
+    
+    var body: some View
+    {
+        #if os(macOS)
+        Image(nsImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(height: 240)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        #else
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(height: 240)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        #endif
     }
 }
 
 #Preview
 {
-    GalleryView()
+    GalleryView(document: .constant(STCDocument()))
 }
