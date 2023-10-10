@@ -28,7 +28,7 @@ struct GalleryView: View
                     {
                         ForEach(base_stc.images, id: \.self)
                         { image in
-                            ImageCard(image: image)
+                            ImageCard(document: $document, image: image)
                         }
                     }
                 }
@@ -101,7 +101,11 @@ struct GalleryView: View
 
 struct ImageCard: View
 {
+    @Binding var document: STCDocument
+    
     @State var image: UIImage
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     var body: some View
     {
@@ -111,13 +115,33 @@ struct ImageCard: View
             .aspectRatio(contentMode: .fill)
             .frame(height: 240)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .contextMenu
+            {
+                Button(role: .destructive, action: delete_image)
+                {
+                    Label("Delete", systemImage: "xmark")
+                }
+            }
         #else
         Image(uiImage: image)
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(height: 240)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .contextMenu
+            {
+                Button(role: .destructive, action: delete_image)
+                {
+                    Label("Delete", systemImage: "xmark")
+                }
+            }
         #endif
+    }
+    
+    func delete_image()
+    {
+        base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
+        document.images = base_stc.images
     }
 }
 
