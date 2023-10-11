@@ -106,7 +106,7 @@ struct ChangerModuleEditor: View
     @Binding var is_presented: Bool
     
     @State private var modules_items: [ModuleItem] = []
-    @State private var add_function_view_presented = false
+    @State private var add_module_view_presented = false
     
     var body: some View
     {
@@ -124,9 +124,19 @@ struct ChangerModuleEditor: View
                     {
                         TextEditor(text: $modules_items[index].text)
                             .frame(minHeight: 64)
+                        #if os(macOS)
                             .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                             .shadow(radius: 1)
+                        #endif
+                        /*Button(action: { modules_items.remove(at: index) })
+                        {
+                            Image(systemName: "xmark")
+                        }*/
                     }
+                }
+                .onDelete
+                { indexSet in
+                    modules_items.remove(atOffsets: indexSet)
                 }
                 .listStyle(.automatic)
             }
@@ -139,12 +149,14 @@ struct ChangerModuleEditor: View
                 
                 Button("New Module")
                 {
-                    add_function_view_presented = true
+                    add_module_view_presented = true
                 }
-                .popover(isPresented: $add_function_view_presented)
+                .popover(isPresented: $add_module_view_presented)
                 {
-                    AddModuleView(is_presented: $add_function_view_presented, modules_items: $modules_items)
+                    AddModuleView(is_presented: $add_module_view_presented, modules_items: $modules_items)
                 }
+                .keyboardShortcut(.defaultAction)
+                .buttonStyle(.borderedProminent)
                 .padding()
             }
         }
