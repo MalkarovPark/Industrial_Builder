@@ -18,5 +18,10 @@ struct Industrial_BuilderApp: App
         { file in
             ContentView(document: file.$document)
         }
+        
+        /*WindowGroup("Editor", id: "editor")
+        {
+            EditorView()
+        }*/
     }
 }

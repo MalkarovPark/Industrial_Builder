@@ -13,7 +13,6 @@ struct GalleryView: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    //@State private var images: [UImage] = []
     @State private var is_targeted = false
     
     var body: some View
@@ -52,6 +51,7 @@ struct GalleryView: View
                 .frame(maxWidth: .infinity, minHeight: 240)
             }
         }
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay
         {
             if is_targeted

@@ -15,9 +15,9 @@ struct PackageView: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        ScrollView(.vertical)
         {
-            ScrollView(.vertical)
+            VStack(spacing: 0)
             {
                 Text("Information")
                     .font(.title2)
@@ -34,6 +34,37 @@ struct PackageView: View
                 { oldValue, newValue in
                     document.package.title = newValue
                 }
+                
+                /*HStack(spacing: 0)
+                {
+                    VStack(alignment: .leading, spacing: 8)
+                    {
+                        Text("Description")
+                        TextEditor(text: $base_stc.package.description)
+                            .frame(minHeight: 192)
+                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                            .shadow(radius: 1)
+                    }
+                    .padding([.bottom, .horizontal])
+                    .onChange(of: base_stc.package.description)
+                    { oldValue, newValue in
+                        document.package.description = newValue
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8)
+                    {
+                        Text("Gallery")
+                        
+                        GalleryView(document: $document)
+                    }
+                    .padding([.bottom, .trailing])
+                }
+                
+                //Divider()
+                
+                Text("Utilites")
+                    .font(.title2)
+                    .padding([.bottom, .horizontal])*/
                 
                 VStack(alignment: .leading, spacing: 8)
                 {
@@ -59,11 +90,7 @@ struct PackageView: View
                     .padding([.bottom, .horizontal])
             }
         }
-        #if os(iOS) || os(visionOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #else
-        .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600) //Window sizes for macOS
-        #endif
+        .modifier(WindowFramer())
     }
 }
 
@@ -71,4 +98,5 @@ struct PackageView: View
 {
     PackageView(document: .constant(STCDocument()))
         .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600)
+        .environmentObject(StandardTemplateConstruct())
 }

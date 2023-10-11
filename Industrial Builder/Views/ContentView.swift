@@ -38,6 +38,8 @@ struct ContentView: View
                                 Text(selection.localizedName)
                             case .PreferencesView:
                                 Text(selection.localizedName)
+                            case .AppView:
+                                AppView(document: $document)
                             case .ProgramsView:
                                 Text(selection.localizedName)
                             case .TargetsView:
@@ -113,7 +115,7 @@ struct ContentView: View
 
 enum navigation_item: Int, Hashable, CaseIterable, Identifiable
 {
-    case PackageView, ComponentsView, PreferencesView, ProgramsView, TargetsView //Sidebar items
+    case PackageView, ComponentsView, PreferencesView, AppView, ProgramsView, TargetsView //Sidebar items
     
     var id: Int { rawValue }
     var localizedName: LocalizedStringKey //Names of sidebar items
@@ -126,6 +128,8 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             return "Components"
         case .PreferencesView:
             return "Preferences"
+        case .AppView:
+            return "App"
         case .ProgramsView:
             return "Programs"
         case .TargetsView:
@@ -143,6 +147,8 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             "square.stack.3d.down.forward"
         case .PreferencesView:
             "slider.horizontal.2.square.on.square"
+        case .AppView:
+            "app.badge.checkmark"
         case .ProgramsView:
             "scroll"
         case .TargetsView:
@@ -151,7 +157,21 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
     }
 }
 
+struct WindowFramer: ViewModifier
+{
+    public func body(content: Content) -> some View
+    {
+        content
+        #if os(iOS) || os(visionOS)
+            .navigationBarTitleDisplayMode(.inline)
+        #else
+            .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600) //Window sizes for macOS
+        #endif
+    }
+}
+
 #Preview
 {
     ContentView(document: .constant(STCDocument()))
 }
+
