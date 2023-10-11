@@ -16,11 +16,12 @@ extension UTType
 
 public class StandardTemplateConstruct: ObservableObject
 {
-    @Published var package: STCPackage
+    @Published var package = STCPackage()
+    @Published var images = [UIImage]()
     
     init()
     {
-        self.package = STCPackage()
+        
     }
     
     func document_view(_ info: STCPackage, images: [UIImage])
@@ -28,8 +29,6 @@ public class StandardTemplateConstruct: ObservableObject
         self.package = info
         self.images = images
     }
-    
-    @Published var images = [UIImage]()
 }
 
 #if os(macOS)
@@ -181,7 +180,7 @@ struct STCDocument: FileDocument
                 break
             }
             
-            let name = (index > 0) ? "GalleryImage\(index + 1).png" : "GalleryImage.png"
+            let name = "GalleryImage\(index + 1).png"
             let fileWrapper = FileWrapper(regularFileWithContents: data)
             fileWrapper.filename = name
             fileWrapper.preferredFilename = name
