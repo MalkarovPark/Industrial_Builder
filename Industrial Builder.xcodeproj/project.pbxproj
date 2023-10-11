@@ -15,6 +15,7 @@
 		6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */; };
 		6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */; };
 		628E144F2AD7152700BC8FD9 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E144E2AD7152700BC8FD9 /* AppView.swift */; };
+		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +109,9 @@
 			dependencies = (
 			);
 			name = "Industrial Builder";
+			packageProductDependencies = (
+				628E14512AD73C0400BC8FD9 /* IndustrialKit */,
+			);
 			productName = "Industrial Builder";
 			productReference = 6289FCC32AD0398100BB7F5E /* Industrial Builder.app */;
 			productType = "com.apple.product-type.application";
@@ -135,6 +140,9 @@
 				Base,
 			);
 			mainGroup = 6289FCBA2AD0398100BB7F5E;
+			packageReferences = (
+				628E14502AD73C0400BC8FD9 /* XCRemoteSwiftPackageReference "IndustrialKit" */,
+			);
 			productRefGroup = 6289FCC42AD0398100BB7F5E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -395,6 +403,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		628E14502AD73C0400BC8FD9 /* XCRemoteSwiftPackageReference "IndustrialKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MalkarovPark/IndustrialKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		628E14512AD73C0400BC8FD9 /* IndustrialKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 628E14502AD73C0400BC8FD9 /* XCRemoteSwiftPackageReference "IndustrialKit" */;
+			productName = IndustrialKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6289FCBB2AD0398100BB7F5E /* Project object */;
 }
