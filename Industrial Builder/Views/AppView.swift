@@ -30,14 +30,12 @@ struct AppView: View
                 {
                     FunctionCard(is_presented: $is_editors_presented[0], name: "Robot", image_name: "r.square.fill", color: .green)
                     {
-                        Text("Robots")
-                            .padding()
+                        RobotModulesEditor()
                     }
                     
                     FunctionCard(is_presented: $is_editors_presented[1], name: "Tool", image_name: "hammer.fill", color: .teal)
                     {
-                        Text("Tools")
-                            .padding()
+                        ToolModulesEditor()
                     }
                     
                     FunctionCard(is_presented: $is_editors_presented[2], name: "Changer", image_name: "wand.and.rays", color: .indigo)

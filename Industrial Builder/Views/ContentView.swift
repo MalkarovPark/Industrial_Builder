@@ -43,7 +43,7 @@ struct ContentView: View
                             case .ProgramsView:
                                 Text(selection.localizedName)
                             case .TargetsView:
-                                Text(selection.localizedName)
+                                TargetsView()
                             }
                         }
                     label:
