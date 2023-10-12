@@ -86,7 +86,7 @@ struct ContentView: View
             }
             .onAppear
             {
-                base_stc.document_view(document.package, images: document.images)
+                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules)
             }
         }
         .environmentObject(base_stc)
@@ -162,10 +162,10 @@ struct WindowFramer: ViewModifier
     public func body(content: Content) -> some View
     {
         content
-        #if os(iOS) || os(visionOS)
-            .navigationBarTitleDisplayMode(.inline)
-        #else
+        #if os(macOS)
             .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600) //Window sizes for macOS
+        #else
+            .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 }

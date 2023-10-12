@@ -16,6 +16,7 @@
 		6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */; };
 		628E144F2AD7152700BC8FD9 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E144E2AD7152700BC8FD9 /* AppView.swift */; };
 		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
+		628E14542AD7E44C00BC8FD9 /* ChangerModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCDocument.swift; sourceTree = "<group>"; };
 		628E144E2AD7152700BC8FD9 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesEditor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 				627D3EBE2AD3F61400D5988D /* PackageView.swift */,
 				627D3EC02AD42A0800D5988D /* GalleryView.swift */,
 				628E144E2AD7152700BC8FD9 /* AppView.swift */,
+				628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */,
 				627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */,
 				627D3EC12AD42A0800D5988D /* GalleryView.swift in Sources */,
+				628E14542AD7E44C00BC8FD9 /* ChangerModulesEditor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

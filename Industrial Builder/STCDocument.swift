@@ -8,6 +8,7 @@
 import Foundation
 import UniformTypeIdentifiers
 import SwiftUI
+import IndustrialKit
 
 extension UTType
 {
@@ -18,17 +19,27 @@ public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package = STCPackage()
     @Published var images = [UIImage]()
+    @Published var changer_modules = [ChangerModule]()
     
     init()
     {
         
     }
     
-    func document_view(_ info: STCPackage, images: [UIImage])
+    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule])
     {
         self.package = info
         self.images = images
+        self.changer_modules = changer_modules
     }
+}
+
+
+
+struct ChangerModule: Equatable, Codable
+{
+    var name = ""
+    var code = ""
 }
 
 #if os(macOS)
@@ -54,15 +65,11 @@ struct STCPackage: Codable
     var title: String
     var description: String
     
-    var image_urls: [URL]
-    
-    init(id: UUID = .init(), title: String = .init(), description: String = .init(), image_urls: [URL] = .init())
+    init(id: UUID = .init(), title: String = .init(), description: String = .init())
     {
         self.id = id
         self.title = title
         self.description = description
-        
-        self.image_urls = image_urls
     }
 }
 
@@ -70,6 +77,7 @@ struct STCDocument: FileDocument
 {
     var package = STCPackage()
     var images = [UIImage]()
+    var changer_modules = [ChangerModule]()
     
     static var readableContentTypes = [UTType.stc_document]
     
@@ -91,10 +99,12 @@ struct STCDocument: FileDocument
         {
             switch wrapper.filename
             {
-            case "package.info":
+            case "Package.info":
                 package_process()
-            case "images":
+            case "Images":
                 images_process()
+            case "App":
+                app_process()
             default:
                 break
             }
@@ -123,6 +133,37 @@ struct STCDocument: FileDocument
                     }
                 }
             }
+            
+            func app_process()
+            {
+                if let file_wrappers = wrapper.fileWrappers
+                {
+                    for (_, file_wrapper) in file_wrappers
+                    {
+                        switch file_wrapper.filename
+                        {
+                        case "ChangerModules.json":
+                            changer_modules_process(file_wrapper)
+                        default:
+                            break
+                        }
+                    }
+                }
+                
+                func changer_modules_process(_ wrapper: FileWrapper)
+                {
+                    if let filename = wrapper.filename
+                    {
+                        guard let data = wrapper.regularFileContents
+                        else
+                        {
+                            return
+                        }
+                        
+                        changer_modules = try! JSONDecoder().decode([ChangerModule].self, from: data)
+                    }
+                }
+            }
         }
     }
     
@@ -131,18 +172,24 @@ struct STCDocument: FileDocument
     {
         do
         {
+            //Store package data
             let data = try make_document_data()
             let json_file_wrapper = FileWrapper(regularFileWithContents: data)
-            let filename = "package.info"
-            json_file_wrapper.filename = filename
+            let package_filename = "Package.info"
+            json_file_wrapper.filename = package_filename
             
-            //Store images to this imagesFileWrapper
+            //Store images to this images_file_wrapper
             var images_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
             images_file_wrapper = try prepare_image_file_wrapper(from: images)
             
-            let file_wrapper = FileWrapper(directoryWithFileWrappers: [
-                filename: json_file_wrapper,
-                "images": images_file_wrapper
+            //Store modules data
+            var app_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
+            app_file_wrapper = try prepare_app_file_wrapper(from: changer_modules)
+            
+            var file_wrapper = FileWrapper(directoryWithFileWrappers: [
+                package_filename: json_file_wrapper,
+                "Images": images_file_wrapper,
+                "App": app_file_wrapper
             ])
             
             return file_wrapper
@@ -170,9 +217,8 @@ struct STCDocument: FileDocument
     
     func prepare_image_file_wrapper(from images: [UIImage]) throws -> FileWrapper
     {
-        var fileWrappers = [String: FileWrapper]()
+        var file_wrappers = [String: FileWrapper]()
         var index = 0
-        //print("🔮 \(images.count)")
         for image in images
         {
             guard let data = image.pngData() else
@@ -180,16 +226,40 @@ struct STCDocument: FileDocument
                 break
             }
             
-            let name = "GalleryImage\(index + 1).png"
-            let fileWrapper = FileWrapper(regularFileWithContents: data)
-            fileWrapper.filename = name
-            fileWrapper.preferredFilename = name
+            let file_name = "GalleryImage\(index + 1).png"
+            let file_wrapper = FileWrapper(regularFileWithContents: data)
+            file_wrapper.filename = file_name
+            file_wrapper.preferredFilename = file_name
             
-            fileWrappers[name] = fileWrapper
+            file_wrappers[file_name] = file_wrapper
             index += 1
         }
         
-        let directoryFileWrapper = FileWrapper(directoryWithFileWrappers: fileWrappers)
-        return directoryFileWrapper
+        return FileWrapper(directoryWithFileWrappers: file_wrappers)
+    }
+    
+    func prepare_app_file_wrapper(from modules: [ChangerModule]) throws -> FileWrapper
+    {
+        var file_wrappers = [String: FileWrapper]()
+        
+        //Changer Modules
+        file_wrappers["ChangerModules.json"] = FileWrapper(regularFileWithContents: try make_changer_modules_data())
+        
+        return FileWrapper(directoryWithFileWrappers: file_wrappers)
+    }
+    
+    private func make_changer_modules_data() throws -> Data
+    {
+        let encoder = JSONEncoder()
+        
+        do
+        {
+            let data = try encoder.encode(changer_modules)
+            return data
+        }
+        catch
+        {
+            throw error
+        }
     }
 }

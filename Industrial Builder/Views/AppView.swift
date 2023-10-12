@@ -30,17 +30,19 @@ struct AppView: View
                 {
                     FunctionCard(is_presented: $is_editors_presented[0], name: "Robot", image_name: "r.square.fill", color: .green)
                     {
-                        ChangerModuleEditor(is_presented: $is_editors_presented[0])
+                        Text("Robots")
+                            .padding()
                     }
                     
                     FunctionCard(is_presented: $is_editors_presented[1], name: "Tool", image_name: "hammer.fill", color: .teal)
                     {
-                        ChangerModuleEditor(is_presented: $is_editors_presented[1])
+                        Text("Tools")
+                            .padding()
                     }
                     
                     FunctionCard(is_presented: $is_editors_presented[2], name: "Changer", image_name: "wand.and.rays", color: .indigo)
                     {
-                        ChangerModuleEditor(is_presented: $is_editors_presented[2])
+                        ChangerModulesEditor(document: $document, is_presented: $is_editors_presented[2])
                     }
                 }
                 .padding(.horizontal, 20)
@@ -52,8 +54,7 @@ struct AppView: View
 
 struct FunctionCard<Content: View>: View
 {
-    @Environment(\.openWindow) var openWindow
-    
+    //@Environment(\.openWindow) var openWindow
     @Binding var is_presented: Bool
     
     let name: String
@@ -101,141 +102,6 @@ struct FunctionCard<Content: View>: View
     }
 }
 
-struct ChangerModuleEditor: View
-{
-    @Binding var is_presented: Bool
-    
-    @State private var modules_items: [ModuleItem] = []
-    @State private var add_module_view_presented = false
-    
-    var body: some View
-    {
-        VStack(spacing: 0)
-        {
-            Text("Modules for Changer")
-                .font(.title2)
-                .padding()
-            
-            List
-            {
-                ForEach(modules_items.indices, id: \.self)
-                { index in
-                    DisclosureGroup(modules_items[index].name, isExpanded: $modules_items[index].is_expanded)
-                    {
-                        TextEditor(text: $modules_items[index].text)
-                            .frame(minHeight: 64)
-                        #if os(macOS)
-                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                            .shadow(radius: 1)
-                        #endif
-                        /*Button(action: { modules_items.remove(at: index) })
-                        {
-                            Image(systemName: "xmark")
-                        }*/
-                    }
-                }
-                .onDelete
-                { indexSet in
-                    modules_items.remove(atOffsets: indexSet)
-                }
-                .listStyle(.automatic)
-            }
-            
-            Divider()
-            
-            HStack(spacing: 0)
-            {
-                Spacer()
-                
-                Button("New Module")
-                {
-                    add_module_view_presented = true
-                }
-                .popover(isPresented: $add_module_view_presented)
-                {
-                    AddModuleView(is_presented: $add_module_view_presented, modules_items: $modules_items)
-                }
-                .keyboardShortcut(.defaultAction)
-                .buttonStyle(.borderedProminent)
-                .padding()
-            }
-        }
-        .overlay(alignment: .topLeading)
-        {
-            Button(action: { is_presented.toggle() })
-            {
-                Label("Close", systemImage: "xmark")
-                    .labelStyle(.iconOnly)
-            }
-            .buttonStyle(.bordered)
-            .keyboardShortcut(.cancelAction)
-            .padding()
-        }
-        #if os(macOS)
-        .frame(minWidth: 320, maxWidth: 800, minHeight: 240, maxHeight: 600)
-        #endif
-    }
-}
-
-struct ModuleItem: Identifiable, Codable
-{
-    var id = UUID()
-    var is_expanded = false
-    var name = ""
-    var text = ""
-}
-
-func module_names(_ modules: [ModuleItem]) -> [String]
-{
-    var names = [String]()
-    for module in modules
-    {
-        names.append(module.name)
-    }
-    
-    return names
-}
-
-struct AddModuleView: View
-{
-    @Binding var is_presented: Bool
-    @Binding var modules_items: [ModuleItem]
-    
-    @State var new_module_name = ""
-    
-    var body: some View
-    {
-        VStack
-        {
-            HStack(spacing: 12)
-            {
-                TextField("Name", text: $new_module_name)
-                    .frame(minWidth: 128, maxWidth: 256)
-                #if os(iOS) || os(visionOS)
-                    .frame(idealWidth: 256)
-                    .textFieldStyle(.roundedBorder)
-                #endif
-                
-                Button("Add")
-                {
-                    if new_module_name == ""
-                    {
-                        new_module_name = "None"
-                    }
-                    
-                    //modules_items.append(ModuleItem(name: new_module_name))
-                    modules_items.append(ModuleItem(name: mismatched_name(name: new_module_name, names: module_names(modules_items))))
-                    
-                    is_presented = false
-                }
-                .fixedSize()
-                .keyboardShortcut(.defaultAction)
-            }
-            .padding(12)
-        }
-    }
-}
-
 /*struct EditorView: View
 {
     var body: some View
@@ -247,14 +113,4 @@ struct AddModuleView: View
 #Preview
 {
     AppView(document: .constant(STCDocument()))
-}
-
-#Preview
-{
-    ChangerModuleEditor(is_presented: .constant(true))
-}
-
-#Preview
-{
-    AddModuleView(is_presented: .constant(true), modules_items: .constant([ModuleItem]()))
 }

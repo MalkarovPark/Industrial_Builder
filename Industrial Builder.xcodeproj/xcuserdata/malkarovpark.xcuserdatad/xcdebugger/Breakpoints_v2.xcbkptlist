@@ -78,8 +78,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "fileWrapper(configuration:)"
             landmarkType = "7">
             <Locations>
@@ -156,8 +156,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -219,8 +219,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -282,8 +282,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -345,8 +345,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
             landmarkName = "make_document_data()"
             landmarkType = "7">
             <Locations>
@@ -441,8 +441,8 @@
             filePath = "Industrial Builder/STCDocument.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
             landmarkName = "prepare_image_file_wrapper(from:)"
             landmarkType = "7">
             <Locations>
