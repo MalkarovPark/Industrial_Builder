@@ -78,17 +78,7 @@ struct ChangerModulesEditor: View
                 .padding()
             }
         }
-        .overlay(alignment: .topLeading)
-        {
-            Button(action: { is_presented.toggle() })
-            {
-                Label("Close", systemImage: "xmark")
-                    .labelStyle(.iconOnly)
-            }
-            .buttonStyle(.bordered)
-            .keyboardShortcut(.cancelAction)
-            .padding()
-        }
+        .modifier(ViewCloseButton(is_presented: $is_presented))
         #if os(macOS)
         .frame(minWidth: 320, maxWidth: 800, minHeight: 240, maxHeight: 600)
         #elseif os(visionOS)
