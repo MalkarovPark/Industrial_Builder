@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		623D72482ADAFD8500927DEA /* ModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D72472ADAFD8500927DEA /* ModelView.swift */; };
 		627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627D3EBE2AD3F61400D5988D /* PackageView.swift */; };
 		627D3EC12AD42A0800D5988D /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627D3EC02AD42A0800D5988D /* GalleryView.swift */; };
 		6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		623D72472ADAFD8500927DEA /* ModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelView.swift; sourceTree = "<group>"; };
 		627D3EBE2AD3F61400D5988D /* PackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageView.swift; sourceTree = "<group>"; };
 		627D3EC02AD42A0800D5988D /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		6289FCC32AD0398100BB7F5E /* Industrial Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Industrial Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +63,7 @@
 				628E144E2AD7152700BC8FD9 /* AppView.swift */,
 				628E14552AD8AAF400BC8FD9 /* TargetsView.swift */,
 				628E145B2AD8ADEF00BC8FD9 /* AppEditors */,
+				623D72472ADAFD8500927DEA /* ModelView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 				628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */,
 				6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */,
 				628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */,
+				623D72482ADAFD8500927DEA /* ModelView.swift in Sources */,
 				628E144F2AD7152700BC8FD9 /* AppView.swift in Sources */,
 				6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */,
 				627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */,

@@ -16,6 +16,9 @@ struct ToolModulesEditor: View
     @State private var selection: String?
     
     @State var modules = [String]()
+    @State private var tab_selection = 0
+    
+    private let editor_tabs = ["Controller", "Connector"]
     
     var body: some View
     {
@@ -76,7 +79,26 @@ struct ToolModulesEditor: View
                 {
                     VStack(spacing: 0)
                     {
-                        Text("None")
+                        Picker("", selection: $tab_selection)
+                        {
+                            ForEach(0..<editor_tabs.count, id: \.self)
+                            { index in
+                                Text(self.editor_tabs[index]).tag(index)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        .padding()
+                        
+                        switch tab_selection
+                        {
+                        case 0:
+                            ToolControllerEditor()
+                        case 1:
+                            ToolConnectorEditor()
+                        default:
+                            Text("None")
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -128,6 +150,95 @@ struct AddToolModuleView: View
             }
             .padding(12)
         }
+    }
+}
+
+struct ToolControllerEditor: View
+{
+    private let scene_elements = ["Connect", "Reset", "Other"]
+    @State private var scene_elements_expanded = [false, false, false, false]
+    
+    private let statistics_elements = ["Chart", "Clear Chart", "State", "Clear State", "Other"]
+    @State private var statistics_elements_expanded = [false, false, false, false, false]
+    
+    var body: some View
+    {
+        List
+        {
+            Section("Scene Functions")
+            {
+                ForEach(scene_elements.indices, id: \.self) { index in
+                    DisclosureGroup(scene_elements[index], isExpanded: $scene_elements_expanded[index])
+                    {
+                        TextEditor(text: .constant("22"))
+                            .frame(minHeight: 64)
+                        #if os(macOS)
+                            .shadow(radius: 1)
+                        #endif
+                    }
+                }
+            }
+            
+            Section("Model")
+            {
+                DisclosureGroup
+                {
+                    ModelView()
+                } label:
+                {
+                    Text("Preview")
+                }
+            }
+            
+            Section("Statistics Functions")
+            {
+                ForEach(statistics_elements.indices, id: \.self) { index in
+                    DisclosureGroup(statistics_elements[index], isExpanded: $statistics_elements_expanded[index])
+                    {
+                        TextEditor(text: .constant("22"))
+                            .frame(minHeight: 64)
+                        #if os(macOS)
+                            .shadow(radius: 1)
+                        #endif
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+    }
+}
+
+struct ToolConnectorEditor: View
+{
+    private let elements = ["Connect", "Perform", "Disconnect", "Other"]
+    @State private var elements_expanded = [false, false, false, false]
+    
+    var body: some View
+    {
+        List
+        {
+            Section("Functions")
+            {
+                ForEach(elements.indices, id: \.self) { index in
+                    DisclosureGroup(elements[index], isExpanded: $elements_expanded[index])
+                    {
+                        TextEditor(text: .constant("22"))
+                            .frame(minHeight: 64)
+                        #if os(macOS)
+                            .shadow(radius: 1)
+                        #endif
+                    }
+                }
+            }
+            
+            Section("Connection Parameters")
+            {
+                
+            }
+        }
+        .listStyle(.plain)
+        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
     }
 }
 

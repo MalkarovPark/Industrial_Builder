@@ -43,7 +43,6 @@ struct ChangerModulesEditor: View
                             TextEditor(text: $base_stc.changer_modules[index].code)
                                 .frame(minHeight: 64)
                             #if os(macOS)
-                                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                                 .shadow(radius: 1)
                             #endif
                         }
@@ -80,7 +79,7 @@ struct ChangerModulesEditor: View
         }
         .modifier(ViewCloseButton(is_presented: $is_presented))
         #if os(macOS)
-        .frame(minWidth: 320, maxWidth: 800, minHeight: 240, maxHeight: 600)
+        .frame(minWidth: 320, maxWidth: 800, minHeight: 320, maxHeight: 480)
         #elseif os(visionOS)
         .frame(width: 512, height: 512)
         #endif
