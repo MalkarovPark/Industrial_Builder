@@ -34,7 +34,7 @@ struct RobotModulesEditor: View
             .padding([.horizontal, .bottom])
         }
         .modifier(ViewCloseButton(is_presented: $is_presented))
-        .modifier(WindowFramer())
+        .modifier(SheetFramer())
     }
 }
 

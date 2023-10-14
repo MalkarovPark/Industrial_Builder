@@ -170,6 +170,19 @@ struct WindowFramer: ViewModifier
     }
 }
 
+struct SheetFramer: ViewModifier
+{
+    public func body(content: Content) -> some View
+    {
+        content
+        #if os(macOS)
+            .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
+        #elseif os(visionOS)
+            .frame(width: 512, height: 512)
+        #endif
+    }
+}
+
 struct ViewCloseButton: ViewModifier
 {
     @Binding var is_presented: Bool

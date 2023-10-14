@@ -68,7 +68,7 @@ struct ChangerModulesEditor: View
                 }
                 .popover(isPresented: $add_module_view_presented)
                 {
-                    AddModuleView(is_presented: $add_module_view_presented, modules_items: $base_stc.changer_modules)
+                    AddChangerModuleView(is_presented: $add_module_view_presented, modules_items: $base_stc.changer_modules)
                     #if os(iOS)
                         .presentationDetents([.height(96)])
                     #endif
@@ -110,7 +110,7 @@ func module_names(_ modules: [ChangerModule]) -> [String]
     return names
 }
 
-struct AddModuleView: View
+struct AddChangerModuleView: View
 {
     @Binding var is_presented: Bool
     @Binding var modules_items: [ChangerModule]
@@ -153,10 +153,11 @@ struct AddModuleView: View
 #Preview
 {
     ChangerModulesEditor(document: .constant(STCDocument()), is_presented: .constant(true))
+        .environmentObject(StandardTemplateConstruct())
 }
 
 #Preview
 {
-    AddModuleView(is_presented: .constant(true), modules_items: .constant([ChangerModule]()))
+    AddChangerModuleView(is_presented: .constant(true), modules_items: .constant([ChangerModule]()))
         .environmentObject(StandardTemplateConstruct())
 }

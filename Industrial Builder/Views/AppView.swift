@@ -63,39 +63,45 @@ struct FunctionCard<Content: View>: View
     
     var body: some View
     {
-        ZStack
+        VStack(spacing: 0)
         {
-            Rectangle()
-                .foregroundColor(color)
+            ZStack
+            {
+                Rectangle()
+                    .foregroundColor(color)
+            }
+            .frame(height: 128)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(alignment: .topLeading)
+            {
+                Text(name)
+                    .fontWeight(.bold)
+                    .font(.system(.title, design: .rounded))
+                    .foregroundColor(.white)
+                    .padding()
+            }
+            .overlay(alignment: .bottomTrailing)
+            {
+                Image(systemName: image_name)
+                    .fontWeight(.bold)
+                    .font(.system(size: 48))
+                    .foregroundColor(.secondary)
+                    .shadow(radius: 8)
+                    .padding()
+            }
+            .onTapGesture
+            {
+                is_presented = true
+                //openWindow(id: "editor")
+            }
+            .sheet(isPresented: $is_presented, content: {
+                content()
+            })
         }
-        .frame(height: 128)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        #if os(visionOS)
+        .frame(depth: 16)
+        #endif
         .shadow(radius: 8.0)
-        .overlay(alignment: .topLeading)
-        {
-            Text(name)
-                .fontWeight(.bold)
-                .font(.system(.title, design: .rounded))
-                .foregroundColor(.white)
-                .padding()
-        }
-        .overlay(alignment: .bottomTrailing)
-        {
-            Image(systemName: image_name)
-                .fontWeight(.bold)
-                .font(.system(size: 48))
-                .foregroundColor(.secondary)
-                .shadow(radius: 8)
-                .padding()
-        }
-        .onTapGesture
-        {
-            is_presented = true
-            //openWindow(id: "editor")
-        }
-        .sheet(isPresented: $is_presented, content: {
-            content()
-        })
         //.padding()
     }
 }
