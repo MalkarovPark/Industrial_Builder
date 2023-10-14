@@ -58,10 +58,10 @@ struct ElementSceneView: UIViewRepresentable
     #else
     func makeUIView(context: Context) -> SCNView
     {
-        base_workspace.camera_node = viewed_scene.rootNode.childNode(withName: "camera", recursively: true)
+        //base_workspace.camera_node = viewed_scene.rootNode.childNode(withName: "camera", recursively: true)
         
         //Add gesture recognizer
-        //let tap_gesture_recognizer = UIGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
+        let tap_gesture_recognizer = UIGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
         scene_view.addGestureRecognizer(tap_gesture_recognizer)
         
         scene_view.allowsCameraControl = true
@@ -95,6 +95,12 @@ struct ElementSceneView: UIViewRepresentable
     #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
+        let greenMaterial = SCNMaterial()
+                greenMaterial.diffuse.contents = UIColor.green
+        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
+                greenBox.materials = [greenMaterial]
+        let boxNode = SCNNode(geometry: greenBox)
+        scene_view.scene?.rootNode.addChildNode(boxNode)
         //Update commands
         /*app_state.reset_camera_view_position(workspace: base_workspace, view: ui_view)
         

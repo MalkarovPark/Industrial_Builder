@@ -204,7 +204,9 @@ struct ToolControllerEditor: View
                 }
             }
         }
+        #if os(macOS)
         .listStyle(.plain)
+        #endif
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
     }
 }
@@ -237,7 +239,9 @@ struct ToolConnectorEditor: View
                 
             }
         }
+        #if os(macOS)
         .listStyle(.plain)
+        #endif
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
     }
 }
