@@ -10,10 +10,13 @@ import IndustrialKit
 
 struct ToolModulesEditor: View
 {
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
+    @Binding var document: STCDocument
     @Binding var is_presented: Bool
     
     @State private var add_tool_module_presented = false
-    @State private var selection: String?
+    @State private var selection = ToolModule(id: UUID())
     
     @State var modules = [String]()
     @State private var tab_selection = 0
@@ -38,13 +41,20 @@ struct ToolModulesEditor: View
                 {
                     ZStack
                     {
-                        if modules.count > 0
+                        if base_stc.tool_modules.count > 0
                         {
-                            List(modules, id: \.self, selection: $selection)
+                            List(base_stc.tool_modules, id: \.self, selection: $selection)
                             { module in
-                                Text(module)
+                                Text(module.name)
                             }
                             .listStyle(.plain)
+                            .contextMenu
+                            {
+                                Button(role: .destructive, action: remove_tool)
+                                {
+                                    Label("Delete", systemImage: "xmark")
+                                }
+                            }
                         }
                         else
                         {
@@ -62,7 +72,7 @@ struct ToolModulesEditor: View
                         }
                         .popover(isPresented: $add_tool_module_presented)
                         {
-                            AddToolModuleView(is_presented: $add_tool_module_presented, modules_items: $modules)
+                            AddToolModuleView(is_presented: $add_tool_module_presented, modules_items: $base_stc.tool_modules, modules_names: base_stc.tool_modules_names)
                         }
                         .padding()
                     }
@@ -93,9 +103,9 @@ struct ToolModulesEditor: View
                         switch tab_selection
                         {
                         case 0:
-                            ToolControllerEditor()
+                            ToolControllerEditor(controller: $selection.controller)
                         case 1:
-                            ToolConnectorEditor()
+                            ToolConnectorEditor(connector: $selection.connector)
                         default:
                             Text("None")
                         }
@@ -111,12 +121,18 @@ struct ToolModulesEditor: View
         .modifier(ViewCloseButton(is_presented: $is_presented))
         .modifier(SheetFramer())
     }
+    
+    private func remove_tool()
+    {
+        base_stc.remove_tool_module(selection.name)
+    }
 }
 
 struct AddToolModuleView: View
 {
     @Binding var is_presented: Bool
-    @Binding var modules_items: [String]
+    @Binding var modules_items: [ToolModule]
+    var modules_names: [String]
     
     @State private var new_module_name = ""
     
@@ -140,8 +156,7 @@ struct AddToolModuleView: View
                         new_module_name = "None"
                     }
                     
-                    //modules_items.append(ChangerModule(name: mismatched_name(name: new_module_name, names: module_names(modules_items))))
-                    modules_items.append(String(mismatched_name(name: new_module_name, names: modules_items)))
+                    modules_items.append(ToolModule(id: UUID(), name: mismatched_name(name: new_module_name, names: modules_names)))
                     
                     is_presented = false
                 }
@@ -155,6 +170,8 @@ struct AddToolModuleView: View
 
 struct ToolControllerEditor: View
 {
+    @Binding var controller: ToolControllerModule
+    
     private let scene_elements = ["Connect", "Reset", "Other"]
     @State private var scene_elements_expanded = [false, false, false, false]
     
@@ -171,10 +188,7 @@ struct ToolControllerEditor: View
                     DisclosureGroup(scene_elements[index], isExpanded: $scene_elements_expanded[index])
                     {
                         TextEditor(text: .constant("22"))
-                            .frame(minHeight: 64)
-                        #if os(macOS)
-                            .shadow(radius: 1)
-                        #endif
+                            .modifier(TextFrame())
                     }
                 }
             }
@@ -213,8 +227,13 @@ struct ToolControllerEditor: View
 
 struct ToolConnectorEditor: View
 {
+    @Binding var connector: ToolConnectorModule
+    
     private let elements = ["Connect", "Perform", "Disconnect", "Other"]
     @State private var elements_expanded = [false, false, false, false]
+    
+    private let statistics_elements = ["Chart", "Clear Chart", "State", "Clear State", "Other"]
+    @State private var statistics_elements_expanded = [false, false, false, false, false]
     
     var body: some View
     {
@@ -238,6 +257,20 @@ struct ToolConnectorEditor: View
             {
                 
             }
+            
+            Section("Statistics Functions")
+            {
+                ForEach(statistics_elements.indices, id: \.self) { index in
+                    DisclosureGroup(statistics_elements[index], isExpanded: $statistics_elements_expanded[index])
+                    {
+                        TextEditor(text: .constant("22"))
+                            .frame(minHeight: 64)
+                        #if os(macOS)
+                            .shadow(radius: 1)
+                        #endif
+                    }
+                }
+            }
         }
         #if os(macOS)
         .listStyle(.plain)
@@ -248,5 +281,5 @@ struct ToolConnectorEditor: View
 
 #Preview
 {
-    ToolModulesEditor(is_presented: .constant(true))
+    ToolModulesEditor(document: .constant(STCDocument()), is_presented: .constant(true))
 }

@@ -15,7 +15,6 @@ struct ChangerModulesEditor: View
     @Binding var document: STCDocument
     @Binding var is_presented: Bool
     
-    //@State private var changer_modules: [ChangerModule] = []
     @State private var expanded = [Bool]()
     @State private var appeared = false
     @State private var add_module_view_presented = false

@@ -203,6 +203,18 @@ struct ViewCloseButton: ViewModifier
     }
 }
 
+struct TextFrame: ViewModifier
+{
+    public func body(content: Content) -> some View
+    {
+        content
+            .frame(minHeight: 64)
+        #if os(macOS)
+            .shadow(radius: 1)
+        #endif
+    }
+}
+
 #Preview
 {
     ContentView(document: .constant(STCDocument()))

@@ -19,7 +19,26 @@ public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package = STCPackage()
     @Published var images = [UIImage]()
+    
     @Published var changer_modules = [ChangerModule]()
+    
+    @Published var tool_modules = [ToolModule]()
+    
+    public var tool_modules_names: [String]
+    {
+        var names = [String]()
+        for tool_module in tool_modules
+        {
+            names.append(tool_module.name)
+        }
+        
+        return names
+    }
+    
+    public func remove_tool_module(_ name: String)
+    {
+        tool_modules.removeAll { $0.name == name }
+    }
     
     init()
     {
@@ -34,12 +53,55 @@ public class StandardTemplateConstruct: ObservableObject
     }
 }
 
-
-
-struct ChangerModule: Equatable, Codable
+public struct ChangerModule: Equatable, Codable
 {
     var name = ""
     var code = ""
+}
+
+public struct ToolModule: Equatable, Codable, Hashable
+{
+    var id: UUID
+    
+    public func hash(into hasher: inout Hasher)
+    {
+        hasher.combine(id)
+    }
+    
+    var name = ""
+    
+    var controller = ToolControllerModule()    
+    var connector = ToolConnectorModule()
+}
+
+public struct ToolControllerModule: Equatable, Codable
+{
+    var connect = ""
+    var reset = ""
+    var other = ""
+    
+    var statistics = StatisticsFunctionsData()
+}
+
+public struct ToolConnectorModule: Equatable, Codable
+{
+    var connect = ""
+    var perform = ""
+    var disconnect = ""
+    var other = ""
+    
+    var statistics = StatisticsFunctionsData()
+}
+
+public struct StatisticsFunctionsData: Equatable, Codable
+{
+    var chart_code = ""
+    var clear_chart_code = ""
+    
+    var state_code = ""
+    var clear_state_code = ""
+    
+    var other_code = ""
 }
 
 #if os(macOS)
@@ -100,16 +162,16 @@ struct STCDocument: FileDocument
             switch wrapper.filename
             {
             case "Package.info":
-                package_process()
+                package_process(wrapper)
             case "Images":
-                images_process()
+                images_process(wrapper)
             case "App":
-                app_process()
+                app_process(wrapper)
             default:
                 break
             }
             
-            func package_process()
+            func package_process(_ wrapper: FileWrapper)
             {
                 guard let data = wrapper.regularFileContents
                 else
@@ -120,7 +182,7 @@ struct STCDocument: FileDocument
                 package = try! JSONDecoder().decode(STCPackage.self, from: data)
             }
             
-            func images_process()
+            func images_process(_ wrapper: FileWrapper)
             {
                 if let file_wrappers = wrapper.fileWrappers
                 {
@@ -134,7 +196,21 @@ struct STCDocument: FileDocument
                 }
             }
             
-            func app_process()
+            func json_decode(_ wrapper: FileWrapper, type: Any, data: Any)
+            {
+                if wrapper.filename != nil
+                {
+                    guard let data = wrapper.regularFileContents
+                    else
+                    {
+                        return
+                    }
+                    
+                    changer_modules = try! JSONDecoder().decode([ChangerModule].self, from: data)
+                }
+            }
+            
+            func app_process(_ wrapper: FileWrapper)
             {
                 if let file_wrappers = wrapper.fileWrappers
                 {
@@ -144,6 +220,8 @@ struct STCDocument: FileDocument
                         {
                         case "ChangerModules.json":
                             changer_modules_process(file_wrapper)
+                        case "Modules":
+                            modules_process(file_wrapper)
                         default:
                             break
                         }
@@ -152,16 +230,36 @@ struct STCDocument: FileDocument
                 
                 func changer_modules_process(_ wrapper: FileWrapper)
                 {
-                    if let filename = wrapper.filename
+                    json_decode(wrapper, type: [ChangerModule].self, data: changer_modules)
+                }
+                
+                func modules_process(_ wrapper: FileWrapper)
+                {
+                    if let file_wrappers = wrapper.fileWrappers
                     {
-                        guard let data = wrapper.regularFileContents
-                        else
+                        for (_, file_wrapper) in file_wrappers
                         {
-                            return
+                            switch file_wrapper.filename
+                            {
+                            case "Robot Modules":
+                                robot_modules_process(file_wrapper)
+                            case "Tool Modules":
+                                tool_modules_process(file_wrapper)
+                            default:
+                                break
+                            }
                         }
-                        
-                        changer_modules = try! JSONDecoder().decode([ChangerModule].self, from: data)
                     }
+                }
+                
+                func robot_modules_process(_ wrapper: FileWrapper)
+                {
+                    
+                }
+                
+                func tool_modules_process(_ wrapper: FileWrapper)
+                {
+                    
                 }
             }
         }

@@ -35,7 +35,7 @@ struct AppView: View
                     
                     FunctionCard(is_presented: $is_editors_presented[1], name: "Tool", image_name: "hammer.fill", color: .teal)
                     {
-                        ToolModulesEditor(is_presented: $is_editors_presented[1])
+                        ToolModulesEditor(document: $document, is_presented: $is_editors_presented[1])
                     }
                     
                     FunctionCard(is_presented: $is_editors_presented[2], name: "Changer", image_name: "wand.and.rays", color: .indigo)
