@@ -20,9 +20,25 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var package = STCPackage()
     @Published var images = [UIImage]()
     
+    init()
+    {
+        
+    }
+    
+    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule])
+    {
+        self.package = info
+        self.images = images
+        self.changer_modules = changer_modules
+    }
+    
+    //MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
     
+    //MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
+    
+    @Published var selected_tool_module_name: String?
     
     public var tool_modules_names: [String]
     {
@@ -35,21 +51,29 @@ public class StandardTemplateConstruct: ObservableObject
         return names
     }
     
-    public func remove_tool_module(_ name: String)
+    /*public func remove_tool_module(_ name: String)
     {
         tool_modules.removeAll { $0.name == name }
+    }*/
+    
+    public var selected_tool_module: ToolModule
+    {
+        get
+        {
+            return tool_modules.first { $0.name == selected_tool_module_name } ?? ToolModule()
+        }
+        set
+        {
+            if let index = tool_modules.firstIndex(where: { $0.name == selected_tool_module_name })
+            {
+                tool_modules[index] = newValue
+            }
+        }
     }
     
-    init()
+    public func remove_selected_tool_module()
     {
-        
-    }
-    
-    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule])
-    {
-        self.package = info
-        self.images = images
-        self.changer_modules = changer_modules
+        tool_modules.removeAll { $0.name == selected_tool_module_name }
     }
 }
 
@@ -59,18 +83,11 @@ public struct ChangerModule: Equatable, Codable
     var code = ""
 }
 
-public struct ToolModule: Equatable, Codable, Hashable
+public struct ToolModule: Equatable, Codable
 {
-    var id: UUID
-    
-    public func hash(into hasher: inout Hasher)
-    {
-        hasher.combine(id)
-    }
-    
     var name = ""
     
-    var controller = ToolControllerModule()    
+    var controller = ToolControllerModule()
     var connector = ToolConnectorModule()
 }
 
@@ -96,10 +113,10 @@ public struct ToolConnectorModule: Equatable, Codable
 public struct StatisticsFunctionsData: Equatable, Codable
 {
     var chart_code = ""
-    var clear_chart_code = ""
+    var chart_code_clear = ""
     
     var state_code = ""
-    var clear_state_code = ""
+    var state_code_clear = ""
     
     var other_code = ""
 }

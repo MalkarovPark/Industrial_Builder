@@ -16,7 +16,7 @@ struct ToolModulesEditor: View
     @Binding var is_presented: Bool
     
     @State private var add_tool_module_presented = false
-    @State private var selection = ToolModule(id: UUID())
+    //@State private var selection = ToolModule()
     
     @State var modules = [String]()
     @State private var tab_selection = 0
@@ -43,9 +43,9 @@ struct ToolModulesEditor: View
                     {
                         if base_stc.tool_modules.count > 0
                         {
-                            List(base_stc.tool_modules, id: \.self, selection: $selection)
-                            { module in
-                                Text(module.name)
+                            List(base_stc.tool_modules_names, id: \.self, selection: $base_stc.selected_tool_module_name)
+                            { names in
+                                Text(names)
                             }
                             .listStyle(.plain)
                             .contextMenu
@@ -89,25 +89,32 @@ struct ToolModulesEditor: View
                 {
                     VStack(spacing: 0)
                     {
-                        Picker("", selection: $tab_selection)
+                        if base_stc.selected_tool_module_name != nil
                         {
-                            ForEach(0..<editor_tabs.count, id: \.self)
-                            { index in
-                                Text(self.editor_tabs[index]).tag(index)
+                            Picker("", selection: $tab_selection)
+                            {
+                                ForEach(0..<editor_tabs.count, id: \.self)
+                                { index in
+                                    Text(self.editor_tabs[index]).tag(index)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .labelsHidden()
+                            .padding()
+                            
+                            switch tab_selection
+                            {
+                            case 0:
+                                ToolControllerEditor(controller: $base_stc.selected_tool_module.controller)
+                            case 1:
+                                ToolConnectorEditor(connector: $base_stc.selected_tool_module.connector)
+                            default:
+                                Text("None")
                             }
                         }
-                        .pickerStyle(.segmented)
-                        .labelsHidden()
-                        .padding()
-                        
-                        switch tab_selection
+                        else
                         {
-                        case 0:
-                            ToolControllerEditor(controller: $selection.controller)
-                        case 1:
-                            ToolConnectorEditor(connector: $selection.connector)
-                        default:
-                            Text("None")
+                            Text("No module")
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -124,7 +131,7 @@ struct ToolModulesEditor: View
     
     private func remove_tool()
     {
-        base_stc.remove_tool_module(selection.name)
+        base_stc.remove_selected_tool_module()
     }
 }
 
@@ -156,7 +163,7 @@ struct AddToolModuleView: View
                         new_module_name = "None"
                     }
                     
-                    modules_items.append(ToolModule(id: UUID(), name: mismatched_name(name: new_module_name, names: modules_names)))
+                    modules_items.append(ToolModule(name: mismatched_name(name: new_module_name, names: modules_names)))
                     
                     is_presented = false
                 }
@@ -175,21 +182,28 @@ struct ToolControllerEditor: View
     private let scene_elements = ["Connect", "Reset", "Other"]
     @State private var scene_elements_expanded = [false, false, false, false]
     
-    private let statistics_elements = ["Chart", "Clear Chart", "State", "Clear State", "Other"]
-    @State private var statistics_elements_expanded = [false, false, false, false, false]
-    
     var body: some View
     {
         List
         {
             Section("Scene Functions")
             {
-                ForEach(scene_elements.indices, id: \.self) { index in
-                    DisclosureGroup(scene_elements[index], isExpanded: $scene_elements_expanded[index])
-                    {
-                        TextEditor(text: .constant("22"))
-                            .modifier(TextFrame())
-                    }
+                DisclosureGroup(scene_elements[0], isExpanded: $scene_elements_expanded[0])
+                {
+                    TextEditor(text: $controller.connect)
+                        .modifier(TextFrame())
+                }
+                
+                DisclosureGroup(scene_elements[1], isExpanded: $scene_elements_expanded[1])
+                {
+                    TextEditor(text: $controller.reset)
+                        .modifier(TextFrame())
+                }
+                
+                DisclosureGroup(scene_elements[2], isExpanded: $scene_elements_expanded[2])
+                {
+                    TextEditor(text: $controller.other)
+                        .modifier(TextFrame())
                 }
             }
             
@@ -204,19 +218,7 @@ struct ToolControllerEditor: View
                 }
             }
             
-            Section("Statistics Functions")
-            {
-                ForEach(statistics_elements.indices, id: \.self) { index in
-                    DisclosureGroup(statistics_elements[index], isExpanded: $statistics_elements_expanded[index])
-                    {
-                        TextEditor(text: .constant("22"))
-                            .frame(minHeight: 64)
-                        #if os(macOS)
-                            .shadow(radius: 1)
-                        #endif
-                    }
-                }
-            }
+            StatisticsListView(statistics: $controller.statistics)
         }
         #if os(macOS)
         .listStyle(.plain)
@@ -241,15 +243,28 @@ struct ToolConnectorEditor: View
         {
             Section("Functions")
             {
-                ForEach(elements.indices, id: \.self) { index in
-                    DisclosureGroup(elements[index], isExpanded: $elements_expanded[index])
-                    {
-                        TextEditor(text: .constant("22"))
-                            .frame(minHeight: 64)
-                        #if os(macOS)
-                            .shadow(radius: 1)
-                        #endif
-                    }
+                DisclosureGroup(elements[0], isExpanded: $elements_expanded[0])
+                {
+                    TextEditor(text: $connector.connect)
+                        .modifier(TextFrame())
+                }
+                
+                DisclosureGroup(elements[1], isExpanded: $elements_expanded[1])
+                {
+                    TextEditor(text: $connector.perform)
+                        .modifier(TextFrame())
+                }
+                
+                DisclosureGroup(elements[2], isExpanded: $elements_expanded[2])
+                {
+                    TextEditor(text: $connector.disconnect)
+                        .modifier(TextFrame())
+                }
+                
+                DisclosureGroup(elements[3], isExpanded: $elements_expanded[3])
+                {
+                    TextEditor(text: $connector.other)
+                        .modifier(TextFrame())
                 }
             }
             
@@ -258,24 +273,56 @@ struct ToolConnectorEditor: View
                 
             }
             
-            Section("Statistics Functions")
-            {
-                ForEach(statistics_elements.indices, id: \.self) { index in
-                    DisclosureGroup(statistics_elements[index], isExpanded: $statistics_elements_expanded[index])
-                    {
-                        TextEditor(text: .constant("22"))
-                            .frame(minHeight: 64)
-                        #if os(macOS)
-                            .shadow(radius: 1)
-                        #endif
-                    }
-                }
-            }
+            StatisticsListView(statistics: $connector.statistics)
         }
         #if os(macOS)
         .listStyle(.plain)
         #endif
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+    }
+}
+
+struct StatisticsListView: View
+{
+    @Binding var statistics: StatisticsFunctionsData
+    
+    private let statistics_elements = ["Chart", "Clear Chart", "State", "Clear State", "Other"]
+    @State private var statistics_elements_expanded = [false, false, false, false, false]
+    
+    var body: some View
+    {
+        Section("Statistics Functions")
+        {
+            DisclosureGroup(statistics_elements[0], isExpanded: $statistics_elements_expanded[0])
+            {
+                TextEditor(text: $statistics.chart_code)
+                    .modifier(TextFrame())
+            }
+            
+            DisclosureGroup(statistics_elements[1], isExpanded: $statistics_elements_expanded[1])
+            {
+                TextEditor(text: $statistics.chart_code_clear)
+                    .modifier(TextFrame())
+            }
+            
+            DisclosureGroup(statistics_elements[2], isExpanded: $statistics_elements_expanded[2])
+            {
+                TextEditor(text: $statistics.state_code)
+                    .modifier(TextFrame())
+            }
+            
+            DisclosureGroup(statistics_elements[3], isExpanded: $statistics_elements_expanded[3])
+            {
+                TextEditor(text: $statistics.state_code_clear)
+                    .modifier(TextFrame())
+            }
+            
+            DisclosureGroup(statistics_elements[4], isExpanded: $statistics_elements_expanded[4])
+            {
+                TextEditor(text: $statistics.other_code)
+                    .modifier(TextFrame())
+            }
+        }
     }
 }
 
