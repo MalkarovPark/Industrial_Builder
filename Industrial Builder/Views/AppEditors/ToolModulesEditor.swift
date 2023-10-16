@@ -272,11 +272,15 @@ struct OperationCodeItemView: View
         VStack
         {
             TextField("Name", text: $element.name)
+            #if os(macOS)
                 .textFieldStyle(.squareBorder)
+            #endif
             HStack(spacing: 0)
             {
                 TextField("Symbol", text: $element.symbol)
+                #if os(macOS)
                     .textFieldStyle(.squareBorder)
+                #endif
                 Image(systemName: "\(element.symbol)")
                     .padding(.leading, 4)
             }
