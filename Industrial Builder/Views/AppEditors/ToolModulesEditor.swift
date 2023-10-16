@@ -201,18 +201,7 @@ struct ToolOperationCodesEditor: View
                     { index in
                         DisclosureGroup("\(elements[index].value)", isExpanded: $expanded[index])
                         {
-                            VStack
-                            {
-                                TextField("Name", text: $elements[index].name)
-                                    .textFieldStyle(.squareBorder)
-                                HStack(spacing: 0)
-                                {
-                                    TextField("Symbol", text: $elements[index].symbol)
-                                        .textFieldStyle(.squareBorder)
-                                    Image(systemName: "\(elements[index].symbol)")
-                                        .padding(.leading, 4)
-                                }
-                            }
+                            OperationCodeItemView(element: $elements[index])
                         }
                     }
                     .onDelete
@@ -245,6 +234,7 @@ struct ToolOperationCodesEditor: View
                         return
                     }
                     elements.append(OperationCode(value: new_code_value))
+                    new_code_value += 1
                 }
                 .keyboardShortcut(.defaultAction)
                 .padding()
@@ -264,6 +254,56 @@ struct ToolOperationCodesEditor: View
         .onAppear
         {
             expanded = [Bool](repeating: false, count: elements.count)
+        }
+    }
+}
+
+struct OperationCodeItemView: View
+{
+    @Binding var element: OperationCode
+    
+    @State private var tab_selection = 0
+    
+    private let editor_tabs = ["Controller", "Connector"]
+    
+    var body: some View
+    {
+        VStack
+        {
+            TextField("Name", text: $element.name)
+                .textFieldStyle(.squareBorder)
+            HStack(spacing: 0)
+            {
+                TextField("Symbol", text: $element.symbol)
+                    .textFieldStyle(.squareBorder)
+                Image(systemName: "\(element.symbol)")
+                    .padding(.leading, 4)
+            }
+            
+            Divider()
+            
+            Picker("", selection: $tab_selection)
+            {
+                ForEach(0..<editor_tabs.count, id: \.self)
+                { index in
+                    Text(self.editor_tabs[index]).tag(index)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding(4)
+            
+            switch tab_selection
+            {
+            case 0:
+                TextEditor(text: $element.controller_code)
+                    .modifier(TextFrame())
+            case 1:
+                TextEditor(text: $element.connector_code)
+                    .modifier(TextFrame())
+            default:
+                Text("None")
+            }
         }
     }
 }
@@ -346,7 +386,7 @@ struct ToolConnectorEditor: View
 {
     @Binding var connector: ToolConnectorModule
     
-    private let elements = ["Connect", "Perform", "Disconnect", "Other"]
+    private let elements = ["Connect", "Disconnect", "Other"]
     @State private var elements_expanded = [false, false, false, false]
     
     private let statistics_elements = ["Chart", "Clear Chart", "State", "Clear State", "Other"]
@@ -366,17 +406,11 @@ struct ToolConnectorEditor: View
                 
                 DisclosureGroup(elements[1], isExpanded: $elements_expanded[1])
                 {
-                    TextEditor(text: $connector.perform)
-                        .modifier(TextFrame())
-                }
-                
-                DisclosureGroup(elements[2], isExpanded: $elements_expanded[2])
-                {
                     TextEditor(text: $connector.disconnect)
                         .modifier(TextFrame())
                 }
                 
-                DisclosureGroup(elements[3], isExpanded: $elements_expanded[3])
+                DisclosureGroup(elements[2], isExpanded: $elements_expanded[2])
                 {
                     TextEditor(text: $connector.other)
                         .modifier(TextFrame())

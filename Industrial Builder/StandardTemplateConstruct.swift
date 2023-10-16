@@ -99,7 +99,6 @@ public struct ToolControllerModule: Equatable, Codable
 public struct ToolConnectorModule: Equatable, Codable
 {
     var connect = ""
-    var perform = ""
     var disconnect = ""
     var other = ""
     
@@ -121,7 +120,11 @@ public struct OperationCode: Equatable, Codable
 {
     var value = 0
     var name = ""
-    var symbol = ""
+    var symbol = "questionmark"
+    
+    //var code = ""
+    var controller_code = ""
+    var connector_code = ""
 }
 
 #if os(macOS)
