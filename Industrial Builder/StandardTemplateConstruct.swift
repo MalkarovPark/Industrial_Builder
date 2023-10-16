@@ -29,6 +29,8 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
     
+    //MARK: Robot modules
+    
     //MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
     
@@ -113,6 +115,13 @@ public struct StatisticsFunctionsData: Equatable, Codable
     var state_code_clear = ""
     
     var other_code = ""
+}
+
+public struct OperationCode: Equatable, Codable
+{
+    var value = 0
+    var name = ""
+    var symbol = ""
 }
 
 #if os(macOS)

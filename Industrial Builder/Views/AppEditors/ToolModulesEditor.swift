@@ -21,7 +21,7 @@ struct ToolModulesEditor: View
     @State var modules = [String]()
     @State private var tab_selection = 0
     
-    private let editor_tabs = ["Controller", "Connector"]
+    private let editor_tabs = ["Codes", "Controller", "Connector"]
     
     var body: some View
     {
@@ -105,8 +105,10 @@ struct ToolModulesEditor: View
                             switch tab_selection
                             {
                             case 0:
-                                ToolControllerEditor(controller: $base_stc.selected_tool_module.controller)
+                                ToolOperationCodesEditor()
                             case 1:
+                                ToolControllerEditor(controller: $base_stc.selected_tool_module.controller)
+                            case 2:
                                 ToolConnectorEditor(connector: $base_stc.selected_tool_module.connector)
                             default:
                                 Text("None")
@@ -180,12 +182,100 @@ struct AddToolModuleView: View
     }
 }
 
+struct ToolOperationCodesEditor: View
+{
+    @State private var expanded = [Bool]()
+    @State private var new_code_value = 0
+    
+    @State private var elements = [OperationCode]()
+    
+    var body: some View
+    {
+        VStack(spacing: 0)
+        {
+            List
+            {
+                if elements.count == expanded.count
+                {
+                    ForEach(expanded.indices, id: \.self)
+                    { index in
+                        DisclosureGroup("\(elements[index].value)", isExpanded: $expanded[index])
+                        {
+                            VStack
+                            {
+                                TextField("Name", text: $elements[index].name)
+                                    .textFieldStyle(.squareBorder)
+                                HStack(spacing: 0)
+                                {
+                                    TextField("Symbol", text: $elements[index].symbol)
+                                        .textFieldStyle(.squareBorder)
+                                    Image(systemName: "\(elements[index].symbol)")
+                                        .padding(.leading, 4)
+                                }
+                            }
+                        }
+                    }
+                    .onDelete
+                    { indexSet in
+                        elements.remove(atOffsets: indexSet)
+                    }
+                    .listStyle(.automatic)
+                }
+            }
+            #if os(macOS)
+            .listStyle(.plain)
+            #endif
+            
+            Divider()
+            
+            HStack(spacing: 0)
+            {
+                TextField("0", value: $new_code_value, format: .number)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.leading)
+                
+                Stepper("Enter", value: $new_code_value, in: 0...1000)
+                    .labelsHidden()
+                    .padding(.leading)
+                
+                Button("Add")
+                {
+                    guard !elements.contains(where: { $0.value == new_code_value }) else
+                    {
+                        return
+                    }
+                    elements.append(OperationCode(value: new_code_value))
+                }
+                .keyboardShortcut(.defaultAction)
+                .padding()
+            }
+            .background(.white)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onChange(of: elements)
+        { _, new_value in
+            //document.changer_modules = new_value
+            if new_value.count != expanded.count
+            {
+                expanded = [Bool](repeating: false, count: elements.count)
+            }
+        }
+        .onAppear
+        {
+            expanded = [Bool](repeating: false, count: elements.count)
+        }
+    }
+}
+
 struct ToolControllerEditor: View
 {
     @Binding var controller: ToolControllerModule
     
     private let scene_elements = ["Connect", "Reset", "Other"]
     @State private var scene_elements_expanded = [false, false, false, false]
+    
+    @State private var select_model_view_presented = false
     
     var body: some View
     {
@@ -222,9 +312,9 @@ struct ToolControllerEditor: View
                     {
                         ModelView()
                         
-                        Button(action: { })
+                        Button(action: { select_model_view_presented.toggle() })
                         {
-                            Image(systemName: "plus")
+                            Image(systemName: "cube")
                                 .imageScale(.large)
                                 .frame(width: 8, height: 16)
                                 .padding()
@@ -233,6 +323,10 @@ struct ToolControllerEditor: View
                             #elseif os(visionOS)
                                 .foregroundColor(false ? Color.secondary : Color.primary)
                             #endif
+                        }
+                        .popover(isPresented: $select_model_view_presented)
+                        {
+                            SelectModelView(is_presented: $select_model_view_presented)
                         }
                     }
                 } label:

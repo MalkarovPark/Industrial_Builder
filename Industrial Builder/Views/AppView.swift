@@ -10,6 +10,8 @@ import IndustrialKit
 
 struct AppView: View
 {
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     @Binding var document: STCDocument
     
     @State private var is_editors_presented = [false, false, false]
@@ -28,17 +30,17 @@ struct AppView: View
                 
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    FunctionCard(is_presented: $is_editors_presented[0], name: "Robot", image_name: "r.square.fill", color: .green)
+                    FunctionCard(is_presented: $is_editors_presented[0], name: "Robot", image_name: "r.square.fill", color: .green, count: 0)
                     {
                         RobotModulesEditor(is_presented: $is_editors_presented[0])
                     }
                     
-                    FunctionCard(is_presented: $is_editors_presented[1], name: "Tool", image_name: "hammer.fill", color: .teal)
+                    FunctionCard(is_presented: $is_editors_presented[1], name: "Tool", image_name: "hammer.fill", color: .teal, count: base_stc.tool_modules.count)
                     {
                         ToolModulesEditor(document: $document, is_presented: $is_editors_presented[1])
                     }
                     
-                    FunctionCard(is_presented: $is_editors_presented[2], name: "Changer", image_name: "wand.and.rays", color: .indigo)
+                    FunctionCard(is_presented: $is_editors_presented[2], name: "Changer", image_name: "wand.and.rays", color: .indigo, count: base_stc.changer_modules.count)
                     {
                         ChangerModulesEditor(document: $document, is_presented: $is_editors_presented[2])
                     }
@@ -58,6 +60,7 @@ struct FunctionCard<Content: View>: View
     let name: String
     let image_name: String
     let color: Color
+    let count: Int
     
     let content: () -> Content
     
@@ -79,6 +82,21 @@ struct FunctionCard<Content: View>: View
                     .font(.system(.title, design: .rounded))
                     .foregroundColor(.white)
                     .padding()
+            }
+            .overlay(alignment: .bottomLeading)
+            {
+                if count > 0
+                {
+                    Text("\(count)")
+                        .fontWeight(.bold)
+                        .font(.system(size: 48, design: .rounded))
+                        #if os(macOS)
+                        .foregroundColor(Color(NSColor.quaternaryLabelColor))
+                        #else
+                        .foregroundColor(Color(UIColor.quaternaryLabel))
+                        #endif
+                        .padding()
+                }
             }
             .overlay(alignment: .bottomTrailing)
             {
@@ -117,4 +135,5 @@ struct FunctionCard<Content: View>: View
 #Preview
 {
     AppView(document: .constant(STCDocument()))
+        .environmentObject(StandardTemplateConstruct())
 }
