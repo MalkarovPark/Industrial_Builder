@@ -136,6 +136,7 @@ struct ToolModulesEditor: View
     private func remove_tool()
     {
         base_stc.remove_selected_tool_module()
+        base_stc.deselect_tool_module()
     }
 }
 
@@ -211,18 +212,34 @@ struct ToolControllerEditor: View
                 }
             }
             
-            Section("Model")
+            StatisticsListView(statistics: $controller.statistics)
+            
+            Section("Visual Model")
             {
                 DisclosureGroup
                 {
-                    ModelView()
+                    HStack(spacing: 0)
+                    {
+                        ModelView()
+                        
+                        Button(action: { })
+                        {
+                            Image(systemName: "plus")
+                                .imageScale(.large)
+                                .frame(width: 8, height: 16)
+                                .padding()
+                            #if os(iOS)
+                                .foregroundColor(false ? Color.secondary : Color.black)
+                            #elseif os(visionOS)
+                                .foregroundColor(false ? Color.secondary : Color.primary)
+                            #endif
+                        }
+                    }
                 } label:
                 {
                     Text("Preview")
                 }
             }
-            
-            StatisticsListView(statistics: $controller.statistics)
         }
         #if os(macOS)
         .listStyle(.plain)
