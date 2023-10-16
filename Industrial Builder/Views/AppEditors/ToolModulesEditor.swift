@@ -188,7 +188,6 @@ struct ToolOperationCodesEditor: View
     
     @Binding var operation_codes: [OperationCode]
     
-    @State private var expanded = [Bool]()
     @State private var new_code_value = 0
     
     var body: some View
@@ -197,24 +196,18 @@ struct ToolOperationCodesEditor: View
         {
             List
             {
-                if operation_codes.count == expanded.count
-                {
-                    ForEach(expanded.indices, id: \.self)
-                    { index in
-                        DisclosureGroup("\(operation_codes[index].value)", isExpanded: $expanded[index])
-                        {
-                            OperationCodeItemView(element: $operation_codes[index])
-                        }
-                    }
-                    .onDelete
-                    { indexSet in
-                        operation_codes.remove(atOffsets: indexSet)
-                    }
-                    .listStyle(.automatic)
+                ForEach(operation_codes.indices, id: \.self)
+                { index in
+                    OperationCodeDisclosureItem(operation_code: $operation_codes[index])
+                }
+                .onDelete
+                { indexSet in
+                    operation_codes.remove(atOffsets: indexSet)
                 }
             }
-            #if os(macOS)
             .listStyle(.plain)
+            #if os(iOS)
+            .background(.white)
             #endif
             
             Divider()
@@ -225,7 +218,7 @@ struct ToolOperationCodesEditor: View
                     .textFieldStyle(.roundedBorder)
                     .padding(.leading)
                 
-                Stepper("Enter", value: $new_code_value, in: 0...1000)
+                Stepper("Value", value: $new_code_value, in: 0...1000)
                     .labelsHidden()
                     .padding(.leading)
                 
@@ -245,16 +238,20 @@ struct ToolOperationCodesEditor: View
         }
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: operation_codes)
-        { _, new_value in
-            if new_value.count != expanded.count
-            {
-                expanded = [Bool](repeating: false, count: operation_codes.count)
-            }
-        }
-        .onAppear
+    }
+}
+
+struct OperationCodeDisclosureItem: View
+{
+    @Binding var operation_code: OperationCode
+    
+    @State private var expanded = false
+    
+    var body: some View
+    {
+        DisclosureGroup("\(operation_code.value)", isExpanded: $expanded)
         {
-            expanded = [Bool](repeating: false, count: operation_codes.count)
+            OperationCodeItemView(element: $operation_code)
         }
     }
 }

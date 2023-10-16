@@ -15,7 +15,6 @@ struct ChangerModulesEditor: View
     @Binding var document: STCDocument
     @Binding var is_presented: Bool
     
-    @State private var expanded = [Bool]()
     @State private var appeared = false
     @State private var add_module_view_presented = false
     
@@ -33,16 +32,9 @@ struct ChangerModulesEditor: View
             
             List
             {
-                ForEach(expanded.indices, id: \.self)
+                ForEach(base_stc.changer_modules.indices, id: \.self)
                 { index in
-                    if base_stc.changer_modules.count == expanded.count
-                    {
-                        DisclosureGroup(base_stc.changer_modules[index].name, isExpanded: $expanded[index])
-                        {
-                            TextEditor(text: $base_stc.changer_modules[index].code)
-                                .modifier(TextFrame())
-                        }
-                    }
+                    ChangerModuleDisclosureItem(name: base_stc.changer_modules[index].name, code: $base_stc.changer_modules[index].code)
                 }
                 .onDelete
                 { indexSet in
@@ -82,14 +74,24 @@ struct ChangerModulesEditor: View
         .onChange(of: base_stc.changer_modules)
         { _, new_value in
             document.changer_modules = new_value
-            if new_value.count != expanded.count
-            {
-                expanded = [Bool](repeating: false, count: base_stc.changer_modules.count)
-            }
         }
-        .onAppear
+    }
+}
+
+struct ChangerModuleDisclosureItem: View
+{
+    var name: String
+    
+    @Binding var code: String
+    
+    @State private var expanded = false
+    
+    var body: some View
+    {
+        DisclosureGroup(name, isExpanded: $expanded)
         {
-            expanded = [Bool](repeating: false, count: base_stc.changer_modules.count)
+            TextEditor(text: $code)
+                .modifier(TextFrame())
         }
     }
 }
