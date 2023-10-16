@@ -105,7 +105,7 @@ struct ToolModulesEditor: View
                             switch tab_selection
                             {
                             case 0:
-                                ToolOperationCodesEditor()
+                                ToolOperationCodesEditor(operation_codes: $base_stc.selected_tool_module.operation_codes)
                             case 1:
                                 ToolControllerEditor(controller: $base_stc.selected_tool_module.controller)
                             case 2:
@@ -184,10 +184,12 @@ struct AddToolModuleView: View
 
 struct ToolOperationCodesEditor: View
 {
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
+    @Binding var operation_codes: [OperationCode]
+    
     @State private var expanded = [Bool]()
     @State private var new_code_value = 0
-    
-    @State private var elements = [OperationCode]()
     
     var body: some View
     {
@@ -195,18 +197,18 @@ struct ToolOperationCodesEditor: View
         {
             List
             {
-                if elements.count == expanded.count
+                if operation_codes.count == expanded.count
                 {
                     ForEach(expanded.indices, id: \.self)
                     { index in
-                        DisclosureGroup("\(elements[index].value)", isExpanded: $expanded[index])
+                        DisclosureGroup("\(operation_codes[index].value)", isExpanded: $expanded[index])
                         {
-                            OperationCodeItemView(element: $elements[index])
+                            OperationCodeItemView(element: $operation_codes[index])
                         }
                     }
                     .onDelete
                     { indexSet in
-                        elements.remove(atOffsets: indexSet)
+                        operation_codes.remove(atOffsets: indexSet)
                     }
                     .listStyle(.automatic)
                 }
@@ -229,11 +231,11 @@ struct ToolOperationCodesEditor: View
                 
                 Button("Add")
                 {
-                    guard !elements.contains(where: { $0.value == new_code_value }) else
+                    guard !operation_codes.contains(where: { $0.value == new_code_value }) else
                     {
                         return
                     }
-                    elements.append(OperationCode(value: new_code_value))
+                    operation_codes.append(OperationCode(value: new_code_value))
                     new_code_value += 1
                 }
                 .keyboardShortcut(.defaultAction)
@@ -243,17 +245,16 @@ struct ToolOperationCodesEditor: View
         }
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: elements)
+        .onChange(of: operation_codes)
         { _, new_value in
-            //document.changer_modules = new_value
             if new_value.count != expanded.count
             {
-                expanded = [Bool](repeating: false, count: elements.count)
+                expanded = [Bool](repeating: false, count: operation_codes.count)
             }
         }
         .onAppear
         {
-            expanded = [Bool](repeating: false, count: elements.count)
+            expanded = [Bool](repeating: false, count: operation_codes.count)
         }
     }
 }

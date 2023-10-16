@@ -83,6 +83,8 @@ public struct ToolModule: Equatable, Codable
 {
     var name = ""
     
+    var operation_codes = [OperationCode]()
+    
     var controller = ToolControllerModule()
     var connector = ToolConnectorModule()
 }
