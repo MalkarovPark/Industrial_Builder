@@ -40,10 +40,7 @@ struct ChangerModulesEditor: View
                         DisclosureGroup(base_stc.changer_modules[index].name, isExpanded: $expanded[index])
                         {
                             TextEditor(text: $base_stc.changer_modules[index].code)
-                                .frame(minHeight: 64)
-                            #if os(macOS)
-                                .shadow(radius: 1)
-                            #endif
+                                .modifier(TextFrame())
                         }
                     }
                 }

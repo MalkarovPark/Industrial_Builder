@@ -60,7 +60,7 @@ struct ToolModulesEditor: View
                         {
                             Rectangle()
                                 .foregroundColor(.white)
-                            Text("No modules")
+                            //Text("No Modules")
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
@@ -114,7 +114,7 @@ struct ToolModulesEditor: View
                         }
                         else
                         {
-                            Text("No module")
+                            Text("No module selected")
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -127,6 +127,10 @@ struct ToolModulesEditor: View
         }
         .modifier(ViewCloseButton(is_presented: $is_presented))
         .modifier(SheetFramer())
+        .onChange(of: base_stc.tool_modules)
+        { _, new_value in
+            document.tool_modules = base_stc.tool_modules
+        }
     }
     
     private func remove_tool()
@@ -329,4 +333,5 @@ struct StatisticsListView: View
 #Preview
 {
     ToolModulesEditor(document: .constant(STCDocument()), is_presented: .constant(true))
+        .environmentObject(StandardTemplateConstruct())
 }

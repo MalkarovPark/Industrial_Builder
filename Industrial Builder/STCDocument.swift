@@ -25,11 +25,12 @@ public class StandardTemplateConstruct: ObservableObject
         
     }
     
-    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule])
+    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule])
     {
         self.package = info
         self.images = images
         self.changer_modules = changer_modules
+        self.tool_modules = tool_modules
     }
     
     //MARK: Changer modules
@@ -156,7 +157,9 @@ struct STCDocument: FileDocument
 {
     var package = STCPackage()
     var images = [UIImage]()
+    
     var changer_modules = [ChangerModule]()
+    var tool_modules = [ToolModule]()
     
     static var readableContentTypes = [UTType.stc_document]
     
@@ -165,7 +168,7 @@ struct STCDocument: FileDocument
         self.package = STCPackage()
     }
     
-    //MARK: Import functions
+    //MARK: - Import functions
     init(configuration: ReadConfiguration) throws
     {
         let wrappers = configuration.file.fileWrappers?.values
@@ -213,18 +216,25 @@ struct STCDocument: FileDocument
                 }
             }
             
-            func json_decode(_ wrapper: FileWrapper, type: Any, data: Any)
+            func json_decode<T: Decodable>(_ wrapper: FileWrapper, type: T.Type) -> T?
             {
-                if wrapper.filename != nil
+                var data: T? = nil
+                
+                guard let file_data = wrapper.regularFileContents else
                 {
-                    guard let data = wrapper.regularFileContents
-                    else
-                    {
-                        return
-                    }
-                    
-                    changer_modules = try! JSONDecoder().decode([ChangerModule].self, from: data)
+                    return data
                 }
+
+                do
+                {
+                    data = try JSONDecoder().decode(T.self, from: file_data)
+                }
+                catch
+                {
+                    print("Error decoding JSON: \(error)")
+                }
+                
+                return data
             }
             
             func app_process(_ wrapper: FileWrapper)
@@ -237,8 +247,10 @@ struct STCDocument: FileDocument
                         {
                         case "ChangerModules.json":
                             changer_modules_process(file_wrapper)
-                        case "Modules":
-                            modules_process(file_wrapper)
+                        case "RobotModules":
+                            robot_modules_process(file_wrapper)
+                        case "ToolModules":
+                            tool_modules_process(file_wrapper)
                         default:
                             break
                         }
@@ -247,26 +259,7 @@ struct STCDocument: FileDocument
                 
                 func changer_modules_process(_ wrapper: FileWrapper)
                 {
-                    json_decode(wrapper, type: [ChangerModule].self, data: changer_modules)
-                }
-                
-                func modules_process(_ wrapper: FileWrapper)
-                {
-                    if let file_wrappers = wrapper.fileWrappers
-                    {
-                        for (_, file_wrapper) in file_wrappers
-                        {
-                            switch file_wrapper.filename
-                            {
-                            case "Robot Modules":
-                                robot_modules_process(file_wrapper)
-                            case "Tool Modules":
-                                tool_modules_process(file_wrapper)
-                            default:
-                                break
-                            }
-                        }
-                    }
+                    changer_modules = json_decode(wrapper, type: [ChangerModule].self)!
                 }
                 
                 func robot_modules_process(_ wrapper: FileWrapper)
@@ -276,13 +269,23 @@ struct STCDocument: FileDocument
                 
                 func tool_modules_process(_ wrapper: FileWrapper)
                 {
-                    
+                    if let file_wrappers = wrapper.fileWrappers
+                    {
+                        for (_, file_wrapper) in file_wrappers
+                        {
+                            print(file_wrapper.filename)
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".json")
+                            {
+                                tool_modules.append(json_decode(file_wrapper, type: ToolModule.self) ?? ToolModule())
+                            }
+                        }
+                    }
                 }
             }
         }
     }
     
-    //MARK: Export functions
+    //MARK: - Export functions
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
     {
         do
@@ -299,9 +302,9 @@ struct STCDocument: FileDocument
             
             //Store modules data
             var app_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
-            app_file_wrapper = try prepare_app_file_wrapper(from: changer_modules)
+            app_file_wrapper = try prepare_app_file_wrapper()
             
-            var file_wrapper = FileWrapper(directoryWithFileWrappers: [
+            let file_wrapper = FileWrapper(directoryWithFileWrappers: [
                 package_filename: json_file_wrapper,
                 "Images": images_file_wrapper,
                 "App": app_file_wrapper
@@ -353,23 +356,48 @@ struct STCDocument: FileDocument
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
     }
     
-    func prepare_app_file_wrapper(from modules: [ChangerModule]) throws -> FileWrapper
+    func prepare_app_file_wrapper() throws -> FileWrapper
     {
         var file_wrappers = [String: FileWrapper]()
         
         //Changer Modules
-        file_wrappers["ChangerModules.json"] = FileWrapper(regularFileWithContents: try make_changer_modules_data())
+        file_wrappers["ChangerModules.json"] = FileWrapper(regularFileWithContents: try make_json_data(changer_modules))
+        
+        //Tool Modules
+        file_wrappers["ToolModules"] = prepare_tool_modules_wrappers()
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        
+        func prepare_tool_modules_wrappers() -> FileWrapper
+        {
+            var file_wrappers = [String: FileWrapper]()
+            
+            for tool_module in tool_modules
+            {
+                guard let data = try? make_json_data(tool_module) else
+                {
+                    break
+                }
+                
+                let file_name = "\(tool_module.name).json"
+                let file_wrapper = FileWrapper(regularFileWithContents: data)
+                file_wrapper.filename = file_name
+                file_wrapper.preferredFilename = file_name
+                
+                file_wrappers[file_name] = file_wrapper
+            }
+            
+            return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        }
     }
     
-    private func make_changer_modules_data() throws -> Data
+    private func make_json_data(_ object: Encodable) throws -> Data
     {
         let encoder = JSONEncoder()
         
         do
         {
-            let data = try encoder.encode(changer_modules)
+            let data = try encoder.encode(object)
             return data
         }
         catch

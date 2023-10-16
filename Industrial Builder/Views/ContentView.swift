@@ -86,7 +86,7 @@ struct ContentView: View
             }
             .onAppear
             {
-                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules)
+                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules)
             }
         }
         .environmentObject(base_stc)
