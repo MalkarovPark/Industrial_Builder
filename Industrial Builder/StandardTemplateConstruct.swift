@@ -34,7 +34,11 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
     
+    #if os(macOS)
     @Published var selected_tool_module_name = ""
+    #else
+    @Published var selected_tool_module_name: String? = ""
+    #endif
     
     public var tool_modules_names: [String]
     {
