@@ -89,7 +89,7 @@ struct ToolModulesEditor: View
                 {
                     VStack(spacing: 0)
                     {
-                        if base_stc.selected_tool_module_name != nil
+                        if base_stc.selected_tool_module_name != ""
                         {
                             Picker("", selection: $tab_selection)
                             {
@@ -144,8 +144,11 @@ struct ToolModulesEditor: View
 
 struct AddToolModuleView: View
 {
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     @Binding var is_presented: Bool
     @Binding var modules_items: [ToolModule]
+    
     var modules_names: [String]
     
     @State private var new_module_name = ""
@@ -172,6 +175,8 @@ struct AddToolModuleView: View
                     
                     modules_items.append(ToolModule(name: mismatched_name(name: new_module_name, names: modules_names)))
                     
+                    base_stc.selected_tool_module_name = new_module_name
+                    
                     is_presented = false
                 }
                 .fixedSize()
@@ -184,8 +189,6 @@ struct AddToolModuleView: View
 
 struct ToolOperationCodesEditor: View
 {
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    
     @Binding var operation_codes: [OperationCode]
     
     @State private var new_code_value = 0
@@ -224,12 +227,11 @@ struct ToolOperationCodesEditor: View
                 
                 Button("Add")
                 {
-                    guard !operation_codes.contains(where: { $0.value == new_code_value }) else
+                   if !operation_codes.contains(where: { $0.value == new_code_value })
                     {
-                        return
+                       operation_codes.append(OperationCode(value: new_code_value))
+                       new_code_value += 1
                     }
-                    operation_codes.append(OperationCode(value: new_code_value))
-                    new_code_value += 1
                 }
                 .keyboardShortcut(.defaultAction)
                 .padding()

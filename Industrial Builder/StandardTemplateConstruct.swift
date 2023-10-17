@@ -34,7 +34,7 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
     
-    @Published var selected_tool_module_name: String?
+    @Published var selected_tool_module_name = ""
     
     public var tool_modules_names: [String]
     {
@@ -69,7 +69,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     public func deselect_tool_module()
     {
-        selected_tool_module_name = nil
+        selected_tool_module_name = ""
     }
 }
 
