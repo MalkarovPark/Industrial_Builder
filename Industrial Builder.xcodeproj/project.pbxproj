@@ -22,6 +22,7 @@
 		628E14562AD8AAF400BC8FD9 /* TargetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14552AD8AAF400BC8FD9 /* TargetsView.swift */; };
 		628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */; };
 		628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */; };
+		62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		628E14552AD8AAF400BC8FD9 /* TargetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetsView.swift; sourceTree = "<group>"; };
 		628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModulesEditor.swift; sourceTree = "<group>"; };
 		628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesEditor.swift; sourceTree = "<group>"; };
+		62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicEditorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		6289FCC52AD0398100BB7F5E /* Industrial Builder */ = {
 			isa = PBXGroup;
 			children = (
+				62AE55292AE7079100554A5B /* Utilites */,
 				627D3EBD2AD3F5EF00D5988D /* Views */,
 				6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */,
 				6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */,
@@ -117,6 +120,22 @@
 				628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */,
 			);
 			path = AppEditors;
+			sourceTree = "<group>";
+		};
+		62AE55292AE7079100554A5B /* Utilites */ = {
+			isa = PBXGroup;
+			children = (
+				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
+			);
+			path = Utilites;
+			sourceTree = "<group>";
+		};
+		62AE552C2AE707CF00554A5B /* KinematicBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */,
+			);
+			path = KinematicBuilder;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,6 +217,7 @@
 				6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */,
 				628E14562AD8AAF400BC8FD9 /* TargetsView.swift in Sources */,
 				628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */,
+				62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */,
 				6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */,
 				628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */,
 				623D72482ADAFD8500927DEA /* ModelView.swift in Sources */,
@@ -441,8 +461,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MalkarovPark/IndustrialKit";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
