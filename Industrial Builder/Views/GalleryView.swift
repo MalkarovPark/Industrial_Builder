@@ -148,4 +148,5 @@ struct ImageCard: View
 #Preview
 {
     GalleryView(document: .constant(STCDocument()))
+        .environmentObject(StandardTemplateConstruct())
 }

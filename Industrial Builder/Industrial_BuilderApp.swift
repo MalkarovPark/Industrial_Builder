@@ -24,30 +24,19 @@ struct Industrial_BuilderApp: App
         {
             SidebarCommands() //Sidebar control items for view menu item
             
-            /*CommandGroup(after: CommandGroupPlacement.sidebar) //View commands for view menu item
-            {
-                Divider()
-                Button("Reset Camera")
-                {
-                    app_state.reset_view = true //Begin reset camera process
-                }
-                .keyboardShortcut("0", modifiers: .command)
-                .disabled(!app_state.reset_view_enabled) //Disable reset view item when camera is reseting
-                Divider()
-            }*/
-            
-            CommandMenu("Open")
+            /*CommandMenu("Open")
             {
                 Button("Editor")
                 {
                     openWindow(id: "editor")
                 }
-            }
+                .keyboardShortcut("E", modifiers: .command)
+            }*/
         }
         
-        WindowGroup("Editor", id: "editor")
+        /*WindowGroup("Editor", id: "editor")
         {
             KinematicEditorView()
-        }
+        }*/
     }
 }

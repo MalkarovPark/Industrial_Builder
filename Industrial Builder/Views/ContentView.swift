@@ -35,7 +35,7 @@ struct ContentView: View
                             case .PackageView:
                                 PackageView(document: $document)
                             case .ComponentsView:
-                                Text(selection.localizedName)
+                                ComponentsView(document: $document)
                             case .PreferencesView:
                                 Text(selection.localizedName)
                             case .AppView:

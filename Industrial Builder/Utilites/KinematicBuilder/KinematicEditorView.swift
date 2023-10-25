@@ -11,41 +11,62 @@ import IndustrialKit
 
 struct KinematicEditorView: View
 {
+    @Binding var is_presented: Bool
+    
     @State private var pointer_location: [Float] = [0, 0, 0]
     @State private var pointer_rotation: [Float] = [0, 0, 0]
     @State private var space_scale: [Float] = [100, 100, 100]
+    @State private var show_inspector = true
     
     var body: some View
     {
-        VStack(spacing: 0)
+        ZStack
         {
             KinematicSceneView()
-            
-            Divider()
-            
-            PositionControl(location: $pointer_location, rotation: $pointer_rotation, scale: $space_scale)
         }
+        .overlay(alignment: .bottom)
+        {
+            PositionControl(location: $pointer_location, rotation: $pointer_rotation, scale: $space_scale)
+                .frame(width: 256)
+                .background(.bar)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .shadow(radius: 4)
+                .padding(.bottom)
+        }
+        .overlay(alignment: .topTrailing)
+        {
+            Button (action: { show_inspector.toggle() })
+            {
+                Image(systemName: "sidebar.trailing")
+            }
+            .buttonStyle(.bordered)
+            .padding()
+        }
+        .inspector(isPresented: $show_inspector)
+        {
+            KinematicInspectorView()
+        }
+        .modifier(ViewCloseButton(is_presented: $is_presented))
+        .frame(minWidth: 640, minHeight: 480)
     }
 }
 
 struct KinematicSceneView: UIViewRepresentable
 {
     let scene_view = SCNView(frame: .zero)
-    let viewed_scene = SCNScene(named: "Scene file name") ?? SCNScene()
+    let viewed_scene = SCNScene() //SCNScene(named: "Scene file name") ?? SCNScene()
     
     func scn_scene(context: Context) -> SCNView
     {
-        
         scene_view.scene = viewed_scene
         scene_view.delegate = context.coordinator
+        scene_view.scene?.background.contents = UIColor.clear
         return scene_view
     }
     
 #if os(macOS)
     func makeNSView(context: Context) -> SCNView
     {
-        
-        
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
         scene_view.addGestureRecognizer(tap_gesture_recognizer)
@@ -61,7 +82,12 @@ struct KinematicSceneView: UIViewRepresentable
 #else
     func makeUIView(context: Context) -> SCNView
     {
-        
+        let greenMaterial = SCNMaterial()
+                greenMaterial.diffuse.contents = UIColor.green
+        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
+                greenBox.materials = [greenMaterial]
+        let boxNode = SCNNode(geometry: greenBox)
+        scene_view.scene?.rootNode.addChildNode(boxNode)
         
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
@@ -80,12 +106,22 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
-        
+        let greenMaterial = SCNMaterial()
+                greenMaterial.diffuse.contents = UIColor.green
+        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
+                greenBox.materials = [greenMaterial]
+        let boxNode = SCNNode(geometry: greenBox)
+        scene_view.scene?.rootNode.addChildNode(boxNode)
     }
 #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
-        
+        let greenMaterial = SCNMaterial()
+                greenMaterial.diffuse.contents = UIColor.green
+        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
+                greenBox.materials = [greenMaterial]
+        let boxNode = SCNNode(geometry: greenBox)
+        scene_view.scene?.rootNode.addChildNode(boxNode)
     }
 #endif
     
@@ -130,8 +166,6 @@ struct KinematicSceneView: UIViewRepresentable
         
     }
 }
-
-
 
 struct PositionParameterView: View
 {
@@ -180,7 +214,43 @@ struct PositionParameterView: View
     }
 }
 
+struct KinematicInspectorView: View
+{
+    var body: some View
+    {
+        List
+        {
+            Picker(selection: /*@START_MENU_TOKEN@*/.constant(1)/*@END_MENU_TOKEN@*/, label: Text("Model")) {
+                /*@START_MENU_TOKEN@*/Text("1").tag(1)/*@END_MENU_TOKEN@*/
+                /*@START_MENU_TOKEN@*/Text("2").tag(2)/*@END_MENU_TOKEN@*/
+            }
+            
+            Section("Parameters")
+            {
+                
+            }
+        }
+        #if os(macOS)
+        .listStyle(.plain)
+        #endif
+        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+        #if os(macOS)
+        .padding()
+        #endif
+    }
+}
+
+//MARK: - View element propeties
+#if os(macOS)
+let placement_trailing: ToolbarItemPlacement = .automatic
+let quaternary_label_color: Color = Color(NSColor.quaternaryLabelColor)
+#else
+let placement_trailing: ToolbarItemPlacement = .navigationBarTrailing
+let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
+#endif
+
 #Preview
 {
-    KinematicEditorView()
+    KinematicEditorView(is_presented: .constant(true))
+        .frame(minWidth: 256, minHeight: 512)
 }
