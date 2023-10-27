@@ -77,6 +77,8 @@ public class StandardTemplateConstruct: ObservableObject
     }
 }
 
+//MARK: - Structures
+//MARK: App Modules
 public struct ChangerModule: Equatable, Codable
 {
     var name = ""
@@ -133,6 +135,89 @@ public struct OperationCode: Equatable, Codable
     var connector_code = ""
 }
 
+//MARK: Kinematic
+public struct KinematicGroup: Identifiable, Equatable, Codable, Hashable
+{
+    public var id = UUID()
+    
+    public static func == (lhs: KinematicGroup, rhs: KinematicGroup) -> Bool
+    {
+        lhs.name == rhs.name
+    }
+    
+    public func hash(into hasher: inout Hasher)
+    {
+        hasher.combine(name)
+    }
+    
+    var name = ""
+    var data = [KinematicElement]()
+}
+
+public struct KinematicElement: Equatable, Codable
+{
+    var name = ""
+    var value = Int()
+    
+    var joints = [KinematicJoint]() //First two used...
+}
+
+public enum KinematicJoint: String, Codable, Equatable, CaseIterable
+{
+    case revolute = "Revolute"
+    case prismatic = "Prismatic"
+    case cardan = "Cardan"
+    case screw = "Screw"
+    case planar = "Planar"
+    case cylindrical = "Cylindrical"
+    case parallel = "Parallel"
+    case spherical = "Spherical"
+    case slider = "Slider"
+    case rotational = "Rotational"
+    case linear = "Linear"
+    case universal = "Universal"
+}
+
+public func PortalGroupMake(name: String) -> KinematicGroup
+{
+    var data = [KinematicElement]()
+    
+    for i in 0...9
+    {
+        data.append(KinematicElement(name: "L\(i)", value: 20))
+    }
+    
+    return KinematicGroup(name: name, data: data)
+}
+
+public func _6DOFGroupMake(name: String) -> KinematicGroup
+{
+    var data = [KinematicElement]()
+    
+    for i in 0...7
+    {
+        data.append(KinematicElement(name: "L\(i)", value: 20))
+    }
+    
+    return KinematicGroup(name: name, data: data)
+}
+
+//MARK: Package
+public struct STCPackage: Codable
+{
+    var id: UUID
+    var title: String
+    var description: String
+    
+    init(id: UUID = .init(), title: String = .init(), description: String = .init())
+    {
+        self.id = id
+        self.title = title
+        self.description = description
+    }
+}
+
+//MARK: - Typealiases
 #if os(macOS)
 typealias UIImage = NSImage
 
@@ -149,17 +234,3 @@ extension UIImage
     }
 }
 #endif
-
-public struct STCPackage: Codable
-{
-    var id: UUID
-    var title: String
-    var description: String
-    
-    init(id: UUID = .init(), title: String = .init(), description: String = .init())
-    {
-        self.id = id
-        self.title = title
-        self.description = description
-    }
-}

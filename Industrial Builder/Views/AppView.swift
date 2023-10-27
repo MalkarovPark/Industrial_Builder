@@ -14,8 +14,6 @@ struct AppView: View
     
     @Binding var document: STCDocument
     
-    @State private var is_editors_presented = [false, false, false]
-    
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
@@ -30,19 +28,19 @@ struct AppView: View
                 
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    FunctionCard(is_presented: $is_editors_presented[0], name: "Robot", image_name: "r.square.fill", color: .green, count: 0)
-                    {
-                        RobotModulesEditor(is_presented: $is_editors_presented[0])
+                    FunctionCard(name: "Robot", image_name: "r.square.fill", color: .green, count: 0)
+                    { is_presented in
+                        RobotModulesEditor(is_presented: is_presented)
                     }
                     
-                    FunctionCard(is_presented: $is_editors_presented[1], name: "Tool", image_name: "hammer.fill", color: .teal, count: base_stc.tool_modules.count)
-                    {
-                        ToolModulesEditor(document: $document, is_presented: $is_editors_presented[1])
+                    FunctionCard(name: "Tool", image_name: "hammer.fill", color: .teal, count: base_stc.tool_modules.count)
+                    { is_presented in
+                        ToolModulesEditor(document: $document, is_presented: is_presented)
                     }
                     
-                    FunctionCard(is_presented: $is_editors_presented[2], name: "Changer", image_name: "wand.and.rays", color: .indigo, count: base_stc.changer_modules.count)
-                    {
-                        ChangerModulesEditor(document: $document, is_presented: $is_editors_presented[2])
+                    FunctionCard(name: "Changer", image_name: "wand.and.rays", color: .indigo, count: base_stc.changer_modules.count)
+                    { is_presented in
+                        ChangerModulesEditor(document: $document, is_presented: is_presented)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -54,15 +52,14 @@ struct AppView: View
 
 struct FunctionCard<Content: View>: View
 {
-    //@Environment(\.openWindow) var openWindow
-    @Binding var is_presented: Bool
+    @State private var is_presented = false
     
     let name: String
     let image_name: String
     let color: Color
     let count: Int
     
-    let content: () -> Content
+    let content: (_ is_presented: Binding<Bool>) -> Content
     
     var body: some View
     {
@@ -113,7 +110,7 @@ struct FunctionCard<Content: View>: View
                 //openWindow(id: "editor")
             }
             .sheet(isPresented: $is_presented, content: {
-                content()
+                content($is_presented)
             })
         }
         #if os(visionOS)

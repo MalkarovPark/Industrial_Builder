@@ -25,6 +25,7 @@
 		62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */; };
 		62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552F2AE962CA00554A5B /* ComponentsView.swift */; };
 		62AE55322AE96B3D00554A5B /* KinematicsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE55312AE96B3D00554A5B /* KinematicsListView.swift */; };
+		62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicEditorView.swift; sourceTree = "<group>"; };
 		62AE552F2AE962CA00554A5B /* ComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsView.swift; sourceTree = "<group>"; };
 		62AE55312AE96B3D00554A5B /* KinematicsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicsListView.swift; sourceTree = "<group>"; };
+		62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = KinematicComponents.scnassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 			children = (
 				62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */,
 				62AE55312AE96B3D00554A5B /* KinematicsListView.swift */,
+				62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */,
 			);
 			path = KinematicBuilder;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 			files = (
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
+				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
