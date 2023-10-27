@@ -12,7 +12,6 @@ struct ToolModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @Binding var document: STCDocument
     @Binding var is_presented: Bool
     
     @State private var add_tool_module_presented = false
@@ -129,10 +128,6 @@ struct ToolModulesEditor: View
         }
         .modifier(ViewCloseButton(is_presented: $is_presented))
         .modifier(SheetFramer())
-        .onChange(of: base_stc.tool_modules)
-        { _, new_value in
-            document.tool_modules = base_stc.tool_modules
-        }
     }
     
     private func remove_tool()
@@ -481,6 +476,6 @@ struct StatisticsListView: View
 
 #Preview
 {
-    ToolModulesEditor(document: .constant(STCDocument()), is_presented: .constant(true))
+    ToolModulesEditor(is_presented: .constant(true))
         .environmentObject(StandardTemplateConstruct())
 }

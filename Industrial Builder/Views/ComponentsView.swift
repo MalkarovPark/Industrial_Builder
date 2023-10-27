@@ -25,12 +25,12 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        NaviagtionCard(name: "Models", image_name: "cylinder.fill", color: .mint, count: 0)
+                        NaviagtionNumericalCard(name: "Models", image_name: "cylinder.fill", color: .mint, count: 0)
                         {
                             EmptyView()
                         }
                         
-                        NaviagtionCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.tool_modules.count)
+                        NaviagtionNumericalCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.tool_modules.count)
                         {
                             KinematicsListView()
                         }
@@ -43,7 +43,7 @@ struct ComponentsView: View
     }
 }
 
-struct NaviagtionCard<Content: View>: View
+struct NaviagtionNumericalCard<Content: View>: View
 {
     let name: String
     let image_name: String
@@ -103,82 +103,8 @@ struct NaviagtionCard<Content: View>: View
     }
 }
 
-struct ComponentCard<Content: View>: View
-{
-    @State private var is_presented = false
-    
-    let name: String
-    let image_name: String
-    let color: Color
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
-    
-    var body: some View
-    {
-        VStack(spacing: 0)
-        {
-            ZStack
-            {
-                Rectangle()
-                    .foregroundColor(color)
-                    .overlay(alignment: .leading)
-                    {
-                        Text(name)
-                            .font(.system(.title))
-                            .foregroundColor(.white)
-                            .padding()
-                    }
-                    .overlay(alignment: .bottomTrailing)
-                    {
-                        Image(systemName: image_name)
-                            .fontWeight(.bold)
-                            .font(.system(size: 48))
-                        #if os(macOS)
-                            .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                        #else
-                            .foregroundColor(Color(UIColor.quaternaryLabel))
-                        #endif
-                            .padding()
-                    }
-                    .onTapGesture
-                    {
-                        is_presented = true
-                        //openWindow(id: "editor")
-                    }
-                    .sheet(isPresented: $is_presented, content: {
-                        content($is_presented)
-                    })
-            }
-            .frame(height: 96)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        }
-        #if os(visionOS)
-        .frame(depth: 16)
-        #endif
-        .shadow(radius: 8)
-        //.padding()
-    }
-}
-
 #Preview
 {
     ComponentsView(document: .constant(STCDocument()))
         .environmentObject(StandardTemplateConstruct())
-}
-
-#Preview
-{
-    ComponentCard(name: "Name", image_name: "gearshape.2.fill", color: .gray)
-    { is_presented in
-        EmptyView()
-    }
-    .frame(width: 256)
-}
-
-#Preview
-{
-    NaviagtionCard(name: "Models", image_name: "cylinder.fill", color: .mint, count: 0)
-    {
-        EmptyView()
-    }
 }

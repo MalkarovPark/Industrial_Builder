@@ -12,7 +12,6 @@ struct ChangerModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @Binding var document: STCDocument
     @Binding var is_presented: Bool
     
     @State private var appeared = false
@@ -71,10 +70,6 @@ struct ChangerModulesEditor: View
         #elseif os(visionOS)
         .frame(width: 512, height: 512)
         #endif
-        .onChange(of: base_stc.changer_modules)
-        { _, new_value in
-            document.changer_modules = new_value
-        }
     }
 }
 
@@ -96,7 +91,7 @@ struct ChangerModuleDisclosureItem: View
     }
 }
 
-func module_names(_ modules: [ChangerModule]) -> [String]
+func modules_names(_ modules: [ChangerModule]) -> [String]
 {
     var names = [String]()
     for module in modules
@@ -135,7 +130,7 @@ struct AddChangerModuleView: View
                     }
                     
                     //modules_items.append(ChangerModule(name: new_module_name))
-                    modules_items.append(ChangerModule(name: mismatched_name(name: new_module_name, names: module_names(modules_items))))
+                    modules_items.append(ChangerModule(name: mismatched_name(name: new_module_name, names: modules_names(modules_items))))
                     
                     is_presented = false
                 }
@@ -149,7 +144,7 @@ struct AddChangerModuleView: View
 
 #Preview
 {
-    ChangerModulesEditor(document: .constant(STCDocument()), is_presented: .constant(true))
+    ChangerModulesEditor(is_presented: .constant(true))
         .environmentObject(StandardTemplateConstruct())
 }
 

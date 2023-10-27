@@ -253,4 +253,5 @@ let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
 {
     KinematicEditorView(is_presented: .constant(true))
         .frame(minWidth: 256, minHeight: 512)
+        .environmentObject(StandardTemplateConstruct())
 }

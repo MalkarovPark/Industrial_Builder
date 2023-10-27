@@ -99,52 +99,6 @@ struct GalleryView: View
     }
 }
 
-struct ImageCard: View
-{
-    @Binding var document: STCDocument
-    
-    @State var image: UIImage
-    
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    
-    var body: some View
-    {
-        #if os(macOS)
-        Image(nsImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 240)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .contextMenu
-            {
-                Button(role: .destructive, action: delete_image)
-                {
-                    Label("Delete", systemImage: "xmark")
-                }
-            }
-        #else
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 240)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .contextMenu
-            {
-                Button(role: .destructive, action: delete_image)
-                {
-                    Label("Delete", systemImage: "xmark")
-                }
-            }
-        #endif
-    }
-    
-    func delete_image()
-    {
-        base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        document.images = base_stc.images
-    }
-}
-
 #Preview
 {
     GalleryView(document: .constant(STCDocument()))

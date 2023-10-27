@@ -178,16 +178,11 @@ public enum KinematicJoint: String, Codable, Equatable, CaseIterable
     case universal = "Universal"
 }
 
-public func PortalGroupMake(name: String) -> KinematicGroup
+public enum KinematicGroupPresets: String, Equatable, CaseIterable
 {
-    var data = [KinematicElement]()
-    
-    for i in 0...9
-    {
-        data.append(KinematicElement(name: "L\(i)", value: 20))
-    }
-    
-    return KinematicGroup(name: name, data: data)
+    case none = "None"
+    case _6DOF = "6DOF"
+    case portal = "Portal"
 }
 
 public func _6DOFGroupMake(name: String) -> KinematicGroup
@@ -195,6 +190,18 @@ public func _6DOFGroupMake(name: String) -> KinematicGroup
     var data = [KinematicElement]()
     
     for i in 0...7
+    {
+        data.append(KinematicElement(name: "L\(i)", value: 20))
+    }
+    
+    return KinematicGroup(name: name, data: data)
+}
+
+public func PortalGroupMake(name: String) -> KinematicGroup
+{
+    var data = [KinematicElement]()
+    
+    for i in 0...9
     {
         data.append(KinematicElement(name: "L\(i)", value: 20))
     }
