@@ -14,6 +14,8 @@ struct KinematicEditorView: View
     @Binding var is_presented: Bool
     @Binding var kinematic: KinematicGroup
     
+    @EnvironmentObject var app_state: AppState
+    
     @State private var pointer_location: [Float] = [0, 0, 0]
     @State private var pointer_rotation: [Float] = [0, 0, 0]
     @State private var space_scale: [Float] = [100, 100, 100]
@@ -27,7 +29,7 @@ struct KinematicEditorView: View
         }
         .overlay(alignment: .bottom)
         {
-            PositionControl(location: $pointer_location, rotation: $pointer_rotation, scale: $space_scale)
+            PositionControl(location: $app_state.kinematic_preview_robot.pointer_location, rotation: $app_state.kinematic_preview_robot.pointer_rotation, scale: $space_scale)
                 .frame(width: 256)
                 .background(.bar)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -57,7 +59,8 @@ struct KinematicSceneView: UIViewRepresentable
     @EnvironmentObject var app_state: AppState
     
     let scene_view = SCNView(frame: .zero)
-    let viewed_scene = SCNScene() //SCNScene(named: "Scene file name") ?? SCNScene()
+    let viewed_scene = SCNScene(named: "KinematicComponents.scnassets/Cell.scn") ?? SCNScene()
+    let robot_scene = SCNScene(named: "KinematicComponents.scnassets/Robots/Portal.scn") ?? SCNScene()
     
     func scn_scene(context: Context) -> SCNView
     {
@@ -70,6 +73,13 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func makeNSView(context: Context) -> SCNView
     {
+        //Connect workcell box and pointer
+        app_state.kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: app_state.kinematic_preview_robot.scene_node_name, recursively: false)!
+        app_state.kinematic_preview_robot.model_controller = PortalController()        
+        app_state.kinematic_preview_robot.workcell_connect(scene: viewed_scene, name: "unit", connect_camera: true)
+        app_state.kinematic_preview_robot.origin_location = [100, 100, 100]
+        //app_state.kinematic_preview_robot.origin_rotation = [0, 0, 0]
+        
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
         scene_view.addGestureRecognizer(tap_gesture_recognizer)
@@ -77,14 +87,6 @@ struct KinematicSceneView: UIViewRepresentable
         scene_view.allowsCameraControl = true
         scene_view.rendersContinuously = true
         scene_view.autoenablesDefaultLighting = true
-        
-        scene_view.backgroundColor = UIColor.clear
-        
-        let camera_node = SCNNode()
-        camera_node.camera = SCNCamera()
-        camera_node.position = SCNVector3(x: 0, y: -0.5, z: 5)
-        viewed_scene.rootNode.addChildNode(camera_node)
-        scene_view.pointOfView = camera_node
         
         app_state.reset_view = false
         app_state.reset_view_enabled = true
@@ -94,12 +96,12 @@ struct KinematicSceneView: UIViewRepresentable
 #else
     func makeUIView(context: Context) -> SCNView
     {
-        let greenMaterial = SCNMaterial()
-                greenMaterial.diffuse.contents = UIColor.green
-        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                greenBox.materials = [greenMaterial]
-        let boxNode = SCNNode(geometry: greenBox)
-        scene_view.scene?.rootNode.addChildNode(boxNode)
+        //Connect workcell box and pointer
+        app_state.kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: app_state.kinematic_preview_robot.scene_node_name, recursively: false)!
+        app_state.kinematic_preview_robot.model_controller = PortalController()
+        app_state.kinematic_preview_robot.workcell_connect(scene: viewed_scene, name: "unit", connect_camera: true)
+        app_state.kinematic_preview_robot.origin_location = [100, 100, 100]
+        //app_state.kinematic_preview_robot.origin_rotation = [0, 0, 0]
         
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
@@ -109,7 +111,8 @@ struct KinematicSceneView: UIViewRepresentable
         scene_view.rendersContinuously = true
         scene_view.autoenablesDefaultLighting = true
         
-        scene_view.backgroundColor = UIColor.clear
+        app_state.reset_view = false
+        app_state.reset_view_enabled = true
         
         return scn_scene(context: context)
     }
@@ -118,24 +121,12 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: SCNVector3(x: 0, y: -0.5, z: 5), rotation: SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scene_view)
-        
-        let greenMaterial = SCNMaterial()
-                greenMaterial.diffuse.contents = UIColor.green
-        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                greenBox.materials = [greenMaterial]
-        let boxNode = SCNNode(geometry: greenBox)
-        scene_view.scene?.rootNode.addChildNode(boxNode)
+        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scene_view)
     }
 #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
-        let greenMaterial = SCNMaterial()
-                greenMaterial.diffuse.contents = UIColor.green
-        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                greenBox.materials = [greenMaterial]
-        let boxNode = SCNNode(geometry: greenBox)
-        scene_view.scene?.rootNode.addChildNode(boxNode)
+        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scene_view)
     }
 #endif
     

@@ -50,12 +50,16 @@ class AppState : ObservableObject
             view.defaultCameraController.pointOfView?.runAction(
                 reset_action, completionHandler: {
                     self.reset_view_enabled = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+                    {
+                        self.objectWillChange.send()
+                    }
                 })
         }
     }
     
-    //MARK: - Register colors
-    public var register_colors = Array(repeating: Color.clear, count: 256)
+    //MARK: - Kinematic view functions
+    @Published var kinematic_preview_robot = Robot()
 }
 
 //MARK - Control modifier
