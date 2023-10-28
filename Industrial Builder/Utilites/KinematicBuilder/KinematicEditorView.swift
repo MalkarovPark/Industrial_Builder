@@ -54,6 +54,8 @@ struct KinematicEditorView: View
 
 struct KinematicSceneView: UIViewRepresentable
 {
+    @EnvironmentObject var app_state: AppState
+    
     let scene_view = SCNView(frame: .zero)
     let viewed_scene = SCNScene() //SCNScene(named: "Scene file name") ?? SCNScene()
     
@@ -77,6 +79,15 @@ struct KinematicSceneView: UIViewRepresentable
         scene_view.autoenablesDefaultLighting = true
         
         scene_view.backgroundColor = UIColor.clear
+        
+        let camera_node = SCNNode()
+        camera_node.camera = SCNCamera()
+        camera_node.position = SCNVector3(x: 0, y: -0.5, z: 5)
+        viewed_scene.rootNode.addChildNode(camera_node)
+        scene_view.pointOfView = camera_node
+        
+        app_state.reset_view = false
+        app_state.reset_view_enabled = true
         
         return scn_scene(context: context)
     }
@@ -107,6 +118,8 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
+        app_state.reset_camera_view_position(locataion: SCNVector3(x: 0, y: -0.5, z: 5), rotation: SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scene_view)
+        
         let greenMaterial = SCNMaterial()
                 greenMaterial.diffuse.contents = UIColor.green
         let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
@@ -184,7 +197,9 @@ struct KinematicInspectorView: View
                     {
                         Text(elements[index].name)
                         TextField("0", value: $elements[index].value, formatter: NumberFormatter())
+                        #if os(macOS)
                             .textFieldStyle(.squareBorder)
+                        #endif
                         Stepper("", value: $elements[index].value)
                             .labelsHidden()
                     }
@@ -215,4 +230,5 @@ let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
     KinematicEditorView(is_presented: .constant(true), kinematic: .constant(KinematicGroup(name: "", type: .portal, data: [KinematicElement]())))
         .frame(minWidth: 256, minHeight: 512)
         .environmentObject(StandardTemplateConstruct())
+        .environmentObject(AppState())
 }

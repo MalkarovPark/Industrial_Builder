@@ -23,6 +23,7 @@
 		628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */; };
 		628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */; };
 		6296D28A2AEC55580094FB19 /* Cards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2892AEC55580094FB19 /* Cards.swift */; };
+		6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2A92AED6E290094FB19 /* AppState.swift */; };
 		62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */; };
 		62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552F2AE962CA00554A5B /* ComponentsView.swift */; };
 		62AE55322AE96B3D00554A5B /* KinematicsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE55312AE96B3D00554A5B /* KinematicsListView.swift */; };
@@ -48,6 +49,7 @@
 		628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModulesEditor.swift; sourceTree = "<group>"; };
 		628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesEditor.swift; sourceTree = "<group>"; };
 		6296D2892AEC55580094FB19 /* Cards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cards.swift; sourceTree = "<group>"; };
+		6296D2A92AED6E290094FB19 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		62AE552D2AE7086B00554A5B /* KinematicEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicEditorView.swift; sourceTree = "<group>"; };
 		62AE552F2AE962CA00554A5B /* ComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsView.swift; sourceTree = "<group>"; };
 		62AE55312AE96B3D00554A5B /* KinematicsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicsListView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */,
 				6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */,
 				628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */,
+				6296D2A92AED6E290094FB19 /* AppState.swift */,
 				6289FCCC2AD0398300BB7F5E /* Assets.xcassets */,
 				6289FCCE2AD0398300BB7F5E /* Info.plist */,
 				6289FCCF2AD0398300BB7F5E /* Industrial_Builder.entitlements */,
@@ -233,6 +236,7 @@
 				6296D28A2AEC55580094FB19 /* Cards.swift in Sources */,
 				628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */,
 				62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */,
+				6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */,
 				62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */,
 				6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */,
 				628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */,

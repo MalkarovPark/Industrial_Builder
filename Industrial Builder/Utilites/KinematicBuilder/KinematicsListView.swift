@@ -24,11 +24,11 @@ struct KinematicsListView: View
             {
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ForEach(base_stc.kinematics.indices, id: \.self)
+                    ForEach(base_stc.kinematic_groups.indices, id: \.self)
                     { index in
-                        StandardCard(name: base_stc.kinematics[index].name, image_name: "gearshape.2.fill", color: .gray)
+                        StandardCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: .gray)
                         { is_presented in
-                            KinematicEditorView(is_presented: is_presented, kinematic: $base_stc.kinematics[index])
+                            KinematicEditorView(is_presented: is_presented, kinematic: $base_stc.kinematic_groups[index])
                         }
                     }
                 }
@@ -43,11 +43,11 @@ struct KinematicsListView: View
             }
             .popover(isPresented: $add_kinematic_view_presented, arrowEdge: .bottom)
             {
-                AddKinematicView(is_presented: $add_kinematic_view_presented, items: $base_stc.kinematics)
+                AddKinematicView(is_presented: $add_kinematic_view_presented, items: $base_stc.kinematic_groups)
             }
         }
         .modifier(WindowFramer())
-        .onChange(of: base_stc.kinematics)
+        .onChange(of: base_stc.kinematic_groups)
         { oldValue, newValue in
             print("💎")
         }

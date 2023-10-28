@@ -26,7 +26,7 @@ public class StandardTemplateConstruct: ObservableObject
         self.tool_modules = tool_modules
     }
     
-    @Published var kinematics = [KinematicGroup]()
+    @Published var kinematic_groups = [KinematicGroup]()
     
     //MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
