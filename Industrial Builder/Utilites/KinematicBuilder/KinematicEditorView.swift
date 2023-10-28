@@ -12,6 +12,7 @@ import IndustrialKit
 struct KinematicEditorView: View
 {
     @Binding var is_presented: Bool
+    @Binding var kinematic: KinematicGroup
     
     @State private var pointer_location: [Float] = [0, 0, 0]
     @State private var pointer_rotation: [Float] = [0, 0, 0]
@@ -44,7 +45,7 @@ struct KinematicEditorView: View
         }
         .inspector(isPresented: $show_inspector)
         {
-            KinematicInspectorView()
+            KinematicInspectorView(elements: $kinematic.data)
         }
         .modifier(ViewCloseButton(is_presented: $is_presented))
         .frame(minWidth: 640, minHeight: 480)
@@ -167,67 +168,27 @@ struct KinematicSceneView: UIViewRepresentable
     }
 }
 
-struct PositionParameterView: View
-{
-    @Binding var position_parameter_view_presented: Bool
-    @Binding var parameter_value: Float
-    @Binding var limit_min: Float
-    @Binding var limit_max: Float
-    
-    var body: some View
-    {
-        HStack(spacing: 8)
-        {
-            Button(action: {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
-                {
-                    parameter_value = 0
-                }
-                //parameter_value = 0
-                position_parameter_view_presented.toggle()
-            })
-            {
-                Image(systemName: "arrow.counterclockwise")
-            }
-            .buttonStyle(.borderedProminent)
-            #if os(macOS)
-            .foregroundColor(Color.white)
-            #else
-            .padding(.leading, 8)
-            #endif
-            
-            TextField("0", value: $parameter_value, format: .number)
-                .textFieldStyle(.roundedBorder)
-            #if os(macOS)
-                .frame(width: 64)
-            #else
-                .frame(width: 128)
-            #endif
-            
-            Stepper("Enter", value: $parameter_value, in: Float(limit_min)...Float(limit_max))
-                .labelsHidden()
-            #if os(iOS) || os(visionOS)
-                .padding(.trailing, 8)
-            #endif
-        }
-        .padding(8)
-    }
-}
-
 struct KinematicInspectorView: View
 {
+    @Binding var elements: [KinematicElement]
+    
     var body: some View
     {
         List
         {
-            Picker(selection: /*@START_MENU_TOKEN@*/.constant(1)/*@END_MENU_TOKEN@*/, label: Text("Model")) {
-                /*@START_MENU_TOKEN@*/Text("1").tag(1)/*@END_MENU_TOKEN@*/
-                /*@START_MENU_TOKEN@*/Text("2").tag(2)/*@END_MENU_TOKEN@*/
-            }
-            
             Section("Parameters")
             {
-                
+                ForEach(elements.indices, id: \.self)
+                { index in
+                    HStack(spacing: 12)
+                    {
+                        Text(elements[index].name)
+                        TextField("0", value: $elements[index].value, formatter: NumberFormatter())
+                            .textFieldStyle(.squareBorder)
+                        Stepper("", value: $elements[index].value)
+                            .labelsHidden()
+                    }
+                }
             }
         }
         #if os(macOS)
@@ -251,7 +212,7 @@ let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
 
 #Preview
 {
-    KinematicEditorView(is_presented: .constant(true))
+    KinematicEditorView(is_presented: .constant(true), kinematic: .constant(KinematicGroup(name: "", type: .portal, data: [KinematicElement]())))
         .frame(minWidth: 256, minHeight: 512)
         .environmentObject(StandardTemplateConstruct())
 }

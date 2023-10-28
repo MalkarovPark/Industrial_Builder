@@ -30,7 +30,7 @@ struct ComponentsView: View
                             EmptyView()
                         }
                         
-                        NaviagtionNumericalCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.tool_modules.count)
+                        NaviagtionNumericalCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.kinematics.count)
                         {
                             KinematicsListView()
                         }

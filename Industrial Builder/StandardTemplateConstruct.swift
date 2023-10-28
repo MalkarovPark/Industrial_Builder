@@ -26,6 +26,8 @@ public class StandardTemplateConstruct: ObservableObject
         self.tool_modules = tool_modules
     }
     
+    @Published var kinematics = [KinematicGroup]()
+    
     //MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
     
@@ -150,19 +152,22 @@ public struct KinematicGroup: Identifiable, Equatable, Codable, Hashable
         hasher.combine(name)
     }
     
-    var name = ""
+    var name = String()
+    var type: KinematicGroupTypes = .portal
     var data = [KinematicElement]()
 }
 
-public struct KinematicElement: Equatable, Codable
+public struct KinematicElement: Identifiable, Equatable, Codable
 {
-    var name = ""
-    var value = Int()
+    public var id = UUID()
     
-    var joints = [KinematicJoint]() //First two used...
+    var name = String()
+    var value = Float()
+    
+    //var joints = [KinematicJoint]() //First two used...
 }
 
-public enum KinematicJoint: String, Codable, Equatable, CaseIterable
+/*public enum KinematicJoint: String, Codable, Equatable, CaseIterable
 {
     case revolute = "Revolute"
     case prismatic = "Prismatic"
@@ -176,11 +181,11 @@ public enum KinematicJoint: String, Codable, Equatable, CaseIterable
     case rotational = "Rotational"
     case linear = "Linear"
     case universal = "Universal"
-}
+}*/
 
-public enum KinematicGroupPresets: String, Equatable, CaseIterable
+public enum KinematicGroupTypes: String, Codable, Equatable, CaseIterable
 {
-    case none = "None"
+    //case none = "None"
     case _6DOF = "6DOF"
     case portal = "Portal"
 }
@@ -191,7 +196,7 @@ public func _6DOFGroupMake(name: String) -> KinematicGroup
     
     for i in 0...7
     {
-        data.append(KinematicElement(name: "L\(i)", value: 20))
+        data.append(KinematicElement(name: "L\(i)", value: 20.0))
     }
     
     return KinematicGroup(name: name, data: data)
@@ -203,7 +208,7 @@ public func PortalGroupMake(name: String) -> KinematicGroup
     
     for i in 0...9
     {
-        data.append(KinematicElement(name: "L\(i)", value: 20))
+        data.append(KinematicElement(name: "L\(i)", value: 20.0))
     }
     
     return KinematicGroup(name: name, data: data)

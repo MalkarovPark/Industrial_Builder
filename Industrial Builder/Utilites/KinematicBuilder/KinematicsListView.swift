@@ -13,7 +13,6 @@ struct KinematicsListView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     @State private var add_kinematic_view_presented = false
-    @State var kinematics = [KinematicGroup]()
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
@@ -25,11 +24,11 @@ struct KinematicsListView: View
             {
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ForEach(kinematics)
-                    { kinematic in
-                        StandardCard(name: kinematic.name, image_name: "gearshape.2.fill", color: .gray)
+                    ForEach(base_stc.kinematics.indices, id: \.self)
+                    { index in
+                        StandardCard(name: base_stc.kinematics[index].name, image_name: "gearshape.2.fill", color: .gray)
                         { is_presented in
-                            KinematicEditorView(is_presented: is_presented)
+                            KinematicEditorView(is_presented: is_presented, kinematic: $base_stc.kinematics[index])
                         }
                     }
                 }
@@ -44,10 +43,14 @@ struct KinematicsListView: View
             }
             .popover(isPresented: $add_kinematic_view_presented, arrowEdge: .bottom)
             {
-                AddKinematicView(is_presented: $add_kinematic_view_presented, items: $kinematics)
+                AddKinematicView(is_presented: $add_kinematic_view_presented, items: $base_stc.kinematics)
             }
         }
         .modifier(WindowFramer())
+        .onChange(of: base_stc.kinematics)
+        { oldValue, newValue in
+            print("💎")
+        }
     }
 }
 
@@ -68,7 +71,7 @@ struct AddKinematicView: View
     @Binding var items: [KinematicGroup]
     
     @State private var new_item_name = ""
-    @State private var kinematic_preset: KinematicGroupPresets = .none
+    @State private var kinematic_preset: KinematicGroupTypes = .portal
     
     var body: some View
     {
@@ -88,7 +91,7 @@ struct AddKinematicView: View
             {
                 Picker("Type", selection: $kinematic_preset)
                 {
-                    ForEach(KinematicGroupPresets.allCases, id: \.self)
+                    ForEach(KinematicGroupTypes.allCases, id: \.self)
                     { preset in
                         Text(preset.rawValue).tag(preset)
                     }
@@ -118,8 +121,8 @@ struct AddKinematicView: View
         //modules_items.append(ChangerModule(name: new_module_name))
         switch kinematic_preset
         {
-        case .none:
-            items.append(KinematicGroup(name: mismatched_name(name: new_item_name, names: kinematics_names(items))))
+        /*case .none:
+            items.append(KinematicGroup(name: mismatched_name(name: new_item_name, names: kinematics_names(items))))*/
         case ._6DOF:
             items.append(_6DOFGroupMake(name: mismatched_name(name: new_item_name, names: kinematics_names(items))))
         case .portal:
