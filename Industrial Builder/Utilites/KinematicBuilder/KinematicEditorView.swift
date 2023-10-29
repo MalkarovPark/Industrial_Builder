@@ -227,6 +227,14 @@ struct KinematicInspectorView: View
         #if os(macOS)
         .padding()
         #endif
+        .onAppear
+        {
+            app_state.update_robot_kinematic(elements)
+        }
+        .onChange(of: elements)
+        { _, new_value in
+            app_state.update_robot_kinematic(new_value)
+        }
     }
 }
 

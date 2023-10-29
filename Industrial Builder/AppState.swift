@@ -76,6 +76,20 @@ class AppState : ObservableObject
         kinematic_preview_robot.origin_location = [100, 100, 100]
         //kinematic_preview_robot.origin_rotation = [0, 0, 0]
     }
+    
+    public func update_robot_kinematic(_ elements: [KinematicElement])
+    {
+        var lengths = [Float]()
+        for element in elements
+        {
+            lengths.append(element.value)
+        }
+        
+        print(lengths.count)
+        
+        kinematic_preview_robot.model_controller.transform_by_lengths(lengths)
+        kinematic_preview_robot.update_model()
+    }
 }
 
 //MARK - Control modifier

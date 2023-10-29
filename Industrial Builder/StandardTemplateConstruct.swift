@@ -194,10 +194,13 @@ public func _6DOFGroupMake(name: String) -> KinematicGroup
 {
     var data = [KinematicElement]()
     
-    for i in 0...7
-    {
-        data.append(KinematicElement(name: "L\(i)", value: 20.0))
-    }
+    data.append(KinematicElement(name: "L1", value: 160.0))
+    data.append(KinematicElement(name: "L2", value: 160.0))
+    data.append(KinematicElement(name: "L3", value: 80.0))
+    data.append(KinematicElement(name: "L4", value: 160.0))
+    data.append(KinematicElement(name: "L5", value: 40.0))
+    data.append(KinematicElement(name: "L6", value: 30.0))
+    data.append(KinematicElement(name: "Base", value: 160.0))
     
     return KinematicGroup(name: name, type: ._6DOF, data: data)
 }
@@ -206,10 +209,15 @@ public func PortalGroupMake(name: String) -> KinematicGroup
 {
     var data = [KinematicElement]()
     
-    for i in 0...9
-    {
-        data.append(KinematicElement(name: "L\(i)", value: 20.0))
-    }
+    data.append(KinematicElement(name: "frame2", value: 440.0))
+    data.append(KinematicElement(name: "limit1_min", value: 80.0))
+    data.append(KinematicElement(name: "limit0_min", value: 160.0))
+    data.append(KinematicElement(name: "limit2_min", value: 40.0))
+    data.append(KinematicElement(name: "target", value: 30.0))
+    data.append(KinematicElement(name: "limit0_max", value: 320.0))
+    data.append(KinematicElement(name: "limit1_max", value: 320.0))
+    data.append(KinematicElement(name: "limit2_max", value: 320.0))
+    data.append(KinematicElement(name: "Base", value: 160.0))
     
     return KinematicGroup(name: name, type: .portal, data: data)
 }
