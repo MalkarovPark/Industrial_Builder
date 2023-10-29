@@ -64,21 +64,13 @@ class AppState : ObservableObject
     public func prepare_robot(_ kinematic: KinematicGroupTypes, scene: SCNScene)
     {
         //Connect workcell box and pointer
-        var robot_scene = SCNScene()
-        var model_controller = RobotModelController()
-        
         switch kinematic
         {
         case ._6DOF:
-            robot_scene = SCNScene(named: "KinematicComponents.scnassets/Robots/6DOF.scn") ?? SCNScene()
-            model_controller = _6DOFController()
+            kinematic_preview_robot = Robot(name: "", model_controller: _6DOFController(), connector: RobotConnector(), scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn")
         case .portal:
-            robot_scene = SCNScene(named: "KinematicComponents.scnassets/Robots/Portal.scn") ?? SCNScene()
-            model_controller = PortalController()
+            kinematic_preview_robot = Robot(name: "", model_controller: PortalController(), connector: RobotConnector(), scene_name: "KinematicComponents.scnassets/Robots/Portal.scn")
         }
-        
-        kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: kinematic_preview_robot.scene_node_name, recursively: false)!
-        kinematic_preview_robot.model_controller = model_controller
         
         kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: true)
         kinematic_preview_robot.origin_location = [100, 100, 100]
@@ -113,4 +105,29 @@ struct MenuHandlingModifier: ViewModifier
                 app_state.reset_view_enabled = true
             }
     }
+}
+
+func color_from_string(_ text: String) -> Color
+{
+    var r: CGFloat = 0
+    var g: CGFloat = 0
+    var b: CGFloat = 0
+    
+    for (i, char) in text.enumerated()
+    {
+        let value = Float(char.asciiValue ?? 0) / 255.0
+        switch i % 3
+        {
+        case 0:
+            r = CGFloat(value)
+        case 1:
+            g = CGFloat(value)
+        case 2:
+            b = CGFloat(value)
+        default:
+            break
+        }
+    }
+    
+    return Color(red: Double(r), green: Double(g), blue: Double(b))
 }
