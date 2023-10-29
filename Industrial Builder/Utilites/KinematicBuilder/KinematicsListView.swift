@@ -47,10 +47,6 @@ struct KinematicsListView: View
             }
         }
         .modifier(WindowFramer())
-        .onChange(of: base_stc.kinematic_groups)
-        { oldValue, newValue in
-            print("💎")
-        }
     }
 }
 

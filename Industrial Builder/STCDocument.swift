@@ -23,6 +23,8 @@ struct STCDocument: FileDocument
     var changer_modules = [ChangerModule]()
     var tool_modules = [ToolModule]()
     
+    var kinematic_groups = [KinematicGroup]()
+    
     static var readableContentTypes = [UTType.stc_document]
     
     init()
@@ -49,6 +51,8 @@ struct STCDocument: FileDocument
                 images_process(wrapper)
             case "App":
                 app_process(wrapper)
+            case "Components":
+                components_process(wrapper)
             default:
                 break
             }
@@ -135,10 +139,40 @@ struct STCDocument: FileDocument
                     {
                         for (_, file_wrapper) in file_wrappers
                         {
-                            print(file_wrapper.filename)
                             if let filename = file_wrapper.filename, filename.hasSuffix(".json")
                             {
                                 tool_modules.append(json_decode(file_wrapper, type: ToolModule.self) ?? ToolModule())
+                            }
+                        }
+                    }
+                }
+            }
+            
+            func components_process(_ wrapper: FileWrapper)
+            {
+                if let file_wrappers = wrapper.fileWrappers
+                {
+                    for (_, file_wrapper) in file_wrappers
+                    {
+                        switch file_wrapper.filename
+                        {
+                        case "KinematicGroups":
+                            kinematics_process(file_wrapper)
+                        default:
+                            break
+                        }
+                    }
+                }
+                
+                func kinematics_process(_ wrapper: FileWrapper)
+                {
+                    if let file_wrappers = wrapper.fileWrappers
+                    {
+                        for (_, file_wrapper) in file_wrappers
+                        {
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".json")
+                            {
+                                kinematic_groups.append(json_decode(file_wrapper, type: KinematicGroup.self) ?? KinematicGroup())
                             }
                         }
                     }
@@ -166,10 +200,15 @@ struct STCDocument: FileDocument
             var app_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
             app_file_wrapper = try prepare_app_file_wrapper()
             
+            //Store components data
+            var components_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
+            components_file_wrapper = try prepare_components_file_wrapper()
+            
             let file_wrapper = FileWrapper(directoryWithFileWrappers: [
                 package_filename: json_file_wrapper,
                 "Images": images_file_wrapper,
-                "App": app_file_wrapper
+                "App": app_file_wrapper,
+                "Components": components_file_wrapper
             ])
             
             return file_wrapper
@@ -251,6 +290,38 @@ struct STCDocument: FileDocument
             
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
+    }
+    
+    func prepare_components_file_wrapper() throws -> FileWrapper
+    {
+        var file_wrappers = [String: FileWrapper]()
+        
+        //Tool Modules
+        file_wrappers["KinematicGroups"] = prepare_kinematics_wrappers()
+        
+        func prepare_kinematics_wrappers() -> FileWrapper
+        {
+            var file_wrappers = [String: FileWrapper]()
+            
+            for kinematic_group in kinematic_groups
+            {
+                guard let data = try? make_json_data(kinematic_group) else
+                {
+                    break
+                }
+                
+                let file_name = "\(kinematic_group.name).json"
+                let file_wrapper = FileWrapper(regularFileWithContents: data)
+                file_wrapper.filename = file_name
+                file_wrapper.preferredFilename = file_name
+                
+                file_wrappers[file_name] = file_wrapper
+            }
+            
+            return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        }
+        
+        return FileWrapper(directoryWithFileWrappers: file_wrappers)
     }
     
     private func make_json_data(_ object: Encodable) throws -> Data

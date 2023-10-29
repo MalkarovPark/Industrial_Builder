@@ -58,6 +58,8 @@ class AppState : ObservableObject
         }
     }
     
+    @Published var document_notify = true
+    
     //MARK: - Kinematic view functions
     @Published var kinematic_preview_robot = Robot()
     
@@ -84,8 +86,6 @@ class AppState : ObservableObject
         {
             lengths.append(element.value)
         }
-        
-        print(lengths.count)
         
         kinematic_preview_robot.model_controller.transform_by_lengths(lengths)
         kinematic_preview_robot.update_model()

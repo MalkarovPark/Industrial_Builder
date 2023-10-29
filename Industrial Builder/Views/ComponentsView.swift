@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ComponentsView: View
 {
+    @EnvironmentObject var app_state: AppState
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     @Binding var document: STCDocument
@@ -33,6 +34,14 @@ struct ComponentsView: View
                         NaviagtionNumericalCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.kinematic_groups.count)
                         {
                             KinematicsListView()
+                        }
+                        .onChange(of: base_stc.kinematic_groups)
+                        { _, new_value in
+                            document.kinematic_groups = new_value
+                        }
+                        .onChange(of: app_state.document_notify)
+                        { oldValue, newValue in
+                            document.kinematic_groups = base_stc.kinematic_groups
                         }
                     }
                     .padding(20)

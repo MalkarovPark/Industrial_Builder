@@ -70,7 +70,7 @@ struct ContentView: View
             }
             .onAppear
             {
-                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules)
+                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules, kinematic_groups: document.kinematic_groups)
             }
         }
         .environmentObject(base_stc)
