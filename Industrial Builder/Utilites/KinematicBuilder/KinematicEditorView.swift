@@ -18,7 +18,6 @@ struct KinematicEditorView: View
     
     @State private var pointer_location: [Float] = [0, 0, 0]
     @State private var pointer_rotation: [Float] = [0, 0, 0]
-    @State private var space_scale: [Float] = [100, 100, 100]
     @State private var show_inspector = true
     
     var body: some View
@@ -29,7 +28,7 @@ struct KinematicEditorView: View
         }
         .overlay(alignment: .bottom)
         {
-            PositionControl(location: $app_state.kinematic_preview_robot.pointer_location, rotation: $app_state.kinematic_preview_robot.pointer_rotation, scale: $space_scale)
+            PositionControl(location: $app_state.kinematic_preview_robot.pointer_location, rotation: $app_state.kinematic_preview_robot.pointer_rotation, scale: $app_state.kinematic_preview_robot.space_scale)
                 .frame(width: 256)
                 .background(.bar)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -66,7 +65,7 @@ struct KinematicSceneView: UIViewRepresentable
     {
         scene_view.scene = viewed_scene
         scene_view.delegate = context.coordinator
-        scene_view.scene?.background.contents = UIColor.clear
+        //scene_view.scene?.background.contents = UIColor.clear
         return scene_view
     }
     
@@ -121,12 +120,12 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scene_view)
+        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
     }
 #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scene_view)
+        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
     }
 #endif
     
@@ -176,11 +175,15 @@ struct KinematicInspectorView: View
 {
     @Binding var elements: [KinematicElement]
     
+    @State private var expanded = [true, false, false, false]
+    
+    @EnvironmentObject var app_state: AppState
+    
     var body: some View
     {
         List
         {
-            Section("Parameters")
+            DisclosureGroup("Parameters", isExpanded: $expanded[0])
             {
                 ForEach(elements.indices, id: \.self)
                 { index in
@@ -196,6 +199,28 @@ struct KinematicInspectorView: View
                     }
                 }
             }
+            
+            Section("Origin")
+            {
+                DisclosureGroup("Location", isExpanded: $expanded[1])
+                {
+                    OriginMoveView(origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
+                }
+                
+                DisclosureGroup("Rotation", isExpanded: $expanded[2])
+                {
+                    OriginRotateView(origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
+                }
+                
+                DisclosureGroup("Scale", isExpanded: $expanded[3])
+                {
+                    SpaceScaleView(space_scale: $app_state.kinematic_preview_robot.space_scale)
+                }
+                .onChange(of: app_state.kinematic_preview_robot.space_scale)
+                { _, _ in
+                    app_state.kinematic_preview_robot.update_space_scale()
+                }
+            }
         }
         #if os(macOS)
         .listStyle(.plain)
@@ -204,6 +229,123 @@ struct KinematicInspectorView: View
         #if os(macOS)
         .padding()
         #endif
+    }
+}
+
+//MARK: Scale elements
+struct SpaceScaleView: View
+{
+    @Binding var space_scale: [Float]
+    
+    var body: some View
+    {
+        HStack(spacing: 8)
+        {
+            Text("X")
+                .frame(width: 20)
+            TextField("0", value: $space_scale[0], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $space_scale[0], in: 2...1000)
+                .labelsHidden()
+        }
+        
+        HStack(spacing: 8)
+        {
+            Text("Y")
+                .frame(width: 20)
+            TextField("0", value: $space_scale[1], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $space_scale[1], in: 2...1000)
+                .labelsHidden()
+        }
+        
+        HStack(spacing: 8)
+        {
+            Text("Z")
+                .frame(width: 20)
+            TextField("0", value: $space_scale[2], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $space_scale[2], in: 2...1000)
+                .labelsHidden()
+        }
+    }
+}
+
+//MARK: Move elements
+struct OriginMoveView: View
+{
+    @Binding var origin_view_pos_location: [Float]
+    
+    var body: some View
+    {
+        HStack(spacing: 8)
+        {
+            Text("X")
+                .frame(width: 20)
+            TextField("0", value: $origin_view_pos_location[0], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $origin_view_pos_location[0], in: -50...50)
+                .labelsHidden()
+        }
+        
+        HStack(spacing: 8)
+        {
+            Text("Y")
+                .frame(width: 20)
+            TextField("0", value: $origin_view_pos_location[1], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $origin_view_pos_location[1], in: -50...50)
+                .labelsHidden()
+        }
+        
+        HStack(spacing: 8)
+        {
+            Text("Z")
+                .frame(width: 20)
+            TextField("0", value: $origin_view_pos_location[2], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $origin_view_pos_location[2], in: -50...50)
+                .labelsHidden()
+        }
+    }
+}
+
+//MARK: Rotate elements
+struct OriginRotateView: View
+{
+    @Binding var origin_view_pos_rotation: [Float]
+    
+    var body: some View
+    {
+        HStack(spacing: 8)
+        {
+            Text("R")
+                .frame(width: 20)
+            TextField("0", value: $origin_view_pos_rotation[0], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $origin_view_pos_rotation[0], in: -180...180)
+                .labelsHidden()
+        }
+        
+        HStack(spacing: 8)
+        {
+            Text("P")
+                .frame(width: 20)
+            TextField("0", value: $origin_view_pos_rotation[1], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $origin_view_pos_rotation[1], in: -180...180)
+                .labelsHidden()
+        }
+        
+        HStack(spacing: 8)
+        {
+            Text("W")
+                .frame(width: 20)
+            TextField("0", value: $origin_view_pos_rotation[2], format: .number)
+                .textFieldStyle(.roundedBorder)
+            Stepper("Enter", value: $origin_view_pos_rotation[2], in: -180...180)
+                .labelsHidden()
+        }
     }
 }
 
