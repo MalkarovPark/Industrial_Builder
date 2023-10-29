@@ -24,7 +24,7 @@ struct KinematicEditorView: View
     {
         ZStack
         {
-            KinematicSceneView()
+            KinematicSceneView(kinematic_type: kinematic.type)
         }
         .overlay(alignment: .bottom)
         {
@@ -59,7 +59,8 @@ struct KinematicSceneView: UIViewRepresentable
     
     let scene_view = SCNView(frame: .zero)
     let viewed_scene = SCNScene(named: "KinematicComponents.scnassets/Cell.scn") ?? SCNScene()
-    let robot_scene = SCNScene(named: "KinematicComponents.scnassets/Robots/Portal.scn") ?? SCNScene()
+    
+    public let kinematic_type: KinematicGroupTypes
     
     func scn_scene(context: Context) -> SCNView
     {
@@ -72,12 +73,7 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func makeNSView(context: Context) -> SCNView
     {
-        //Connect workcell box and pointer
-        app_state.kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: app_state.kinematic_preview_robot.scene_node_name, recursively: false)!
-        app_state.kinematic_preview_robot.model_controller = PortalController()        
-        app_state.kinematic_preview_robot.workcell_connect(scene: viewed_scene, name: "unit", connect_camera: true)
-        app_state.kinematic_preview_robot.origin_location = [100, 100, 100]
-        //app_state.kinematic_preview_robot.origin_rotation = [0, 0, 0]
+        app_state.prepare_robot(kinematic_type, scene: viewed_scene)
         
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
@@ -95,6 +91,8 @@ struct KinematicSceneView: UIViewRepresentable
 #else
     func makeUIView(context: Context) -> SCNView
     {
+        app_state.prepare_robot(kinematic_type, scene: viewed_scene)
+        
         //Connect workcell box and pointer
         app_state.kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: app_state.kinematic_preview_robot.scene_node_name, recursively: false)!
         app_state.kinematic_preview_robot.model_controller = PortalController()

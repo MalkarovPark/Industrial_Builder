@@ -60,6 +60,30 @@ class AppState : ObservableObject
     
     //MARK: - Kinematic view functions
     @Published var kinematic_preview_robot = Robot()
+    
+    public func prepare_robot(_ kinematic: KinematicGroupTypes, scene: SCNScene)
+    {
+        //Connect workcell box and pointer
+        var robot_scene = SCNScene()
+        var model_controller = RobotModelController()
+        
+        switch kinematic
+        {
+        case ._6DOF:
+            robot_scene = SCNScene(named: "KinematicComponents.scnassets/Robots/6DOF.scn") ?? SCNScene()
+            model_controller = _6DOFController()
+        case .portal:
+            robot_scene = SCNScene(named: "KinematicComponents.scnassets/Robots/Portal.scn") ?? SCNScene()
+            model_controller = PortalController()
+        }
+        
+        kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: kinematic_preview_robot.scene_node_name, recursively: false)!
+        kinematic_preview_robot.model_controller = model_controller
+        
+        kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: true)
+        kinematic_preview_robot.origin_location = [100, 100, 100]
+        //kinematic_preview_robot.origin_rotation = [0, 0, 0]
+    }
 }
 
 //MARK - Control modifier

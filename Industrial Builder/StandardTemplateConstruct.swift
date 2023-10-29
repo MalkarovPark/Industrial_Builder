@@ -199,7 +199,7 @@ public func _6DOFGroupMake(name: String) -> KinematicGroup
         data.append(KinematicElement(name: "L\(i)", value: 20.0))
     }
     
-    return KinematicGroup(name: name, data: data)
+    return KinematicGroup(name: name, type: ._6DOF, data: data)
 }
 
 public func PortalGroupMake(name: String) -> KinematicGroup
@@ -211,7 +211,7 @@ public func PortalGroupMake(name: String) -> KinematicGroup
         data.append(KinematicElement(name: "L\(i)", value: 20.0))
     }
     
-    return KinematicGroup(name: name, data: data)
+    return KinematicGroup(name: name, type: .portal, data: data)
 }
 
 //MARK: Package
