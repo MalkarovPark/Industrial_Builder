@@ -7,12 +7,31 @@
 
 import SwiftUI
 
-struct ModelsListView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct ModelsListView: View
+{
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
+    
+    var body: some View
+    {
+        ScrollView(.vertical)
+        {
+            VStack(spacing: 0)
+            {
+                LazyVGrid(columns: columns, spacing: 24)
+                {
+                    ModelCard(name: "Model") { is_presented in
+                        ModelView()
+                            .modifier(WindowFramer())
+                    }
+                }
+                .padding(20)
+            }
+        }
+        .modifier(WindowFramer())
     }
 }
 
-#Preview {
+#Preview
+{
     ModelsListView()
 }
