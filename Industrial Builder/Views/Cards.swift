@@ -102,7 +102,7 @@ struct StandardCard<Content: View>: View
                             .foregroundColor(.white)
                             .padding()
                     }
-                    .overlay(alignment: .bottomTrailing)
+                    .overlay(alignment: .trailing)
                     {
                         Image(systemName: image_name)
                             .fontWeight(.bold)
@@ -180,6 +180,43 @@ struct ImageCard: View
     }
 }
 
+struct ModelCard<Content: View>: View
+{
+    @State private var is_presented = false
+    
+    let name: String
+    
+    let content: (_ is_presented: Binding<Bool>) -> Content
+    
+    var body: some View
+    {
+        Button(action: { is_presented = true })
+        {
+            ElementSceneView()
+                .disabled(true)
+        }
+        .buttonStyle(.borderless)
+        .background(.regularMaterial)
+        .sheet(isPresented: $is_presented, content: { content($is_presented) })
+        .frame(height: 192)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .shadow(radius: 8)
+        .overlay(alignment: .bottomLeading)
+        {
+            Text(name)
+                .padding(8)
+                #if os(macOS)
+                .foregroundColor(Color(NSColor.secondaryLabelColor))
+                #else
+                .foregroundColor(Color(UIColor.secondaryLabel))
+                #endif
+                .background(.bar)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .padding(8)
+        }
+    }
+}
+
 #Preview
 {
     StandardNumericalCard(name: "Name", image_name: "cube", color: .green, count: 2)
@@ -202,6 +239,15 @@ struct ImageCard: View
 {
     NaviagtionNumericalCard(name: "Name", image_name: "cylinder.fill", color: .mint, count: 0)
     {
+        EmptyView()
+    }
+    .frame(width: 256)
+}
+
+#Preview
+{
+    ModelCard(name: "Name")
+    { is_presented in
         EmptyView()
     }
     .frame(width: 256)

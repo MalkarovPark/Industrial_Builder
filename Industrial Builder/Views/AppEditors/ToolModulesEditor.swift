@@ -365,7 +365,7 @@ struct ToolControllerEditor: View
                         }
                         .popover(isPresented: $select_model_view_presented)
                         {
-                            SelectModelView(is_presented: $select_model_view_presented)
+                            ModelSelectorView(is_presented: $select_model_view_presented)
                         }
                     }
                 } label:

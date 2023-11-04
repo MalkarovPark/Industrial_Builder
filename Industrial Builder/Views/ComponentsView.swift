@@ -26,9 +26,9 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        NaviagtionNumericalCard(name: "Models", image_name: "cylinder.fill", color: .mint, count: 0)
+                        NaviagtionNumericalCard(name: "Models", image_name: "cube", color: .mint, count: 0)
                         {
-                            EmptyView()
+                            ModelsListView()
                         }
                         
                         NaviagtionNumericalCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.kinematic_groups.count)
@@ -116,4 +116,5 @@ struct NaviagtionNumericalCard<Content: View>: View
 {
     ComponentsView(document: .constant(STCDocument()))
         .environmentObject(StandardTemplateConstruct())
+        .environmentObject(AppState())
 }
