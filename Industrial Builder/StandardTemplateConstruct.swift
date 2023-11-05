@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SceneKit
 
 public class StandardTemplateConstruct: ObservableObject
 {
@@ -15,7 +16,8 @@ public class StandardTemplateConstruct: ObservableObject
     
     init()
     {
-        
+        make_preview()
+        make_contents()
     }
     
     func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], kinematic_groups: [KinematicGroup])
@@ -28,6 +30,34 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     @Published var kinematic_groups = [KinematicGroup]()
+    
+    //MARK: Model nodes functions
+    @Published var models_nodes = [SCNNode]()
+    
+    @Published var viewed_model_node = SCNNode()
+    
+    private func make_preview()
+    {
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.green
+        
+        let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
+                box.materials = [material]
+        viewed_model_node = SCNNode(geometry: box)
+    }
+    
+    private func make_contents()
+    {
+        for i in 0..<17
+        {
+            let material = SCNMaterial()
+            material.diffuse.contents = UIColor(red: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0)
+            let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
+                    box.materials = [material]
+            
+            models_nodes.append(SCNNode(geometry: box))
+        }
+    }
     
     //MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()

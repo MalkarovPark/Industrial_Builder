@@ -26,7 +26,7 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        NaviagtionNumericalCard(name: "Models", image_name: "cube", color: .mint, count: 0)
+                        NaviagtionNumericalCard(name: "Models", image_name: "cube", color: .mint, count: base_stc.models_nodes.count)
                         {
                             ModelsListView()
                         }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SceneKit
 
 struct StandardNumericalCard<Content: View>: View
 {
@@ -182,6 +183,8 @@ struct ImageCard: View
 
 struct ModelCard<Content: View>: View
 {
+    @Binding var node: SCNNode
+    
     @State private var is_presented = false
     
     let name: String
@@ -192,7 +195,7 @@ struct ModelCard<Content: View>: View
     {
         Button(action: { is_presented = true })
         {
-            ElementSceneView()
+            ElementSceneView(node: node)
                 .disabled(true)
         }
         .buttonStyle(.borderless)
@@ -246,7 +249,7 @@ struct ModelCard<Content: View>: View
 
 #Preview
 {
-    ModelCard(name: "Name")
+    ModelCard(node: .constant(SCNNode()), name: "Name")
     { is_presented in
         EmptyView()
     }

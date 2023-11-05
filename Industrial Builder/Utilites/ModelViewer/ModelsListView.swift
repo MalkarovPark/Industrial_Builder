@@ -10,6 +10,8 @@ import IndustrialKit
 
 struct ModelsListView: View
 {
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
@@ -20,10 +22,13 @@ struct ModelsListView: View
             {
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ModelCard(name: "Model") { is_presented in
-                        ModelView()
-                            .modifier(WindowFramer())
-                            .modifier(ViewCloseButton(is_presented: is_presented))
+                    ForEach(base_stc.models_nodes.indices, id: \.self)
+                    { number in
+                        ModelCard(node: $base_stc.models_nodes[number], name: "Model \(number)") { is_presented in
+                            ModelView(node: $base_stc.models_nodes[number])
+                                .modifier(WindowFramer())
+                                .modifier(ViewCloseButton(is_presented: is_presented))
+                        }
                     }
                 }
                 .padding(20)

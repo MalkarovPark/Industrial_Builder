@@ -311,10 +311,13 @@ struct ToolControllerEditor: View
 {
     @Binding var controller: ToolControllerModule
     
-    private let scene_elements = ["Connect", "Reset", "Other"]
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     @State private var scene_elements_expanded = [false, false, false, false]
     
     @State private var select_model_view_presented = false
+    
+    private let scene_elements = ["Connect", "Reset", "Other"]
     
     var body: some View
     {
@@ -349,7 +352,8 @@ struct ToolControllerEditor: View
                 {
                     HStack(spacing: 0)
                     {
-                        ModelView()
+                        ModelView(node: $base_stc.viewed_model_node)
+                            .frame(height: 240)
                         
                         Button(action: { select_model_view_presented.toggle() })
                         {
@@ -365,7 +369,7 @@ struct ToolControllerEditor: View
                         }
                         .popover(isPresented: $select_model_view_presented)
                         {
-                            ModelSelectorView(is_presented: $select_model_view_presented)
+                            ModelSelectorView(is_presented: $select_model_view_presented, nodes: $base_stc.models_nodes)
                         }
                     }
                 } label:

@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SceneKit
 
 struct ModelSelectorView: View
 {
     @Binding var is_presented: Bool
+    @Binding var nodes: [SCNNode]
     
-    private let numbers = (0...16).map { $0 }
+    //private let numbers = (0...16).map { $0 }
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 88, maximum: 88), spacing: 0)]
@@ -34,9 +36,9 @@ struct ModelSelectorView: View
                             is_presented = false
                         }
                     
-                    ForEach(numbers, id: \.self)
+                    ForEach(nodes.indices, id: \.self)
                     { number in
-                        ElementItemView(action: { print(number); is_presented = false })
+                        ElementItemView(node: nodes[number], action: { print(number); is_presented = false })
                             .id(number)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
                     }
@@ -50,14 +52,16 @@ struct ModelSelectorView: View
 
 struct ElementItemView: View
 {
+    var node: SCNNode
     var action: () -> ()
+    
     var body: some View
     {
         ZStack
         {
             Button(action: action)
             {
-                ElementSceneView()
+                ElementSceneView(node: node)
                     .disabled(true)
             }
             .buttonStyle(.borderless)
@@ -97,5 +101,5 @@ struct NoElementItemView: View
 
 #Preview
 {
-    ModelSelectorView(is_presented: .constant(true))
+    ModelSelectorView(is_presented: .constant(true), nodes: .constant([SCNNode]()))
 }

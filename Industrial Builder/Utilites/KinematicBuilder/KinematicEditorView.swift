@@ -93,13 +93,6 @@ struct KinematicSceneView: UIViewRepresentable
     {
         app_state.prepare_robot(kinematic_type, scene: viewed_scene)
         
-        //Connect workcell box and pointer
-        app_state.kinematic_preview_robot.node = robot_scene.rootNode.childNode(withName: app_state.kinematic_preview_robot.scene_node_name, recursively: false)!
-        app_state.kinematic_preview_robot.model_controller = PortalController()
-        app_state.kinematic_preview_robot.workcell_connect(scene: viewed_scene, name: "unit", connect_camera: true)
-        app_state.kinematic_preview_robot.origin_location = [100, 100, 100]
-        //app_state.kinematic_preview_robot.origin_rotation = [0, 0, 0]
-        
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
         scene_view.addGestureRecognizer(tap_gesture_recognizer)

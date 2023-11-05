@@ -10,39 +10,37 @@ import SceneKit
 
 struct ModelView: View
 {
+    @Binding var node: SCNNode
+    
     var body: some View
     {
-        ElementSceneView()
-            //.frame(height: 240)
+        ElementSceneView(node: node)
     }
 }
 
 //MARK: - Scene views
 struct ElementSceneView: UIViewRepresentable
 {
-    //@AppStorage("WorkspaceImagesStore") private var workspace_images_store: Bool = true
-    
-    //@EnvironmentObject var base_workspace: Workspace
-    //@EnvironmentObject var app_state: AppState
+    @EnvironmentObject var app_state: AppState
     
     let scene_view = SCNView(frame: .zero)
-    let viewed_scene = SCNScene() //SCNScene(named: "Components.scnassets/View.scn")!
+    let viewed_scene = SCNScene()
+    let node: SCNNode
     
     func scn_scene(context: Context) -> SCNView
     {
-        //app_state.reset_view = false
-        //app_state.reset_view_enabled = true
         scene_view.scene = viewed_scene
         scene_view.delegate = context.coordinator
         scene_view.scene?.background.contents = UIColor.clear
+        
+        scene_view.scene?.rootNode.addChildNode(node.clone())
+        
         return scene_view
     }
     
     #if os(macOS)
     func makeNSView(context: Context) -> SCNView
     {
-        //base_workspace.camera_node = viewed_scene.rootNode.childNode(withName: "camera", recursively: true)
-        
         //Add gesture recognizer
         let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
         scene_view.addGestureRecognizer(tap_gesture_recognizer)
@@ -53,13 +51,14 @@ struct ElementSceneView: UIViewRepresentable
         
         scene_view.backgroundColor = UIColor.clear
         
+        app_state.reset_view = false
+        app_state.reset_view_enabled = true
+        
         return scn_scene(context: context)
     }
     #else
     func makeUIView(context: Context) -> SCNView
     {
-        //base_workspace.camera_node = viewed_scene.rootNode.childNode(withName: "camera", recursively: true)
-        
         //Add gesture recognizer
         let tap_gesture_recognizer = UIGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
         scene_view.addGestureRecognizer(tap_gesture_recognizer)
@@ -70,6 +69,9 @@ struct ElementSceneView: UIViewRepresentable
         
         scene_view.backgroundColor = UIColor.clear
         
+        app_state.reset_view = false
+        app_state.reset_view_enabled = true
+        
         return scn_scene(context: context)
     }
     #endif
@@ -77,38 +79,12 @@ struct ElementSceneView: UIViewRepresentable
     #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
-        let greenMaterial = SCNMaterial()
-                greenMaterial.diffuse.contents = UIColor.green
-        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                greenBox.materials = [greenMaterial]
-        let boxNode = SCNNode(geometry: greenBox)
-        scene_view.scene?.rootNode.addChildNode(boxNode)
-        //Update commands
-        /*app_state.reset_camera_view_position(workspace: base_workspace, view: ui_view)
-        
-        if app_state.get_scene_image && workspace_images_store
-        {
-            app_state.get_scene_image = false
-            app_state.previewed_object?.image = ui_view.snapshot()
-        }*/
+        app_state.reset_camera_view_position(locataion: SCNVector3(0, 0, 0), rotation: SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
     }
     #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
-        let greenMaterial = SCNMaterial()
-                greenMaterial.diffuse.contents = UIColor.green
-        let greenBox = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                greenBox.materials = [greenMaterial]
-        let boxNode = SCNNode(geometry: greenBox)
-        scene_view.scene?.rootNode.addChildNode(boxNode)
-        //Update commands
-        /*app_state.reset_camera_view_position(workspace: base_workspace, view: ui_view)
-        
-        if app_state.get_scene_image && workspace_images_store
-        {
-            app_state.get_scene_image = false
-            app_state.previewed_object?.image = ui_view.snapshot()
-        }*/
+        app_state.reset_camera_view_position(locataion: SCNVector3(0, 0, 0), rotation: SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
     }
     #endif
     
@@ -174,5 +150,5 @@ typealias UIColor = NSColor
 
 #Preview
 {
-    ModelView()
+    ModelView(node: .constant(SCNNode()))
 }
