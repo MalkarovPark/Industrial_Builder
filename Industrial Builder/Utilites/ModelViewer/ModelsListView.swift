@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IndustrialKit
 
 struct ModelsListView: View
 {
@@ -22,6 +23,7 @@ struct ModelsListView: View
                     ModelCard(name: "Model") { is_presented in
                         ModelView()
                             .modifier(WindowFramer())
+                            .modifier(ViewCloseButton(is_presented: is_presented))
                     }
                 }
                 .padding(20)

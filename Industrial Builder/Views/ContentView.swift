@@ -167,26 +167,6 @@ struct SheetFramer: ViewModifier
     }
 }
 
-struct ViewCloseButton: ViewModifier
-{
-    @Binding var is_presented: Bool
-    
-    public func body(content: Content) -> some View
-    {
-        content
-            .overlay(alignment: .topLeading)
-            {
-                Button(action: { is_presented.toggle() })
-                {
-                    Image(systemName: "xmark")
-                }
-                .buttonStyle(.bordered)
-                .keyboardShortcut(.cancelAction)
-                .padding()
-            }
-    }
-}
-
 struct TextFrame: ViewModifier
 {
     public func body(content: Content) -> some View
