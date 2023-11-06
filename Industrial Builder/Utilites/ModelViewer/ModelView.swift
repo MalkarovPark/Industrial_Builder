@@ -21,8 +21,6 @@ struct ModelView: View
 //MARK: - Scene views
 struct ElementSceneView: UIViewRepresentable
 {
-    @EnvironmentObject var app_state: AppState
-    
     let scene_view = SCNView(frame: .zero)
     let viewed_scene = SCNScene()
     let node: SCNNode
@@ -42,17 +40,18 @@ struct ElementSceneView: UIViewRepresentable
     func makeNSView(context: Context) -> SCNView
     {
         //Add gesture recognizer
-        let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
-        scene_view.addGestureRecognizer(tap_gesture_recognizer)
+        scene_view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:))))
+        
+        //Add reset double tap recognizer for macOS
+        let double_tap_gesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_reset_double_tap(_:)))
+        double_tap_gesture.numberOfClicksRequired = 2
+        scene_view.addGestureRecognizer(double_tap_gesture)
         
         scene_view.allowsCameraControl = true
         scene_view.rendersContinuously = true
         scene_view.autoenablesDefaultLighting = true
         
         scene_view.backgroundColor = UIColor.clear
-        
-        app_state.reset_view = false
-        app_state.reset_view_enabled = true
         
         let camera_node = SCNNode()
         camera_node.camera = SCNCamera()
@@ -66,8 +65,7 @@ struct ElementSceneView: UIViewRepresentable
     func makeUIView(context: Context) -> SCNView
     {
         //Add gesture recognizer
-        let tap_gesture_recognizer = UIGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
-        scene_view.addGestureRecognizer(tap_gesture_recognizer)
+        scene_view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:))))
         
         scene_view.allowsCameraControl = true
         scene_view.rendersContinuously = true
@@ -85,12 +83,12 @@ struct ElementSceneView: UIViewRepresentable
     #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: SCNVector3(0, 0, 0), rotation: SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
+        
     }
     #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: SCNVector3(0, 0, 0), rotation: SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
+        
     }
     #endif
     
@@ -117,6 +115,11 @@ struct ElementSceneView: UIViewRepresentable
         }
         
         private let scn_view: SCNView
+        
+        #if os(macOS)
+        private var on_reset_view = false
+        #endif
+        
         @objc func handle_tap(_ gesture_recognize: UITapGestureRecognizer)
         {
             let tap_location = gesture_recognize.location(in: scn_view)
@@ -131,19 +134,28 @@ struct ElementSceneView: UIViewRepresentable
                 print("🍮 tapped – \(result.node.name ?? "None")")
             }
         }
+        
+        @objc func handle_reset_double_tap(_ gesture_recognize: UITapGestureRecognizer)
+        {
+            reset_camera_view_position(locataion: SCNVector3(0, 0, 2), rotation: SCNVector4Zero, view: scn_view)
+            
+            func reset_camera_view_position(locataion: SCNVector3, rotation: SCNVector4, view: SCNView)
+            {
+                if !on_reset_view
+                {
+                    on_reset_view = true
+                    
+                    let reset_action = SCNAction.group([SCNAction.move(to: locataion, duration: 0.5), SCNAction.rotate(toAxisAngle: rotation, duration: 0.5)])
+                    view.defaultCameraController.pointOfView?.runAction(
+                        reset_action, completionHandler: { self.on_reset_view = false })
+                }
+            }
+        }
     }
     
     func scene_check() //Render functions
     {
-        /*if app_state.preview_update_scene
-        {
-            let remove_node = scene_view.scene?.rootNode.childNode(withName: "Figure", recursively: true)
-            remove_node?.removeFromParentNode()
-            
-            scene_view.scene?.rootNode.addChildNode(app_state.previewed_object?.node ?? SCNNode())
-            app_state.previewed_object?.node?.name = "Figure"
-            app_state.preview_update_scene = false
-        }*/
+        
     }
 }
 

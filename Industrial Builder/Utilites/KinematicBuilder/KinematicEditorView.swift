@@ -75,15 +75,19 @@ struct KinematicSceneView: UIViewRepresentable
         app_state.prepare_robot(kinematic_type, scene: viewed_scene)
         
         //Add gesture recognizer
-        let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
-        scene_view.addGestureRecognizer(tap_gesture_recognizer)
+        scene_view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:))))
+        
+        //Add reset double tap recognizer for macOS
+        let double_tap_gesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_reset_double_tap(_:)))
+        double_tap_gesture.numberOfClicksRequired = 2
+        scene_view.addGestureRecognizer(double_tap_gesture)
         
         scene_view.allowsCameraControl = true
         scene_view.rendersContinuously = true
         scene_view.autoenablesDefaultLighting = true
         
-        app_state.reset_view = false
-        app_state.reset_view_enabled = true
+        //print(app_state.kinematic_preview_robot.camera_node?.position)
+        //print(app_state.kinematic_preview_robot.camera_node?.rotation)
         
         return scn_scene(context: context)
     }
@@ -93,8 +97,7 @@ struct KinematicSceneView: UIViewRepresentable
         app_state.prepare_robot(kinematic_type, scene: viewed_scene)
         
         //Add gesture recognizer
-        let tap_gesture_recognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:)))
-        scene_view.addGestureRecognizer(tap_gesture_recognizer)
+        scene_view.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handle_tap(_:))))
         
         scene_view.allowsCameraControl = true
         scene_view.rendersContinuously = true
@@ -110,29 +113,32 @@ struct KinematicSceneView: UIViewRepresentable
 #if os(macOS)
     func updateNSView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
+        
     }
 #else
     func updateUIView(_ ui_view: SCNView, context: Context)
     {
-        app_state.reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: ui_view)
+        
     }
 #endif
     
     func makeCoordinator() -> Coordinator
     {
-        Coordinator(self, scene_view)
+        Coordinator(self, scene_view, app_state: app_state)
     }
     
-    final class Coordinator: NSObject, SCNSceneRendererDelegate
+    final class Coordinator: NSObject, SCNSceneRendererDelegate, ObservableObject
     {
         var control: KinematicSceneView
+        var app_state: AppState
         
-        init(_ control: KinematicSceneView, _ scn_view: SCNView)
+        init(_ control: KinematicSceneView, _ scn_view: SCNView, app_state: AppState)
         {
             self.control = control
             
             self.scn_view = scn_view
+            self.app_state = app_state
+            
             super.init()
         }
         
@@ -142,6 +148,11 @@ struct KinematicSceneView: UIViewRepresentable
         }
         
         private let scn_view: SCNView
+        
+        #if os(macOS)
+        private var on_reset_view = false
+        #endif
+        
         @objc func handle_tap(_ gesture_recognize: UITapGestureRecognizer)
         {
             let tap_location = gesture_recognize.location(in: scn_view)
@@ -151,6 +162,24 @@ struct KinematicSceneView: UIViewRepresentable
             if hit_results.count > 0
             {
                 
+            }
+        }
+        
+        @objc func handle_reset_double_tap(_ gesture_recognize: UITapGestureRecognizer)
+        {
+            reset_camera_view_position(locataion: app_state.kinematic_preview_robot.camera_node?.position ?? SCNVector3(0, 0, 0), rotation: app_state.kinematic_preview_robot.camera_node?.rotation ?? SCNVector4(x: 0, y: 0, z: 0, w: 0), view: scn_view)
+            //reset_camera_view_position(locataion: SCNVector3(800, 295, 200), rotation: SCNVector4(x: 0.0, y: 1.0, z: 0.0, w: 1.570796012878418), view: scn_view)
+            
+            func reset_camera_view_position(locataion: SCNVector3, rotation: SCNVector4, view: SCNView)
+            {
+                if !on_reset_view
+                {
+                    on_reset_view = true
+                    
+                    let reset_action = SCNAction.group([SCNAction.move(to: locataion, duration: 0.5), SCNAction.rotate(toAxisAngle: rotation, duration: 0.5)])
+                    view.defaultCameraController.pointOfView?.runAction(
+                        reset_action, completionHandler: { self.on_reset_view = false })
+                }
             }
         }
     }
