@@ -14,16 +14,61 @@ struct ModelView: View
     
     var body: some View
     {
-        ElementSceneView(node: node)
+        ElementSceneView(node: node, on_tap: tapper(gesture_recognizer:scn_view:))
+        //ElementSceneView(scene: SCNScene(named: "KinematicComponents.scnassets/Robots/6DOF.scn")!)
+    }
+    
+    func tapper(gesture_recognizer: UITapGestureRecognizer, scn_view: SCNView)
+    {
+        let tap_location = gesture_recognizer.location(in: scn_view)
+        let hit_results = scn_view.hitTest(tap_location, options: [:])
+        var result = SCNHitTestResult()
+        
+        if hit_results.count > 0
+        {
+            result = hit_results[0]
+            
+            print(result.localCoordinates)
+            print("🍮 tapped – \(result.node.name ?? "None")")
+        }
     }
 }
 
 //MARK: - Scene views
 struct ElementSceneView: UIViewRepresentable
 {
-    let scene_view = SCNView(frame: .zero)
-    let viewed_scene = SCNScene()
-    let node: SCNNode
+    private let scene_view = SCNView(frame: .zero)
+    private let viewed_scene: SCNScene
+    private let node: SCNNode
+    private let on_tap: ((_ recognizer: UITapGestureRecognizer, _ scene_view: SCNView) -> Void)
+    
+    public init(node: SCNNode)
+    {
+        self.viewed_scene = SCNScene()
+        self.node = node
+        self.on_tap = {_, _ in }
+    }
+    
+    public init(node: SCNNode, on_tap: @escaping (_: UITapGestureRecognizer, _: SCNView) -> Void)
+    {
+        self.viewed_scene = SCNScene()
+        self.node = node
+        self.on_tap = on_tap
+    }
+    
+    public init(scene: SCNScene)
+    {
+        self.viewed_scene = scene
+        self.node = SCNNode()
+        self.on_tap = {_, _ in }
+    }
+    
+    public init(scene: SCNScene, on_tap: @escaping (_: UITapGestureRecognizer, _: SCNView) -> Void)
+    {
+        self.viewed_scene = scene
+        self.node = SCNNode()
+        self.on_tap = on_tap
+    }
     
     func scn_scene(context: Context) -> SCNView
     {
@@ -53,11 +98,14 @@ struct ElementSceneView: UIViewRepresentable
         
         scene_view.backgroundColor = UIColor.clear
         
-        let camera_node = SCNNode()
-        camera_node.camera = SCNCamera()
-        camera_node.position = SCNVector3(0, 0, 2)
-        viewed_scene.rootNode.addChildNode(camera_node)
-        scene_view.pointOfView = camera_node
+        if viewed_scene.rootNode.childNodes.count == 0
+        {
+            let camera_node = SCNNode()
+            camera_node.camera = SCNCamera()
+            camera_node.position = SCNVector3(0, 0, 2)
+            viewed_scene.rootNode.addChildNode(camera_node)
+            scene_view.pointOfView = camera_node
+        }
         
         return scn_scene(context: context)
     }
@@ -94,16 +142,18 @@ struct ElementSceneView: UIViewRepresentable
     
     func makeCoordinator() -> Coordinator
     {
-        Coordinator(self, scene_view)
+        Coordinator(self, scene_view, on_tap: on_tap)
     }
     
     final class Coordinator: NSObject, SCNSceneRendererDelegate
     {
         var control: ElementSceneView
+        var on_tap: (UITapGestureRecognizer, SCNView) -> ()
         
-        init(_ control: ElementSceneView, _ scn_view: SCNView)
+        init(_ control: ElementSceneView, _ scn_view: SCNView, on_tap: @escaping (UITapGestureRecognizer, SCNView) -> ())
         {
             self.control = control
+            self.on_tap = on_tap
             
             self.scn_view = scn_view
             super.init()
@@ -122,17 +172,7 @@ struct ElementSceneView: UIViewRepresentable
         
         @objc func handle_tap(_ gesture_recognize: UITapGestureRecognizer)
         {
-            let tap_location = gesture_recognize.location(in: scn_view)
-            let hit_results = scn_view.hitTest(tap_location, options: [:])
-            var result = SCNHitTestResult()
-            
-            if hit_results.count > 0
-            {
-                result = hit_results[0]
-                
-                print(result.localCoordinates)
-                print("🍮 tapped – \(result.node.name ?? "None")")
-            }
+            on_tap(gesture_recognize, scn_view)
         }
         
         @objc func handle_reset_double_tap(_ gesture_recognize: UITapGestureRecognizer)
