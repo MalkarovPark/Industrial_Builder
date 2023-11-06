@@ -37,9 +37,9 @@ struct ModelSelectorView: View
                         }
                     
                     ForEach(nodes.indices, id: \.self)
-                    { number in
-                        ElementItemView(node: nodes[number], action: { print(number); is_presented = false })
-                            .id(number)
+                    { index in
+                        ElementItemView(node: nodes[index], action: { print(index); is_presented = false })
+                            .id(index)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
                     }
                 }

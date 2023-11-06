@@ -23,9 +23,9 @@ struct ModelsListView: View
                 LazyVGrid(columns: columns, spacing: 24)
                 {
                     ForEach(base_stc.models_nodes.indices, id: \.self)
-                    { number in
-                        ModelCard(node: $base_stc.models_nodes[number], name: "Model \(number)") { is_presented in
-                            ModelView(node: $base_stc.models_nodes[number])
+                    { index in
+                        ModelCard(node: $base_stc.models_nodes[index], name: "Model \(index)") { is_presented in
+                            ModelView(node: $base_stc.models_nodes[index])
                                 .modifier(WindowFramer())
                                 .modifier(ViewCloseButton(is_presented: is_presented))
                         }

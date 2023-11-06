@@ -54,6 +54,12 @@ struct ElementSceneView: UIViewRepresentable
         app_state.reset_view = false
         app_state.reset_view_enabled = true
         
+        let camera_node = SCNNode()
+        camera_node.camera = SCNCamera()
+        camera_node.position = SCNVector3(0, 0, 2)
+        viewed_scene.rootNode.addChildNode(camera_node)
+        scene_view.pointOfView = camera_node
+        
         return scn_scene(context: context)
     }
     #else

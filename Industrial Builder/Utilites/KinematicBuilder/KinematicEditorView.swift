@@ -66,7 +66,6 @@ struct KinematicSceneView: UIViewRepresentable
     {
         scene_view.scene = viewed_scene
         scene_view.delegate = context.coordinator
-        //scene_view.scene?.background.contents = UIColor.clear
         return scene_view
     }
     
