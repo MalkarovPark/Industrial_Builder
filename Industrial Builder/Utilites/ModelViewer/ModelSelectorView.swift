@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import IndustrialKit
 
 struct ModelSelectorView: View
 {
@@ -61,7 +62,7 @@ struct ElementItemView: View
         {
             Button(action: action)
             {
-                ElementSceneView(node: node)
+                ObjectSceneView(node: node)
                     .disabled(true)
             }
             .buttonStyle(.borderless)

@@ -42,7 +42,7 @@ public class StandardTemplateConstruct: ObservableObject
         material.diffuse.contents = UIColor.green
         
         let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                box.materials = [material]
+        box.materials = [material]
         viewed_model_node = SCNNode(geometry: box)
     }
     

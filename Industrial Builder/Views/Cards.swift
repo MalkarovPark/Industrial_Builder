@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import IndustrialKit
 
 struct StandardNumericalCard<Content: View>: View
 {
@@ -195,7 +196,7 @@ struct ModelCard<Content: View>: View
     {
         Button(action: { is_presented = true })
         {
-            ElementSceneView(node: node)
+            ObjectSceneView(node: node)
                 .disabled(true)
         }
         .buttonStyle(.borderless)
