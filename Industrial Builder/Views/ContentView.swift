@@ -16,7 +16,23 @@ struct ContentView: View
     @State var sidebar_selection: navigation_item? = .PackageView //Selected sidebar item
     
     @StateObject private var base_stc = StandardTemplateConstruct()
+    
+    @ViewBuilder var body: some View
+    {
+        Sidebar(document: $document)
+            .environmentObject(base_stc)
+        #if os(iOS) || os(visionOS)
+            .navigationBarHidden(true)
+        #endif
+    }
+}
 
+struct Sidebar: View
+{
+    @Binding var document: STCDocument
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -51,7 +67,7 @@ struct ContentView: View
                             Label(selection.localizedName, systemImage: selection.image_name)
                         }
                     }
-                    .onDelete(perform: deleteItems)
+                    //.onDelete(perform: deleteItems)
                 }
                 #if os(macOS)
                 .navigationSplitViewColumnWidth(min: 180, ideal: 200)
@@ -71,27 +87,6 @@ struct ContentView: View
             .onAppear
             {
                 base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules, kinematic_groups: document.kinematic_groups)
-            }
-        }
-        .environmentObject(base_stc)
-    }
-
-    private func addItem()
-    {
-        withAnimation
-        {
-            //let newItem = Item(timestamp: Date())
-            //modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet)
-    {
-        withAnimation
-        {
-            for index in offsets
-            {
-                //modelContext.delete(items[index])
             }
         }
     }
