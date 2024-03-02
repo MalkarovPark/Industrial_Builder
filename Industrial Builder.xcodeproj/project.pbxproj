@@ -32,6 +32,7 @@
 		62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552F2AE962CA00554A5B /* ComponentsView.swift */; };
 		62AE55322AE96B3D00554A5B /* KinematicsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE55312AE96B3D00554A5B /* KinematicsListView.swift */; };
 		62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */; };
+		62E243832B9381EC009C76EB /* ListBorderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E243822B9381EC009C76EB /* ListBorderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		62AE552F2AE962CA00554A5B /* ComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsView.swift; sourceTree = "<group>"; };
 		62AE55312AE96B3D00554A5B /* KinematicsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicsListView.swift; sourceTree = "<group>"; };
 		62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = KinematicComponents.scnassets; sourceTree = "<group>"; };
+		62E243822B9381EC009C76EB /* ListBorderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBorderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				628E145B2AD8ADEF00BC8FD9 /* AppEditors */,
 				62AE552F2AE962CA00554A5B /* ComponentsView.swift */,
 				6296D2892AEC55580094FB19 /* Cards.swift */,
+				62E243822B9381EC009C76EB /* ListBorderer.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 				629B526C2AF69056003F45D2 /* ModelsListView.swift in Sources */,
 				627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */,
 				627D3EC12AD42A0800D5988D /* GalleryView.swift in Sources */,
+				62E243832B9381EC009C76EB /* ListBorderer.swift in Sources */,
 				628E14542AD7E44C00BC8FD9 /* ChangerModulesEditor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

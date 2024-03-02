@@ -11,7 +11,7 @@ import IndustrialKit
 
 struct KinematicEditorView: View
 {
-    @Binding var is_presented: Bool
+    //@Binding var is_presented: Bool
     @Binding var kinematic: KinematicGroup
     
     @EnvironmentObject var app_state: AppState
@@ -43,6 +43,9 @@ struct KinematicEditorView: View
                 Rectangle()
                     .fill(.gray)
             }
+            #if !os(macOS)
+            .ignoresSafeArea(.container, edges: .bottom)
+            #endif
         }
         .overlay(alignment: .bottom)
         {
@@ -53,20 +56,17 @@ struct KinematicEditorView: View
                 .shadow(radius: 8)
                 .padding(.bottom)
         }
-        .overlay(alignment: .topTrailing)
+        .toolbar
         {
             Button (action: { show_inspector.toggle() })
             {
                 Image(systemName: "sidebar.trailing")
             }
-            .buttonStyle(.bordered)
-            .padding()
         }
         .inspector(isPresented: $show_inspector)
         {
             KinematicInspectorView(elements: $kinematic.data)
         }
-        .modifier(ViewCloseButton(is_presented: $is_presented))
         .frame(minWidth: 640, minHeight: 480)
     }
 }
@@ -75,60 +75,70 @@ struct KinematicInspectorView: View
 {
     @Binding var elements: [KinematicElement]
     
-    @State private var expanded = [true, false, false, false]
+    @State private var expanded = [false, false, false]
     
     @EnvironmentObject var app_state: AppState
     
     var body: some View
     {
-        List
+        VStack(spacing: 0)
         {
-            DisclosureGroup("Parameters", isExpanded: $expanded[0])
+            List
             {
-                ForEach(elements.indices, id: \.self)
-                { index in
-                    HStack(spacing: 12)
-                    {
-                        Text(elements[index].name)
-                        TextField("0", value: $elements[index].value, formatter: NumberFormatter())
-                        #if os(macOS)
-                            .textFieldStyle(.squareBorder)
-                        #endif
-                        Stepper("", value: $elements[index].value)
-                            .labelsHidden()
+                Section("Parameters")
+                {
+                    ForEach(elements.indices, id: \.self)
+                    { index in
+                        HStack(spacing: 12)
+                        {
+                            Text(elements[index].name)
+                            TextField("0", value: $elements[index].value, formatter: NumberFormatter())
+                            #if os(macOS)
+                                .textFieldStyle(.squareBorder)
+                            #endif
+                            Stepper("", value: $elements[index].value)
+                                .labelsHidden()
+                        }
                     }
                 }
             }
+            #if os(macOS)
+            .listStyle(.plain)
+            #endif
+            .modifier(ListBorderer())
+            .padding(.bottom)
             
-            Section("Origin")
+            List
             {
-                DisclosureGroup("Location", isExpanded: $expanded[1])
+                Section("Origin")
                 {
-                    OriginMoveView(origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
-                }
-                
-                DisclosureGroup("Rotation", isExpanded: $expanded[2])
-                {
-                    OriginRotateView(origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
-                }
-                
-                DisclosureGroup("Scale", isExpanded: $expanded[3])
-                {
-                    SpaceScaleView(space_scale: $app_state.kinematic_preview_robot.space_scale)
-                }
-                .onChange(of: app_state.kinematic_preview_robot.space_scale)
-                { _, _ in
-                    app_state.kinematic_preview_robot.update_space_scale()
+                    DisclosureGroup("Location", isExpanded: $expanded[0])
+                    {
+                        OriginMoveView(origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
+                    }
+                    
+                    DisclosureGroup("Rotation", isExpanded: $expanded[1])
+                    {
+                        OriginRotateView(origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
+                    }
+                    
+                    DisclosureGroup("Scale", isExpanded: $expanded[2])
+                    {
+                        SpaceScaleView(space_scale: $app_state.kinematic_preview_robot.space_scale)
+                    }
+                    .onChange(of: app_state.kinematic_preview_robot.space_scale)
+                    { _, _ in
+                        app_state.kinematic_preview_robot.update_space_scale()
+                    }
                 }
             }
+            .frame(height: 192)//144)
+            #if os(macOS)
+            .listStyle(.plain)
+            #endif
+            .modifier(ListBorderer())
         }
-        #if os(macOS)
-        .listStyle(.plain)
-        #endif
-        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-        #if os(macOS)
         .padding()
-        #endif
         .onAppear
         {
             app_state.update_robot_kinematic(elements)
@@ -269,7 +279,7 @@ let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
 
 #Preview
 {
-    KinematicEditorView(is_presented: .constant(true), kinematic: .constant(KinematicGroup(name: "", type: .portal, data: [KinematicElement]())))
+    KinematicEditorView(kinematic: .constant(KinematicGroup(name: "", type: .portal, data: [KinematicElement]())))
         .frame(minWidth: 256, minHeight: 512)
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(AppState())

@@ -35,52 +35,18 @@ struct PackageView: View
                     document.package.title = newValue
                 }
                 
-                /*HStack(spacing: 0)
-                {
-                    VStack(alignment: .leading, spacing: 8)
-                    {
-                        Text("Description")
-                        TextEditor(text: $base_stc.package.description)
-                            .frame(minHeight: 192)
-                            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                            .shadow(radius: 1)
-                    }
-                    .padding([.bottom, .horizontal])
-                    .onChange(of: base_stc.package.description)
-                    { oldValue, newValue in
-                        document.package.description = newValue
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 8)
-                    {
-                        Text("Gallery")
-                        
-                        GalleryView(document: $document)
-                    }
-                    .padding([.bottom, .trailing])
-                }
-                
-                //Divider()
-                
-                Text("Utilites")
-                    .font(.title2)
-                    .padding([.bottom, .horizontal])*/
-                
                 VStack(alignment: .leading, spacing: 8)
                 {
                     Text("Description")
                     TextEditor(text: $base_stc.package.description)
                         .frame(minHeight: 192)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                        .shadow(radius: 1)
+                        .modifier(ListBorderer())
                 }
                 .padding([.bottom, .horizontal])
                 .onChange(of: base_stc.package.description)
                 { oldValue, newValue in
                     document.package.description = newValue
                 }
-                
-                //Divider()
                 
                 Text("Gallery")
                     .font(.title2)

@@ -77,11 +77,7 @@ struct ToolModulesEditor: View
                     }
                 }
                 .frame(width: 200)
-                #if os(iOS)
-                .background(.white)
-                #endif
-                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                .shadow(radius: 1)
+                .modifier(ListBorderer())
                 .padding(.trailing)
                 
                 GroupBox

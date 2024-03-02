@@ -14,8 +14,6 @@ struct ModelSelectorView: View
     @Binding var is_presented: Bool
     @Binding var nodes: [SCNNode]
     
-    //private let numbers = (0...16).map { $0 }
-    
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 88, maximum: 88), spacing: 0)]
     #else

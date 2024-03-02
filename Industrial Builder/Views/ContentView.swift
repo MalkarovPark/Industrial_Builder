@@ -177,4 +177,3 @@ struct TextFrame: ViewModifier
 {
     ContentView(document: .constant(STCDocument()))
 }
-
