@@ -28,12 +28,12 @@ struct AppView: View
                 
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    StandardNumericalCard(name: "Robot", image_name: "r.square.fill", color: .green, count: 0)
+                    StandardSheetCard(name: "Robot", count_number: 0, image_name: "r.square.fill", color: .green)
                     { is_presented in
                         RobotModulesEditor(is_presented: is_presented)
                     }
                     
-                    StandardNumericalCard(name: "Tool", image_name: "hammer.fill", color: .teal, count: base_stc.tool_modules.count)
+                    StandardSheetCard(name: "Tool", count_number: base_stc.tool_modules.count, image_name: "hammer.fill", color: .teal)
                     { is_presented in
                         ToolModulesEditor(is_presented: is_presented)
                             .onChange(of: base_stc.tool_modules)
@@ -42,7 +42,7 @@ struct AppView: View
                             }
                     }
                     
-                    StandardNumericalCard(name: "Changer", image_name: "wand.and.rays", color: .indigo, count: base_stc.changer_modules.count)
+                    StandardSheetCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .indigo)
                     { is_presented in
                         ChangerModulesEditor(is_presented: is_presented)
                             .onChange(of: base_stc.changer_modules)

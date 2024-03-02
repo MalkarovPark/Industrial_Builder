@@ -9,16 +9,24 @@ import SwiftUI
 import SceneKit
 import IndustrialKit
 
-struct StandardNumericalCard<Content: View>: View
+struct StandardCard: View
 {
     @State private var is_presented = false
     
     let name: String
     let image_name: String
-    let color: Color
-    let count: Int
     
-    let content: (_ is_presented: Binding<Bool>) -> Content
+    let count_number: Int?
+    
+    let color: Color
+    
+    public init(name: String, count_number: Int? = nil, image_name: String, color: Color)
+    {
+        self.name = name
+        self.count_number = count_number
+        self.image_name = image_name
+        self.color = color
+    }
     
     var body: some View
     {
@@ -28,41 +36,108 @@ struct StandardNumericalCard<Content: View>: View
             {
                 Rectangle()
                     .foregroundColor(color)
-            }
-            .frame(height: 128)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .overlay(alignment: .topLeading)
-            {
-                Text(name)
-                    .fontWeight(.bold)
-                    .font(.system(.title, design: .rounded))
-                    .foregroundColor(.white)
-                    .padding()
-            }
-            .overlay(alignment: .bottomLeading)
-            {
-                if count > 0
-                {
-                    Text("\(count)")
-                        .fontWeight(.bold)
-                        .font(.system(size: 48, design: .rounded))
+                    .overlay(alignment: .trailing)
+                    {
+                        Image(systemName: image_name)
+                            .fontWeight(.bold)
+                            .font(.system(size: 96))
                         #if os(macOS)
-                        .foregroundColor(Color(NSColor.quaternaryLabelColor))
+                            .foregroundColor(Color(NSColor.quaternaryLabelColor))
                         #else
-                        .foregroundColor(Color(UIColor.quaternaryLabel))
+                            .foregroundColor(Color(UIColor.quaternaryLabel))
                         #endif
-                        .padding()
-                }
+                            .padding()
+                            .offset(x: 40, y: 20)
+                    }
+                    .overlay(alignment: .leading)
+                    {
+                        VStack(spacing: 0)
+                        {
+                            Text(name)
+                                .font(.system(size: 28))
+                                .foregroundColor(.white)
+                                .padding()
+                        }
+                    }
+                    .overlay(alignment: .topTrailing)
+                    {
+                        if count_number != nil
+                        {
+                            if count_number! > 0
+                            {
+                                Text("\(count_number!)")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 28, design: .rounded))
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .offset(y: -6)
+                            }
+                        }
+                    }
             }
-            .overlay(alignment: .bottomTrailing)
-            {
-                Image(systemName: image_name)
-                    .fontWeight(.bold)
-                    .font(.system(size: 48))
-                    .foregroundColor(.secondary)
-                    .shadow(radius: 8)
-                    .padding()
-            }
+            .frame(height: 96)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        }
+        .shadow(radius: 8)
+    }
+}
+
+struct StandardNavigationCard<Content: View>: View
+{
+    let name: String
+    let image_name: String
+    
+    let count_number: Int?
+    
+    let color: Color
+    
+    let link_view: () -> Content
+    
+    public init(name: String, count_number: Int? = nil, image_name: String, color: Color, link_view: @escaping () -> Content)
+    {
+        self.name = name
+        self.count_number = count_number
+        self.image_name = image_name
+        self.color = color
+        
+        self.link_view = link_view
+    }
+    
+    var body: some View
+    {
+        NavigationLink(destination: link_view)
+        {
+            StandardCard(name: name, count_number: count_number, image_name: image_name, color: color)
+        }
+        .buttonStyle(.borderless)
+    }
+}
+
+struct StandardSheetCard<Content: View>: View
+{
+    @State private var is_presented = false
+    
+    let name: String
+    let image_name: String
+    
+    let count_number: Int?
+    let color: Color
+    
+    let content: (_ is_presented: Binding<Bool>) -> Content
+    
+    public init(name: String, count_number: Int? = nil, image_name: String, color: Color, @ViewBuilder content: @escaping (_ is_presented: Binding<Bool>) -> Content)
+    {
+        self.name = name
+        self.image_name = image_name
+        self.count_number = count_number
+        self.color = color
+        
+        self.content = content
+    }
+    
+    var body: some View
+    {
+        StandardCard(name: name, count_number: count_number, image_name: image_name, color: color)
             .onTapGesture
             {
                 is_presented = true
@@ -71,68 +146,6 @@ struct StandardNumericalCard<Content: View>: View
             .sheet(isPresented: $is_presented, content: {
                 content($is_presented)
             })
-        }
-        #if os(visionOS)
-        .frame(depth: 16)
-        #endif
-        .shadow(radius: 8)
-    }
-}
-
-struct StandardCard<Content: View>: View
-{
-    @State private var is_presented = false
-    
-    let name: String
-    let image_name: String
-    let color: Color
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
-    
-    var body: some View
-    {
-        VStack(spacing: 0)
-        {
-            ZStack
-            {
-                Rectangle()
-                    .foregroundColor(color)
-                    .overlay(alignment: .leading)
-                    {
-                        Text(name)
-                            .font(.system(.title))
-                            .foregroundColor(.white)
-                            .padding()
-                    }
-                    .overlay(alignment: .trailing)
-                    {
-                        Image(systemName: image_name)
-                            .fontWeight(.bold)
-                            .font(.system(size: 48))
-                        #if os(macOS)
-                            .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                        #else
-                            .foregroundColor(Color(UIColor.quaternaryLabel))
-                        #endif
-                            .padding()
-                    }
-                    .onTapGesture
-                    {
-                        is_presented = true
-                        //openWindow(id: "editor")
-                    }
-                    .sheet(isPresented: $is_presented, content: {
-                        content($is_presented)
-                    })
-            }
-            .frame(height: 96)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        }
-        #if os(visionOS)
-        .frame(depth: 16)
-        #endif
-        .shadow(radius: 8)
-        //.padding()
     }
 }
 
@@ -223,16 +236,19 @@ struct ModelCard<Content: View>: View
 
 #Preview
 {
-    StandardNumericalCard(name: "Name", image_name: "cube", color: .green, count: 2)
-    { is_presented in
-        EmptyView()
-    }
-    .frame(width: 256)
-}
-
-#Preview
-{
     StandardCard(name: "Name", image_name: "gearshape.2.fill", color: .gray)
+        .frame(width: 256)
+}
+
+#Preview
+{
+    StandardCard(name: "Name", count_number: 2, image_name: "gearshape.2.fill", color: .gray)
+        .frame(width: 256)
+}
+
+#Preview
+{
+    StandardSheetCard(name: "Name", count_number: 2, image_name: "gearshape.2.fill", color: .gray)
     { is_presented in
         EmptyView()
     }
@@ -241,7 +257,7 @@ struct ModelCard<Content: View>: View
 
 #Preview
 {
-    NaviagtionNumericalCard(name: "Name", image_name: "cylinder.fill", color: .mint, count: 0)
+    StandardNavigationCard(name: "Name", image_name: "cylinder.fill", color: .mint)
     {
         EmptyView()
     }

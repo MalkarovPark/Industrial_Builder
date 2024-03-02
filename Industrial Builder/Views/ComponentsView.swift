@@ -26,12 +26,12 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        NaviagtionNumericalCard(name: "Models", image_name: "cube", color: .mint, count: base_stc.models_nodes.count)
+                        StandardNavigationCard(name: "Models", count_number: base_stc.models_nodes.count, image_name: "cube", color: .mint)
                         {
                             ModelsListView()
                         }
                         
-                        NaviagtionNumericalCard(name: "Kinematics", image_name: "point.3.connected.trianglepath.dotted", color: .pink, count: base_stc.kinematic_groups.count)
+                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .pink)
                         {
                             KinematicsListView()
                         }
@@ -49,66 +49,6 @@ struct ComponentsView: View
             }
         }
         .modifier(WindowFramer())
-    }
-}
-
-struct NaviagtionNumericalCard<Content: View>: View
-{
-    let name: String
-    let image_name: String
-    let color: Color
-    let count: Int
-    let link_view: () -> Content
-    
-    var body: some View
-    {
-        VStack(spacing: 0)
-        {
-            NavigationLink(destination: link_view)
-            {
-                Rectangle()
-                    .foregroundColor(color)
-            }
-            .buttonStyle(.plain)
-            .frame(height: 128)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .overlay(alignment: .topLeading)
-            {
-                Text(name)
-                    .fontWeight(.bold)
-                    .font(.system(.title, design: .rounded))
-                    .foregroundColor(.white)
-                    .padding()
-            }
-            .overlay(alignment: .bottomLeading)
-            {
-                if count > 0
-                {
-                    Text("\(count)")
-                        .fontWeight(.bold)
-                        .font(.system(size: 48, design: .rounded))
-                        #if os(macOS)
-                        .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                        #else
-                        .foregroundColor(Color(UIColor.quaternaryLabel))
-                        #endif
-                        .padding()
-                }
-            }
-            .overlay(alignment: .bottomTrailing)
-            {
-                Image(systemName: image_name)
-                    .fontWeight(.bold)
-                    .font(.system(size: 48))
-                    .foregroundColor(.secondary)
-                    .shadow(radius: 8)
-                    .padding()
-            }
-        }
-        #if os(visionOS)
-        .frame(depth: 16)
-        #endif
-        .shadow(radius: 8)
     }
 }
 

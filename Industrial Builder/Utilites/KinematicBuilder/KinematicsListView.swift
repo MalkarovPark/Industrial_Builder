@@ -26,7 +26,7 @@ struct KinematicsListView: View
                 {
                     ForEach(base_stc.kinematic_groups.indices, id: \.self)
                     { index in
-                        StandardCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
+                        StandardSheetCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
                         { is_presented in
                             KinematicEditorView(is_presented: is_presented, kinematic: $base_stc.kinematic_groups[index])
                         }
