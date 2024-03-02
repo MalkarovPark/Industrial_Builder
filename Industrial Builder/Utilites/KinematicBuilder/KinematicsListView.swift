@@ -114,7 +114,6 @@ struct AddKinematicView: View
             new_item_name = "None"
         }
         
-        //modules_items.append(ChangerModule(name: new_module_name))
         switch kinematic_preset
         {
         /*case .none:

@@ -43,10 +43,10 @@ class AppState : ObservableObject
     //MARK: - Kinematic view functions
     @Published var kinematic_preview_robot = Robot()
     
-    public func prepare_robot(_ kinematic: KinematicGroupTypes, scene: SCNScene)
+    public func prepare_robot(_ kinematic: KinematicGroup, scene: SCNScene)
     {
         //Connect workcell box and pointer
-        switch kinematic
+        switch kinematic.type
         {
         case ._6DOF:
             kinematic_preview_robot = Robot(name: "", model_controller: _6DOFController(), connector: RobotConnector(), scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn")
@@ -56,7 +56,8 @@ class AppState : ObservableObject
         
         kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: true)
         kinematic_preview_robot.origin_location = [100, 100, 100]
-        //kinematic_preview_robot.origin_rotation = [0, 0, 0]
+        
+        update_robot_kinematic(kinematic.data)
     }
     
     public func update_robot_kinematic(_ elements: [KinematicElement])

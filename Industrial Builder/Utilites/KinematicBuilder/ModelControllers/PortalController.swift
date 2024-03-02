@@ -126,6 +126,7 @@ class PortalController: RobotModelController
         var saved_material = SCNMaterial()
         
         modified_node = node.childNode(withName: "part_v", recursively: true)!
+        
         if lengths[0] - 40 > 0
         {
             saved_material = (modified_node.geometry?.firstMaterial)!

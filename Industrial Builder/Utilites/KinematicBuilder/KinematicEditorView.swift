@@ -36,7 +36,7 @@ struct KinematicEditorView: View
             }
             .onAppear
             {
-                app_state.prepare_robot(kinematic.type, scene: viewed_scene)
+                app_state.prepare_robot(kinematic, scene: viewed_scene)
             }
             .background
             {
@@ -50,7 +50,7 @@ struct KinematicEditorView: View
                 .frame(width: 256)
                 .background(.bar)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .shadow(radius: 4)
+                .shadow(radius: 8)
                 .padding(.bottom)
         }
         .overlay(alignment: .topTrailing)
