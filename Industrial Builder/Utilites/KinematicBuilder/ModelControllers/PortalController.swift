@@ -133,7 +133,7 @@ class PortalController: RobotModelController
         modified_node.geometry?.firstMaterial = saved_material
         
         //Frames
-        var node = nodes.last!
+        var node = nodes.first!
         
         modified_node = node.childNode(withName: "part_v", recursively: true)!
         
@@ -144,7 +144,7 @@ class PortalController: RobotModelController
         modified_node.geometry = SCNBox(width: 80, height: CGFloat(vf_length), length: 80, chamferRadius: 10)
         modified_node.geometry?.firstMaterial = saved_material
         #if os(macOS)
-        modified_node.position.y = CGFloat(vf_length / 2 + lengths[8] / 2)
+        modified_node.position.y = CGFloat(vf_length / 2)
         #else
         modified_node.position.y = vf_length / 2 + lengths[8] / 2
         #endif
