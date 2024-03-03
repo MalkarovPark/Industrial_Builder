@@ -203,7 +203,7 @@ struct OriginMoveView: View
                 .frame(width: 20)
             TextField("0", value: $origin_view_pos_location[0], format: .number)
                 .textFieldStyle(.roundedBorder)
-            Stepper("Enter", value: $origin_view_pos_location[0], in: -50...50)
+            Stepper("Enter", value: $origin_view_pos_location[0], in: -1000...1000)
                 .labelsHidden()
         }
         
@@ -213,7 +213,7 @@ struct OriginMoveView: View
                 .frame(width: 20)
             TextField("0", value: $origin_view_pos_location[1], format: .number)
                 .textFieldStyle(.roundedBorder)
-            Stepper("Enter", value: $origin_view_pos_location[1], in: -50...50)
+            Stepper("Enter", value: $origin_view_pos_location[1], in: -1000...1000)
                 .labelsHidden()
         }
         
@@ -223,7 +223,7 @@ struct OriginMoveView: View
                 .frame(width: 20)
             TextField("0", value: $origin_view_pos_location[2], format: .number)
                 .textFieldStyle(.roundedBorder)
-            Stepper("Enter", value: $origin_view_pos_location[2], in: -50...50)
+            Stepper("Enter", value: $origin_view_pos_location[2], in: -1000...1000)
                 .labelsHidden()
         }
     }

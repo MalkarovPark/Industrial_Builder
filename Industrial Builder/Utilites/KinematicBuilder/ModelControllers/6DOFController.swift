@@ -37,7 +37,8 @@ class _6DOFController: RobotModelController
         
         if without_lengths
         {
-            lengths.append(Float(nodes[0].position.y)) //Append base height [8]
+            lengths.append(Float(nodes[0].position.y)) //Append base height [6]
+            nodes.append(node.childNode(withName: "base", recursively: true)!) //Base pillar node [7]
         }
     }
     
@@ -152,9 +153,24 @@ class _6DOFController: RobotModelController
         var modified_node = SCNNode()
         var saved_material = SCNMaterial()
         
+        //Change height of base
+        modified_node = nodes[7]
+        saved_material = (modified_node.geometry?.firstMaterial)!
+        
+        #if os(macOS)
+        modified_node.geometry = SCNCylinder(radius: 80, height: CGFloat(lengths[6]))
+        modified_node.position.y = CGFloat(lengths[6] / 2)
+        #else
+        modified_node.geometry = SCNCylinder(radius: 80, height: lengths[6])
+        modified_node.position.y = lengths[6] / 2
+        #endif
+        
+        modified_node.geometry?.firstMaterial = saved_material
+        
+        //Change other lengths
         saved_material = (nodes[0].childNode(withName: "box", recursively: false)!.geometry?.firstMaterial)! //Save material from part box
         
-        for i in 0..<nodes.count - 1
+        for i in 0..<nodes.count - 2
         {
             //Get length 0 if first robot part selected and get previous length for all next parts
             #if os(macOS)
@@ -166,7 +182,7 @@ class _6DOFController: RobotModelController
             if i < 5
             {
                 //Change box model size and move that node vertical for parts 0-4
-                modified_node = nodes[i].childNode(withName: "box", recursively: false)!
+                modified_node = nodes[i].childNode(withName: "box", recursively: false) ?? SCNNode()
                 if i < 3
                 {
                     modified_node.geometry = SCNBox(width: 60, height: CGFloat(lengths[i]), length: 60, chamferRadius: 10) //Set geometry for 0-2 parts with width 6 and chamfer

@@ -14,6 +14,8 @@ struct KinematicsListView: View
     
     @State private var add_kinematic_view_presented = false
     
+    @EnvironmentObject var app_state: AppState
+    
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
@@ -29,6 +31,15 @@ struct KinematicsListView: View
                         StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
                         {
                             KinematicEditorView(kinematic: $base_stc.kinematic_groups[index])
+                        }
+                        .contextMenu
+                        {
+                            Button(role: .destructive, action: {
+                                delete_kinematic(index)
+                            })
+                            {
+                                Label("Delete", systemImage: "xmark")
+                            }
                         }
                     }
                 }
@@ -47,6 +58,13 @@ struct KinematicsListView: View
             }
         }
         .modifier(WindowFramer())
+    }
+    
+    private func delete_kinematic(_ index: Int)
+    {
+        base_stc.kinematic_groups.remove(at: index)
+        app_state.document_notify.toggle()
+        //document.images = base_stc.images
     }
 }
 

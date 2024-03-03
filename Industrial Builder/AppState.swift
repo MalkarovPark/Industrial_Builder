@@ -54,7 +54,7 @@ class AppState : ObservableObject
             kinematic_preview_robot = Robot(name: "", model_controller: PortalController(), connector: RobotConnector(), scene_name: "KinematicComponents.scnassets/Robots/Portal.scn")
         }
         
-        kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: true)
+        kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: false)
         kinematic_preview_robot.origin_location = [100, 100, 100]
         
         update_robot_kinematic(kinematic.data)
@@ -70,6 +70,7 @@ class AppState : ObservableObject
         
         kinematic_preview_robot.model_controller.transform_by_lengths(lengths)
         kinematic_preview_robot.update_model()
+        kinematic_preview_robot.robot_location_place()
     }
 }
 
