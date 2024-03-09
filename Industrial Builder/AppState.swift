@@ -13,9 +13,6 @@ import IndustrialKit
 //MARK: - Class for work with various application data
 class AppState : ObservableObject
 {
-    //Commands
-    //@Published var menu_tap = false
-    
     #if os(iOS) || os(visionOS)
     @Published var settings_view_presented = false //Flag for showing setting view for iOS and iPadOS
     #endif
@@ -37,7 +34,7 @@ class AppState : ObservableObject
     
     @Published var view_update_state = false //Flag for update parts view grid
     
-    //MARK: - Visual functions
+    //MARK: - Document handling
     @Published var document_notify = true
     
     //MARK: - Kinematic view functions

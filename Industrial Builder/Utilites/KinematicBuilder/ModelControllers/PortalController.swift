@@ -43,8 +43,9 @@ class PortalController: RobotModelController
         if without_lengths
         {
             lengths.append(Float(node.childNode(withName: "frame", recursively: true)!.position.y)) //Append base height [8]
-            nodes.append(node.childNode(withName: "base", recursively: true)!) //Base pillar node [4]
         }
+        
+        nodes.append(node.childNode(withName: "base", recursively: true)!) //Base pillar node [4]
     }
     
     //MARK: - Inverse kinematic parts calculation for roataion angles of portal
@@ -122,11 +123,10 @@ class PortalController: RobotModelController
         modified_node = nodes[4]
         saved_material = (modified_node.geometry?.firstMaterial)!
         
-        #if os(macOS)
         modified_node.geometry = SCNCylinder(radius: 80, height: CGFloat(lengths[8]))
+        #if os(macOS)
         modified_node.position.y = CGFloat(lengths[8] / 2)
         #else
-        modified_node.geometry = SCNCylinder(radius: 80, height: lengths[8])
         modified_node.position.y = lengths[8] / 2
         #endif
         
@@ -139,7 +139,6 @@ class PortalController: RobotModelController
         
         saved_material = (modified_node.geometry?.firstMaterial)!
         
-        print(lengths)
         let vf_length = lengths[0] - 40
         modified_node.geometry = SCNBox(width: 80, height: CGFloat(vf_length), length: 80, chamferRadius: 10)
         modified_node.geometry?.firstMaterial = saved_material

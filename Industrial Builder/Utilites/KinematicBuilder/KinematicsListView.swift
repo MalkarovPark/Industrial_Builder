@@ -64,7 +64,6 @@ struct KinematicsListView: View
     {
         base_stc.kinematic_groups.remove(at: index)
         app_state.document_notify.toggle()
-        //document.images = base_stc.images
     }
 }
 

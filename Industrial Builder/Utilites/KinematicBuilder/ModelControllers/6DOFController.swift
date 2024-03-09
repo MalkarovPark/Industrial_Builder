@@ -38,8 +38,9 @@ class _6DOFController: RobotModelController
         if without_lengths
         {
             lengths.append(Float(nodes[0].position.y)) //Append base height [6]
-            nodes.append(node.childNode(withName: "base", recursively: true)!) //Base pillar node [7]
         }
+        
+        nodes.append(node.childNode(withName: "base", recursively: true)!) //Base pillar node [7]
     }
     
     //MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
@@ -157,11 +158,10 @@ class _6DOFController: RobotModelController
         modified_node = nodes[7]
         saved_material = (modified_node.geometry?.firstMaterial)!
         
-        #if os(macOS)
         modified_node.geometry = SCNCylinder(radius: 80, height: CGFloat(lengths[6]))
+        #if os(macOS)
         modified_node.position.y = CGFloat(lengths[6] / 2)
         #else
-        modified_node.geometry = SCNCylinder(radius: 80, height: lengths[6])
         modified_node.position.y = lengths[6] / 2
         #endif
         

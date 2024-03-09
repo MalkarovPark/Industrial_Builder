@@ -44,7 +44,6 @@ struct Sidebar: View
                     { selection in
                         NavigationLink
                         {
-                            //Text("Item at \(selection.image_name)")
                             switch selection
                             {
                             case .PackageView:
@@ -66,7 +65,6 @@ struct Sidebar: View
                             Label(selection.localizedName, systemImage: selection.image_name)
                         }
                     }
-                    //.onDelete(perform: deleteItems)
                 }
                 #if os(macOS)
                 .navigationSplitViewColumnWidth(min: 180, ideal: 200)
@@ -132,44 +130,6 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
         case .TargetsView:
             "target"
         }
-    }
-}
-
-struct WindowFramer: ViewModifier
-{
-    public func body(content: Content) -> some View
-    {
-        content
-        #if os(macOS)
-            .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600) //Window sizes for macOS
-        #else
-            .navigationBarTitleDisplayMode(.inline)
-        #endif
-    }
-}
-
-struct SheetFramer: ViewModifier
-{
-    public func body(content: Content) -> some View
-    {
-        content
-        #if os(macOS)
-            .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
-        #elseif os(visionOS)
-            .frame(width: 512, height: 512)
-        #endif
-    }
-}
-
-struct TextFrame: ViewModifier
-{
-    public func body(content: Content) -> some View
-    {
-        content
-            .frame(minHeight: 64)
-        #if os(macOS)
-            .shadow(radius: 1)
-        #endif
     }
 }
 

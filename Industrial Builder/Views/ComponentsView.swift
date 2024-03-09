@@ -40,7 +40,7 @@ struct ComponentsView: View
                             document.kinematic_groups = new_value
                         }
                         .onChange(of: app_state.document_notify)
-                        { oldValue, newValue in
+                        { _, _ in
                             document.kinematic_groups = base_stc.kinematic_groups
                         }
                     }
