@@ -11,10 +11,8 @@ import IndustrialKit
 
 struct KinematicEditorView: View
 {
-    //@Binding var is_presented: Bool
-    @Binding var kinematic: KinematicGroup
-    
     @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     @State private var pointer_location: [Float] = [0, 0, 0]
     @State private var pointer_rotation: [Float] = [0, 0, 0]
@@ -36,7 +34,7 @@ struct KinematicEditorView: View
             }
             .onAppear
             {
-                app_state.prepare_robot(kinematic, scene: viewed_scene)
+                app_state.prepare_robot(base_stc.selected_kinematic, scene: viewed_scene)
             }
             .background
             {
@@ -65,7 +63,7 @@ struct KinematicEditorView: View
         }
         .inspector(isPresented: $show_inspector)
         {
-            KinematicInspectorView(elements: $kinematic.data)
+            KinematicInspectorView(elements: $base_stc.selected_kinematic.data)
         }
         .frame(minWidth: 640, minHeight: 480)
     }
@@ -279,7 +277,7 @@ let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
 
 #Preview
 {
-    KinematicEditorView(kinematic: .constant(KinematicGroup(name: "", type: .portal, data: [KinematicElement]())))
+    KinematicEditorView()
         .frame(minWidth: 256, minHeight: 512)
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(AppState())

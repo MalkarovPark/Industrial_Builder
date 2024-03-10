@@ -26,16 +26,20 @@ struct KinematicsListView: View
             {
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ForEach(base_stc.kinematic_groups.indices, id: \.self)
-                    { index in
-                        StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
+                    ForEach(base_stc.kinematic_groups, id: \.id)
+                    { group in
+                        StandardNavigationCard(name: group.name, image_name: "gearshape.2.fill", color: color_from_string(group.type.rawValue))
                         {
-                            KinematicEditorView(kinematic: $base_stc.kinematic_groups[index])
+                            KinematicEditorView()
+                                .onAppear
+                                {
+                                    base_stc.selected_kinematic_name = group.name
+                                }
                         }
                         .contextMenu
                         {
                             Button(role: .destructive, action: {
-                                delete_kinematic(index)
+                                delete_kinematic(group.id)
                             })
                             {
                                 Label("Delete", systemImage: "xmark")
@@ -60,9 +64,10 @@ struct KinematicsListView: View
         .modifier(WindowFramer())
     }
     
-    private func delete_kinematic(_ index: Int)
+    private func delete_kinematic(_ id: UUID)
     {
-        base_stc.kinematic_groups.remove(at: index)
+        //base_stc.kinematic_groups.remove(at: index)
+        base_stc.kinematic_groups.removeAll { $0.id == id }
         app_state.document_update_kinematics()
     }
 }
@@ -85,6 +90,8 @@ struct AddKinematicView: View
     
     @State private var new_item_name = ""
     @State private var kinematic_preset: KinematicGroupTypes = .portal
+    
+    @EnvironmentObject var app_state: AppState
     
     var body: some View
     {
@@ -142,6 +149,7 @@ struct AddKinematicView: View
         }
         
         is_presented = false
+        app_state.document_update_kinematics()
     }
 }
 

@@ -29,7 +29,26 @@ public class StandardTemplateConstruct: ObservableObject
         self.kinematic_groups = kinematic_groups
     }
     
+    //MARK: - Components handling
+    //MARK: Kinematic groups functions
     @Published var kinematic_groups = [KinematicGroup]()
+    
+    @Published var selected_kinematic_name: String? = ""
+    
+    public var selected_kinematic: KinematicGroup
+    {
+        get
+        {
+            return kinematic_groups.first { $0.name == selected_kinematic_name } ?? KinematicGroup()
+        }
+        set
+        {
+            if let index = kinematic_groups.firstIndex(where: { $0.name == selected_kinematic_name })
+            {
+                kinematic_groups[index] = newValue
+            }
+        }
+    }
     
     //MARK: Model nodes functions
     @Published var models_nodes = [SCNNode]()
@@ -53,13 +72,14 @@ public class StandardTemplateConstruct: ObservableObject
             let material = SCNMaterial()
             material.diffuse.contents = UIColor(red: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0)
             let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-                    box.materials = [material]
+            box.materials = [material]
             
             models_nodes.append(SCNNode(geometry: box))
         }
     }
     
-    //MARK: Changer modules
+    //MARK: - Objects handling
+    //MARK: Changer modules functions
     @Published var changer_modules = [ChangerModule]()
     
     //MARK: Robot modules
