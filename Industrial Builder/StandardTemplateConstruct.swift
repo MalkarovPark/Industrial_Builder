@@ -194,25 +194,7 @@ public struct KinematicElement: Identifiable, Equatable, Codable
     
     var name = String()
     var value = Float()
-    
-    //var joints = [KinematicJoint]() //First two used...
 }
-
-/*public enum KinematicJoint: String, Codable, Equatable, CaseIterable
-{
-    case revolute = "Revolute"
-    case prismatic = "Prismatic"
-    case cardan = "Cardan"
-    case screw = "Screw"
-    case planar = "Planar"
-    case cylindrical = "Cylindrical"
-    case parallel = "Parallel"
-    case spherical = "Spherical"
-    case slider = "Slider"
-    case rotational = "Rotational"
-    case linear = "Linear"
-    case universal = "Universal"
-}*/
 
 public enum KinematicGroupTypes: String, Codable, Equatable, CaseIterable
 {

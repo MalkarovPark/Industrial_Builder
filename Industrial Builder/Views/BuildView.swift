@@ -1,5 +1,5 @@
 //
-//  TargetsView.swift
+//  BuildView.swift
 //  Industrial Builder
 //
 //  Created by Artiom Malkarov on 13.10.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TargetsView: View
+struct BuildView: View
 {
     @State private var targets_palette_view_presented = false
     
@@ -65,7 +65,7 @@ struct TargetsPalette: View
 
 #Preview
 {
-    TargetsView()
+    BuildView()
 }
 
 #Preview

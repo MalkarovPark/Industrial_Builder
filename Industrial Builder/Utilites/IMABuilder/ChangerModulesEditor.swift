@@ -12,10 +12,10 @@ struct ChangerModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @Binding var is_presented: Bool
-    
     @State private var appeared = false
     @State private var add_module_view_presented = false
+    
+    @Binding var document: STCDocument
     
     var body: some View
     {
@@ -42,7 +42,7 @@ struct ChangerModulesEditor: View
                 .listStyle(.automatic)
             }
             
-            Divider()
+            /*Divider()
             
             HStack(spacing: 0)
             {
@@ -62,14 +62,26 @@ struct ChangerModulesEditor: View
                 .keyboardShortcut(.defaultAction)
                 .buttonStyle(.borderedProminent)
                 .padding()
+            }*/
+        }
+        .toolbar
+        {
+            Button (action: { add_module_view_presented = true })
+            {
+                Label("Add Module", systemImage: "plus")
+            }
+            .popover(isPresented: $add_module_view_presented, arrowEdge: .bottom)
+            {
+                AddChangerModuleView(is_presented: $add_module_view_presented, modules_items: $base_stc.changer_modules)
+                #if os(iOS)
+                    .presentationDetents([.height(96)])
+                #endif
             }
         }
-        .modifier(ViewCloseButton(is_presented: $is_presented))
-        #if os(macOS)
-        .frame(minWidth: 320, maxWidth: 800, minHeight: 320, maxHeight: 480)
-        #elseif os(visionOS)
-        .frame(width: 512, height: 512)
-        #endif
+        .onChange(of: base_stc.changer_modules)
+        { _, new_value in
+            document.changer_modules = new_value
+        }
     }
 }
 
@@ -144,7 +156,7 @@ struct AddChangerModuleView: View
 
 #Preview
 {
-    ChangerModulesEditor(is_presented: .constant(true))
+    ChangerModulesEditor(document: .constant(STCDocument()))
         .environmentObject(StandardTemplateConstruct())
 }
 

@@ -32,6 +32,8 @@ struct Sidebar: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
+    @State var is_presented = false
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -42,35 +44,100 @@ struct Sidebar: View
                 {
                     ForEach(navigation_item.allCases)
                     { selection in
-                        NavigationLink
+                        if selection == .ComponentsView
                         {
-                            switch selection
+                            DisclosureGroup
                             {
-                            case .PackageView:
-                                PackageView(document: $document)
-                            case .ComponentsView:
-                                ComponentsView(document: $document)
-                            case .PreferencesView:
+                                NavigationLink(destination: ModelsListView())
+                                {
+                                    Label("Models", systemImage: "cube")
+                                        .badge(base_stc.models_nodes.count)
+                                }
+                                NavigationLink(destination: KinematicsListView())
+                                {
+                                    Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
+                                        .badge(base_stc.kinematic_groups.count)
+                                }
+                                NavigationLink(destination: ChangerModulesEditor(document: $document)
+                                    .onChange(of: base_stc.changer_modules)
+                                    { _, new_value in
+                                        document.changer_modules = new_value
+                                    })
+                                {
+                                    Label("Changer", systemImage: "wand.and.rays")
+                                        .badge(base_stc.changer_modules.count)
+                                }
+                            }
+                            label:
+                            {
+                                #if os(macOS)
+                                NavigationLink(destination: ComponentsView(document: $document))
+                                {
+                                    Label(selection.localizedName, systemImage: selection.image_name)
+                                }
+                                #else
                                 Text(selection.localizedName)
-                            case .AppView:
-                                AppView(document: $document)
-                            case .ProgramsView:
-                                Text(selection.localizedName)
-                            case .TargetsView:
-                                TargetsView()
+                                    .font(.headline)
+                                #endif
                             }
                         }
-                    label:
+                        else if selection == .ObjectsView
                         {
-                            Label(selection.localizedName, systemImage: selection.image_name)
+                            DisclosureGroup
+                            {
+                                NavigationLink(destination: EmptyView())
+                                {
+                                    Label("Robots", systemImage: "r.circle")
+                                }
+                                NavigationLink(destination: EmptyView())
+                                {
+                                    Label("Tools", systemImage: "hammer.circle")
+                                }
+                                NavigationLink(destination: EmptyView())
+                                {
+                                    Label("Parts", systemImage: "shippingbox.circle")
+                                }
+                            }
+                            label:
+                            {
+                                #if os(macOS)
+                                NavigationLink(destination: EmptyView())
+                                {
+                                    Label(selection.localizedName, systemImage: selection.image_name)
+                                }
+                                #else
+                                Text(selection.localizedName)
+                                    .font(.headline)
+                                #endif
+                            }
+                        }
+                        else
+                        {
+                            NavigationLink
+                            {
+                                switch selection
+                                {
+                                case .PackageView:
+                                    PackageView(document: $document)
+                                case .BuildView:
+                                    BuildView()
+                                default:
+                                    EmptyView()
+                                }
+                            }
+                            label:
+                            {
+                                Label(selection.localizedName, systemImage: selection.image_name)
+                            }
                         }
                     }
                 }
+                .listStyle(.sidebar)
                 #if os(macOS)
-                .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+                .navigationSplitViewColumnWidth(min: 150, ideal: 150)
                 #endif
             }
-        detail:
+            detail:
             {
                 Text("Select an item")
                     .font(.largeTitle)
@@ -91,7 +158,7 @@ struct Sidebar: View
 
 enum navigation_item: Int, Hashable, CaseIterable, Identifiable
 {
-    case PackageView, ComponentsView, PreferencesView, AppView, ProgramsView, TargetsView //Sidebar items
+    case PackageView, ComponentsView, ObjectsView, BuildView //Sidebar items
     
     var id: Int { rawValue }
     var localizedName: LocalizedStringKey //Names of sidebar items
@@ -102,14 +169,10 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             return "Package"
         case .ComponentsView:
             return "Components"
-        case .PreferencesView:
-            return "Preferences"
-        case .AppView:
-            return "App"
-        case .ProgramsView:
-            return "Programs"
-        case .TargetsView:
-            return "Targets"
+        case .ObjectsView:
+            return "Objects"
+        case .BuildView:
+            return "Build"
         }
     }
     
@@ -121,14 +184,10 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             "shippingbox"
         case .ComponentsView:
             "square.stack.3d.down.forward"
-        case .PreferencesView:
-            "slider.horizontal.2.square.on.square"
-        case .AppView:
-            "app.badge.checkmark"
-        case .ProgramsView:
-            "scroll"
-        case .TargetsView:
-            "target"
+        case .ObjectsView:
+            "square.on.circle"
+        case .BuildView:
+            "hammer"
         }
     }
 }

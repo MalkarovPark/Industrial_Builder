@@ -26,12 +26,12 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Models", count_number: base_stc.models_nodes.count, image_name: "cube", color: .mint)
+                        StandardNavigationCard(name: "Models", count_number: base_stc.models_nodes.count, image_name: "cube", color: .green)
                         {
                             ModelsListView()
                         }
                         
-                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .pink)
+                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .teal)
                         {
                             KinematicsListView()
                         }
@@ -42,6 +42,11 @@ struct ComponentsView: View
                         .onChange(of: app_state.document_notify)
                         { _, _ in
                             document.kinematic_groups = base_stc.kinematic_groups
+                        }
+                        
+                        StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .indigo)
+                        {
+                            ChangerModulesEditor(document: $document)
                         }
                     }
                     .padding(20)

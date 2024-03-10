@@ -17,10 +17,9 @@
 		6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */; };
 		6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */; };
 		628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */; };
-		628E144F2AD7152700BC8FD9 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E144E2AD7152700BC8FD9 /* AppView.swift */; };
 		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
 		628E14542AD7E44C00BC8FD9 /* ChangerModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */; };
-		628E14562AD8AAF400BC8FD9 /* TargetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14552AD8AAF400BC8FD9 /* TargetsView.swift */; };
+		628E14562AD8AAF400BC8FD9 /* BuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14552AD8AAF400BC8FD9 /* BuildView.swift */; };
 		628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */; };
 		628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */; };
 		6296D28A2AEC55580094FB19 /* Cards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2892AEC55580094FB19 /* Cards.swift */; };
@@ -50,9 +49,8 @@
 		6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCDocument.swift; sourceTree = "<group>"; };
 		628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardTemplateConstruct.swift; sourceTree = "<group>"; };
-		628E144E2AD7152700BC8FD9 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesEditor.swift; sourceTree = "<group>"; };
-		628E14552AD8AAF400BC8FD9 /* TargetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetsView.swift; sourceTree = "<group>"; };
+		628E14552AD8AAF400BC8FD9 /* BuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildView.swift; sourceTree = "<group>"; };
 		628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModulesEditor.swift; sourceTree = "<group>"; };
 		628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesEditor.swift; sourceTree = "<group>"; };
 		6296D2892AEC55580094FB19 /* Cards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cards.swift; sourceTree = "<group>"; };
@@ -84,8 +82,26 @@
 			isa = PBXGroup;
 			children = (
 				6255B91F2B9BDC86002B575C /* Framers.swift */,
+				62E243822B9381EC009C76EB /* ListBorderer.swift */,
 			);
 			path = ViewModifiers;
+			sourceTree = "<group>";
+		};
+		6255B9212B9D242F002B575C /* IMABuilder */ = {
+			isa = PBXGroup;
+			children = (
+				628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */,
+			);
+			path = IMABuilder;
+			sourceTree = "<group>";
+		};
+		6255B9222B9D26AA002B575C /* ObjectBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */,
+				628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */,
+			);
+			path = ObjectBuilder;
 			sourceTree = "<group>";
 		};
 		627D3EBD2AD3F5EF00D5988D /* Views */ = {
@@ -94,12 +110,9 @@
 				6289FCC82AD0398100BB7F5E /* ContentView.swift */,
 				627D3EBE2AD3F61400D5988D /* PackageView.swift */,
 				627D3EC02AD42A0800D5988D /* GalleryView.swift */,
-				628E14552AD8AAF400BC8FD9 /* TargetsView.swift */,
-				628E144E2AD7152700BC8FD9 /* AppView.swift */,
-				628E145B2AD8ADEF00BC8FD9 /* AppEditors */,
 				62AE552F2AE962CA00554A5B /* ComponentsView.swift */,
+				628E14552AD8AAF400BC8FD9 /* BuildView.swift */,
 				6296D2892AEC55580094FB19 /* Cards.swift */,
-				62E243822B9381EC009C76EB /* ListBorderer.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,16 +159,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		628E145B2AD8ADEF00BC8FD9 /* AppEditors */ = {
-			isa = PBXGroup;
-			children = (
-				628E14532AD7E44C00BC8FD9 /* ChangerModulesEditor.swift */,
-				628E14572AD8ADCC00BC8FD9 /* RobotModulesEditor.swift */,
-				628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */,
-			);
-			path = AppEditors;
-			sourceTree = "<group>";
-		};
 		6296D2AB2AED9BDD0094FB19 /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,8 +181,10 @@
 		62AE55292AE7079100554A5B /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
+				6255B9222B9D26AA002B575C /* ObjectBuilder */,
 				629B52682AF6887D003F45D2 /* ModelViewer */,
 				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
+				6255B9212B9D242F002B575C /* IMABuilder */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -274,7 +279,7 @@
 			files = (
 				62AE55322AE96B3D00554A5B /* KinematicsListView.swift in Sources */,
 				6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */,
-				628E14562AD8AAF400BC8FD9 /* TargetsView.swift in Sources */,
+				628E14562AD8AAF400BC8FD9 /* BuildView.swift in Sources */,
 				6296D28A2AEC55580094FB19 /* Cards.swift in Sources */,
 				6296D2AE2AED9C2C0094FB19 /* 6DOFController.swift in Sources */,
 				628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */,
@@ -287,7 +292,6 @@
 				628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */,
 				623D72482ADAFD8500927DEA /* ModelView.swift in Sources */,
 				6296D2AF2AED9C2C0094FB19 /* PortalController.swift in Sources */,
-				628E144F2AD7152700BC8FD9 /* AppView.swift in Sources */,
 				6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */,
 				628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */,
 				629B526C2AF69056003F45D2 /* ModelsListView.swift in Sources */,
