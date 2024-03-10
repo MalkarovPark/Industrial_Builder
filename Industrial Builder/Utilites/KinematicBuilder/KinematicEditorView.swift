@@ -146,7 +146,7 @@ struct KinematicInspectorView: View
         .onChange(of: elements)
         { _, new_value in
             app_state.update_robot_kinematic(new_value)
-            app_state.document_notify.toggle()
+            app_state.document_update_kinematics()
         }
     }
 }

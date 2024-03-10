@@ -23,6 +23,7 @@ struct ContentView: View
         #if os(iOS) || os(visionOS)
             .navigationBarHidden(true)
         #endif
+            .modifier(DocumentUpdateHandler(document: $document, base_stc: base_stc))
     }
 }
 
@@ -32,7 +33,10 @@ struct Sidebar: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @State var is_presented = false
+    #if !os(macOS)
+    @State private var components_section_expanded = false
+    @State private var objects_section_expanded = false
+    #endif
     
     var body: some View
     {
@@ -46,70 +50,53 @@ struct Sidebar: View
                     { selection in
                         if selection == .ComponentsView
                         {
+                            #if os(macOS)
                             DisclosureGroup
                             {
-                                NavigationLink(destination: ModelsListView())
-                                {
-                                    Label("Models", systemImage: "cube")
-                                        .badge(base_stc.models_nodes.count)
-                                }
-                                NavigationLink(destination: KinematicsListView())
-                                {
-                                    Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
-                                        .badge(base_stc.kinematic_groups.count)
-                                }
-                                NavigationLink(destination: ChangerModulesEditor(document: $document)
-                                    .onChange(of: base_stc.changer_modules)
-                                    { _, new_value in
-                                        document.changer_modules = new_value
-                                    })
-                                {
-                                    Label("Changer", systemImage: "wand.and.rays")
-                                        .badge(base_stc.changer_modules.count)
-                                }
+                                ComponentsSidebarGroup()
                             }
                             label:
                             {
-                                #if os(macOS)
                                 NavigationLink(destination: ComponentsView(document: $document))
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                 }
-                                #else
-                                Text(selection.localizedName)
-                                    .font(.headline)
-                                #endif
                             }
+                            #else
+                            Section(isExpanded: $components_section_expanded)
+                            {
+                                ComponentsSidebarGroup()
+                            }
+                            header:
+                            {
+                                Text(selection.localizedName)
+                            }
+                            #endif
                         }
                         else if selection == .ObjectsView
                         {
+                            #if os(macOS)
                             DisclosureGroup
                             {
-                                NavigationLink(destination: EmptyView())
-                                {
-                                    Label("Robots", systemImage: "r.circle")
-                                }
-                                NavigationLink(destination: EmptyView())
-                                {
-                                    Label("Tools", systemImage: "hammer.circle")
-                                }
-                                NavigationLink(destination: EmptyView())
-                                {
-                                    Label("Parts", systemImage: "shippingbox.circle")
-                                }
+                                ObjectsSidebarGroup()
                             }
                             label:
                             {
-                                #if os(macOS)
                                 NavigationLink(destination: EmptyView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                 }
-                                #else
-                                Text(selection.localizedName)
-                                    .font(.headline)
-                                #endif
                             }
+                            #else
+                            Section(isExpanded: $objects_section_expanded)
+                            {
+                                ObjectsSidebarGroup()
+                            }
+                            header:
+                            {
+                                Text(selection.localizedName)
+                            }
+                            #endif
                         }
                         else
                         {
@@ -132,6 +119,7 @@ struct Sidebar: View
                         }
                     }
                 }
+                .navigationTitle("View")
                 .listStyle(.sidebar)
                 #if os(macOS)
                 .navigationSplitViewColumnWidth(min: 150, ideal: 150)
@@ -152,6 +140,51 @@ struct Sidebar: View
             {
                 base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules, kinematic_groups: document.kinematic_groups)
             }
+        }
+    }
+}
+
+struct ComponentsSidebarGroup: View
+{
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
+    var body: some View
+    {
+        NavigationLink(destination: ModelsListView())
+        {
+            Label("Models", systemImage: "cube")
+                .badge(base_stc.models_nodes.count)
+        }
+        NavigationLink(destination: KinematicsListView())
+        {
+            Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
+                .badge(base_stc.kinematic_groups.count)
+        }
+        NavigationLink(destination: ChangerModulesEditor())
+        {
+            Label("Changer", systemImage: "wand.and.rays")
+                .badge(base_stc.changer_modules.count)
+        }
+    }
+}
+
+struct ObjectsSidebarGroup: View
+{
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
+    var body: some View
+    {
+        NavigationLink(destination: EmptyView())
+        {
+            Label("Robots", systemImage: "r.circle")
+        }
+        NavigationLink(destination: EmptyView())
+        {
+            Label("Tools", systemImage: "hammer.circle")
+        }
+        NavigationLink(destination: EmptyView())
+        {
+            Label("Parts", systemImage: "shippingbox.circle")
         }
     }
 }

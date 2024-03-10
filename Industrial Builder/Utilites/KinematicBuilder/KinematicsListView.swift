@@ -63,7 +63,7 @@ struct KinematicsListView: View
     private func delete_kinematic(_ index: Int)
     {
         base_stc.kinematic_groups.remove(at: index)
-        app_state.document_notify.toggle()
+        app_state.document_update_kinematics()
     }
 }
 

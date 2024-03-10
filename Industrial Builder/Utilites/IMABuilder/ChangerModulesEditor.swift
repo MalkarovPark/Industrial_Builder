@@ -11,24 +11,15 @@ import IndustrialKit
 struct ChangerModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var app_state: AppState
     
     @State private var appeared = false
     @State private var add_module_view_presented = false
-    
-    @Binding var document: STCDocument
     
     var body: some View
     {
         VStack(spacing: 0)
         {
-            Text("Modules for Changer")
-                .font(.title2)
-            #if os(visionOS)
-                .padding(24)
-            #else
-                .padding()
-            #endif
-            
             List
             {
                 ForEach(base_stc.changer_modules.indices, id: \.self)
@@ -79,9 +70,10 @@ struct ChangerModulesEditor: View
             }
         }
         .onChange(of: base_stc.changer_modules)
-        { _, new_value in
-            document.changer_modules = new_value
+        { _, _ in
+            app_state.document_update_ima()
         }
+        .navigationTitle("Modules for Changer")
     }
 }
 
@@ -156,7 +148,7 @@ struct AddChangerModuleView: View
 
 #Preview
 {
-    ChangerModulesEditor(document: .constant(STCDocument()))
+    ChangerModulesEditor()
         .environmentObject(StandardTemplateConstruct())
 }
 

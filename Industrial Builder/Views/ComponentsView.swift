@@ -35,18 +35,9 @@ struct ComponentsView: View
                         {
                             KinematicsListView()
                         }
-                        .onChange(of: base_stc.kinematic_groups)
-                        { _, new_value in
-                            document.kinematic_groups = new_value
-                        }
-                        .onChange(of: app_state.document_notify)
-                        { _, _ in
-                            document.kinematic_groups = base_stc.kinematic_groups
-                        }
-                        
                         StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .indigo)
                         {
-                            ChangerModulesEditor(document: $document)
+                            ChangerModulesEditor()
                         }
                     }
                     .padding(20)
