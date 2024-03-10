@@ -34,7 +34,7 @@ struct KinematicEditorView: View
             }
             .onAppear
             {
-                app_state.prepare_robot(base_stc.selected_kinematic, scene: viewed_scene)
+                app_state.prepare_robot(base_stc.viewed_kinematic_group, scene: viewed_scene)
             }
             .background
             {
@@ -63,7 +63,7 @@ struct KinematicEditorView: View
         }
         .inspector(isPresented: $show_inspector)
         {
-            KinematicInspectorView(elements: $base_stc.selected_kinematic.data)
+            KinematicInspectorView(elements: $base_stc.viewed_kinematic_group.data)
         }
         .frame(minWidth: 640, minHeight: 480)
     }

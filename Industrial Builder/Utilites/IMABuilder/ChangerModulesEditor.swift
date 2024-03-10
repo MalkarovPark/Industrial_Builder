@@ -30,30 +30,8 @@ struct ChangerModulesEditor: View
                 { indexSet in
                     base_stc.changer_modules.remove(atOffsets: indexSet)
                 }
-                .listStyle(.automatic)
             }
-            
-            /*Divider()
-            
-            HStack(spacing: 0)
-            {
-                Spacer()
-                
-                Button("New Module")
-                {
-                    add_module_view_presented = true
-                }
-                .popover(isPresented: $add_module_view_presented)
-                {
-                    AddChangerModuleView(is_presented: $add_module_view_presented, modules_items: $base_stc.changer_modules)
-                    #if os(iOS)
-                        .presentationDetents([.height(96)])
-                    #endif
-                }
-                .keyboardShortcut(.defaultAction)
-                .buttonStyle(.borderedProminent)
-                .padding()
-            }*/
+            .listStyle(.plain)
         }
         .toolbar
         {

@@ -34,8 +34,8 @@ struct Sidebar: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     #if !os(macOS)
-    @State private var components_section_expanded = false
-    @State private var objects_section_expanded = false
+    @State private var components_section_expanded = true
+    @State private var objects_section_expanded = true
     #endif
     
     var body: some View

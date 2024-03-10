@@ -32,23 +32,7 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: - Components handling
     //MARK: Kinematic groups functions
     @Published var kinematic_groups = [KinematicGroup]()
-    
-    @Published var selected_kinematic_name: String? = ""
-    
-    public var selected_kinematic: KinematicGroup
-    {
-        get
-        {
-            return kinematic_groups.first { $0.name == selected_kinematic_name } ?? KinematicGroup()
-        }
-        set
-        {
-            if let index = kinematic_groups.firstIndex(where: { $0.name == selected_kinematic_name })
-            {
-                kinematic_groups[index] = newValue
-            }
-        }
-    }
+    @Published var viewed_kinematic_group = KinematicGroup()
     
     //MARK: Model nodes functions
     @Published var models_nodes = [SCNNode]()
