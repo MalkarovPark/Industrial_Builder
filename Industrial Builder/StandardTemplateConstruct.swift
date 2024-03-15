@@ -31,6 +31,17 @@ public class StandardTemplateConstruct: ObservableObject
         self.kinematic_groups = kinematic_groups
     }
     
+    func document_view(_ document: STCDocument)
+    {
+        self.package = document.package
+        self.images = document.images
+        self.changer_modules = document.changer_modules
+        self.tool_modules = document.tool_modules
+        
+        self.scenes = document.scenes
+        self.kinematic_groups = document.kinematic_groups
+    }
+    
     //MARK: - Components handling
     //MARK: Kinematic groups functions
     @Published var kinematic_groups = [KinematicGroup]()

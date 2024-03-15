@@ -30,7 +30,7 @@ struct ScenesListView: View
                     {
                         ForEach(base_stc.scenes.indices, id: \.self)
                         { index in
-                            ModelCard(node: root_node_binding(for: base_stc.scenes[index]), name: "Model \(index)")
+                            ModelCard(scene: $base_stc.scenes[index], name: "Model \(index)")
                             { is_presented in
                                 ModelView(node: root_node_binding(for: base_stc.scenes[index]))
                                     .modifier(WindowFramer())

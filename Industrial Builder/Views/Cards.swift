@@ -196,9 +196,12 @@ struct ImageCard: View
 
 struct ModelCard<Content: View>: View
 {
-    @Binding var node: SCNNode
+    @Binding var scene: SCNScene
     
     @State private var is_presented = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var app_state: AppState
     
     let name: String
     
@@ -208,7 +211,7 @@ struct ModelCard<Content: View>: View
     {
         Button(action: { is_presented = true })
         {
-            ObjectSceneView(node: node)
+            ObjectSceneView(scene: scene)
                 .disabled(true)
         }
         .buttonStyle(.borderless)
@@ -230,6 +233,19 @@ struct ModelCard<Content: View>: View
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .padding(8)
         }
+        .contextMenu
+        {
+            Button(role: .destructive, action: delete_scene)
+            {
+                Label("Delete", systemImage: "xmark")
+            }
+        }
+    }
+    
+    func delete_scene()
+    {
+        base_stc.scenes.remove(at: base_stc.scenes.firstIndex(of: scene) ?? 0)
+        app_state.document_update_scenes()
     }
 }
 
@@ -265,7 +281,7 @@ struct ModelCard<Content: View>: View
 
 #Preview
 {
-    ModelCard(node: .constant(SCNNode()), name: "Name")
+    ModelCard(scene: .constant(SCNScene()), name: "Name")
     { is_presented in
         EmptyView()
     }
