@@ -160,6 +160,8 @@ struct STCDocument: FileDocument
                         {
                         case "KinematicGroups":
                             kinematics_process(file_wrapper)
+                        case "Components.scnassets":
+                            scenes_process(file_wrapper)
                         default:
                             break
                         }
@@ -175,6 +177,31 @@ struct STCDocument: FileDocument
                             if let filename = file_wrapper.filename, filename.hasSuffix(".json")
                             {
                                 kinematic_groups.append(json_decode(file_wrapper, type: KinematicGroup.self) ?? KinematicGroup())
+                            }
+                        }
+                    }
+                }
+                
+                func scenes_process(_ wrapper: FileWrapper)
+                {
+                    if let file_wrappers = wrapper.fileWrappers
+                    {
+                        for (_, file_wrapper) in file_wrappers
+                        {
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
+                            {
+                                if let scene_data = file_wrapper.regularFileContents
+                                {
+                                    let scene_source = SCNSceneSource(data: scene_data, options: nil)
+                                    if let scene = scene_source?.scene(options: nil)
+                                    {
+                                        scenes.append(scene)
+                                    }
+                                    else
+                                    {
+                                        print("Error: Unable to load the scene from file data")
+                                    }
+                                }
                             }
                         }
                     }
@@ -298,7 +325,33 @@ struct STCDocument: FileDocument
     {
         var file_wrappers = [String: FileWrapper]()
         
-        //Tool Modules
+        //Kinematic groups
+        file_wrappers["Components.scnassets"] = prepare_scenes_wrappers()
+        
+        func prepare_scenes_wrappers() -> FileWrapper
+        {
+            var file_wrappers = [String: FileWrapper]()
+            
+            var i = 1
+            for scene in scenes
+            {
+                let scene_data = try? NSKeyedArchiver.archivedData(withRootObject: scene, requiringSecureCoding: true)
+                guard let data = scene_data else { continue }
+                
+                let file_name = "\(i).scn"
+                let file_wrapper = FileWrapper(regularFileWithContents: data)
+                file_wrapper.filename = file_name
+                file_wrapper.preferredFilename = file_name
+                
+                file_wrappers[file_name] = file_wrapper
+                
+                i += 1
+            }
+            
+            return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        }
+        
+        //Kinematic groups
         file_wrappers["KinematicGroups"] = prepare_kinematics_wrappers()
         
         func prepare_kinematics_wrappers() -> FileWrapper

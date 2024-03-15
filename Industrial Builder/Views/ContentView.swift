@@ -138,7 +138,7 @@ struct Sidebar: View
             }
             .onAppear
             {
-                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules, kinematic_groups: document.kinematic_groups)
+                base_stc.document_view(document.package, images: document.images, changer_modules: document.changer_modules, tool_modules: document.tool_modules, scenes: document.scenes, kinematic_groups: document.kinematic_groups)
             }
         }
     }

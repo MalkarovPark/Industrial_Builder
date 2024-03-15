@@ -12,6 +12,7 @@ import SceneKit
 struct ScenesListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var app_state: AppState
     
     @State private var is_targeted = false
     
@@ -21,7 +22,7 @@ struct ScenesListView: View
     {
         VStack(spacing: 0)
         {
-            if base_stc.images.count > 0
+            if base_stc.scenes.count > 0
             {
                 ScrollView(.vertical)
                 {
@@ -105,6 +106,8 @@ struct ScenesListView: View
                             {
                                 let scene = try SCNScene(url: fileURL, options: nil)
                                 self.base_stc.scenes.append(scene)
+                                
+                                app_state.document_update_scenes()
                             }
                             catch
                             {
@@ -119,6 +122,7 @@ struct ScenesListView: View
                 }
             }
         }
+        
         return true
     }
 }

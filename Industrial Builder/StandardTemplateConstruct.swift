@@ -20,12 +20,14 @@ public class StandardTemplateConstruct: ObservableObject
         //make_contents()
     }
     
-    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], kinematic_groups: [KinematicGroup])
+    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], scenes: [SCNScene], kinematic_groups: [KinematicGroup])
     {
         self.package = info
         self.images = images
         self.changer_modules = changer_modules
         self.tool_modules = tool_modules
+        
+        self.scenes = scenes
         self.kinematic_groups = kinematic_groups
     }
     
