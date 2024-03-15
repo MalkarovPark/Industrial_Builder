@@ -15,9 +15,7 @@ struct ModelView: View
     
     var body: some View
     {
-        //SceneView(scene: SCNScene(named: "KinematicComponents.scnassets/Robots/6DOF.scn"))
-        ObjectSceneView(node: node, on_render: { _ in }, on_tap: tapper(gesture_recognizer:scn_view:))
-        //ElementSceneView(scene: SCNScene(named: "KinematicComponents.scnassets/Robots/6DOF.scn")!)
+        ObjectSceneView(node: node, on_tap: tapper(gesture_recognizer:scn_view:))
     }
     
     func tapper(gesture_recognizer: UITapGestureRecognizer, scn_view: SCNView)

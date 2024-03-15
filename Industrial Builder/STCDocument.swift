@@ -9,6 +9,7 @@ import Foundation
 import UniformTypeIdentifiers
 import SwiftUI
 import IndustrialKit
+import SceneKit
 
 extension UTType
 {
@@ -19,6 +20,7 @@ struct STCDocument: FileDocument
 {
     var package = STCPackage()
     var images = [UIImage]()
+    var scenes = [SCNScene]()
     
     var changer_modules = [ChangerModule]()
     var tool_modules = [ToolModule]()

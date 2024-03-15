@@ -151,11 +151,10 @@ struct StandardSheetCard<Content: View>: View
 
 struct ImageCard: View
 {
-    @Binding var document: STCDocument
-    
     @State var image: UIImage
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var app_state: AppState
     
     var body: some View
     {
@@ -191,7 +190,7 @@ struct ImageCard: View
     func delete_image()
     {
         base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        document.images = base_stc.images
+        app_state.document_update_gallery()
     }
 }
 

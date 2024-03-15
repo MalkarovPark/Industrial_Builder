@@ -150,10 +150,10 @@ struct ComponentsSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: ModelsListView())
+        NavigationLink(destination: ScenesListView())
         {
-            Label("Models", systemImage: "cube")
-                .badge(base_stc.models_nodes.count)
+            Label("Scenes", systemImage: "cube")
+                .badge(base_stc.scenes.count)
         }
         NavigationLink(destination: KinematicsListView())
         {

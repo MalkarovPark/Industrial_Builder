@@ -16,8 +16,8 @@ public class StandardTemplateConstruct: ObservableObject
     
     init()
     {
-        make_preview()
-        make_contents()
+        //make_preview()
+        //make_contents()
     }
     
     func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], kinematic_groups: [KinematicGroup])
@@ -35,8 +35,7 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var viewed_kinematic_group = KinematicGroup()
     
     //MARK: Model nodes functions
-    @Published var models_nodes = [SCNNode]()
-    
+    @Published var scenes = [SCNScene]()
     @Published var viewed_model_node = SCNNode()
     
     private func make_preview()
@@ -49,7 +48,7 @@ public class StandardTemplateConstruct: ObservableObject
         viewed_model_node = SCNNode(geometry: box)
     }
     
-    private func make_contents()
+    /*private func make_contents()
     {
         for i in 0..<17
         {
@@ -58,9 +57,9 @@ public class StandardTemplateConstruct: ObservableObject
             let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
             box.materials = [material]
             
-            models_nodes.append(SCNNode(geometry: box))
+            scenes.append(SCNNode(geometry: box))
         }
-    }
+    }*/
     
     //MARK: - Objects handling
     //MARK: Changer modules functions

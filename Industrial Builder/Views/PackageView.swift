@@ -52,7 +52,7 @@ struct PackageView: View
                     .font(.title2)
                     .padding([.bottom, .horizontal])
                 
-                GalleryView(document: $document)
+                GalleryView()
                     .padding([.bottom, .horizontal])
             }
         }

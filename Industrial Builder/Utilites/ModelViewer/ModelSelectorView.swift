@@ -12,7 +12,7 @@ import IndustrialKit
 struct ModelSelectorView: View
 {
     @Binding var is_presented: Bool
-    @Binding var nodes: [SCNNode]
+    @Binding var scenes: [SCNScene]
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 88, maximum: 88), spacing: 0)]
@@ -35,9 +35,9 @@ struct ModelSelectorView: View
                             is_presented = false
                         }
                     
-                    ForEach(nodes.indices, id: \.self)
+                    ForEach(scenes.indices, id: \.self)
                     { index in
-                        ElementItemView(node: nodes[index], action: { print(index); is_presented = false })
+                        ElementItemView(node: scenes[index].rootNode, action: { print(index); is_presented = false })
                             .id(index)
                             .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
                     }
@@ -100,5 +100,5 @@ struct NoElementItemView: View
 
 #Preview
 {
-    ModelSelectorView(is_presented: .constant(true), nodes: .constant([SCNNode]()))
+    ModelSelectorView(is_presented: .constant(true), scenes: .constant([SCNScene]()))
 }

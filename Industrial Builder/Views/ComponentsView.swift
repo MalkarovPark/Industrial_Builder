@@ -26,9 +26,9 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Models", count_number: base_stc.models_nodes.count, image_name: "cube", color: .green)
+                        StandardNavigationCard(name: "Scenes", count_number: base_stc.scenes.count, image_name: "cube", color: .green)
                         {
-                            ModelsListView()
+                            ScenesListView()
                         }
                         
                         StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .teal)

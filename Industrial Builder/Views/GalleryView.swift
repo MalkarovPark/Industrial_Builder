@@ -9,9 +9,8 @@ import SwiftUI
 
 struct GalleryView: View
 {
-    @Binding var document: STCDocument
-    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var app_state: AppState
     
     @State private var is_targeted = false
     
@@ -27,28 +26,14 @@ struct GalleryView: View
                     {
                         ForEach(base_stc.images, id: \.self)
                         { image in
-                            ImageCard(document: $document, image: image)
+                            ImageCard(image: image)
                         }
                     }
                 }
             }
             else
             {
-                VStack(spacing: 0)
-                {
-                    Text("No Images")
-                        .font(.largeTitle)
-                    #if os(macOS)
-                        .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                    #else
-                        .foregroundColor(Color(UIColor.quaternaryLabel))
-                    #endif
-                        .padding(16)
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.6)))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
-                }
-                .frame(maxWidth: .infinity, minHeight: 240)
+                NoView(label: "No Images")
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -86,14 +71,13 @@ struct GalleryView: View
                     DispatchQueue.main.async
                     {
                         base_stc.images.append(image)
-                        document.images.append(image)
+                        app_state.document_update_gallery()
+                        //document.images.append(image)
                         //print(image.name())
                     }
                 }
             }
         }
-        
-        //document.images = base_stc.images
         
         return true
     }
@@ -101,6 +85,6 @@ struct GalleryView: View
 
 #Preview
 {
-    GalleryView(document: .constant(STCDocument()))
+    GalleryView()
         .environmentObject(StandardTemplateConstruct())
 }
