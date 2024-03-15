@@ -2,7 +2,7 @@
 //  Framers.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 09.03.2024.
+//  Created by Artem on 09.03.2024.
 //
 
 import Foundation

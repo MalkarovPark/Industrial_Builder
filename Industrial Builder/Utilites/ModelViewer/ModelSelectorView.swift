@@ -2,7 +2,7 @@
 //  ModelSelectorView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 04.11.2023.
+//  Created by Artem on 04.11.2023.
 //
 
 import SwiftUI

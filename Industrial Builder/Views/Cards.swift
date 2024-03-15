@@ -2,7 +2,7 @@
 //  Cards.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 27.10.2023.
+//  Created by Artem on 27.10.2023.
 //
 
 import SwiftUI

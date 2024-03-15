@@ -2,7 +2,7 @@
 //  StandardTemplateConstruct.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 16.10.2023.
+//  Created by Artem on 16.10.2023.
 //
 
 import Foundation

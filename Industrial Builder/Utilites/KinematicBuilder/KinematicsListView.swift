@@ -2,7 +2,7 @@
 //  KinematicsListView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 25.10.2023.
+//  Created by Artem on 25.10.2023.
 //
 
 import SwiftUI

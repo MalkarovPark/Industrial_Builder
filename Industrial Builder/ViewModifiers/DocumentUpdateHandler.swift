@@ -2,7 +2,7 @@
 //  DocumentUpdateHandler.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 10.03.2024.
+//  Created by Artem on 10.03.2024.
 //
 
 import Foundation

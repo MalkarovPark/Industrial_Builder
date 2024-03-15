@@ -2,7 +2,7 @@
 //  KinematicEditorView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 23.10.2023.
+//  Created by Artem on 23.10.2023.
 //
 
 import SwiftUI

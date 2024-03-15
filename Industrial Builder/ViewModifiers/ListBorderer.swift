@@ -2,7 +2,7 @@
 //  ListBorderer.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 02.03.2024.
+//  Created by Artem on 02.03.2024.
 //
 
 import Foundation

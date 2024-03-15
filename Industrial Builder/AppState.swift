@@ -2,7 +2,7 @@
 //  AppState.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 28.10.2023.
+//  Created by Artem on 28.10.2023.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  ToolModulesEditor.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 13.10.2023.
+//  Created by Artem on 13.10.2023.
 //
 
 import SwiftUI
