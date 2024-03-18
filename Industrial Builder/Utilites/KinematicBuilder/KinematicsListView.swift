@@ -26,20 +26,16 @@ struct KinematicsListView: View
             {
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ForEach(base_stc.kinematic_groups, id: \.id)
-                    { kinematic_group in
-                        StandardNavigationCard(name: kinematic_group.name, image_name: "gearshape.2.fill", color: color_from_string(kinematic_group.type.rawValue))
+                    ForEach(base_stc.kinematic_groups.indices, id: \.self)
+                    { index in
+                        StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
                         {
-                            KinematicEditorView()
-                                .onAppear
-                                {
-                                    base_stc.viewed_kinematic_group = kinematic_group
-                                }
+                            KinematicEditorView(group: $base_stc.kinematic_groups[index])
                         }
                         .contextMenu
                         {
                             Button(role: .destructive, action: {
-                                delete_kinematic(kinematic_group.id)
+                                delete_kinematic(base_stc.kinematic_groups[index].id)
                             })
                             {
                                 Label("Delete", systemImage: "xmark")

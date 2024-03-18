@@ -45,7 +45,6 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: - Components handling
     //MARK: Kinematic groups functions
     @Published var kinematic_groups = [KinematicGroup]()
-    @Published var viewed_kinematic_group = KinematicGroup()
     
     //MARK: Model nodes functions
     @Published var scenes = [SCNScene]()
