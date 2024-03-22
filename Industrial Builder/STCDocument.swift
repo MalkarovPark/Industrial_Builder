@@ -43,14 +43,14 @@ struct STCDocument: FileDocument
             file_process(wrapper: wrapper)
         }
         
-        func file_process(wrapper: FileWrapper)
+        func file_process(wrapper: FileWrapper) //Top level files & folders
         {
             switch wrapper.filename
             {
-            case "Package.info":
+            case "PkgInfo":
                 package_process(wrapper)
-            case "Images":
-                images_process(wrapper)
+            //case "Images":
+                //images_process(wrapper)
             case "App":
                 app_process(wrapper)
             case "Components":
@@ -68,20 +68,6 @@ struct STCDocument: FileDocument
                 }
                 
                 package = try! JSONDecoder().decode(STCPackage.self, from: data)
-            }
-            
-            func images_process(_ wrapper: FileWrapper)
-            {
-                if let file_wrappers = wrapper.fileWrappers
-                {
-                    for (_, file_wrapper) in file_wrappers
-                    {
-                        if let filename = file_wrapper.filename, filename.hasSuffix(".png")
-                        {
-                            images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
-                        }
-                    }
-                }
             }
             
             func json_decode<T: Decodable>(_ wrapper: FileWrapper, type: T.Type) -> T?
@@ -161,7 +147,7 @@ struct STCDocument: FileDocument
                         case "KinematicGroups":
                             kinematics_process(file_wrapper)
                         case "Resources":
-                            scenes_process(file_wrapper)
+                            resources_process(file_wrapper)
                         default:
                             break
                         }
@@ -182,10 +168,26 @@ struct STCDocument: FileDocument
                     }
                 }
                 
-                func scenes_process(_ wrapper: FileWrapper)
+                func resources_process(_ wrapper: FileWrapper)
                 {
-                    scene_wrapper = wrapper
-                    scene_folder_adress = "\(configuration.file.filename ?? "")/Components/Resources/"
+                    if let file_wrappers = wrapper.fileWrappers
+                    {
+                        for (_, file_wrapper) in file_wrappers
+                        {
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
+                            {
+                                //scenes_process(file_wrapper)
+                                scene_wrapper = wrapper
+                                scene_folder_adress = "\(configuration.file.filename ?? "")/Components/Resources/"
+                            }
+                            
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".png")
+                            {
+                                //images_process(file_wrapper)
+                                images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -264,12 +266,8 @@ struct STCDocument: FileDocument
             //Store package data
             let data = try make_document_data()
             let json_file_wrapper = FileWrapper(regularFileWithContents: data)
-            let package_filename = "Package.info"
+            let package_filename = "PkgInfo"
             json_file_wrapper.filename = package_filename
-            
-            //Store images to this images_file_wrapper
-            var images_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
-            images_file_wrapper = try prepare_image_file_wrapper(from: images)
             
             //Store modules data
             var app_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
@@ -281,7 +279,6 @@ struct STCDocument: FileDocument
             
             let file_wrapper = FileWrapper(directoryWithFileWrappers: [
                 package_filename: json_file_wrapper,
-                "Images": images_file_wrapper,
                 "App": app_file_wrapper,
                 "Components": components_file_wrapper
             ])
@@ -307,29 +304,6 @@ struct STCDocument: FileDocument
         {
             throw error
         }
-    }
-    
-    func prepare_image_file_wrapper(from images: [UIImage]) throws -> FileWrapper
-    {
-        var file_wrappers = [String: FileWrapper]()
-        var index = 0
-        for image in images
-        {
-            guard let data = image.pngData() else
-            {
-                break
-            }
-            
-            let file_name = "GalleryImage\(index + 1).png"
-            let file_wrapper = FileWrapper(regularFileWithContents: data)
-            file_wrapper.filename = file_name
-            file_wrapper.preferredFilename = file_name
-            
-            file_wrappers[file_name] = file_wrapper
-            index += 1
-        }
-        
-        return FileWrapper(directoryWithFileWrappers: file_wrappers)
     }
     
     func prepare_app_file_wrapper() throws -> FileWrapper
@@ -371,29 +345,49 @@ struct STCDocument: FileDocument
     {
         var file_wrappers = [String: FileWrapper]()
         
-        //Kinematic groups
-        file_wrappers["Resources"] = prepare_scenes_wrappers()
+        //Resources
+        file_wrappers["Resources"] = prepare_resources_wrappers()
         
-        func prepare_scenes_wrappers() -> FileWrapper
+        func prepare_resources_wrappers() -> FileWrapper
         {
+            //Images
             var file_wrappers = [String: FileWrapper]()
             
-            var i = 1
+            var index = 0
             for scene in scenes
             {
                 let scene_data = try? NSKeyedArchiver.archivedData(withRootObject: scene, requiringSecureCoding: true)
                 guard let data = scene_data else { continue }
                 
-                let file_name = "\(i).scn"
+                let file_name = "Scene\(index + 1).scn"
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
                 
                 file_wrappers[file_name] = file_wrapper
                 
-                i += 1
+                index += 1
             }
             
+            //Scenes
+            index = 0
+            for image in images
+            {
+                guard let data = image.pngData() else
+                {
+                    break
+                }
+                
+                let file_name = "Image\(index + 1).png"
+                let file_wrapper = FileWrapper(regularFileWithContents: data)
+                file_wrapper.filename = file_name
+                file_wrapper.preferredFilename = file_name
+                
+                file_wrappers[file_name] = file_wrapper
+                index += 1
+            }
+            
+            print(file_wrappers)
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
         

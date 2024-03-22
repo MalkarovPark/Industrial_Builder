@@ -31,11 +31,16 @@ struct ComponentsView: View
                             ScenesListView()
                         }
                         
-                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .teal)
+                        StandardNavigationCard(name: "Images", count_number: base_stc.images.count, image_name: "photo", color: .teal)
+                        {
+                            GalleryView()
+                        }
+                        
+                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .indigo)
                         {
                             KinematicsListView()
                         }
-                        StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .indigo)
+                        StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .purple)
                         {
                             ChangerModulesEditor()
                         }

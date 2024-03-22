@@ -9,7 +9,7 @@ import SwiftUI
 import SceneKit
 import IndustrialKit
 
-struct ModelView: View
+struct SceneView: View
 {
     @Binding var node: SCNNode
     
@@ -43,5 +43,5 @@ typealias UIColor = NSColor
 
 #Preview
 {
-    ModelView(node: .constant(SCNNode()))
+    SceneView(node: .constant(SCNNode()))
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SceneKit
 import IndustrialKit
 
-struct ModelSelectorView: View
+struct SceneSelectorView: View
 {
     @Binding var is_presented: Bool
     @Binding var scenes: [SCNScene]
@@ -100,5 +100,5 @@ struct NoElementItemView: View
 
 #Preview
 {
-    ModelSelectorView(is_presented: .constant(true), scenes: .constant([SCNScene]()))
+    SceneSelectorView(is_presented: .constant(true), scenes: .constant([SCNScene]()))
 }

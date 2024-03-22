@@ -37,3 +37,22 @@ struct DocumentUpdateHandler: ViewModifier
             }
     }
 }
+
+struct DoubleModifier: ViewModifier
+{
+    @Binding var update_toggle: Bool
+    
+    func body(content: Content) -> some View
+    {
+        if update_toggle
+        {
+            content
+                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+        }
+        else
+        {
+            content
+                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+        }
+    }
+}

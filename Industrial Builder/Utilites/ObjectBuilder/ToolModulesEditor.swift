@@ -348,7 +348,7 @@ struct ToolControllerEditor: View
                 {
                     HStack(spacing: 0)
                     {
-                        ModelView(node: $base_stc.viewed_model_node)
+                        SceneView(node: $base_stc.viewed_model_node)
                             .frame(height: 240)
                         
                         Button(action: { select_model_view_presented.toggle() })
@@ -365,7 +365,7 @@ struct ToolControllerEditor: View
                         }
                         .popover(isPresented: $select_model_view_presented)
                         {
-                            ModelSelectorView(is_presented: $select_model_view_presented, scenes: $base_stc.scenes)
+                            SceneSelectorView(is_presented: $select_model_view_presented, scenes: $base_stc.scenes)
                         }
                     }
                 } label:

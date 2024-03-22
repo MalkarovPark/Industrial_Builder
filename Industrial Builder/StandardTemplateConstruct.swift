@@ -38,7 +38,7 @@ public class StandardTemplateConstruct: ObservableObject
         self.changer_modules = document.changer_modules
         self.tool_modules = document.tool_modules
         
-        self.scenes = document.scenes
+        //self.scenes = document.scenes
         self.kinematic_groups = document.kinematic_groups
     }
     

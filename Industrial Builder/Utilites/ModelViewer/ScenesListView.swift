@@ -30,9 +30,9 @@ struct ScenesListView: View
                     {
                         ForEach(base_stc.scenes.indices, id: \.self)
                         { index in
-                            ModelCard(scene: $base_stc.scenes[index], name: "Model \(index)")
+                            ModelCard(scene: $base_stc.scenes[index], name: "Scene\(index + 1)")
                             { is_presented in
-                                ModelView(node: root_node_binding(for: base_stc.scenes[index]))
+                                SceneView(node: root_node_binding(for: base_stc.scenes[index]))
                                     .modifier(WindowFramer())
                                     .modifier(ViewCloseButton(is_presented: is_presented))
                             }
@@ -40,6 +40,7 @@ struct ScenesListView: View
                     }
                     .padding(20)
                 }
+                .modifier(DoubleModifier(update_toggle: $app_state.update_scenes_document_notify))
             }
             else
             {

@@ -158,6 +158,11 @@ struct ComponentsSidebarGroup: View
             Label("Scenes", systemImage: "cube")
                 .badge(base_stc.scenes.count)
         }
+        NavigationLink(destination: GalleryView())
+        {
+            Label("Images", systemImage: "photo")
+                .badge(base_stc.images.count)
+        }
         NavigationLink(destination: KinematicsListView())
         {
             Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
