@@ -160,7 +160,7 @@ struct STCDocument: FileDocument
                         {
                         case "KinematicGroups":
                             kinematics_process(file_wrapper)
-                        case "Components.scnassets":
+                        case "Resources":
                             scenes_process(file_wrapper)
                         default:
                             break
@@ -184,29 +184,75 @@ struct STCDocument: FileDocument
                 
                 func scenes_process(_ wrapper: FileWrapper)
                 {
-                    if let file_wrappers = wrapper.fileWrappers
+                    scene_wrapper = wrapper
+                    scene_folder_adress = "\(configuration.file.filename ?? "")/Components/Resources/"
+                }
+            }
+        }
+    }
+    
+    var scene_folder_adress = String()
+    var scene_wrapper: FileWrapper?
+    
+    public func deferred_scene_view(folder_bookmark: Data) -> [SCNScene]
+    {
+        var scenes = [SCNScene]()
+        
+        guard let file_wrappers = scene_wrapper?.fileWrappers
+        else
+        {
+            return scenes
+        }
+        
+        for (_, file_wrapper) in file_wrappers
+        {
+            if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
+            {
+                if let scene_data = file_wrapper.regularFileContents
+                {
+                    let scene_source = SCNSceneSource(data: scene_data, options: nil)
+                    if let scene = scene_source?.scene(options: nil)
                     {
-                        for (_, file_wrapper) in file_wrappers
-                        {
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
-                            {
-                                if let scene_data = file_wrapper.regularFileContents
-                                {
-                                    let scene_source = SCNSceneSource(data: scene_data, options: nil)
-                                    if let scene = scene_source?.scene(options: nil)
-                                    {
-                                        scenes.append(scene)
-                                    }
-                                    else
-                                    {
-                                        print("Error: Unable to load the scene from file data")
-                                    }
-                                }
-                            }
-                        }
+                        scenes.append(scene_viewer(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
+                    }
+                    else
+                    {
+                        print("Error load from \(filename)")
                     }
                 }
             }
+        }
+        
+        return scenes
+    }
+    
+    private func scene_viewer(scene_address: String, folder_bookmark: Data) -> SCNScene
+    {
+        var scene = SCNScene()
+        do
+        {
+            //File access
+            var is_stale = false
+            let url = try URL(resolvingBookmarkData: folder_bookmark, bookmarkDataIsStale: &is_stale)
+            
+            print(url)
+            print(scene_folder_adress)
+            
+            guard !is_stale else
+            {
+                return scene
+            }
+            
+            do
+            {
+                let scene = try SCNScene(url: URL(string: url.absoluteString + scene_address)!)
+                return scene
+            }
+        }
+        catch
+        {
+            print(error.localizedDescription)
+            return scene
         }
     }
     
@@ -326,7 +372,7 @@ struct STCDocument: FileDocument
         var file_wrappers = [String: FileWrapper]()
         
         //Kinematic groups
-        file_wrappers["Components.scnassets"] = prepare_scenes_wrappers()
+        file_wrappers["Resources"] = prepare_scenes_wrappers()
         
         func prepare_scenes_wrappers() -> FileWrapper
         {

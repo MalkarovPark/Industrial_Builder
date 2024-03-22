@@ -16,6 +16,8 @@ struct ContentView: View
     
     @StateObject private var base_stc = StandardTemplateConstruct()
     
+    @AppStorage("WorkFolderBookmark") private var work_folder_bookmark: Data?
+    
     @ViewBuilder var body: some View
     {
         Sidebar(document: $document)
@@ -23,6 +25,11 @@ struct ContentView: View
         #if os(iOS) || os(visionOS)
             .navigationBarHidden(true)
         #endif
+            .onAppear
+            {
+                base_stc.document_view(document)
+                base_stc.scenes = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!)
+            }
             .modifier(DocumentUpdateHandler(document: $document, base_stc: base_stc))
     }
 }
@@ -135,10 +142,6 @@ struct Sidebar: View
                     .foregroundColor(Color(UIColor.quaternaryLabel))
                 #endif
                     .padding(16)
-            }
-            .onAppear
-            {
-                base_stc.document_view(document)
             }
         }
     }

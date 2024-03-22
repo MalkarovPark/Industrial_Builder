@@ -28,10 +28,6 @@ struct KinematicEditorView: View
             { scene_view in
                 app_state.kinematic_preview_robot.update_model()
             }
-            on_tap:
-            { _, _ in
-                //Tap gesture handler
-            }
             .onAppear
             {
                 app_state.prepare_robot(group, scene: viewed_scene)
