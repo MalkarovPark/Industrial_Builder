@@ -42,6 +42,10 @@ public class StandardTemplateConstruct: ObservableObject
         self.kinematic_groups = document.kinematic_groups
     }
     
+    //Imported files names
+    public var scenes_files_names = [String]()
+    public var images_files_names = [String]()
+    
     //MARK: - Components handling
     //MARK: Kinematic groups functions
     @Published var kinematic_groups = [KinematicGroup]()

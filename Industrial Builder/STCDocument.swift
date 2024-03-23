@@ -181,10 +181,16 @@ struct STCDocument: FileDocument
                                 scene_folder_adress = "\(configuration.file.filename ?? "")/Components/Resources/"
                             }
                             
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".png")
+                            if let filename = file_wrapper.filename
                             {
-                                //images_process(file_wrapper)
-                                images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
+                                let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp"]
+                                if image_extensions.contains(where: filename.lowercased().hasSuffix)
+                                {
+                                    //images_process(file_wrapper)
+                                    images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
+                                    
+                                    images_files_names.append(URL(fileURLWithPath: filename).lastPathComponent)
+                                }
                             }
                         }
                     }
@@ -196,14 +202,18 @@ struct STCDocument: FileDocument
     var scene_folder_adress = String()
     var scene_wrapper: FileWrapper?
     
-    public func deferred_scene_view(folder_bookmark: Data) -> [SCNScene]
+    var scenes_files_names = [String]()
+    var images_files_names = [String]()
+    
+    public func deferred_scene_view(folder_bookmark: Data) -> (scenes: [SCNScene], names: [String])
     {
         var scenes = [SCNScene]()
+        var names = [String]()
         
         guard let file_wrappers = scene_wrapper?.fileWrappers
         else
         {
-            return scenes
+            return (scenes, names)
         }
         
         for (_, file_wrapper) in file_wrappers
@@ -216,6 +226,9 @@ struct STCDocument: FileDocument
                     if let scene = scene_source?.scene(options: nil)
                     {
                         scenes.append(scene_viewer(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
+                        
+                        let filename_no_ext = URL(fileURLWithPath: filename).lastPathComponent
+                        names.append(filename_no_ext)
                     }
                     else
                     {
@@ -225,7 +238,7 @@ struct STCDocument: FileDocument
             }
         }
         
-        return scenes
+        return (scenes, names)
     }
     
     private func scene_viewer(scene_address: String, folder_bookmark: Data) -> SCNScene
@@ -341,6 +354,10 @@ struct STCDocument: FileDocument
         }
     }
     
+    //New files names
+    static var new_scenes_names = [String]()
+    static var new_images_names = [String]()
+    
     func prepare_components_file_wrapper() throws -> FileWrapper
     {
         var file_wrappers = [String: FileWrapper]()
@@ -359,7 +376,7 @@ struct STCDocument: FileDocument
                 let scene_data = try? NSKeyedArchiver.archivedData(withRootObject: scene, requiringSecureCoding: true)
                 guard let data = scene_data else { continue }
                 
-                let file_name = "Scene\(index + 1).scn"
+                let file_name = STCDocument.new_scenes_names[index]
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
@@ -378,7 +395,7 @@ struct STCDocument: FileDocument
                     break
                 }
                 
-                let file_name = "Image\(index + 1).png"
+                let file_name = STCDocument.new_images_names[safe: index] ?? String("Image \(index)")
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
@@ -431,6 +448,30 @@ struct STCDocument: FileDocument
         catch
         {
             throw error
+        }
+    }
+}
+
+//MARK: - Safe access to array elements
+extension Array
+{
+    subscript(safe index: Int) -> Element?
+    {
+        get
+        {
+            guard index >= 0 && index < count else
+            {
+                return nil
+            }
+            return self[index]
+        }
+        set
+        {
+            guard let newValue = newValue, index >= 0 && index < count else
+            {
+                return
+            }
+            self[index] = newValue
         }
     }
 }

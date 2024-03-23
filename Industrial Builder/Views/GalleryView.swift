@@ -64,21 +64,29 @@ struct GalleryView: View
     {
         for provider in providers
         {
-            provider.loadObject(ofClass: UIImage.self)
-            { image, error in
-                if let image = image as? UIImage
+            provider.loadItem(forTypeIdentifier: "public.image", options: nil)
+            { (item, error) in
+                DispatchQueue.main.async
                 {
-                    DispatchQueue.main.async
+                    if let url = item as? URL
                     {
-                        base_stc.images.append(image)
-                        app_state.document_update_gallery()
-                        //document.images.append(image)
-                        //print(image.name())
+                        let file_name = url.lastPathComponent
+                        
+                        if let image_data = try? Data(contentsOf: url)
+                        {
+                            guard let image = UIImage(data: image_data)
+                            else
+                            {
+                                return
+                            }
+                            base_stc.images.append(image)
+                            app_state.document_update_gallery()
+                            base_stc.images_files_names.append(file_name)
+                        }
                     }
                 }
             }
         }
-        
         return true
     }
 }

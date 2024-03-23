@@ -28,7 +28,16 @@ struct ContentView: View
             .onAppear
             {
                 base_stc.document_view(document)
-                base_stc.scenes = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!)
+                base_stc.scenes = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!).scenes
+                
+                base_stc.scenes_files_names = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!).names
+                base_stc.images_files_names = document.images_files_names
+                
+                //STCDocument.new_images_names = base_stc.images_files_names
+                //STCDocument.new_scenes_names = base_stc.scenes_files_names
+                
+                print(document.scenes_files_names)
+                print(document.images_files_names)
             }
             .modifier(DocumentUpdateHandler(document: $document, base_stc: base_stc))
     }

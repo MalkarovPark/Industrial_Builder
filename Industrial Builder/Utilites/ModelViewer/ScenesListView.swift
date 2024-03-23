@@ -30,7 +30,7 @@ struct ScenesListView: View
                     {
                         ForEach(base_stc.scenes.indices, id: \.self)
                         { index in
-                            ModelCard(scene: $base_stc.scenes[index], name: "Scene\(index + 1)")
+                            ModelCard(scene: $base_stc.scenes[index], name: "\(base_stc.scenes_files_names[index])")
                             { is_presented in
                                 SceneView(node: root_node_binding(for: base_stc.scenes[index]))
                                     .modifier(WindowFramer())
@@ -107,6 +107,7 @@ struct ScenesListView: View
                             {
                                 let scene = try SCNScene(url: fileURL, options: nil)
                                 self.base_stc.scenes.append(scene)
+                                self.base_stc.scenes_files_names.append(fileURL.lastPathComponent)
                                 
                                 app_state.document_update_scenes()
                             }

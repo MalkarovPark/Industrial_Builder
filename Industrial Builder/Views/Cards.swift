@@ -189,6 +189,7 @@ struct ImageCard: View
     
     func delete_image()
     {
+        base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         app_state.document_update_gallery()
     }
@@ -222,7 +223,7 @@ struct ModelCard<Content: View>: View
         .shadow(radius: 8)
         .overlay(alignment: .bottomLeading)
         {
-            Text(name)
+            Text(URL(fileURLWithPath: name).deletingPathExtension().lastPathComponent)
                 .padding(8)
                 #if os(macOS)
                 .foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -244,6 +245,7 @@ struct ModelCard<Content: View>: View
     
     func delete_scene()
     {
+        base_stc.scenes_files_names.remove(at: base_stc.scenes.firstIndex(of: scene) ?? 0)
         base_stc.scenes.remove(at: base_stc.scenes.firstIndex(of: scene) ?? 0)
         app_state.document_update_scenes()
     }
