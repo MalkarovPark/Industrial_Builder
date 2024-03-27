@@ -24,7 +24,7 @@ struct DocumentUpdateHandler: ViewModifier
                 STCDocument.new_images_names = base_stc.images_files_names
                 document.images = base_stc.images
                 
-                update_deferred_imported()
+                update_deferred_import()
             }
             .onChange(of: app_state.update_scenes_document_notify)
             { _, _ in
@@ -36,22 +36,30 @@ struct DocumentUpdateHandler: ViewModifier
                 document.kinematic_groups = base_stc.kinematic_groups
                 document.scenes = base_stc.scenes
                 
-                update_deferred_imported()
+                update_deferred_import()
             }
             .onChange(of: app_state.update_ima_document_notify)
             { _, _ in
                 document.changer_modules = base_stc.changer_modules
                 document.scenes = base_stc.scenes
                 
-                update_deferred_imported()
+                update_deferred_import()
             }
     }
     
-    private func update_deferred_imported()
+    private func update_deferred_import()
     {
+        //update_scenes()
+        //update_scripts()
         STCDocument.new_scenes_names = base_stc.scenes_files_names //If that data was deferred imported
         document.scenes = base_stc.scenes
     }
+    
+    /*private func update_scenes()
+    {
+        STCDocument.new_scenes_names = base_stc.scenes_files_names //If that data was deferred imported
+        document.scenes = base_stc.scenes
+    }*/
 }
 
 struct DoubleModifier: ViewModifier

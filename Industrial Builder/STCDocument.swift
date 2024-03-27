@@ -18,7 +18,7 @@ extension UTType
 
 struct STCDocument: FileDocument
 {
-    var package = STCPackage()
+    var package_info = STCPackageInfo()
     var images = [UIImage]()
     var scenes = [SCNScene]()
     
@@ -31,7 +31,7 @@ struct STCDocument: FileDocument
     
     init()
     {
-        self.package = STCPackage()
+        self.package_info = STCPackageInfo()
     }
     
     //MARK: - Import functions
@@ -49,8 +49,6 @@ struct STCDocument: FileDocument
             {
             case "PkgInfo":
                 package_process(wrapper)
-            //case "Images":
-                //images_process(wrapper)
             case "App":
                 app_process(wrapper)
             case "Components":
@@ -67,7 +65,7 @@ struct STCDocument: FileDocument
                     return
                 }
                 
-                package = try! JSONDecoder().decode(STCPackage.self, from: data)
+                package_info = try! JSONDecoder().decode(STCPackageInfo.self, from: data)
             }
             
             func json_decode<T: Decodable>(_ wrapper: FileWrapper, type: T.Type) -> T?
@@ -276,7 +274,7 @@ struct STCDocument: FileDocument
     {
         do
         {
-            //Store package data
+            //Store package info data
             let data = try make_document_data()
             let json_file_wrapper = FileWrapper(regularFileWithContents: data)
             let package_filename = "PkgInfo"
@@ -310,7 +308,7 @@ struct STCDocument: FileDocument
         
         do
         {
-            let data = try encoder.encode(package)
+            let data = try encoder.encode(package_info)
             return data
         }
         catch

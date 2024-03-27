@@ -11,7 +11,7 @@ import SceneKit
 
 public class StandardTemplateConstruct: ObservableObject
 {
-    @Published var package = STCPackage()
+    @Published var package_info = STCPackageInfo()
     @Published var images = [UIImage]()
     
     init()
@@ -20,9 +20,9 @@ public class StandardTemplateConstruct: ObservableObject
         //make_contents()
     }
     
-    func document_view(_ info: STCPackage, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], scenes: [SCNScene], kinematic_groups: [KinematicGroup])
+    func document_view(_ info: STCPackageInfo, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], scenes: [SCNScene], kinematic_groups: [KinematicGroup])
     {
-        self.package = info
+        self.package_info = info
         self.images = images
         self.changer_modules = changer_modules
         self.tool_modules = tool_modules
@@ -33,7 +33,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     func document_view(_ document: STCDocument)
     {
-        self.package = document.package
+        self.package_info = document.package_info
         self.images = document.images
         self.changer_modules = document.changer_modules
         self.tool_modules = document.tool_modules
@@ -255,7 +255,7 @@ public func PortalGroupMake(name: String) -> KinematicGroup
 }
 
 //MARK: Package
-public struct STCPackage: Codable
+public struct STCPackageInfo: Codable
 {
     var id: UUID
     var title: String

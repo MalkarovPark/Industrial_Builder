@@ -26,26 +26,26 @@ struct PackageView: View
                 HStack(spacing: 8)
                 {
                     Text("Title")
-                    TextField("Title", text: $base_stc.package.title)
+                    TextField("Title", text: $base_stc.package_info.title)
                         .textFieldStyle(.roundedBorder)
                 }
                 .padding([.bottom, .horizontal])
-                .onChange(of: base_stc.package.title)
+                .onChange(of: base_stc.package_info.title)
                 { oldValue, newValue in
-                    document.package.title = newValue
+                    document.package_info.title = newValue
                 }
                 
                 VStack(alignment: .leading, spacing: 8)
                 {
                     Text("Description")
-                    TextEditor(text: $base_stc.package.description)
+                    TextEditor(text: $base_stc.package_info.description)
                         .frame(minHeight: 192)
                         .modifier(ListBorderer())
                 }
                 .padding([.bottom, .horizontal])
-                .onChange(of: base_stc.package.description)
+                .onChange(of: base_stc.package_info.description)
                 { oldValue, newValue in
-                    document.package.description = newValue
+                    document.package_info.description = newValue
                 }
                 
                 Text("Gallery")
