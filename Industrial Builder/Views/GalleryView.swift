@@ -26,7 +26,7 @@ struct GalleryView: View
                     {
                         ForEach(base_stc.images, id: \.self)
                         { image in
-                            ImageCard(image: image)
+                            //ImageCard(image: image)
                         }
                     }
                 }

@@ -19,7 +19,7 @@ struct DocumentUpdateHandler: ViewModifier
     public func body(content: Content) -> some View
     {
         content
-            .onChange(of: app_state.update_gallery_document_notify)
+            .onChange(of: app_state.update_images_document_notify)
             { _, _ in
                 STCDocument.new_images_names = base_stc.images_files_names
                 document.images = base_stc.images

@@ -33,7 +33,7 @@ struct ComponentsView: View
                         
                         StandardNavigationCard(name: "Images", count_number: base_stc.images.count, image_name: "photo", color: .teal)
                         {
-                            ImagesView()
+                            ImagesListView()
                         }
                         
                         StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .indigo)

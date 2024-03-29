@@ -165,7 +165,7 @@ struct ComponentsSidebarGroup: View
                 .badge(base_stc.scenes.count)
         }
         
-        NavigationLink(destination: ImagesView())
+        NavigationLink(destination: ImagesListView())
         {
             Label("Images", systemImage: "photo")
                 .badge(base_stc.images.count)

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		622C88A22BB71C7200A53213 /* ImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C88A12BB71C7200A53213 /* ImagesView.swift */; };
+		621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A4E9F2BB73DEB006A081A /* ImageView.swift */; };
+		622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C88A12BB71C7200A53213 /* ImagesListView.swift */; };
 		623D72482ADAFD8500927DEA /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D72472ADAFD8500927DEA /* SceneView.swift */; };
 		6255B9202B9BDC86002B575C /* Framers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6255B91F2B9BDC86002B575C /* Framers.swift */; };
 		6255B9242B9E0DD4002B575C /* DocumentUpdateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6255B9232B9E0DD4002B575C /* DocumentUpdateHandler.swift */; };
@@ -39,7 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		622C88A12BB71C7200A53213 /* ImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesView.swift; sourceTree = "<group>"; };
+		621A4E9F2BB73DEB006A081A /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		622C88A12BB71C7200A53213 /* ImagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListView.swift; sourceTree = "<group>"; };
 		623D72472ADAFD8500927DEA /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		6255B91F2B9BDC86002B575C /* Framers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Framers.swift; sourceTree = "<group>"; };
 		6255B9232B9E0DD4002B575C /* DocumentUpdateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUpdateHandler.swift; sourceTree = "<group>"; };
@@ -84,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		622C88A32BB73C7300A53213 /* ImagesViewer */ = {
+			isa = PBXGroup;
+			children = (
+				622C88A12BB71C7200A53213 /* ImagesListView.swift */,
+				621A4E9F2BB73DEB006A081A /* ImageView.swift */,
+			);
+			path = ImagesViewer;
+			sourceTree = "<group>";
+		};
 		6255B91E2B9BDC34002B575C /* ViewModifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,7 +132,6 @@
 				628E14552AD8AAF400BC8FD9 /* BuildView.swift */,
 				6296D2892AEC55580094FB19 /* Cards.swift */,
 				62785AC12BA4902500DCB829 /* NoView.swift */,
-				622C88A12BB71C7200A53213 /* ImagesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -190,8 +200,9 @@
 		62AE55292AE7079100554A5B /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
-				6255B9222B9D26AA002B575C /* ObjectBuilder */,
+				622C88A32BB73C7300A53213 /* ImagesViewer */,
 				629B52682AF6887D003F45D2 /* ModelViewer */,
+				6255B9222B9D26AA002B575C /* ObjectBuilder */,
 				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
 				6255B9212B9D242F002B575C /* IMABuilder */,
 			);
@@ -290,6 +301,7 @@
 				6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */,
 				628E14562AD8AAF400BC8FD9 /* BuildView.swift in Sources */,
 				6296D28A2AEC55580094FB19 /* Cards.swift in Sources */,
+				621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */,
 				6296D2AE2AED9C2C0094FB19 /* 6DOFController.swift in Sources */,
 				628E14582AD8ADCC00BC8FD9 /* RobotModulesEditor.swift in Sources */,
 				62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */,
@@ -310,7 +322,7 @@
 				62E243832B9381EC009C76EB /* ListBorderer.swift in Sources */,
 				628E14542AD7E44C00BC8FD9 /* ChangerModulesEditor.swift in Sources */,
 				62785AC22BA4902500DCB829 /* NoView.swift in Sources */,
-				622C88A22BB71C7200A53213 /* ImagesView.swift in Sources */,
+				622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

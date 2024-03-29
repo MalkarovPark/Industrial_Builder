@@ -149,12 +149,16 @@ struct StandardSheetCard<Content: View>: View
     }
 }
 
-struct ImageCard: View
+struct ImageCard<Content: View>: View
 {
     @State var image: UIImage
     
+    @State private var is_presented = false
+    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var app_state: AppState
+    
+    let content: (_ is_presented: Binding<Bool>) -> Content
     
     var body: some View
     {
@@ -166,9 +170,13 @@ struct ImageCard: View
             Image(nsImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .onTapGesture
+                {
+                    is_presented.toggle()
+                }
         }
         .frame(height: 192)
-        //.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .sheet(isPresented: $is_presented, content: { content($is_presented) })
         .shadow(radius: 8)
         .contextMenu
         {
@@ -178,18 +186,23 @@ struct ImageCard: View
             }
         }
         #else
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 240)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .contextMenu
+        ZStack
+        {
+            //Rectangle()
+                //.foregroundStyle(.regularMaterial)
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        }
+        .frame(height: 192)
+        .shadow(radius: 8)
+        .contextMenu
+        {
+            Button(role: .destructive, action: delete_image)
             {
-                Button(role: .destructive, action: delete_image)
-                {
-                    Label("Delete", systemImage: "xmark")
-                }
+                Label("Delete", systemImage: "xmark")
             }
+        }
         #endif
     }
     
