@@ -2,12 +2,13 @@
 //  ImagesView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 29.03.2024.
+//  Created by Artem on 29.03.2024.
 //
 
 import SwiftUI
+import IndustrialKit
 
-struct ImagesView: View
+struct ImagesListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var app_state: AppState
@@ -29,6 +30,11 @@ struct ImagesView: View
                         ForEach(base_stc.images, id: \.self)
                         { image in
                             ImageCard(image: image)
+                            { is_presented in
+                                ImageView(image: image)
+                                    //.modifier(WindowFramer())
+                                    .modifier(ViewCloseButton(is_presented: is_presented))
+                            }
                         }
                     }
                     .padding(20)
@@ -121,6 +127,6 @@ struct ImagesView: View
 
 #Preview
 {
-    ImagesView()
+    ImagesListView()
         .environmentObject(StandardTemplateConstruct())
 }
