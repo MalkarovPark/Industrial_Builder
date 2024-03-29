@@ -192,15 +192,15 @@ struct ModulesSidebarGroup: View
     {
         NavigationLink(destination: EmptyView())
         {
-            Label("Robots", systemImage: "r.circle")
+            Label("Robots", systemImage: "r.square")
         }
         NavigationLink(destination: EmptyView())
         {
-            Label("Tools", systemImage: "hammer.circle")
+            Label("Tools", systemImage: "hammer")
         }
         NavigationLink(destination: EmptyView())
         {
-            Label("Parts", systemImage: "shippingbox.circle")
+            Label("Parts", systemImage: "shippingbox")
         }
         NavigationLink(destination: ChangerModulesEditor())
         {
@@ -235,7 +235,7 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
         switch self
         {
         case .PackageView:
-            "shippingbox"
+            "gift"
         case .ComponentsView:
             "square.stack.3d.down.forward"
         case .ModulesView:
