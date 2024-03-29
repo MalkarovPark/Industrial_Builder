@@ -77,7 +77,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }*/
     
-    //MARK: - Objects handling
+    //MARK: - Modules handling
     //MARK: Changer modules functions
     @Published var changer_modules = [ChangerModule]()
     

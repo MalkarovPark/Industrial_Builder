@@ -1,18 +1,20 @@
 //
-//  GalleryView.swift
+//  ImagesView.swift
 //  Industrial Builder
 //
-//  Created by Artem on 09.10.2023.
+//  Created by Artiom Malkarov on 29.03.2024.
 //
 
 import SwiftUI
 
-struct GalleryView: View
+struct ImagesView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var app_state: AppState
     
     @State private var is_targeted = false
+    
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
     {
@@ -20,15 +22,16 @@ struct GalleryView: View
         {
             if base_stc.images.count > 0
             {
-                ScrollView(.horizontal)
+                ScrollView(.vertical)
                 {
-                    LazyHGrid(rows: [GridItem(.adaptive(minimum: 240))], spacing: 16)
+                    LazyVGrid(columns: columns, spacing: 24)
                     {
                         ForEach(base_stc.images, id: \.self)
                         { image in
                             ImageCard(image: image)
                         }
                     }
+                    .padding(20)
                 }
             }
             else
@@ -36,7 +39,6 @@ struct GalleryView: View
                 NoView(label: "No Images")
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay
         {
             if is_targeted
@@ -58,16 +60,42 @@ struct GalleryView: View
             perform_drop(providers: providers)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .modifier(WindowFramer())
     }
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
         for provider in providers
         {
-            provider.loadItem(forTypeIdentifier: "public.image", options: nil)
-            { (item, error) in
+            /*provider.loadInPlaceFileRepresentation(forTypeIdentifier: "public.image")
+            { (fileURL, isWritable, error) in
                 DispatchQueue.main.async
                 {
+                    if let fileURL = fileURL
+                    {
+                        if let image_data = try? Data(contentsOf: fileURL)
+                        {
+                            guard let image = UIImage(data: image_data)
+                            else
+                            {
+                                return
+                            }
+                            base_stc.images.append(image)
+                            base_stc.images_files_names.append(fileURL.lastPathComponent)
+                            app_state.document_update_gallery()
+                        }
+                    }
+                    else if let error = error
+                    {
+                        print(error.localizedDescription)
+                    }
+                }
+            }*/
+            
+            DispatchQueue.main.async
+            {
+                provider.loadItem(forTypeIdentifier: "public.image", options: nil)
+                { (item, error) in
                     if let url = item as? URL
                     {
                         let file_name = url.lastPathComponent
@@ -93,6 +121,6 @@ struct GalleryView: View
 
 #Preview
 {
-    GalleryView()
+    ImagesView()
         .environmentObject(StandardTemplateConstruct())
 }

@@ -97,10 +97,10 @@ struct ScenesListView: View
         {
             if provider.hasItemConformingToTypeIdentifier("com.apple.scenekit.scene")
             {
-                provider.loadInPlaceFileRepresentation(forTypeIdentifier: "com.apple.scenekit.scene")
-                { (fileURL, isWritable, error) in
-                    DispatchQueue.main.async
-                    {
+                DispatchQueue.main.async
+                {
+                    provider.loadInPlaceFileRepresentation(forTypeIdentifier: "com.apple.scenekit.scene")
+                    { (fileURL, isWritable, error) in
                         if let fileURL = fileURL
                         {
                             do

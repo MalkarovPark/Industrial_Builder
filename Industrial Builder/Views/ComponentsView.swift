@@ -33,16 +33,17 @@ struct ComponentsView: View
                         
                         StandardNavigationCard(name: "Images", count_number: base_stc.images.count, image_name: "photo", color: .teal)
                         {
-                            GalleryView()
+                            ImagesView()
                         }
                         
                         StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .indigo)
                         {
                             KinematicsListView()
                         }
-                        StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .purple)
+                        
+                        StandardNavigationCard(name: "Listings", image_name: "scroll", color: .purple)
                         {
-                            ChangerModulesEditor()
+                            EmptyView()
                         }
                     }
                     .padding(20)

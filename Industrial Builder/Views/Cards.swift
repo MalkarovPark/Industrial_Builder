@@ -159,18 +159,24 @@ struct ImageCard: View
     var body: some View
     {
         #if os(macOS)
-        Image(nsImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 240)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .contextMenu
+        ZStack
+        {
+            //Rectangle()
+                //.foregroundStyle(.regularMaterial)
+            Image(nsImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        }
+        .frame(height: 192)
+        //.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .shadow(radius: 8)
+        .contextMenu
+        {
+            Button(role: .destructive, action: delete_image)
             {
-                Button(role: .destructive, action: delete_image)
-                {
-                    Label("Delete", systemImage: "xmark")
-                }
+                Label("Delete", systemImage: "xmark")
             }
+        }
         #else
         Image(uiImage: image)
             .resizable()

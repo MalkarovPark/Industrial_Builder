@@ -86,12 +86,12 @@ struct Sidebar: View
                             }
                             #endif
                         }
-                        else if selection == .ObjectsView
+                        else if selection == .ModulesView
                         {
                             #if os(macOS)
                             DisclosureGroup
                             {
-                                ObjectsSidebarGroup()
+                                ModulesSidebarGroup()
                             }
                             label:
                             {
@@ -103,7 +103,7 @@ struct Sidebar: View
                             #else
                             Section(isExpanded: $objects_section_expanded)
                             {
-                                ObjectsSidebarGroup()
+                                ModulesSidebarGroup()
                             }
                             header:
                             {
@@ -164,25 +164,27 @@ struct ComponentsSidebarGroup: View
             Label("Scenes", systemImage: "cube")
                 .badge(base_stc.scenes.count)
         }
-        NavigationLink(destination: GalleryView())
+        
+        NavigationLink(destination: ImagesView())
         {
             Label("Images", systemImage: "photo")
                 .badge(base_stc.images.count)
         }
+        
         NavigationLink(destination: KinematicsListView())
         {
             Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
                 .badge(base_stc.kinematic_groups.count)
         }
-        NavigationLink(destination: ChangerModulesEditor())
+        
+        NavigationLink(destination: EmptyView())
         {
-            Label("Changer", systemImage: "wand.and.rays")
-                .badge(base_stc.changer_modules.count)
+            Label("Listings", systemImage: "scroll")
         }
     }
 }
 
-struct ObjectsSidebarGroup: View
+struct ModulesSidebarGroup: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
@@ -200,12 +202,17 @@ struct ObjectsSidebarGroup: View
         {
             Label("Parts", systemImage: "shippingbox.circle")
         }
+        NavigationLink(destination: ChangerModulesEditor())
+        {
+            Label("Changers", systemImage: "wand.and.rays")
+                .badge(base_stc.changer_modules.count)
+        }
     }
 }
 
 enum navigation_item: Int, Hashable, CaseIterable, Identifiable
 {
-    case PackageView, ComponentsView, ObjectsView, BuildView //Sidebar items
+    case PackageView, ComponentsView, ModulesView, BuildView //Sidebar items
     
     var id: Int { rawValue }
     var localizedName: LocalizedStringKey //Names of sidebar items
@@ -216,8 +223,8 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             return "Package"
         case .ComponentsView:
             return "Components"
-        case .ObjectsView:
-            return "Objects"
+        case .ModulesView:
+            return "Modules"
         case .BuildView:
             return "Build"
         }
@@ -231,8 +238,8 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             "shippingbox"
         case .ComponentsView:
             "square.stack.3d.down.forward"
-        case .ObjectsView:
-            "square.on.circle"
+        case .ModulesView:
+            "puzzlepiece.extension"
         case .BuildView:
             "hammer"
         }
