@@ -12,6 +12,7 @@ struct ImagesListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var is_targeted = false
     @State private var load_panel_presented = false
@@ -82,7 +83,7 @@ struct ImagesListView: View
                 {
                     base_stc.images.removeAll()
                     base_stc.images_files_names.removeAll()
-                    app_state.document_update_gallery()
+                    document_handler.document_update_gallery()
                 }
             }
             
@@ -116,7 +117,7 @@ struct ImagesListView: View
                             }
                             base_stc.images.append(image)
                             base_stc.images_files_names.append(file_name)
-                            app_state.document_update_gallery()
+                            document_handler.document_update_gallery()
                         }
                     }
                 }
@@ -143,7 +144,7 @@ struct ImagesListView: View
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
-                app_state.document_update_gallery()
+                document_handler.document_update_gallery()
             }
             catch
             {

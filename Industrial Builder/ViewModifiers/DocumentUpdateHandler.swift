@@ -9,32 +9,45 @@ import Foundation
 import SwiftUI
 import IndustrialKit
 
-struct DocumentUpdateHandler: ViewModifier
+class DocumentUpdateHandler: ObservableObject
+{
+    @Published var update_images_document_notify = true
+    @Published var update_scenes_document_notify = true
+    @Published var update_kinematics_document_notify = true
+    @Published var update_ima_document_notify = true
+    
+    public func document_update_gallery() { update_images_document_notify.toggle() }
+    public func document_update_scenes() { update_scenes_document_notify.toggle() }
+    public func document_update_kinematics() { update_kinematics_document_notify.toggle() }
+    public func document_update_ima() { update_ima_document_notify.toggle() }
+}
+
+struct DocumentUpdateModifier: ViewModifier
 {
     @Binding var document: STCDocument
     
     var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     public func body(content: Content) -> some View
     {
         content
-            .onChange(of: app_state.update_images_document_notify)
+            .onChange(of: document_handler.update_images_document_notify)
             { _, _ in
                 update_deferred_import()
             }
-            .onChange(of: app_state.update_scenes_document_notify)
+            .onChange(of: document_handler.update_scenes_document_notify)
             { _, _ in
                 update_deferred_import()
             }
-            .onChange(of: app_state.update_kinematics_document_notify)
+            .onChange(of: document_handler.update_kinematics_document_notify)
             { _, _ in
                 document.kinematic_groups = base_stc.kinematic_groups
                 document.scenes = base_stc.scenes
                 
                 update_deferred_import()
             }
-            .onChange(of: app_state.update_ima_document_notify)
+            .onChange(of: document_handler.update_ima_document_notify)
             { _, _ in
                 document.changer_modules = base_stc.changer_modules
                 document.scenes = base_stc.scenes

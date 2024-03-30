@@ -155,7 +155,7 @@ struct ImageCard<Content: View>: View
     @State private var is_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     let content: (_ is_presented: Binding<Bool>) -> Content
     
@@ -214,7 +214,7 @@ struct ImageCard<Content: View>: View
     {
         base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        app_state.document_update_gallery()
+        document_handler.document_update_gallery()
     }
 }
 
@@ -280,7 +280,7 @@ struct ModelCard<Content: View>: View
     @State private var is_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     let name: String
     
@@ -325,7 +325,7 @@ struct ModelCard<Content: View>: View
     {
         base_stc.scenes_files_names.remove(at: base_stc.scenes.firstIndex(of: scene) ?? 0)
         base_stc.scenes.remove(at: base_stc.scenes.firstIndex(of: scene) ?? 0)
-        app_state.document_update_scenes()
+        document_handler.document_update_scenes()
     }
 }
 

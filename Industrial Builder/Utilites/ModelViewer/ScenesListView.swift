@@ -12,7 +12,7 @@ import SceneKit
 struct ScenesListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var is_targeted = false
     @State private var load_panel_presented = false
@@ -42,7 +42,7 @@ struct ScenesListView: View
                     }
                     .padding(20)
                 }
-                .modifier(DoubleModifier(update_toggle: $app_state.update_scenes_document_notify))
+                .modifier(DoubleModifier(update_toggle: $document_handler.update_scenes_document_notify))
             }
             else
             {
@@ -83,7 +83,7 @@ struct ScenesListView: View
                 {
                     base_stc.scenes.removeAll()
                     base_stc.scenes_files_names.removeAll()
-                    app_state.document_update_scenes()
+                    document_handler.document_update_scenes()
                 }
             }
             
@@ -124,7 +124,7 @@ struct ScenesListView: View
                                 self.base_stc.scenes.append(scene)
                                 self.base_stc.scenes_files_names.append(fileURL.lastPathComponent)
                                 
-                                app_state.document_update_scenes()
+                                document_handler.document_update_scenes()
                             }
                             catch
                             {
@@ -161,7 +161,7 @@ struct ScenesListView: View
                     url.stopAccessingSecurityScopedResource()
                     
                 }
-                app_state.document_update_scenes()
+                document_handler.document_update_scenes()
             }
             catch
             {

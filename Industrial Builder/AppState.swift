@@ -34,17 +34,6 @@ class AppState : ObservableObject
     
     @Published var view_update_state = false //Flag for update parts view grid
     
-    //MARK: - Document handling
-    @Published var update_images_document_notify = true
-    @Published var update_scenes_document_notify = true
-    @Published var update_kinematics_document_notify = true
-    @Published var update_ima_document_notify = true
-    
-    public func document_update_gallery() { update_images_document_notify.toggle() }
-    public func document_update_scenes() { update_scenes_document_notify.toggle() }
-    public func document_update_kinematics() { update_kinematics_document_notify.toggle() }
-    public func document_update_ima() { update_ima_document_notify.toggle() }
-    
     //MARK: - Kinematic view functions
     @Published var kinematic_preview_robot = Robot()
     

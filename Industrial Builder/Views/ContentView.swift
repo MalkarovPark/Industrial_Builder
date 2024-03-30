@@ -15,6 +15,7 @@ struct ContentView: View
     @State var sidebar_selection: navigation_item? = .PackageView //Selected sidebar item
     
     @StateObject private var base_stc = StandardTemplateConstruct()
+    @StateObject private var document_handler = DocumentUpdateHandler()
     
     @AppStorage("WorkFolderBookmark") private var work_folder_bookmark: Data?
     
@@ -40,7 +41,8 @@ struct ContentView: View
                 //print(document.scenes_files_names)
                 //print(document.images_files_names)
             }
-            .modifier(DocumentUpdateHandler(document: $document, base_stc: base_stc))
+            .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
+            .environmentObject(document_handler)
     }
 }
 

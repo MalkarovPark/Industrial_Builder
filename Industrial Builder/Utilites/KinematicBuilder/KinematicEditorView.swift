@@ -72,6 +72,7 @@ struct KinematicInspectorView: View
     @State private var expanded = [false, false, false]
     
     @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     var body: some View
     {
@@ -140,7 +141,7 @@ struct KinematicInspectorView: View
         .onChange(of: elements)
         { _, new_value in
             app_state.update_robot_kinematic(new_value)
-            app_state.document_update_kinematics()
+            document_handler.document_update_kinematics()
         }
     }
 }

@@ -11,7 +11,7 @@ import IndustrialKit
 struct ChangerModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var appeared = false
     @State private var add_module_view_presented = false
@@ -49,7 +49,7 @@ struct ChangerModulesEditor: View
         }
         .onChange(of: base_stc.changer_modules)
         { _, _ in
-            app_state.document_update_ima()
+            document_handler.document_update_ima()
         }
         .navigationTitle("Modules for Changer")
     }

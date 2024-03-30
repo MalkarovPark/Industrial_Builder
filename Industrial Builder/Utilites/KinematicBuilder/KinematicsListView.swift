@@ -14,7 +14,7 @@ struct KinematicsListView: View
     
     @State private var add_kinematic_view_presented = false
     
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
@@ -64,7 +64,7 @@ struct KinematicsListView: View
     {
         //base_stc.kinematic_groups.remove(at: index)
         base_stc.kinematic_groups.removeAll { $0.id == id }
-        app_state.document_update_kinematics()
+        document_handler.document_update_kinematics()
     }
 }
 
@@ -87,7 +87,7 @@ struct AddKinematicView: View
     @State private var new_item_name = ""
     @State private var kinematic_preset: KinematicGroupTypes = .portal
     
-    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     var body: some View
     {
@@ -145,7 +145,7 @@ struct AddKinematicView: View
         }
         
         is_presented = false
-        app_state.document_update_kinematics()
+        document_handler.document_update_kinematics()
     }
 }
 
