@@ -77,9 +77,10 @@ struct InfoView: View
                     {
                         ForEach(0..<document.package_info.gallery.count, id: \.self)
                         { index in
-                            SimpleImageCard(images: $document.package_info.gallery, image: document.package_info.gallery[index])
+                            SimpleImageCard(image: document.package_info.gallery[index]) //(images: $document.package_info.gallery, image: document.package_info.gallery[index])
                             { is_presented in
                                 ImageView(image: document.package_info.gallery[index])
+                                    .frame(maxWidth: 320)
                             }
                         }
                     }
@@ -92,7 +93,12 @@ struct InfoView: View
                     })
                     {
                         Image(systemName: "eraser")
+                            .frame(maxHeight: 24)
                     }
+                    .buttonBorderShape(.roundedRectangle)
+                    #if os(iOS)
+                    .buttonStyle(.borderedProminent)
+                    #endif
                     .controlSize(.extraLarge)
                     .padding()
                 }
@@ -101,7 +107,12 @@ struct InfoView: View
                     Button(action: { load_panel_presented.toggle() })
                     {
                         Image(systemName: "square.and.arrow.down")
+                            .frame(maxHeight: 24)
                     }
+                    .buttonBorderShape(.roundedRectangle)
+                    #if os(iOS)
+                    .buttonStyle(.borderedProminent)
+                    #endif
                     .controlSize(.extraLarge)
                     .padding()
                     .fileImporter(isPresented: $load_panel_presented,

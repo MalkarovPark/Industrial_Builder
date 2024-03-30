@@ -14,6 +14,8 @@ struct ImagesListView: View
     @EnvironmentObject var app_state: AppState
     
     @State private var is_targeted = false
+    @State private var load_panel_presented = false
+    @State private var clear_message_presented = false
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
@@ -34,6 +36,7 @@ struct ImagesListView: View
                                 ImageView(image: image)
                                     //.modifier(WindowFramer())
                                     .modifier(ViewCloseButton(is_presented: is_presented))
+                                    .frame(maxWidth: 800)
                             }
                         }
                     }
@@ -67,37 +70,35 @@ struct ImagesListView: View
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .modifier(WindowFramer())
+        .toolbar
+        {
+            Button(action: { clear_message_presented.toggle() })
+            {
+                Image(systemName: "eraser")
+            }
+            .confirmationDialog(Text("Remove all images?"), isPresented: $clear_message_presented)
+            {
+                Button("Remove", role: .destructive)
+                {
+                    base_stc.images.removeAll()
+                    base_stc.images_files_names.removeAll()
+                    app_state.document_update_gallery()
+                }
+            }
+            
+            Button(action: { load_panel_presented = true })
+            {
+                Image(systemName: "square.and.arrow.down")
+            }
+            .fileImporter(isPresented: $load_panel_presented,
+                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+        }
     }
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
         for provider in providers
         {
-            /*provider.loadInPlaceFileRepresentation(forTypeIdentifier: "public.image")
-            { (fileURL, isWritable, error) in
-                DispatchQueue.main.async
-                {
-                    if let fileURL = fileURL
-                    {
-                        if let image_data = try? Data(contentsOf: fileURL)
-                        {
-                            guard let image = UIImage(data: image_data)
-                            else
-                            {
-                                return
-                            }
-                            base_stc.images.append(image)
-                            base_stc.images_files_names.append(fileURL.lastPathComponent)
-                            app_state.document_update_gallery()
-                        }
-                    }
-                    else if let error = error
-                    {
-                        print(error.localizedDescription)
-                    }
-                }
-            }*/
-            
             DispatchQueue.main.async
             {
                 provider.loadItem(forTypeIdentifier: "public.image", options: nil)
@@ -122,6 +123,33 @@ struct ImagesListView: View
             }
         }
         return true
+    }
+    
+    func import_images(_ res: Result<[URL], Error>)
+    {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            do
+            {
+                let urls = try res.get()
+                
+                for url in urls
+                {
+                    guard url.startAccessingSecurityScopedResource() else { return }
+                    if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData)
+                    {
+                        base_stc.images.append(image)
+                        base_stc.images_files_names.append(url.lastPathComponent)
+                    }
+                    url.stopAccessingSecurityScopedResource()
+                }
+                app_state.document_update_gallery()
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

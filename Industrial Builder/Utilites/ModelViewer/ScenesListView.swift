@@ -15,6 +15,8 @@ struct ScenesListView: View
     @EnvironmentObject var app_state: AppState
     
     @State private var is_targeted = false
+    @State private var load_panel_presented = false
+    @State private var clear_message_presented = false
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
@@ -71,13 +73,26 @@ struct ScenesListView: View
         .modifier(WindowFramer())
         .toolbar
         {
-            ToolbarItem(placement: .automatic)
+            Button(action: { clear_message_presented.toggle() })
             {
-                Button (action: { })
+                Image(systemName: "eraser")
+            }
+            .confirmationDialog(Text("Remove all scenes?"), isPresented: $clear_message_presented)
+            {
+                Button("Remove", role: .destructive)
                 {
-                    Label("Add Model", systemImage: "plus")
+                    base_stc.scenes.removeAll()
+                    base_stc.scenes_files_names.removeAll()
+                    app_state.document_update_scenes()
                 }
             }
+            
+            Button(action: { load_panel_presented = true })
+            {
+                Image(systemName: "square.and.arrow.down")
+            }
+            .fileImporter(isPresented: $load_panel_presented,
+                                  allowedContentTypes: [.sceneKitScene], allowsMultipleSelection: true, onCompletion: import_scenes)
         }
     }
     
@@ -124,8 +139,35 @@ struct ScenesListView: View
                 }
             }
         }
-        
         return true
+    }
+    
+    func import_scenes(_ res: Result<[URL], Error>)
+    {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            do
+            {
+                let urls = try res.get()
+                
+                for url in urls
+                {
+                    guard url.startAccessingSecurityScopedResource() else { return }
+                    if let scene = try? SCNScene(url: url, options: nil)
+                    {
+                        self.base_stc.scenes.append(scene)
+                        self.base_stc.scenes_files_names.append(url.lastPathComponent)
+                    }
+                    url.stopAccessingSecurityScopedResource()
+                    
+                }
+                app_state.document_update_scenes()
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

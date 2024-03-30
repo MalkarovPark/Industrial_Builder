@@ -141,7 +141,6 @@ struct StandardSheetCard<Content: View>: View
             .onTapGesture
             {
                 is_presented = true
-                //openWindow(id: "editor")
             }
             .sheet(isPresented: $is_presented, content: {
                 content($is_presented)
@@ -221,7 +220,7 @@ struct ImageCard<Content: View>: View
 
 struct SimpleImageCard<Content: View>: View
 {
-    @Binding var images: [UIImage]
+    //@Binding var images: [UIImage]
     @State var image: UIImage
     
     @State private var is_presented = false
@@ -241,14 +240,14 @@ struct SimpleImageCard<Content: View>: View
             {
                 is_presented.toggle()
             }
-            .popover(isPresented: $is_presented, content: { content($is_presented) })
-            .contextMenu
+            .popover(isPresented: $is_presented, arrowEdge: .trailing, content: { content($is_presented) })
+            /*.contextMenu
             {
                 Button(role: .destructive, action: delete_image)
                 {
                     Label("Delete", systemImage: "xmark")
                 }
-            }
+            }*/
         #else
         Image(uiImage: image)
             .resizable()
@@ -257,21 +256,21 @@ struct SimpleImageCard<Content: View>: View
             {
                 is_presented.toggle()
             }
-            .popover(isPresented: $is_presented, content: { content($is_presented) })
-            .contextMenu
+            .popover(isPresented: $is_presented, arrowEdge: .trailing, content: { content($is_presented) })
+            /*.contextMenu
             {
                 Button(role: .destructive, action: delete_image)
                 {
                     Label("Delete", systemImage: "xmark")
                 }
-            }
+            }*/
         #endif
     }
     
-    func delete_image()
+    /*func delete_image()
     {
         images.remove(at: images.firstIndex(of: image) ?? 0)
-    }
+    }*/
 }
 
 struct ModelCard<Content: View>: View

@@ -21,15 +21,11 @@ struct DocumentUpdateHandler: ViewModifier
         content
             .onChange(of: app_state.update_images_document_notify)
             { _, _ in
-                STCDocument.new_images_names = base_stc.images_files_names
-                document.images = base_stc.images
-                
                 update_deferred_import()
             }
             .onChange(of: app_state.update_scenes_document_notify)
             { _, _ in
-                STCDocument.new_scenes_names = base_stc.scenes_files_names
-                document.scenes = base_stc.scenes
+                update_deferred_import()
             }
             .onChange(of: app_state.update_kinematics_document_notify)
             { _, _ in
@@ -51,6 +47,10 @@ struct DocumentUpdateHandler: ViewModifier
     {
         //update_scenes()
         //update_scripts()
+        
+        STCDocument.new_images_names = base_stc.images_files_names
+        document.images = base_stc.images
+        
         STCDocument.new_scenes_names = base_stc.scenes_files_names //If that data was deferred imported
         document.scenes = base_stc.scenes
     }
