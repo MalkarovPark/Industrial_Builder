@@ -32,9 +32,9 @@ struct InfoView: View
 {
     @Binding var document: STCDocument
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    
-    @State var selected_items: [PhotosPickerItem] = []
     @State private var gallery: [Image] = []
+    
+    @State private var load_panel_presented = false
     
     var body: some View
     {
@@ -73,48 +73,71 @@ struct InfoView: View
                 
                 ScrollView(.vertical)
                 {
-                    LazyVStack(spacing: 0)
+                    VStack(spacing: 0)
                     {
-                        ForEach(0..<gallery.count, id: \.self)
+                        ForEach(0..<document.package_info.gallery.count, id: \.self)
                         { index in
-                            gallery[index]
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity)
+                            SimpleImageCard(images: $document.package_info.gallery, image: document.package_info.gallery[index])
+                            { is_presented in
+                                ImageView(image: document.package_info.gallery[index])
+                            }
                         }
                     }
                 }
                 .frame(width: 192)
-            }
-        }
-        .modifier(ListBorderer())
-        .overlay(alignment: .bottomTrailing)
-        {
-            PhotosPicker(selection: $selected_items,
-                matching: .images)
-            {
-                Image(systemName: "photo.badge.plus")
-            }
-            .controlSize(.extraLarge)
-            .padding()
-        }
-        .onChange(of: selected_items)
-        {
-            Task
-            {
-                gallery.removeAll()
-                
-                for item in selected_items
+                .overlay(alignment: .bottomLeading)
                 {
-                    if let image = try? await item.loadTransferable(type: Image.self)
+                    Button(action: {
+                        document.package_info.clear_gallery()
+                    })
                     {
-                        gallery.append(image)
+                        Image(systemName: "eraser")
                     }
+                    .controlSize(.extraLarge)
+                    .padding()
+                }
+                .overlay(alignment: .bottomTrailing)
+                {
+                    Button(action: { load_panel_presented.toggle() })
+                    {
+                        Image(systemName: "square.and.arrow.down")
+                    }
+                    .controlSize(.extraLarge)
+                    .padding()
+                    .fileImporter(isPresented: $load_panel_presented,
+                                          allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
                 }
             }
         }
+        .modifier(ListBorderer())
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
+    }
+    
+    func import_images(_ res: Result<[URL], Error>)
+    {
+        document.package_info.clear_gallery()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            do
+            {
+                let urls = try res.get()
+                
+                for url in urls
+                {
+                    guard url.startAccessingSecurityScopedResource() else { return }
+                    if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData)
+                    {
+                        document.package_info.gallery.append(image)
+                    }
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 

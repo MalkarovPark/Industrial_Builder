@@ -193,8 +193,13 @@ struct ImageCard<Content: View>: View
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .onTapGesture
+                {
+                    is_presented.toggle()
+                }
         }
         .frame(height: 192)
+        .sheet(isPresented: $is_presented, content: { content($is_presented) })
         .shadow(radius: 8)
         .contextMenu
         {
@@ -211,6 +216,61 @@ struct ImageCard<Content: View>: View
         base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         app_state.document_update_gallery()
+    }
+}
+
+struct SimpleImageCard<Content: View>: View
+{
+    @Binding var images: [UIImage]
+    @State var image: UIImage
+    
+    @State private var is_presented = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var app_state: AppState
+    
+    let content: (_ is_presented: Binding<Bool>) -> Content
+    
+    var body: some View
+    {
+        #if os(macOS)
+        Image(nsImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .onTapGesture
+            {
+                is_presented.toggle()
+            }
+            .popover(isPresented: $is_presented, content: { content($is_presented) })
+            .contextMenu
+            {
+                Button(role: .destructive, action: delete_image)
+                {
+                    Label("Delete", systemImage: "xmark")
+                }
+            }
+        #else
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .onTapGesture
+            {
+                is_presented.toggle()
+            }
+            .popover(isPresented: $is_presented, content: { content($is_presented) })
+            .contextMenu
+            {
+                Button(role: .destructive, action: delete_image)
+                {
+                    Label("Delete", systemImage: "xmark")
+                }
+            }
+        #endif
+    }
+    
+    func delete_image()
+    {
+        images.remove(at: images.firstIndex(of: image) ?? 0)
     }
 }
 
