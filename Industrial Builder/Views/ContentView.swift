@@ -125,8 +125,6 @@ struct Sidebar: View
                                 {
                                 case .PackageView:
                                     PackageView(document: $document)
-                                case .BuildView:
-                                    BuildView()
                                 default:
                                     EmptyView()
                                 }
@@ -218,7 +216,7 @@ struct ModulesSidebarGroup: View
 
 enum navigation_item: Int, Hashable, CaseIterable, Identifiable
 {
-    case PackageView, ComponentsView, ModulesView, BuildView //Sidebar items
+    case PackageView, ComponentsView, ModulesView //Sidebar items
     
     var id: Int { rawValue }
     var localizedName: LocalizedStringKey //Names of sidebar items
@@ -231,8 +229,6 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             return "Components"
         case .ModulesView:
             return "Modules"
-        case .BuildView:
-            return "Build"
         }
     }
     
@@ -246,8 +242,6 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             "square.stack.3d.down.forward"
         case .ModulesView:
             "puzzlepiece.extension"
-        case .BuildView:
-            "hammer"
         }
     }
 }

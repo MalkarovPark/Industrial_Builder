@@ -12,18 +12,34 @@ struct PackageView: View
 {
     @Binding var document: STCDocument
     
+    @State private var pkg_tab_selection = 0
+    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     var body: some View
     {
         VStack(spacing: 0)
         {
-            Text("Information")
+            /*Text("Information")
                 .font(.title)
-                .padding([.horizontal, .top])
-            
-            InfoView(document: $document)
-                .modifier(WindowFramer())
+                .padding([.horizontal, .top])*/
+            switch pkg_tab_selection
+            {
+            case 0:
+                InfoView(document: $document)
+                    .modifier(WindowFramer())
+            default:
+                BuildView()
+            }
+        }
+        .toolbar
+        {
+            Picker("Package", selection: $pkg_tab_selection)
+            {
+                Text("Info").tag(0)
+                Text("Build").tag(1)
+            }
+            .pickerStyle(.segmented)
         }
     }
 }
