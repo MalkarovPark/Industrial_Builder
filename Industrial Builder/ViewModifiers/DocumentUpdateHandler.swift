@@ -43,14 +43,12 @@ struct DocumentUpdateModifier: ViewModifier
             .onChange(of: document_handler.update_kinematics_document_notify)
             { _, _ in
                 document.kinematic_groups = base_stc.kinematic_groups
-                document.scenes = base_stc.scenes
                 
                 update_deferred_import()
             }
             .onChange(of: document_handler.update_ima_document_notify)
             { _, _ in
                 document.changer_modules = base_stc.changer_modules
-                document.scenes = base_stc.scenes
                 
                 update_deferred_import()
             }

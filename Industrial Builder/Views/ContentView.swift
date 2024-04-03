@@ -32,8 +32,9 @@ struct ContentView: View
                 
                 if work_folder_bookmark != nil
                 {
-                    base_stc.scenes = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!).scenes
-                    base_stc.scenes_files_names = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!).names
+                    let scene_file_data = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!)
+                    base_stc.scenes = scene_file_data.scenes
+                    base_stc.scenes_files_names = scene_file_data.names
                 }
                 
                 base_stc.images_files_names = document.images_files_names

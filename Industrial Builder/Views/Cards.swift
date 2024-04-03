@@ -157,6 +157,8 @@ struct ImageCard<Content: View>: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    let name: String
+    
     let content: (_ is_presented: Binding<Bool>) -> Content
     
     var body: some View
@@ -169,14 +171,25 @@ struct ImageCard<Content: View>: View
             Image(nsImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .shadow(radius: 8)
                 .onTapGesture
                 {
                     is_presented.toggle()
                 }
+                .overlay(alignment: .bottomTrailing)
+                {
+                    Text(name)
+                        .padding(8)
+                        .background
+                        {
+                            Rectangle()
+                                .foregroundStyle(.thinMaterial)
+                        }
+                }
         }
         .frame(height: 192)
         .sheet(isPresented: $is_presented, content: { content($is_presented) })
-        .shadow(radius: 8)
+        //.shadow(radius: 8)
         .contextMenu
         {
             Button(role: .destructive, action: delete_image)

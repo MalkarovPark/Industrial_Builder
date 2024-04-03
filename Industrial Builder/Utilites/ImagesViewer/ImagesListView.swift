@@ -30,14 +30,13 @@ struct ImagesListView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.images, id: \.self)
-                        { image in
-                            ImageCard(image: image)
+                        ForEach(base_stc.images.indices, id: \.self)
+                        { index in
+                            ImageCard(image: base_stc.images[index], name: base_stc.images_files_names[index])
                             { is_presented in
-                                ImageView(image: image)
-                                    //.modifier(WindowFramer())
-                                    .modifier(ViewCloseButton(is_presented: is_presented))
+                                ImageView(image: base_stc.images[index])
                                     .frame(maxWidth: 800)
+                                    .modifier(ViewCloseButton(is_presented: is_presented))
                             }
                         }
                     }
@@ -49,6 +48,7 @@ struct ImagesListView: View
                 NoView(label: "No Images")
             }
         }
+        .modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
         .overlay
         {
             if is_targeted
