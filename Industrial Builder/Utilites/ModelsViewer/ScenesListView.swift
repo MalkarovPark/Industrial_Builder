@@ -46,7 +46,10 @@ struct ScenesListView: View
             }
             else
             {
-                NoView(label: "No Scenes")
+                ContentUnavailableView
+                {
+                    Label("No Scenes", systemImage: "cube")
+                }
             }
         }
         .overlay

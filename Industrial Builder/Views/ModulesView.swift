@@ -1,13 +1,13 @@
 //
-//  ComponentsView.swift
+//  ModulesView.swift
 //  Industrial Builder
 //
-//  Created by Artem on 25.10.2023.
+//  Created by Artem on 06.04.2024.
 //
 
 import SwiftUI
 
-struct ComponentsView: View
+struct ModulesView: View
 {
     @EnvironmentObject var app_state: AppState
     @EnvironmentObject var base_stc: StandardTemplateConstruct
@@ -26,24 +26,24 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Scenes", count_number: base_stc.scenes.count, image_name: "cube", color: .green)
+                        StandardNavigationCard(name: "Robots", count_number: 0, image_name: "r.square", color: .green)
                         {
                             ScenesListView()
                         }
                         
-                        StandardNavigationCard(name: "Images", count_number: base_stc.images.count, image_name: "photo", color: .teal)
+                        StandardNavigationCard(name: "Tools", count_number: 0, image_name: "hammer", color: .mint)
                         {
                             ImagesListView()
                         }
                         
-                        StandardNavigationCard(name: "Listings", image_name: "scroll", color: .indigo)
-                        {
-                            ListingsListView()
-                        }
-                        
-                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .purple)
+                        StandardNavigationCard(name: "Parts", count_number: 0, image_name: "shippingbox", color: .brown)
                         {
                             KinematicsListView()
+                        }
+                        
+                        StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
+                        {
+                            ChangerModulesEditor()
                         }
                     }
                     .padding(20)
@@ -56,7 +56,5 @@ struct ComponentsView: View
 
 #Preview
 {
-    ComponentsView(document: .constant(STCDocument()))
-        .environmentObject(StandardTemplateConstruct())
-        .environmentObject(AppState())
+    ModulesView(document: .constant(STCDocument()))
 }

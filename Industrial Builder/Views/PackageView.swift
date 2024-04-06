@@ -20,9 +20,6 @@ struct PackageView: View
     {
         VStack(spacing: 0)
         {
-            /*Text("Information")
-                .font(.title)
-                .padding([.horizontal, .top])*/
             switch pkg_tab_selection
             {
             case 0:

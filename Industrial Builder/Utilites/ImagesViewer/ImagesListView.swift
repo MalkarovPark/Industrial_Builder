@@ -42,13 +42,16 @@ struct ImagesListView: View
                     }
                     .padding(20)
                 }
+                .modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
             }
             else
             {
-                NoView(label: "No Images")
+                ContentUnavailableView
+                {
+                    Label("No Images", systemImage: "photo")
+                }
             }
         }
-        .modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
         .overlay
         {
             if is_targeted

@@ -102,7 +102,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: EmptyView())
+                                NavigationLink(destination: ModulesView(document: $document))
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                 }
@@ -176,15 +176,15 @@ struct ComponentsSidebarGroup: View
                 .badge(base_stc.images.count)
         }
         
+        NavigationLink(destination: ListingsListView())
+        {
+            Label("Listings", systemImage: "scroll")
+        }
+        
         NavigationLink(destination: KinematicsListView())
         {
             Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
                 .badge(base_stc.kinematic_groups.count)
-        }
-        
-        NavigationLink(destination: EmptyView())
-        {
-            Label("Listings", systemImage: "scroll")
         }
     }
 }
