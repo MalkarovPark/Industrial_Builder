@@ -13,12 +13,16 @@ class DocumentUpdateHandler: ObservableObject
 {
     @Published var update_images_document_notify = true
     @Published var update_scenes_document_notify = true
+    @Published var update_listings_document_notify = true
     @Published var update_kinematics_document_notify = true
+    
     @Published var update_ima_document_notify = true
     
     public func document_update_gallery() { update_images_document_notify.toggle() }
     public func document_update_scenes() { update_scenes_document_notify.toggle() }
+    public func document_update_listings() { update_listings_document_notify.toggle() }
     public func document_update_kinematics() { update_kinematics_document_notify.toggle() }
+    
     public func document_update_ima() { update_ima_document_notify.toggle() }
 }
 
@@ -38,6 +42,13 @@ struct DocumentUpdateModifier: ViewModifier
             }
             .onChange(of: document_handler.update_scenes_document_notify)
             { _, _ in
+                update_deferred_import()
+            }
+            .onChange(of: document_handler.update_listings_document_notify)
+            { _, _ in
+                document.listings_files_names = base_stc.listings_files_names
+                document.listings = base_stc.listings
+                
                 update_deferred_import()
             }
             .onChange(of: document_handler.update_kinematics_document_notify)

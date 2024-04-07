@@ -140,7 +140,7 @@ struct ImagesListView: View
                 for url in urls
                 {
                     guard url.startAccessingSecurityScopedResource() else { return }
-                    if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData)
+                    if let image_data = try? Data(contentsOf: url), let image = UIImage(data: image_data)
                     {
                         base_stc.images.append(image)
                         base_stc.images_files_names.append(url.lastPathComponent)

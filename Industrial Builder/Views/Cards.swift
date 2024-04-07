@@ -259,18 +259,18 @@ struct ListingCard<Content: View>: View
         }
         .contextMenu
         {
-            Button(role: .destructive, action: delete_image)
+            Button(role: .destructive, action: delete_listing)
             {
                 Label("Delete", systemImage: "xmark")
             }
         }
     }
     
-    func delete_image()
+    func delete_listing()
     {
-        //base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        //base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        //document_handler.document_update_gallery()
+        base_stc.listings_files_names.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
+        base_stc.listings.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
+        document_handler.document_update_listings()
     }
 }
 

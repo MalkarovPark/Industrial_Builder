@@ -24,13 +24,13 @@ struct ListingsListView: View
     {
         VStack(spacing: 0)
         {
-            if base_stc.images.count > 0
+            if base_stc.listings.count > 0
             {
                 ScrollView(.vertical)
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.images.indices, id: \.self)
+                        ForEach(base_stc.listings.indices, id: \.self)
                         { index in
                             ListingCard(code: $base_stc.listings[index], name: base_stc.listings_files_names[index])
                             { is_presented in
@@ -56,7 +56,7 @@ struct ListingsListView: View
             {
                 VStack
                 {
-                    Text("Drop images here")
+                    Text("Drop listings here")
                         .foregroundColor(.secondary)
                         .padding()
                 }
@@ -66,7 +66,7 @@ struct ListingsListView: View
                 .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }
-        .onDrop(of: [.image], isTargeted: $is_targeted)
+        .onDrop(of: [.swiftSource], isTargeted: $is_targeted)
         { providers in
             perform_drop(providers: providers)
         }
@@ -78,20 +78,18 @@ struct ListingsListView: View
             {
                 Image(systemName: "plus")
             }
-            .fileImporter(isPresented: $load_panel_presented,
-                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
             
             Button(action: { clear_message_presented.toggle() })
             {
                 Image(systemName: "eraser")
             }
-            .confirmationDialog(Text("Remove all images?"), isPresented: $clear_message_presented)
+            .confirmationDialog(Text("Remove all listings?"), isPresented: $clear_message_presented)
             {
                 Button("Remove", role: .destructive)
                 {
-                    base_stc.images.removeAll()
-                    base_stc.images_files_names.removeAll()
-                    document_handler.document_update_gallery()
+                    base_stc.listings.removeAll()
+                    base_stc.listings_files_names.removeAll()
+                    document_handler.document_update_listings()
                 }
             }
             
@@ -100,7 +98,7 @@ struct ListingsListView: View
                 Image(systemName: "square.and.arrow.down")
             }
             .fileImporter(isPresented: $load_panel_presented,
-                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+                                  allowedContentTypes: [.swiftSource], allowsMultipleSelection: true, onCompletion: import_listings)
         }
     }
     
@@ -110,31 +108,32 @@ struct ListingsListView: View
         {
             DispatchQueue.main.async
             {
-                provider.loadItem(forTypeIdentifier: "public.image", options: nil)
+                provider.loadItem(forTypeIdentifier: "public.swift-source", options: nil)
                 { (item, error) in
                     if let url = item as? URL
                     {
                         let file_name = url.lastPathComponent
                         
-                        if let image_data = try? Data(contentsOf: url)
+                        if let listing_data = try? Data(contentsOf: url)
                         {
-                            guard let image = UIImage(data: image_data)
+                            guard let listing = String(data: listing_data, encoding: .utf8)
                             else
                             {
                                 return
                             }
-                            base_stc.images.append(image)
-                            base_stc.images_files_names.append(file_name)
-                            document_handler.document_update_gallery()
+                            base_stc.listings.append(listing)
+                            base_stc.listings_files_names.append(String(file_name.split(separator: ".").first!))
+                            document_handler.document_update_listings()
                         }
                     }
                 }
             }
         }
+        
         return true
     }
     
-    func import_images(_ res: Result<[URL], Error>)
+    func import_listings(_ res: Result<[URL], Error>)
     {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
@@ -145,14 +144,14 @@ struct ListingsListView: View
                 for url in urls
                 {
                     guard url.startAccessingSecurityScopedResource() else { return }
-                    if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData)
+                    if let listing_data = try? Data(contentsOf: url), let listing = String(data: listing_data, encoding: .utf8)
                     {
-                        base_stc.images.append(image)
-                        base_stc.images_files_names.append(url.lastPathComponent)
+                        base_stc.listings.append(listing)
+                        base_stc.listings_files_names.append(String(url.lastPathComponent.split(separator: ".").first!))
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
-                document_handler.document_update_gallery()
+                document_handler.document_update_listings()
             }
             catch
             {

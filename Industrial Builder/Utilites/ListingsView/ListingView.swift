@@ -12,6 +12,8 @@ struct ListingView: View
     @Binding var code: String
     @Binding var is_presented: Bool
     
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -21,6 +23,10 @@ struct ListingView: View
                 Spacer()
                 TextEditor(text: $code)
                     .font(.custom("Menlo", size: 12))
+                    .onChange(of: code)
+                    { _, _ in
+                        document_handler.document_update_listings()
+                    }
             }
         }
         .toolbar

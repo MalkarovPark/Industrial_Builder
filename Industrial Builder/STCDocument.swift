@@ -21,6 +21,7 @@ struct STCDocument: FileDocument
     var package_info = STCPackageInfo()
     var images = [UIImage]()
     var scenes = [SCNScene]()
+    var listings = [String]()
     
     var changer_modules = [ChangerModule]()
     var tool_modules = [ToolModule]()
@@ -146,6 +147,8 @@ struct STCDocument: FileDocument
                             kinematics_process(file_wrapper)
                         case "Resources":
                             resources_process(file_wrapper)
+                        case "Codes":
+                            codes_process(file_wrapper)
                         default:
                             break
                         }
@@ -193,6 +196,21 @@ struct STCDocument: FileDocument
                         }
                     }
                 }
+                
+                func codes_process(_ wrapper: FileWrapper)
+                {
+                    if let file_wrappers = wrapper.fileWrappers
+                    {
+                        for (_, file_wrapper) in file_wrappers
+                        {
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".swift"), let listing = String(data: file_wrapper.regularFileContents ?? Data(), encoding: .utf8)
+                            {
+                                listings.append(listing)
+                                listings_files_names.append(String(filename.split(separator: ".").first!))
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -202,6 +220,7 @@ struct STCDocument: FileDocument
     
     var scenes_files_names = [String]()
     var images_files_names = [String]()
+    var listings_files_names = [String]()
     
     public func deferred_scene_view(folder_bookmark: Data) -> (scenes: [SCNScene], names: [String])
     {
@@ -317,6 +336,7 @@ struct STCDocument: FileDocument
         }
     }
     
+    //!
     func prepare_app_file_wrapper() throws -> FileWrapper
     {
         var file_wrappers = [String: FileWrapper]()
@@ -351,6 +371,7 @@ struct STCDocument: FileDocument
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
     }
+    //!
     
     //New files names
     static var new_scenes_names = [String]()
@@ -365,7 +386,7 @@ struct STCDocument: FileDocument
         
         func prepare_resources_wrappers() -> FileWrapper
         {
-            //Images
+            //Scenes
             var file_wrappers = [String: FileWrapper]()
             
             var index = 0
@@ -384,7 +405,7 @@ struct STCDocument: FileDocument
                 index += 1
             }
             
-            //Scenes
+            //Images
             index = 0
             for image in images
             {
@@ -403,6 +424,33 @@ struct STCDocument: FileDocument
             }
             
             print(file_wrappers)
+            return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        }
+        
+        //Listings
+        file_wrappers["Codes"] = prepare_listings_wrappers()
+        
+        func prepare_listings_wrappers() -> FileWrapper
+        {
+            var file_wrappers = [String: FileWrapper]()
+            
+            for (index, listing) in listings.enumerated()
+            {
+                let file_name = "\(listings_files_names[index]).swift"
+                
+                guard let data = listing.data(using: .utf8) else
+                {
+                    break
+                }
+                
+                let file_wrapper = FileWrapper(regularFileWithContents: data)
+                
+                file_wrapper.filename = file_name
+                file_wrapper.preferredFilename = file_name
+                
+                file_wrappers[file_name] = file_wrapper
+            }
+            
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
         

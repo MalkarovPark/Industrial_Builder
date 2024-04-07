@@ -13,7 +13,7 @@ public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package_info = STCPackageInfo()
     @Published var images = [UIImage]()
-    @Published var listings = ["??", "????"]//[String]()
+    @Published var listings = [String]()
     
     init()
     {
@@ -24,29 +24,33 @@ public class StandardTemplateConstruct: ObservableObject
     func document_view(_ info: STCPackageInfo, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], scenes: [SCNScene], kinematic_groups: [KinematicGroup])
     {
         self.package_info = info
-        self.images = images
-        self.changer_modules = changer_modules
-        self.tool_modules = tool_modules
         
+        self.images = images
         self.scenes = scenes
         self.kinematic_groups = kinematic_groups
+        
+        self.changer_modules = changer_modules
+        self.tool_modules = tool_modules
     }
     
     func document_view(_ document: STCDocument)
     {
         self.package_info = document.package_info
         self.images = document.images
-        self.changer_modules = document.changer_modules
-        self.tool_modules = document.tool_modules
+        self.listings = document.listings
+        self.listings_files_names = document.listings_files_names
         
         //self.scenes = document.scenes
         self.kinematic_groups = document.kinematic_groups
+        
+        self.changer_modules = document.changer_modules
+        self.tool_modules = document.tool_modules
     }
     
     //Imported files names
     public var scenes_files_names = [String]()
     public var images_files_names = [String]()
-    public var listings_files_names = ["Ithi", "Mintscreen"]//[String]()
+    public var listings_files_names = [String]()
     
     //MARK: - Components handling
     //MARK: Kinematic groups functions
@@ -132,6 +136,18 @@ public class StandardTemplateConstruct: ObservableObject
 }
 
 //MARK: - Structures
+//MARK: - File
+/*public struct FileHolder: Equatable
+{
+    public static func == (lhs: FileHolder, rhs: FileHolder) -> Bool
+    {
+        lhs.name == rhs.name
+    }
+    
+    var name = String()
+    var data = (Any).self
+}*/
+
 //MARK: App Modules
 public struct ChangerModule: Equatable, Codable
 {
