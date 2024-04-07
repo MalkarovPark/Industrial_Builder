@@ -179,6 +179,7 @@ struct ComponentsSidebarGroup: View
         NavigationLink(destination: ListingsListView())
         {
             Label("Listings", systemImage: "scroll")
+                .badge(base_stc.listings.count)
         }
         
         NavigationLink(destination: KinematicsListView())

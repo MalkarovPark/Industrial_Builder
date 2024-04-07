@@ -32,7 +32,7 @@ struct ImagesListView: View
                     {
                         ForEach(base_stc.images.indices, id: \.self)
                         { index in
-                            ImageCard(image: base_stc.images[index], name: base_stc.images_files_names[index])
+                            ImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index])
                             { is_presented in
                                 ImageView(image: base_stc.images[index])
                                     .frame(maxWidth: 800)
@@ -42,7 +42,7 @@ struct ImagesListView: View
                     }
                     .padding(20)
                 }
-                .modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
+                //.modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
             }
             else
             {

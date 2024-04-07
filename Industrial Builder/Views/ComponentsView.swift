@@ -36,7 +36,7 @@ struct ComponentsView: View
                             ImagesListView()
                         }
                         
-                        StandardNavigationCard(name: "Listings", image_name: "scroll", color: .indigo)
+                        StandardNavigationCard(name: "Listings", count_number: base_stc.listings.count, image_name: "scroll", color: .indigo)
                         {
                             ListingsListView()
                         }

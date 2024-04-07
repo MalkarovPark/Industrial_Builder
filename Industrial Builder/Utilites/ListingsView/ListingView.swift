@@ -2,17 +2,43 @@
 //  ListingView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 06.04.2024.
+//  Created by Artem on 06.04.2024.
 //
 
 import SwiftUI
 
-struct ListingView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct ListingView: View
+{
+    @Binding var code: String
+    @Binding var is_presented: Bool
+    
+    var body: some View
+    {
+        VStack(spacing: 0)
+        {
+            ScrollView(.vertical)
+            {
+                Spacer()
+                TextEditor(text: $code)
+                    .font(.custom("Menlo", size: 12))
+            }
+        }
+        .toolbar
+        {
+            Button(action: {
+                is_presented = false
+            })
+            {
+                Image(systemName: "xmark")
+            }
+            .keyboardShortcut(.cancelAction)
+            .controlSize(.extraLarge)
+        }
+        .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
     }
 }
 
-#Preview {
-    ListingView()
+#Preview
+{
+    ListingView(code: .constant(""), is_presented: .constant(true))
 }

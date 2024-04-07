@@ -150,7 +150,7 @@ struct StandardSheetCard<Content: View>: View
 
 struct ImageCard<Content: View>: View
 {
-    @State var image: UIImage
+    @Binding var image: UIImage
     
     @State private var is_presented = false
     
@@ -163,11 +163,11 @@ struct ImageCard<Content: View>: View
     
     var body: some View
     {
-        #if os(macOS)
         ZStack
         {
             //Rectangle()
                 //.foregroundStyle(.regularMaterial)
+            #if os(macOS)
             Image(nsImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -186,6 +186,15 @@ struct ImageCard<Content: View>: View
                                 .foregroundStyle(.thinMaterial)
                         }
                 }
+            #else
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .onTapGesture
+                {
+                    is_presented.toggle()
+                }
+            #endif
         }
         .frame(height: 192)
         .sheet(isPresented: $is_presented, content: { content($is_presented) })
@@ -197,30 +206,6 @@ struct ImageCard<Content: View>: View
                 Label("Delete", systemImage: "xmark")
             }
         }
-        #else
-        ZStack
-        {
-            //Rectangle()
-                //.foregroundStyle(.regularMaterial)
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .onTapGesture
-                {
-                    is_presented.toggle()
-                }
-        }
-        .frame(height: 192)
-        .sheet(isPresented: $is_presented, content: { content($is_presented) })
-        .shadow(radius: 8)
-        .contextMenu
-        {
-            Button(role: .destructive, action: delete_image)
-            {
-                Label("Delete", systemImage: "xmark")
-            }
-        }
-        #endif
     }
     
     func delete_image()
@@ -228,6 +213,64 @@ struct ImageCard<Content: View>: View
         base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         document_handler.document_update_gallery()
+    }
+}
+
+struct ListingCard<Content: View>: View
+{
+    @Binding var code: String
+    
+    @State private var is_presented = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    let name: String
+    
+    let content: (_ is_presented: Binding<Bool>) -> Content
+    
+    var body: some View
+    {
+        ZStack
+        {
+            Rectangle()
+                .foregroundStyle(.white)
+                .shadow(radius: 8)
+                .overlay(alignment: .topLeading)
+                {
+                    Text(code)
+                }
+                .overlay(alignment: .bottomTrailing)
+                {
+                    Text(name)
+                        .padding(8)
+                        .background
+                        {
+                            Rectangle()
+                                .foregroundStyle(.thinMaterial)
+                        }
+                }
+        }
+        .frame(height: 192)
+        .sheet(isPresented: $is_presented, content: { content($is_presented) })
+        .onTapGesture
+        {
+            is_presented.toggle()
+        }
+        .contextMenu
+        {
+            Button(role: .destructive, action: delete_image)
+            {
+                Label("Delete", systemImage: "xmark")
+            }
+        }
+    }
+    
+    func delete_image()
+    {
+        //base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
+        //base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
+        //document_handler.document_update_gallery()
     }
 }
 

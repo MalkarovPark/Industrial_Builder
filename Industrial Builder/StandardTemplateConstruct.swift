@@ -13,6 +13,7 @@ public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package_info = STCPackageInfo()
     @Published var images = [UIImage]()
+    @Published var listings = ["??", "????"]//[String]()
     
     init()
     {
@@ -45,6 +46,7 @@ public class StandardTemplateConstruct: ObservableObject
     //Imported files names
     public var scenes_files_names = [String]()
     public var images_files_names = [String]()
+    public var listings_files_names = ["Ithi", "Mintscreen"]//[String]()
     
     //MARK: - Components handling
     //MARK: Kinematic groups functions
