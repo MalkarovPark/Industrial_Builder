@@ -42,7 +42,6 @@ struct ImagesListView: View
                     }
                     .padding(20)
                 }
-                //.modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
             }
             else
             {
@@ -101,6 +100,8 @@ struct ImagesListView: View
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
+        var even = false
+        
         for provider in providers
         {
             DispatchQueue.main.async
@@ -120,7 +121,13 @@ struct ImagesListView: View
                             }
                             base_stc.images.append(image)
                             base_stc.images_files_names.append(file_name)
+                            
                             document_handler.document_update_gallery()
+                            if even
+                            {
+                                document_handler.document_update_gallery()
+                            }
+                            even.toggle()
                         }
                     }
                 }
