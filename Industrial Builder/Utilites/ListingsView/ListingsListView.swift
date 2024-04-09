@@ -15,6 +15,7 @@ struct ListingsListView: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var is_targeted = false
+    @State private var new_panel_presented = false
     @State private var load_panel_presented = false
     @State private var clear_message_presented = false
     
@@ -74,9 +75,13 @@ struct ListingsListView: View
         .modifier(WindowFramer())
         .toolbar
         {
-            Button(action: { })
+            Button(action: { new_panel_presented.toggle() })
             {
                 Image(systemName: "plus")
+            }
+            .popover(isPresented: $new_panel_presented, arrowEdge: .bottom)
+            {
+                NewListingView(is_presented: $new_panel_presented)
             }
             
             Button(action: { clear_message_presented.toggle() })

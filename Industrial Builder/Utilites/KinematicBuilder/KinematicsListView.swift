@@ -11,39 +11,48 @@ import IndustrialKit
 struct KinematicsListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var add_kinematic_view_presented = false
-    
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
     {
-        ScrollView(.vertical)
+        VStack(spacing: 0)
         {
-            VStack(spacing: 0)
+            if base_stc.kinematic_groups.count > 0
             {
-                LazyVGrid(columns: columns, spacing: 24)
+                ScrollView(.vertical)
                 {
-                    ForEach(base_stc.kinematic_groups.indices, id: \.self)
-                    { index in
-                        StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
-                        {
-                            KinematicEditorView(group: $base_stc.kinematic_groups[index])
-                        }
-                        .contextMenu
-                        {
-                            Button(role: .destructive, action: {
-                                delete_kinematic(base_stc.kinematic_groups[index].id)
-                            })
+                    LazyVGrid(columns: columns, spacing: 24)
+                    {
+                        ForEach(base_stc.kinematic_groups.indices, id: \.self)
+                        { index in
+                            StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
                             {
-                                Label("Delete", systemImage: "xmark")
+                                KinematicEditorView(group: $base_stc.kinematic_groups[index])
+                            }
+                            .contextMenu
+                            {
+                                Button(role: .destructive, action: {
+                                    delete_kinematic(base_stc.kinematic_groups[index].id)
+                                })
+                                {
+                                    Label("Delete", systemImage: "xmark")
+                                }
                             }
                         }
                     }
+                    .padding(20)
                 }
-                .padding(20)
+            }
+            else
+            {
+                ContentUnavailableView
+                {
+                    Label("No Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
+                }
             }
         }
         .toolbar
