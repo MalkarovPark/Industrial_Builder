@@ -30,6 +30,9 @@ struct KinematicEditorView: View
             }
             .onAppear
             {
+                let clear_node = viewed_scene.rootNode.childNode(withName: "robot", recursively: true)
+                clear_node?.removeFromParentNode()
+                
                 app_state.prepare_robot(group, scene: viewed_scene)
             }
             .background

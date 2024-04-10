@@ -2,7 +2,7 @@
 //  NewListingView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 09.04.2024.
+//  Created by Artem on 09.04.2024.
 //
 
 import SwiftUI
