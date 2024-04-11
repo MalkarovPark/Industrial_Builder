@@ -355,7 +355,7 @@ struct ModelCard<Content: View>: View
         .frame(height: 192)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .shadow(radius: 8)
-        .overlay(alignment: .bottomLeading)
+        .overlay(alignment: .bottomTrailing)
         {
             Text(URL(fileURLWithPath: name).deletingPathExtension().lastPathComponent)
                 .padding(8)

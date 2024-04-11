@@ -174,6 +174,9 @@ struct ListingsListView: View
     }
 }
 
-#Preview {
+#Preview
+{
     ListingsListView()
+        .environmentObject(StandardTemplateConstruct())
+        .environmentObject(AppState())
 }

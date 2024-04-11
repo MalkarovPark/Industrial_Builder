@@ -43,7 +43,7 @@ struct ModulesView: View
                         
                         StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
                         {
-                            ChangerModulesEditor()
+                            ChangersModulesEditorView()
                         }
                     }
                     .padding(20)

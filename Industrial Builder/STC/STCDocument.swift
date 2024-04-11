@@ -147,7 +147,7 @@ struct STCDocument: FileDocument
                             kinematics_process(file_wrapper)
                         case "Resources":
                             resources_process(file_wrapper)
-                        case "Codes":
+                        case "Code":
                             codes_process(file_wrapper)
                         default:
                             break
@@ -428,7 +428,7 @@ struct STCDocument: FileDocument
         }
         
         //Listings
-        file_wrappers["Codes"] = prepare_listings_wrappers()
+        file_wrappers["Code"] = prepare_listings_wrappers()
         
         func prepare_listings_wrappers() -> FileWrapper
         {

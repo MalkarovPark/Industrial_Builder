@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ChangerModulesEditor: View
+struct ChangersModulesEditorView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -18,7 +18,8 @@ struct ChangerModulesEditor: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        EmptyView()
+        /*VStack(spacing: 0)
         {
             List
             {
@@ -51,11 +52,11 @@ struct ChangerModulesEditor: View
         { _, _ in
             document_handler.document_update_ima()
         }
-        .navigationTitle("Modules for Changer")
+        .navigationTitle("Modules for Changer")*/
     }
 }
 
-struct ChangerModuleDisclosureItem: View
+/*struct ChangerModuleDisclosureItem: View
 {
     var name: String
     
@@ -122,16 +123,17 @@ struct AddChangerModuleView: View
             .padding(12)
         }
     }
-}
+}*/
 
 #Preview
 {
-    ChangerModulesEditor()
+    ChangersModulesEditorView()
         .environmentObject(StandardTemplateConstruct())
 }
-
+/*
 #Preview
 {
     AddChangerModuleView(is_presented: .constant(true), modules_items: .constant([ChangerModule]()))
         .environmentObject(StandardTemplateConstruct())
 }
+*/
