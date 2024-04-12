@@ -208,7 +208,7 @@ struct ModulesSidebarGroup: View
         {
             Label("Parts", systemImage: "shippingbox")
         }
-        NavigationLink(destination: ChangersModulesEditorView())
+        NavigationLink(destination: ChangerModulesListView())
         {
             Label("Changers", systemImage: "wand.and.rays")
                 .badge(base_stc.changer_modules.count)

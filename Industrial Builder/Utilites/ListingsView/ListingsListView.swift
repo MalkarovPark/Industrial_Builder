@@ -81,7 +81,13 @@ struct ListingsListView: View
             }
             .popover(isPresented: $new_panel_presented, arrowEdge: .bottom)
             {
-                NewListingView(is_presented: $new_panel_presented)
+                AddNewView(is_presented: $new_panel_presented, names: base_stc.listings_files_names)
+                { new_name in
+                    base_stc.listings.append("")
+                    base_stc.listings_files_names.append(new_name)
+                    
+                    document_handler.document_update_listings()
+                }
             }
             
             Button(action: { clear_message_presented.toggle() })

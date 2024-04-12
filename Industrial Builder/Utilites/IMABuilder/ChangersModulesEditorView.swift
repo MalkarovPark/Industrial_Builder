@@ -13,6 +13,8 @@ struct ChangersModulesEditorView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    @Binding var changer: ChangerModule
+    
     @State private var appeared = false
     @State private var add_module_view_presented = false
     
@@ -127,7 +129,7 @@ struct AddChangerModuleView: View
 
 #Preview
 {
-    ChangersModulesEditorView()
+    ChangersModulesEditorView(changer: .constant(ChangerModule(name: "None")))
         .environmentObject(StandardTemplateConstruct())
 }
 /*

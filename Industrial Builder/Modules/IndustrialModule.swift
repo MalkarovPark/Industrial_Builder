@@ -12,8 +12,10 @@ import Foundation
  
  Sets parameters of the model and links them with the components of the package module.
  */
-public class IndustrialModule: Codable, Equatable
+public class IndustrialModule: Identifiable, Codable, Equatable
 {
+    public var id = UUID()
+    
     public static func == (lhs: IndustrialModule, rhs: IndustrialModule) -> Bool
     {
         lhs.name == rhs.name
@@ -34,7 +36,14 @@ public class IndustrialModule: Codable, Equatable
     
     open var extension_name: String { "module" } ///An object package extension name.
     
-    public var internal_url: String?
+    public init(name: String = String(), description: String? = nil, package_file_name: String = String())
+    {
+        self.name = name
+        self.description = description
+        self.package_file_name = package_file_name
+    }
+    
+    public var internal_url: String? ///An adress to package contents access.
     {
         do
         {

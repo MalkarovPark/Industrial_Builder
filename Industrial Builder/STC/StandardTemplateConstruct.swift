@@ -12,8 +12,6 @@ import SceneKit
 public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package_info = STCPackageInfo()
-    @Published var images = [UIImage]()
-    @Published var listings = [String]()
     
     init()
     {
@@ -47,17 +45,21 @@ public class StandardTemplateConstruct: ObservableObject
         self.tool_modules = document.tool_modules
     }
     
+    //MARK: - Components handling
+    //Imported files
+    @Published var images = [UIImage]()
+    @Published var listings = [String]()
+    @Published var scenes = [SCNScene]()
+    @Published var kinematic_groups = [KinematicGroup]()
+    
     //Imported files names
     public var scenes_files_names = [String]()
     public var images_files_names = [String]()
     public var listings_files_names = [String]()
     
-    //MARK: - Components handling
     //MARK: Kinematic groups functions
-    @Published var kinematic_groups = [KinematicGroup]()
     
     //MARK: Model nodes functions
-    @Published var scenes = [SCNScene]()
     @Published var viewed_model_node = SCNNode()
     
     private func make_preview()
@@ -69,19 +71,6 @@ public class StandardTemplateConstruct: ObservableObject
         box.materials = [material]
         viewed_model_node = SCNNode(geometry: box)
     }
-    
-    /*private func make_contents()
-    {
-        for i in 0..<17
-        {
-            let material = SCNMaterial()
-            material.diffuse.contents = UIColor(red: CGFloat(drand48()), green: CGFloat(drand48()), blue: CGFloat(drand48()), alpha: 1.0)
-            let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-            box.materials = [material]
-            
-            scenes.append(SCNNode(geometry: box))
-        }
-    }*/
     
     //MARK: - Modules handling
     //MARK: Changer modules functions

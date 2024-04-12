@@ -31,9 +31,7 @@ struct ListingView: View
         }
         .toolbar
         {
-            Button(action: {
-                is_presented = false
-            })
+            Button(action: { is_presented = false })
             {
                 Image(systemName: "xmark")
             }
