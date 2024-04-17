@@ -33,12 +33,12 @@ struct ModulesView: View
                         
                         StandardNavigationCard(name: "Tools", count_number: 0, image_name: "hammer", color: .mint)
                         {
-                            ImagesListView()
+                            ToolsModulesEditor()
                         }
                         
                         StandardNavigationCard(name: "Parts", count_number: 0, image_name: "shippingbox", color: .brown)
                         {
-                            KinematicsListView()
+                            PartsModulesEditor()
                         }
                         
                         StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)

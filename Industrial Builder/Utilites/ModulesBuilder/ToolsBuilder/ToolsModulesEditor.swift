@@ -8,11 +8,9 @@
 import SwiftUI
 import IndustrialKit
 
-struct ToolModulesEditor: View
+struct ToolsModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    
-    @Binding var is_presented: Bool
     
     @State private var add_tool_module_presented = false
     //@State private var selection = ToolModule()
@@ -26,14 +24,6 @@ struct ToolModulesEditor: View
     {
         VStack(spacing: 0)
         {
-            Text("Modules for Tool")
-                .font(.title2)
-            #if os(visionOS)
-                .padding(24)
-            #else
-                .padding()
-            #endif
-            
             HStack(spacing: 0)
             {
                 VStack(spacing: 0)
@@ -120,10 +110,17 @@ struct ToolModulesEditor: View
                 .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
                 #endif
             }
-            .padding([.horizontal, .bottom])
+            .padding()
         }
-        .modifier(ViewCloseButton(is_presented: $is_presented))
         .modifier(SheetFramer())
+        //.navigationTitle("Modules for Tool")
+        /*.toolbar
+        {
+            ToolbarItem(placement: .automatic)
+            {
+                Text("Modules for Tool")
+            }
+        }*/
     }
     
     private func remove_tool()
@@ -476,6 +473,6 @@ struct StatisticsListView: View
 
 #Preview
 {
-    ToolModulesEditor(is_presented: .constant(true))
+    ToolsModulesEditor()
         .environmentObject(StandardTemplateConstruct())
 }

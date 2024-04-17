@@ -200,11 +200,11 @@ struct ModulesSidebarGroup: View
         {
             Label("Robots", systemImage: "r.square")
         }
-        NavigationLink(destination: EmptyView())
+        NavigationLink(destination: ToolsModulesEditor())
         {
             Label("Tools", systemImage: "hammer")
         }
-        NavigationLink(destination: EmptyView())
+        NavigationLink(destination: PartsModulesEditor())
         {
             Label("Parts", systemImage: "shippingbox")
         }
