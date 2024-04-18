@@ -61,7 +61,7 @@ struct ModulesListView: View
                 {
                     Label("Add", systemImage: "plus")
                 }
-                .popover(isPresented: $new_panel_presented, arrowEdge: .bottom)
+                .popover(isPresented: $new_panel_presented, arrowEdge: .top)
                 {
                     AddNewView(is_presented: $new_panel_presented, names: names)
                     { new_name in

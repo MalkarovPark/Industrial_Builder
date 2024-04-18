@@ -23,7 +23,7 @@
 		6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */; };
 		628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */; };
 		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
-		628E14542AD7E44C00BC8FD9 /* ChangersModulesEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangersModulesEditorView.swift */; };
+		628E14542AD7E44C00BC8FD9 /* ChangerModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */; };
 		628E14562AD8AAF400BC8FD9 /* BuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14552AD8AAF400BC8FD9 /* BuildView.swift */; };
 		628E14582AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift */; };
 		628E145A2AD8ADE100BC8FD9 /* ToolsModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolsModulesEditor.swift */; };
@@ -69,7 +69,7 @@
 		6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCDocument.swift; sourceTree = "<group>"; };
 		628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardTemplateConstruct.swift; sourceTree = "<group>"; };
-		628E14532AD7E44C00BC8FD9 /* ChangersModulesEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangersModulesEditorView.swift; sourceTree = "<group>"; };
+		628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModuleView.swift; sourceTree = "<group>"; };
 		628E14552AD8AAF400BC8FD9 /* BuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildView.swift; sourceTree = "<group>"; };
 		628E14572AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotsModulesEditor.swift; sourceTree = "<group>"; };
 		628E14592AD8ADE100BC8FD9 /* ToolsModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsModulesEditor.swift; sourceTree = "<group>"; };
@@ -130,8 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				62D5A0FE2BD1BF9500356FD2 /* ChangerModulesEditor.swift */,
+				628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */,
 				62988BD02BC8627E00371AFE /* ChangerModulesListView.swift */,
-				628E14532AD7E44C00BC8FD9 /* ChangersModulesEditorView.swift */,
 			);
 			path = IMABuilder;
 			sourceTree = "<group>";
@@ -411,7 +411,7 @@
 				626872422BC1A3D2005F8B3C /* ListingsListView.swift in Sources */,
 				62E243832B9381EC009C76EB /* ListBorderer.swift in Sources */,
 				6268723F2BC18D21005F8B3C /* ModulesView.swift in Sources */,
-				628E14542AD7E44C00BC8FD9 /* ChangersModulesEditorView.swift in Sources */,
+				628E14542AD7E44C00BC8FD9 /* ChangerModuleView.swift in Sources */,
 				622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

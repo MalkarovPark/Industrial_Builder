@@ -31,7 +31,7 @@ struct ChangerModulesEditor: View
                 {
                     VStack(spacing: 0)
                     {
-                        
+                        ChangerModuleView(changer: .constant(ChangerModule()))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }

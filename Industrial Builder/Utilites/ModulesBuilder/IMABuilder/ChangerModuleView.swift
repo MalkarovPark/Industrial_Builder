@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ChangersModulesEditorView: View
+struct ChangerModuleView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -20,7 +20,47 @@ struct ChangersModulesEditorView: View
     
     var body: some View
     {
-        EmptyView()
+        List
+        {
+            TextField("Name", text: .constant(""))
+            
+            Section("Description")
+            {
+                TextEditor(text: .constant("Description"))
+                    .modifier(TextFrame())
+            }
+            
+            Section("Code")
+            {
+                TextEditor(text: .constant("code"))
+                    .modifier(TextFrame())
+                
+                Toggle(isOn: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Is On@*/.constant(true)/*@END_MENU_TOKEN@*/)
+                {
+                    Text("Internal")
+                }
+                
+                HStack
+                {
+                    Picker(selection: /*@START_MENU_TOKEN@*/.constant(1)/*@END_MENU_TOKEN@*/, label: Text("File"))
+                    {
+                        /*@START_MENU_TOKEN@*/Text("1").tag(1)/*@END_MENU_TOKEN@*/
+                        /*@START_MENU_TOKEN@*/Text("2").tag(2)/*@END_MENU_TOKEN@*/
+                    }
+                    #if !os(macOS)
+                    .pickerStyle(.wheel)
+                    #endif
+                    
+                    Button(action: {  })
+                    {
+                        Text("To Internal")
+                        Image(systemName: "arrow.up.doc")
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        
         /*VStack(spacing: 0)
         {
             List
@@ -129,7 +169,7 @@ struct AddChangerModuleView: View
 
 #Preview
 {
-    ChangersModulesEditorView(changer: .constant(ChangerModule(name: "None")))
+    ChangerModuleView(changer: .constant(ChangerModule(name: "None")))
         .environmentObject(StandardTemplateConstruct())
 }
 /*
