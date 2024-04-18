@@ -1,13 +1,13 @@
 //
-//  PartsModulesEditor.swift
+//  ChangerModulesEditor.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 17.04.2024.
+//  Created by Artiom Malkarov on 18.04.2024.
 //
 
 import SwiftUI
 
-struct PartsModulesEditor: View
+struct ChangerModulesEditor: View
 {
     @State private var names = [String]()
     @State private var selected_name = String()
@@ -53,5 +53,5 @@ struct PartsModulesEditor: View
 
 #Preview
 {
-    PartsModulesEditor()
+    ChangerModulesEditor()
 }

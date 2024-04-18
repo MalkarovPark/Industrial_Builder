@@ -1,13 +1,14 @@
 //
-//  PartsModulesEditor.swift
+//  RobotModulesEditor.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 17.04.2024.
+//  Created by Artem on 13.10.2023.
 //
 
 import SwiftUI
+import IndustrialKit
 
-struct PartsModulesEditor: View
+struct RobotsModulesEditor: View
 {
     @State private var names = [String]()
     @State private var selected_name = String()
@@ -53,5 +54,5 @@ struct PartsModulesEditor: View
 
 #Preview
 {
-    PartsModulesEditor()
+    RobotsModulesEditor()
 }

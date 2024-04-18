@@ -50,7 +50,7 @@ struct STCDocument: FileDocument
             {
             case "PkgInfo":
                 package_process(wrapper)
-            case "App":
+            case "Modules":
                 app_process(wrapper)
             case "Components":
                 components_process(wrapper)
@@ -309,7 +309,7 @@ struct STCDocument: FileDocument
             
             let file_wrapper = FileWrapper(directoryWithFileWrappers: [
                 package_filename: json_file_wrapper,
-                "App": app_file_wrapper,
+                "Modules": app_file_wrapper,
                 "Components": components_file_wrapper
             ])
             

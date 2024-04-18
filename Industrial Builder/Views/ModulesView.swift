@@ -28,7 +28,7 @@ struct ModulesView: View
                     {
                         StandardNavigationCard(name: "Robots", count_number: 0, image_name: "r.square", color: .green)
                         {
-                            ScenesListView()
+                            RobotsModulesEditor()
                         }
                         
                         StandardNavigationCard(name: "Tools", count_number: 0, image_name: "hammer", color: .mint)
@@ -43,7 +43,7 @@ struct ModulesView: View
                         
                         StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
                         {
-                            ChangerModulesListView()
+                            ChangerModulesEditor()
                         }
                     }
                     .padding(20)

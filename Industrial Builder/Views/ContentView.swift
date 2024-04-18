@@ -196,7 +196,7 @@ struct ModulesSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: EmptyView())
+        NavigationLink(destination: RobotsModulesEditor())
         {
             Label("Robots", systemImage: "r.square")
         }
@@ -208,7 +208,7 @@ struct ModulesSidebarGroup: View
         {
             Label("Parts", systemImage: "shippingbox")
         }
-        NavigationLink(destination: ChangerModulesListView())
+        NavigationLink(destination: ChangerModulesEditor())
         {
             Label("Changers", systemImage: "wand.and.rays")
                 .badge(base_stc.changer_modules.count)
