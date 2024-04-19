@@ -18,6 +18,9 @@ struct ChangerModuleView: View
     @State private var appeared = false
     @State private var add_module_view_presented = false
     
+    @State private var code_field_update = false
+    @State private var file_field_update = false
+    
     var body: some View
     {
         List
@@ -32,26 +35,39 @@ struct ChangerModuleView: View
             
             Section("Code")
             {
-                TextEditor(text: .constant("code"))
+                TextEditor(text: $changer_module.internal_code)
                     .modifier(TextFrame())
+                    .frame(maxHeight: 256)
+                    .modifier(DoubleModifier(update_toggle: $code_field_update))
                 
-                Toggle(isOn: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Is On@*/.constant(true)/*@END_MENU_TOKEN@*/)
+                Toggle(isOn: is_external_binding(from: $changer_module.internal_code))
                 {
                     Text("Internal")
                 }
                 
                 HStack
                 {
-                    Picker(selection: /*@START_MENU_TOKEN@*/.constant(1)/*@END_MENU_TOKEN@*/, label: Text("File"))
-                    {
-                        /*@START_MENU_TOKEN@*/Text("1").tag(1)/*@END_MENU_TOKEN@*/
-                        /*@START_MENU_TOKEN@*/Text("2").tag(2)/*@END_MENU_TOKEN@*/
-                    }
-                    #if !os(macOS)
-                    .pickerStyle(.wheel)
-                    #endif
+                    TextField("File", text: $changer_module.code_file_name)
+                        .modifier(DoubleModifier(update_toggle: $file_field_update))
                     
-                    Button(action: {  })
+                    Menu
+                    {
+                        ForEach(base_stc.listings_files_names, id: \.self)
+                        { listing_file_name in
+                            Button(listing_file_name)
+                            {
+                                changer_module.code_file_name = listing_file_name
+                                file_field_update.toggle()
+                            }
+                        }
+                    }
+                    label:
+                    {
+                        Text("Select File")
+                    }
+                    .frame(width: 96)
+                    
+                    Button(action: push_code_internal)
                     {
                         Text("To Internal")
                         Image(systemName: "arrow.up.doc")
@@ -60,122 +76,31 @@ struct ChangerModuleView: View
             }
         }
         .listStyle(.plain)
+    }
+    
+    private func is_external_binding(from code: Binding<String>) -> Binding<Bool>
+    {
+        Binding<Bool>(
+            get: { !code.wrappedValue.isEmpty },
+            set: { code.wrappedValue = $0 ? code.wrappedValue : "" }
+        )
+    }
+    
+    private func push_code_internal()
+    {
+        guard let index = base_stc.listings_files_names.firstIndex(where: { $0 == changer_module.code_file_name })
+        else
+        {
+            return
+        }
         
-        /*VStack(spacing: 0)
-        {
-            List
-            {
-                ForEach(base_stc.changer_modules.indices, id: \.self)
-                { index in
-                    ChangerModuleDisclosureItem(name: base_stc.changer_modules[index].name, code: $base_stc.changer_modules[index].code)
-                }
-                .onDelete
-                { indexSet in
-                    base_stc.changer_modules.remove(atOffsets: indexSet)
-                }
-            }
-            .listStyle(.plain)
-        }
-        .toolbar
-        {
-            Button (action: { add_module_view_presented = true })
-            {
-                Label("Add Module", systemImage: "plus")
-            }
-            .popover(isPresented: $add_module_view_presented, arrowEdge: .bottom)
-            {
-                AddChangerModuleView(is_presented: $add_module_view_presented, modules_items: $base_stc.changer_modules)
-                #if os(iOS)
-                    .presentationDetents([.height(96)])
-                #endif
-            }
-        }
-        .onChange(of: base_stc.changer_modules)
-        { _, _ in
-            document_handler.document_update_ima()
-        }
-        .navigationTitle("Modules for Changer")*/
+        changer_module.internal_code = base_stc.listings[index]
+        code_field_update.toggle()
     }
 }
-
-/*struct ChangerModuleDisclosureItem: View
-{
-    var name: String
-    
-    @Binding var code: String
-    
-    @State private var expanded = false
-    
-    var body: some View
-    {
-        DisclosureGroup(name, isExpanded: $expanded)
-        {
-            TextEditor(text: $code)
-                .modifier(TextFrame())
-        }
-    }
-}
-
-func modules_names(_ modules: [ChangerModule]) -> [String]
-{
-    var names = [String]()
-    for module in modules
-    {
-        names.append(module.name)
-    }
-    
-    return names
-}
-
-struct AddChangerModuleView: View
-{
-    @Binding var is_presented: Bool
-    @Binding var modules_items: [ChangerModule]
-    
-    @State private var new_module_name = ""
-    
-    var body: some View
-    {
-        VStack
-        {
-            HStack(spacing: 12)
-            {
-                TextField("Name", text: $new_module_name)
-                    .frame(minWidth: 128, maxWidth: 256)
-                #if os(iOS) || os(visionOS)
-                    .frame(idealWidth: 256)
-                    .textFieldStyle(.roundedBorder)
-                #endif
-                
-                Button("Add")
-                {
-                    if new_module_name == ""
-                    {
-                        new_module_name = "None"
-                    }
-                    
-                    //modules_items.append(ChangerModule(name: new_module_name))
-                    modules_items.append(ChangerModule(name: mismatched_name(name: new_module_name, names: modules_names(modules_items))))
-                    
-                    is_presented = false
-                }
-                .fixedSize()
-                .keyboardShortcut(.defaultAction)
-            }
-            .padding(12)
-        }
-    }
-}*/
 
 #Preview
 {
     ChangerModuleView(changer_module: .constant(ChangerModule(name: "None")))
         .environmentObject(StandardTemplateConstruct())
 }
-/*
-#Preview
-{
-    AddChangerModuleView(is_presented: .constant(true), modules_items: .constant([ChangerModule]()))
-        .environmentObject(StandardTemplateConstruct())
-}
-*/

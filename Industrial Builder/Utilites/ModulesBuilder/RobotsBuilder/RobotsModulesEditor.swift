@@ -28,17 +28,12 @@ struct RobotsModulesEditor: View
                     names.remove(at: names.firstIndex(of: selected_name)!)
                 }
                 
-                GroupBox
+                VStack(spacing: 0)
                 {
-                    VStack(spacing: 0)
-                    {
-                        
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
                 }
-                #if os(visionOS)
-                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-                #endif
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .modifier(ListBorderer())
             }
             .padding()
         }

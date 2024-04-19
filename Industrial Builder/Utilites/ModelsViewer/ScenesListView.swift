@@ -99,13 +99,17 @@ struct ScenesListView: View
         }
     }
     
-    func root_node_binding(for scene: SCNScene) -> Binding<SCNNode>
+    private func root_node_binding(for scene: SCNScene) -> Binding<SCNNode>
     {
         Binding<SCNNode>(
-            get: { scene.rootNode },
-            set: { newNode in
-                
-            }
+            get:
+                {
+                    scene.rootNode
+                },
+            set:
+                { new_node in
+                    
+                }
         )
     }
     

@@ -9,7 +9,7 @@ import Foundation
 
 public class ChangerModule: IndustrialModule
 {
-    public var code_file_name: String?
+    public var code_file_name = String()
     
     /**
      Performs register conversion within a class instance.
@@ -18,7 +18,7 @@ public class ChangerModule: IndustrialModule
      */
     public func change(registers: inout [Float])
     {
-        if code_file_name == nil
+        if code_file_name == ""
         {
             registers = internal_change(registers: registers)
         }
@@ -39,6 +39,13 @@ public class ChangerModule: IndustrialModule
     {
         /*@START_MENU_TOKEN@*/return [Float]()/*@END_MENU_TOKEN@*/
     }
+    
+    /**
+     An itnernal code file.
+     
+     Impliments to the *internal_change* function by compilation.
+     */
+    public var internal_code = String()
     
     /**
      Performs register conversion within an external script.

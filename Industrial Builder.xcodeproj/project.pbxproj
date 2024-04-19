@@ -76,7 +76,6 @@
 		6296D2A92AED6E290094FB19 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		6296D2AC2AED9C2C0094FB19 /* 6DOFController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 6DOFController.swift; sourceTree = "<group>"; };
 		6296D2AD2AED9C2C0094FB19 /* PortalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortalController.swift; sourceTree = "<group>"; };
-		62988BD02BC8627E00371AFE /* ChangerModulesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesListView.swift; sourceTree = "<group>"; };
 		62988BD52BD05D8200371AFE /* ModulesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulesListView.swift; sourceTree = "<group>"; };
 		62988BD72BD0600100371AFE /* PartsModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsModulesEditor.swift; sourceTree = "<group>"; };
 		629AABC32BC8561500720386 /* STCPackageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCPackageInfo.swift; sourceTree = "<group>"; };
@@ -130,7 +129,6 @@
 			children = (
 				62D5A0FE2BD1BF9500356FD2 /* ChangerModulesEditor.swift */,
 				628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */,
-				62988BD02BC8627E00371AFE /* ChangerModulesListView.swift */,
 			);
 			path = IMABuilder;
 			sourceTree = "<group>";

@@ -29,24 +29,23 @@ struct ChangerModulesEditor: View
                     base_stc.changer_modules.remove(at: selected_module_index())
                 }
                 
-                GroupBox
+                VStack(spacing: 0)
                 {
-                    VStack(spacing: 0)
+                    if selected_module_index() != -1
                     {
-                        if selected_module_index() != -1
-                        {
-                            ChangerModuleView(changer_module: $base_stc.changer_modules[selected_module_index()])
-                        }
-                        else
+                        ChangerModuleView(changer_module: $base_stc.changer_modules[selected_module_index()])
+                    }
+                    else
+                    {
+                        GroupBox
                         {
                             Text("Select Module")
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                #if os(visionOS)
-                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-                #endif
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .modifier(ListBorderer())
             }
             .padding()
         }
