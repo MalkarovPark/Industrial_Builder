@@ -31,7 +31,6 @@
 		6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2A92AED6E290094FB19 /* AppState.swift */; };
 		6296D2AE2AED9C2C0094FB19 /* 6DOFController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2AC2AED9C2C0094FB19 /* 6DOFController.swift */; };
 		6296D2AF2AED9C2C0094FB19 /* PortalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2AD2AED9C2C0094FB19 /* PortalController.swift */; };
-		62988BD12BC8627F00371AFE /* ChangerModulesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD02BC8627E00371AFE /* ChangerModulesListView.swift */; };
 		62988BD62BD05D8200371AFE /* ModulesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD52BD05D8200371AFE /* ModulesListView.swift */; };
 		62988BD82BD0600100371AFE /* PartsModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD72BD0600100371AFE /* PartsModulesEditor.swift */; };
 		629AABC42BC8561500720386 /* STCPackageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC32BC8561500720386 /* STCPackageInfo.swift */; };
@@ -399,7 +398,6 @@
 				628E145A2AD8ADE100BC8FD9 /* ToolsModulesEditor.swift in Sources */,
 				626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */,
 				62D5A0FF2BD1BF9500356FD2 /* ChangerModulesEditor.swift in Sources */,
-				62988BD12BC8627F00371AFE /* ChangerModulesListView.swift in Sources */,
 				623D72482ADAFD8500927DEA /* SceneView.swift in Sources */,
 				6296D2AF2AED9C2C0094FB19 /* PortalController.swift in Sources */,
 				6255B9242B9E0DD4002B575C /* DocumentUpdateHandler.swift in Sources */,

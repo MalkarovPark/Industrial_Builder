@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ChangerModulesEditor: View
 {
-    @State private var names = [String]()
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
     @State private var selected_name = String()
     
     var body: some View
@@ -18,20 +19,28 @@ struct ChangerModulesEditor: View
         {
             HStack(spacing: 0)
             {
-                ModulesListView(names: $names, selected_name: $selected_name)
+                ModulesListView(names: $base_stc.changer_modules_names, selected_name: $selected_name)
                 { name in
-                    names.append(name)
+                    //names.append(name)
+                    base_stc.changer_modules.append(ChangerModule(name: name))
                 }
                 remove_module:
                 {
-                    names.remove(at: names.firstIndex(of: selected_name)!)
+                    base_stc.changer_modules.remove(at: selected_module_index())
                 }
                 
                 GroupBox
                 {
                     VStack(spacing: 0)
                     {
-                        ChangerModuleView(changer: .constant(ChangerModule()))
+                        if selected_module_index() != -1
+                        {
+                            ChangerModuleView(changer_module: $base_stc.changer_modules[selected_module_index()])
+                        }
+                        else
+                        {
+                            Text("Select Module")
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -44,10 +53,9 @@ struct ChangerModulesEditor: View
         .modifier(SheetFramer())
     }
     
-    private func remove_part_model()
+    private func selected_module_index() -> Int
     {
-        //base_stc.remove_selected_tool_module()
-        //base_stc.deselect_tool_module()
+        return base_stc.changer_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
 }
 

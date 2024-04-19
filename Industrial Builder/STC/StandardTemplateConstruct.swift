@@ -76,6 +76,25 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: Changer modules functions
     @Published var changer_modules = [ChangerModule]()
     
+    public var changer_modules_names: [String]
+    {
+        get
+        {
+            var names = [String]()
+            for changer_module in changer_modules
+            {
+                names.append(changer_module.name)
+            }
+            
+            return names
+        }
+        
+        set
+        {
+            print(newValue)
+        }
+    }
+    
     //MARK: Robot modules
     
     //MARK: Tool modules

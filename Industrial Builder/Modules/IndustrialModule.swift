@@ -22,7 +22,7 @@ public class IndustrialModule: Identifiable, Codable, Equatable
     }
     
     public var name = String() ///A module name.
-    public var description: String? ///An optional module description.
+    public var description = String() ///An optional module description.
     
     //MARK: - File handling
     /**
@@ -36,7 +36,7 @@ public class IndustrialModule: Identifiable, Codable, Equatable
     
     open var extension_name: String { "module" } ///An object package extension name.
     
-    public init(name: String = String(), description: String? = nil, package_file_name: String = String())
+    public init(name: String = String(), description: String = String(), package_file_name: String = String())
     {
         self.name = name
         self.description = description

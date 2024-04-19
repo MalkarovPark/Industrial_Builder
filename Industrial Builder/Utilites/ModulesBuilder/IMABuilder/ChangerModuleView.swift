@@ -13,7 +13,7 @@ struct ChangerModuleView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var changer: ChangerModule
+    @Binding var changer_module: ChangerModule
     
     @State private var appeared = false
     @State private var add_module_view_presented = false
@@ -22,11 +22,11 @@ struct ChangerModuleView: View
     {
         List
         {
-            TextField("Name", text: .constant(""))
+            TextField("Name", text: $changer_module.name)
             
             Section("Description")
             {
-                TextEditor(text: .constant("Description"))
+                TextEditor(text: $changer_module.description)
                     .modifier(TextFrame())
             }
             
@@ -169,7 +169,7 @@ struct AddChangerModuleView: View
 
 #Preview
 {
-    ChangerModuleView(changer: .constant(ChangerModule(name: "None")))
+    ChangerModuleView(changer_module: .constant(ChangerModule(name: "None")))
         .environmentObject(StandardTemplateConstruct())
 }
 /*

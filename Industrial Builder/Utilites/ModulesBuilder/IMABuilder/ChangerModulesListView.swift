@@ -33,7 +33,7 @@ struct ChangerModulesListView: View
                         { index in
                             StandardSheetCard(name: base_stc.changer_modules[index].name, image_name: "star", color: .secondary)
                             { is_presented in
-                                ChangerModuleView(changer: $base_stc.changer_modules[index])
+                                ChangerModuleView(changer_module: $base_stc.changer_modules[index])
                                     .frame(maxWidth: 800)
                                     .modifier(ViewCloseButton(is_presented: is_presented))
                             }
