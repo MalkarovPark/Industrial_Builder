@@ -2,7 +2,7 @@
 //  ChangerModulesEditor.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 18.04.2024.
+//  Created by Artem on 18.04.2024.
 //
 
 import SwiftUI
@@ -10,6 +10,7 @@ import SwiftUI
 struct ChangerModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var selected_name = String()
     
@@ -21,7 +22,6 @@ struct ChangerModulesEditor: View
             {
                 ModulesListView(names: $base_stc.changer_modules_names, selected_name: $selected_name)
                 { name in
-                    //names.append(name)
                     base_stc.changer_modules.append(ChangerModule(name: name))
                 }
                 remove_module:
@@ -50,6 +50,10 @@ struct ChangerModulesEditor: View
             .padding()
         }
         .modifier(SheetFramer())
+        .onChange(of: base_stc.changer_modules)
+        {
+            document_handler.document_update_ima()
+        }
     }
     
     private func selected_module_index() -> Int

@@ -85,6 +85,12 @@ struct ChangerModuleView: View
         
         changer_module.internal_code = base_stc.listings[index]
         code_field_update.toggle()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            document_handler.document_update_ima()
+        }
+        //document_handler.document_update_ima()
     }
 }
 

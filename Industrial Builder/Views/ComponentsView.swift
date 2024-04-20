@@ -12,8 +12,6 @@ struct ComponentsView: View
     @EnvironmentObject var app_state: AppState
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @Binding var document: STCDocument
-    
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
@@ -56,7 +54,7 @@ struct ComponentsView: View
 
 #Preview
 {
-    ComponentsView(document: .constant(STCDocument()))
+    ComponentsView()
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(AppState())
 }

@@ -12,8 +12,6 @@ struct ModulesView: View
     @EnvironmentObject var app_state: AppState
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @Binding var document: STCDocument
-    
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
@@ -56,5 +54,5 @@ struct ModulesView: View
 
 #Preview
 {
-    ModulesView(document: .constant(STCDocument()))
+    ModulesView()
 }

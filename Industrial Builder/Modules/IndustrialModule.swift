@@ -21,8 +21,8 @@ public class IndustrialModule: Identifiable, Codable, Equatable
         lhs.name == rhs.name
     }
     
-    public var name = String() ///A module name.
-    public var description = String() ///An optional module description.
+    @Published public var name = String() ///A module name.
+    @Published public var description = String() ///An optional module description.
     
     //MARK: - File handling
     /**
@@ -30,7 +30,7 @@ public class IndustrialModule: Identifiable, Codable, Equatable
      
      Uses for access contents of module package.
      */
-    public var package_file_name: String
+    @Published public var package_file_name: String
     
     public static var work_folder_bookmark: Data? ///A folder bookmark to resources access.
     
@@ -63,6 +63,33 @@ public class IndustrialModule: Identifiable, Codable, Equatable
         {
             return nil
         }
+    }
+    
+    //MARK: Codable handling
+    enum CodingKeys: String, CodingKey
+    {
+        case name
+        case description
+        case package_file_name
+        case additional_listings_names
+    }
+    
+    public required init(from decoder: any Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.package_file_name = try container.decode(String.self, forKey: .package_file_name)
+        self.additional_listings_names = try container.decodeIfPresent([String].self, forKey: .additional_listings_names)
+    }
+    
+    public func encode(to encoder: any Encoder) throws
+    {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(description, forKey: .description)
+        try container.encode(package_file_name, forKey: .package_file_name)
+        try container.encodeIfPresent(additional_listings_names, forKey: .additional_listings_names)
     }
     
     /**

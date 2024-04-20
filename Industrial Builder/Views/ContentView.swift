@@ -77,7 +77,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ComponentsView(document: $document))
+                                NavigationLink(destination: ComponentsView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                 }
@@ -102,7 +102,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ModulesView(document: $document))
+                                NavigationLink(destination: ModulesView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                 }

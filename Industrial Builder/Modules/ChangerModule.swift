@@ -49,7 +49,7 @@ public class ChangerModule: IndustrialModule
      
      Impliments to the *internal_change* function by compilation.
      */
-    public var internal_code = String()
+    @Published public var internal_code = String()
     
     /**
      Performs register conversion within an external script.
@@ -80,6 +80,43 @@ public class ChangerModule: IndustrialModule
         //Converting the output back to a Float array
         let new_registers = output?.split(separator: " ").compactMap { Float($0) }
         return new_registers ?? []
+    }
+    
+    //MARK: Init functions
+    public override init(name: String = String(), description: String = String(), package_file_name: String = String())
+    {
+        super.init(name: name, description: description, package_file_name: package_file_name)
+    }
+    
+    public init(name: String = String(), description: String = String(), package_file_name: String = String(), is_internal_change: Bool = Bool(), internal_code: String = String())
+    {
+        super.init(name: name, description: description, package_file_name: package_file_name)
+        self.is_internal_change = is_internal_change
+        self.internal_code = internal_code
+    }
+    
+    //MARK: Codable handling
+    enum ChangerModuleCodingKeys: String, CodingKey
+    {
+        case is_internal_change
+        case internal_code
+    }
+    
+    required public init(from decoder: any Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: ChangerModuleCodingKeys.self)
+        is_internal_change = try container.decode(Bool.self, forKey: .is_internal_change)
+        internal_code = try container.decode(String.self, forKey: .internal_code)
+        
+        try super.init(from: decoder)
+    }
+    
+    override public func encode(to encoder: any Encoder) throws
+    {
+        var container = encoder.container(keyedBy: ChangerModuleCodingKeys.self)
+        try container.encode(is_internal_change, forKey: .is_internal_change)
+        try container.encode(internal_code, forKey: .internal_code)
+        try super.encode(to: encoder)
     }
 }
 
