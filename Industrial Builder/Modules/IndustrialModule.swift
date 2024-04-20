@@ -64,6 +64,13 @@ public class IndustrialModule: Identifiable, Codable, Equatable
             return nil
         }
     }
+    
+    /**
+     An additional listing files names.
+     
+     Used to check files in a package and during the STC package compilation process.
+     */
+    public var additional_listings_names: [String]?
 }
 
 //MARK: - Structures

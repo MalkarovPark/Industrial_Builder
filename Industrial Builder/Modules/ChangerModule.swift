@@ -9,7 +9,11 @@ import Foundation
 
 public class ChangerModule: IndustrialModule
 {
-    public var code_file_name = String()
+    ///Defines the internal/external source of the changer code.
+    public var is_internal_change = true
+    
+    ///A main external code file name
+    public var code_file_name: String { "Count" }
     
     /**
      Performs register conversion within a class instance.
@@ -18,7 +22,7 @@ public class ChangerModule: IndustrialModule
      */
     public func change(registers: inout [Float])
     {
-        if code_file_name == ""
+        if is_internal_change
         {
             registers = internal_change(registers: registers)
         }
@@ -56,9 +60,15 @@ public class ChangerModule: IndustrialModule
      */
     private func external_change(registers: [Float]) -> [Float]
     {
+        guard let internal_url = internal_url
+        else
+        {
+            return [Float]()
+        }
+        
         let task = Process()
         task.launchPath = "/usr/bin/env"
-        task.arguments = ["swift", "\(internal_url ?? "")/Components/Code/\(package_file_name)/\(code_file_name ?? "").swift"] + registers.map { String($0) }
+        task.arguments = ["swift", "\(internal_url)/Components/Code/\(package_file_name)/\(code_file_name).swift"] + registers.map { String($0) }
         
         let pipe = Pipe()
         task.standardOutput = pipe
@@ -72,6 +82,8 @@ public class ChangerModule: IndustrialModule
         return new_registers ?? []
     }
 }
+
+/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Additive Code@*//*@END_MENU_TOKEN@*/
 
 //External code file example
 /*

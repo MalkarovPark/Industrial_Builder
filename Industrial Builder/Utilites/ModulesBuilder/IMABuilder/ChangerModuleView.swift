@@ -15,11 +15,11 @@ struct ChangerModuleView: View
     
     @Binding var changer_module: ChangerModule
     
-    @State private var appeared = false
+    //@State private var appeared = false
     @State private var add_module_view_presented = false
+    @State private var code_file_name = String()
     
     @State private var code_field_update = false
-    @State private var file_field_update = false
     
     var body: some View
     {
@@ -40,32 +40,21 @@ struct ChangerModuleView: View
                     .frame(maxHeight: 256)
                     .modifier(DoubleModifier(update_toggle: $code_field_update))
                 
-                Toggle(isOn: is_external_binding(from: $changer_module.internal_code))
+                Toggle(isOn: $changer_module.is_internal_change)
                 {
                     Text("Internal")
                 }
                 
                 HStack
                 {
-                    TextField("File", text: $changer_module.code_file_name)
-                        .modifier(DoubleModifier(update_toggle: $file_field_update))
-                    
-                    Menu
+                    Picker(selection: $code_file_name, label: Text("File"))
                     {
                         ForEach(base_stc.listings_files_names, id: \.self)
                         { listing_file_name in
-                            Button(listing_file_name)
-                            {
-                                changer_module.code_file_name = listing_file_name
-                                file_field_update.toggle()
-                            }
+                            Text(listing_file_name)
                         }
                     }
-                    label:
-                    {
-                        Text("Select File")
-                    }
-                    .frame(width: 96)
+                    .buttonStyle(.bordered)
                     
                     Button(action: push_code_internal)
                     {
@@ -73,22 +62,22 @@ struct ChangerModuleView: View
                         Image(systemName: "arrow.up.doc")
                     }
                 }
+                .disabled(base_stc.listings_files_names.count == 0)
             }
         }
         .listStyle(.plain)
-    }
-    
-    private func is_external_binding(from code: Binding<String>) -> Binding<Bool>
-    {
-        Binding<Bool>(
-            get: { !code.wrappedValue.isEmpty },
-            set: { code.wrappedValue = $0 ? code.wrappedValue : "" }
-        )
+        .onAppear
+        {
+            if base_stc.listings_files_names.count > 0
+            {
+                code_file_name = base_stc.listings_files_names.first!
+            }
+        }
     }
     
     private func push_code_internal()
     {
-        guard let index = base_stc.listings_files_names.firstIndex(where: { $0 == changer_module.code_file_name })
+        guard let index = base_stc.listings_files_names.firstIndex(where: { $0 == code_file_name })
         else
         {
             return
