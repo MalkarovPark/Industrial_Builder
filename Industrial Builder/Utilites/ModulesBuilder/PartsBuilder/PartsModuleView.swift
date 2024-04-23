@@ -20,8 +20,6 @@ struct PartsModuleView: View
     {
         List
         {
-            TextField("Name", text: $part_module.name)
-            
             Section("Description")
             {
                 TextEditor(text: $part_module.description)

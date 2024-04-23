@@ -22,8 +22,6 @@ struct ChangerModuleView: View
     {
         List
         {
-            TextField("Name", text: $changer_module.name)
-            
             Section("Description")
             {
                 TextEditor(text: $changer_module.description)

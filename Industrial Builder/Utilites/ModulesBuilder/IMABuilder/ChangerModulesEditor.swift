@@ -24,7 +24,12 @@ struct ChangerModulesEditor: View
                 { name in
                     base_stc.changer_modules.append(ChangerModule(name: name))
                 }
-                remove_module:
+                rename_module:
+                { new_name in
+                    base_stc.changer_modules[selected_module_index()].name = new_name
+                    document_handler.document_update_ima()
+                }
+                delete_module:
                 {
                     base_stc.changer_modules.remove(at: selected_module_index())
                 }

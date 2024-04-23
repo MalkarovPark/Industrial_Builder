@@ -24,7 +24,12 @@ struct PartsModulesEditor: View
                 { name in
                     base_stc.part_modules.append(PartModule(name: name))
                 }
-                remove_module:
+                rename_module:
+                { new_name in
+                    base_stc.part_modules[selected_module_index()].name = new_name
+                    document_handler.document_update_parts()
+                }
+                delete_module:
                 {
                     base_stc.part_modules.remove(at: selected_module_index())
                 }

@@ -23,7 +23,11 @@ struct RobotsModulesEditor: View
                 { name in
                     names.append(name)
                 }
-                remove_module:
+                rename_module:
+                { new_name in
+                    
+                }
+                delete_module:
                 {
                     names.remove(at: names.firstIndex(of: selected_name)!)
                 }

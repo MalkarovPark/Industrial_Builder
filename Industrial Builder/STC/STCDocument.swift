@@ -99,13 +99,13 @@ struct STCDocument: FileDocument
                         switch file_wrapper.filename
                         {
                         case "Robots":
-                            robot_modules_process(file_wrapper)
+                            break //robot_modules_process(file_wrapper)
                         case "Tools":
-                            tool_modules_process(file_wrapper)
+                            modules_process(file_wrapper, type: ToolModule.self)
                         case "Parts":
-                            part_modules_process(file_wrapper)
+                            modules_process(file_wrapper, type: PartModule.self)
                         case "Changers":
-                            changer_modules_process(file_wrapper)
+                            modules_process(file_wrapper, type: ChangerModule.self)
                         default:
                             break
                         }
@@ -117,7 +117,7 @@ struct STCDocument: FileDocument
                     
                 }
                 
-                func tool_modules_process(_ wrapper: FileWrapper)
+                /*func tool_modules_process(_ wrapper: FileWrapper)
                 {
                     if let file_wrappers = wrapper.fileWrappers
                     {
@@ -129,31 +129,27 @@ struct STCDocument: FileDocument
                             }
                         }
                     }
-                }
+                }*/
                 
-                func part_modules_process(_ wrapper: FileWrapper)
+                func modules_process<T>(_ wrapper: FileWrapper, type: T.Type) where T: Decodable
                 {
-                    if let file_wrappers = wrapper.fileWrappers
+                    if let fileWrappers = wrapper.fileWrappers
                     {
-                        for (_, file_wrapper) in file_wrappers
+                        for (_, fileWrapper) in fileWrappers
                         {
-                            if let filename = file_wrapper.filename//, filename.hasSuffix(".json")
+                            if let filename = fileWrapper.filename
                             {
-                                part_modules.append(json_decode(file_wrapper, type: PartModule.self) ?? PartModule())
-                            }
-                        }
-                    }
-                }
-                
-                func changer_modules_process(_ wrapper: FileWrapper)
-                {
-                    if let file_wrappers = wrapper.fileWrappers
-                    {
-                        for (_, file_wrapper) in file_wrappers
-                        {
-                            if let filename = file_wrapper.filename//, filename.hasSuffix(".json")
-                            {
-                                changer_modules.append(json_decode(file_wrapper, type: ChangerModule.self) ?? ChangerModule())
+                                switch type
+                                {
+                                    case is ToolModule.Type:
+                                        tool_modules.append(json_decode(fileWrapper, type: ToolModule.self) ?? ToolModule())
+                                    case is PartModule.Type:
+                                        part_modules.append(json_decode(fileWrapper, type: PartModule.self) ?? PartModule())
+                                    case is ChangerModule.Type:
+                                        changer_modules.append(json_decode(fileWrapper, type: ChangerModule.self) ?? ChangerModule())
+                                    default:
+                                        break
+                                }
                             }
                         }
                     }
