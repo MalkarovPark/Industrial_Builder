@@ -443,7 +443,7 @@ struct STCDocument: FileDocument
                     break
                 }
                 
-                let file_name = STCDocument.new_images_names[safe: index] ?? String("Image \(index)")
+                let file_name = STCDocument.new_images_names[safe: index] ?? "Image \(index).png"
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name

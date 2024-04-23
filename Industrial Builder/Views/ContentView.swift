@@ -207,6 +207,7 @@ struct ModulesSidebarGroup: View
         NavigationLink(destination: PartsModulesEditor())
         {
             Label("Parts", systemImage: "shippingbox")
+                .badge(base_stc.part_modules.count)
         }
         NavigationLink(destination: ChangerModulesEditor())
         {

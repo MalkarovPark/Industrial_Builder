@@ -49,7 +49,7 @@ struct ChangerModulesEditor: View
             }
             .padding()
         }
-        .modifier(SheetFramer())
+        .modifier(WindowFramer())
         .onChange(of: base_stc.changer_modules)
         {
             document_handler.document_update_ima()

@@ -73,28 +73,6 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     //MARK: - Modules handling
-    //MARK: Changer modules functions
-    @Published var changer_modules = [ChangerModule]()
-    
-    public var changer_modules_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for changer_module in changer_modules
-            {
-                names.append(changer_module.name)
-            }
-            
-            return names
-        }
-        
-        set
-        {
-            print(newValue)
-        }
-    }
-    
     //MARK: Robot modules
     
     //MARK: Tool modules
@@ -140,6 +118,51 @@ public class StandardTemplateConstruct: ObservableObject
     public func deselect_tool_module()
     {
         selected_tool_module_name = ""
+    }
+    
+    //MARK: Part modules functions
+    @Published var part_modules = [PartModule]()
+    
+    public var part_modules_names: [String]
+    {
+        get
+        {
+            var names = [String]()
+            for part_module in part_modules
+            {
+                names.append(part_module.name)
+            }
+            
+            return names
+        }
+        
+        set
+        {
+            print(newValue)
+        }
+    }
+    
+    
+    //MARK: Changer modules functions
+    @Published var changer_modules = [ChangerModule]()
+    
+    public var changer_modules_names: [String]
+    {
+        get
+        {
+            var names = [String]()
+            for changer_module in changer_modules
+            {
+                names.append(changer_module.name)
+            }
+            
+            return names
+        }
+        
+        set
+        {
+            print(newValue)
+        }
     }
 }
 

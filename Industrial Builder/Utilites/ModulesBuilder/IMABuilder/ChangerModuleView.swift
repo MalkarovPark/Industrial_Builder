@@ -15,10 +15,7 @@ struct ChangerModuleView: View
     
     @Binding var changer_module: ChangerModule
     
-    //@State private var appeared = false
-    @State private var add_module_view_presented = false
     @State private var code_file_name = String()
-    
     @State private var code_field_update = false
     
     var body: some View
@@ -31,6 +28,7 @@ struct ChangerModuleView: View
             {
                 TextEditor(text: $changer_module.description)
                     .modifier(TextFrame())
+                    .frame(maxHeight: 256)
             }
             
             Section("Code")

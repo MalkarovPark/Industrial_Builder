@@ -34,7 +34,7 @@ struct ModulesView: View
                             ToolsModulesEditor()
                         }
                         
-                        StandardNavigationCard(name: "Parts", count_number: 0, image_name: "shippingbox", color: .brown)
+                        StandardNavigationCard(name: "Parts", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .brown)
                         {
                             PartsModulesEditor()
                         }
