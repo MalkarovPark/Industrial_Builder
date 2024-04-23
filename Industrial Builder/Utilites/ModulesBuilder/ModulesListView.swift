@@ -39,12 +39,12 @@ struct ModulesListView: View
                 if names.count > 0
                 {
                     List(names, id: \.self, selection: $selected_name)
-                    { names in
-                        Text(names)
+                    { name in
+                        Text(name)
                     }
                     .popover(isPresented: $new_name_presented)
                     {
-                        NewNameView(is_presented: $new_name_presented, names: names) { new_name in
+                        NewNameView(is_presented: $new_name_presented, name: selected_name, names: names) { new_name in
                                 rename_module(new_name)
                             }
                     }
@@ -97,54 +97,65 @@ struct NewNameView: View
 {
     @Binding var is_presented: Bool
     
-    @State var new_item_name = ""
+    @State var new_name = ""
     
     private var update_name: (String) -> Void
     private var names: [String]?
     
-    public init(is_presented: Binding<Bool>, update_name: @escaping (String) -> Void)
+    private var old_name: String
+    
+    public init(is_presented: Binding<Bool>, name: String, update_name: @escaping (String) -> Void)
     {
         self._is_presented = is_presented
+        self.new_name = name
         self.update_name = update_name
+        
+        old_name = name
     }
     
-    public init(is_presented: Binding<Bool>, names: [String], update_name: @escaping (String) -> Void)
+    public init(is_presented: Binding<Bool>, name: String, names: [String], update_name: @escaping (String) -> Void)
     {
         self._is_presented = is_presented
-        self.update_name = update_name
+        self.new_name = name
         self.names = names
+        self.update_name = update_name
+        
+        old_name = name
     }
     
     public var body: some View
     {
         HStack(spacing: 0)
         {
-            TextField("Name", text: $new_item_name)
-                .padding(.trailing)
+            #if os(macOS)
+            TextField(old_name, text: $new_name)
                 .frame(minWidth: 96)
-            
-            Button("Update")
-            {
+                .onSubmit
+                {
+                    rename_perform()
+                }
+            #else
+            TextField("Name", text: $new_name, onCommit: {
                 rename_perform()
-            }
-            .keyboardShortcut(.defaultAction)
+            })
+            #endif
         }
         .padding()
     }
     
     private func rename_perform()
     {
-        if new_item_name == ""
+        if new_name != "" && new_name != old_name
         {
-            new_item_name = "Name"
+            if names != nil
+            {
+                new_name = mismatched_name(name: new_name, names: names!)
+            }
+            
+            update_name(new_name)
         }
         
-        if names != nil
-        {
-            new_item_name = mismatched_name(name: new_item_name, names: names!)
-        }
         
-        update_name(new_item_name)
         is_presented = false
     }
 }
