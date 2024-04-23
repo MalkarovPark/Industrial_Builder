@@ -34,15 +34,16 @@ public class StandardTemplateConstruct: ObservableObject
     func document_view(_ document: STCDocument)
     {
         self.package_info = document.package_info
+        
+        //self.scenes = document.scenes
         self.images = document.images
         self.listings = document.listings
         self.listings_files_names = document.listings_files_names
-        
-        //self.scenes = document.scenes
         self.kinematic_groups = document.kinematic_groups
         
-        self.changer_modules = document.changer_modules
         self.tool_modules = document.tool_modules
+        self.part_modules = document.part_modules
+        self.changer_modules = document.changer_modules
     }
     
     //MARK: - Components handling

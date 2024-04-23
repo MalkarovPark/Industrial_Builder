@@ -72,8 +72,12 @@ struct PartsModuleView: View
         {
             part_module.additional_resources_names = [String]()
         }
-        part_module.additional_resources_names?.append(name)
-        resources_names_update.toggle()
+        
+        if resource_name_index(name) == -1
+        {
+            part_module.additional_resources_names?.append(name)
+            resources_names_update.toggle()
+        }
     }
     
     private func delete_resource_file_name(at offsets: IndexSet)

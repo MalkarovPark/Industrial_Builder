@@ -11,18 +11,22 @@ import IndustrialKit
 
 class DocumentUpdateHandler: ObservableObject
 {
-    @Published var update_images_document_notify = true
+    //MARK: Update notifies
     @Published var update_scenes_document_notify = true
+    @Published var update_images_document_notify = true
     @Published var update_listings_document_notify = true
     @Published var update_kinematics_document_notify = true
     
+    @Published var update_parts_document_notify = true
     @Published var update_ima_document_notify = true
     
-    public func document_update_gallery() { update_images_document_notify.toggle() }
+    //MARK: Update functions
     public func document_update_scenes() { update_scenes_document_notify.toggle() }
+    public func document_update_images() { update_images_document_notify.toggle() }
     public func document_update_listings() { update_listings_document_notify.toggle() }
     public func document_update_kinematics() { update_kinematics_document_notify.toggle() }
     
+    public func document_update_parts() { update_parts_document_notify.toggle() }
     public func document_update_ima() { update_ima_document_notify.toggle() }
 }
 
@@ -36,11 +40,11 @@ struct DocumentUpdateModifier: ViewModifier
     public func body(content: Content) -> some View
     {
         content
-            .onChange(of: document_handler.update_images_document_notify)
+            .onChange(of: document_handler.update_scenes_document_notify)
             { _, _ in
                 update_deferred_import()
             }
-            .onChange(of: document_handler.update_scenes_document_notify)
+            .onChange(of: document_handler.update_images_document_notify)
             { _, _ in
                 update_deferred_import()
             }
@@ -57,12 +61,19 @@ struct DocumentUpdateModifier: ViewModifier
                 
                 update_deferred_import()
             }
+            .onChange(of: document_handler.update_parts_document_notify)
+            { _, _ in
+                document.part_modules = base_stc.part_modules
+                
+                update_deferred_import()
+            }
             .onChange(of: document_handler.update_ima_document_notify)
             { _, _ in
                 document.changer_modules = base_stc.changer_modules
                 
                 update_deferred_import()
             }
+        
     }
     
     private func update_deferred_import()

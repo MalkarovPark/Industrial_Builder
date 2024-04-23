@@ -85,7 +85,7 @@ struct ImagesListView: View
                 {
                     base_stc.images.removeAll()
                     base_stc.images_files_names.removeAll()
-                    document_handler.document_update_gallery()
+                    document_handler.document_update_images()
                 }
             }
             
@@ -122,10 +122,10 @@ struct ImagesListView: View
                             base_stc.images.append(image)
                             base_stc.images_files_names.append(file_name)
                             
-                            document_handler.document_update_gallery()
+                            document_handler.document_update_images()
                             if even
                             {
-                                document_handler.document_update_gallery()
+                                document_handler.document_update_images()
                             }
                             even.toggle()
                         }
@@ -154,7 +154,7 @@ struct ImagesListView: View
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
-                document_handler.document_update_gallery()
+                document_handler.document_update_images()
             }
             catch
             {

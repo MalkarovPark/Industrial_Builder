@@ -50,9 +50,9 @@ struct PartsModulesEditor: View
             .padding()
         }
         .modifier(WindowFramer())
-        .onChange(of: base_stc.changer_modules)
+        .onChange(of: base_stc.part_modules)
         {
-            //document_handler.document_update_ima()
+            document_handler.document_update_parts()
         }
     }
     

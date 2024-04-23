@@ -212,7 +212,7 @@ struct ImageCard<Content: View>: View
     {
         base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
         base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        document_handler.document_update_gallery()
+        document_handler.document_update_images()
     }
 }
 

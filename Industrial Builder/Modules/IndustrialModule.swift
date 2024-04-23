@@ -78,6 +78,7 @@ public class IndustrialModule: Identifiable, Codable, Equatable
     public required init(from decoder: any Decoder) throws
     {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decode(String.self, forKey: .description)
         self.package_file_name = try container.decode(String.self, forKey: .package_file_name)
@@ -88,6 +89,7 @@ public class IndustrialModule: Identifiable, Codable, Equatable
     public func encode(to encoder: any Encoder) throws
     {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        
         try container.encode(name, forKey: .name)
         try container.encode(description, forKey: .description)
         try container.encode(package_file_name, forKey: .package_file_name)
