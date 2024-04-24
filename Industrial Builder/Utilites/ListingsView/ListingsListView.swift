@@ -35,7 +35,7 @@ struct ListingsListView: View
                         { index in
                             ListingCard(code: $base_stc.listings[index], name: base_stc.listings_files_names[index])
                             { is_presented in
-                                ListingView(code: $base_stc.listings[index], is_presented: is_presented)
+                                ListingView(code: $base_stc.listings[index], is_presented: is_presented, label: base_stc.listings_files_names[index])
                             }
                         }
                     }

@@ -14,10 +14,35 @@ struct ListingView: View
     
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    let label: String
+    
     var body: some View
     {
         VStack(spacing: 0)
         {
+            #if !os(macOS)
+            HStack(spacing: 0)
+            {
+                Button(action: { is_presented = false })
+                {
+                    Image(systemName: "xmark")
+                }
+                .keyboardShortcut(.cancelAction)
+                .controlSize(.extraLarge)
+                .padding()
+                
+                Spacer()
+                
+                Text(label)
+                    .padding()
+                
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
+            
+            Divider()
+            #endif
+            
             ScrollView(.vertical)
             {
                 Spacer()
@@ -29,6 +54,7 @@ struct ListingView: View
                     }
             }
         }
+        #if os(macOS)
         .toolbar
         {
             Button(action: { is_presented = false })
@@ -39,10 +65,13 @@ struct ListingView: View
             .controlSize(.extraLarge)
         }
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
+        #else
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        #endif
     }
 }
 
 #Preview
 {
-    ListingView(code: .constant(""), is_presented: .constant(true))
+    ListingView(code: .constant(""), is_presented: .constant(true), label: "code")
 }

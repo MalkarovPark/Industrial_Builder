@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import SceneKit
+import IndustrialKit
 
 public class StandardTemplateConstruct: ObservableObject
 {

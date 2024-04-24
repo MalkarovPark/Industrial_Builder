@@ -11,7 +11,11 @@ import IndustrialKit
 struct ModulesListView: View
 {
     @Binding var names: [String]
+    #if os(macOS)
     @Binding var selected_name: String
+    #else
+    @Binding var selected_name: String?
+    #endif
     
     @State private var new_panel_presented = false
     @State private var new_name_presented = false
@@ -23,7 +27,11 @@ struct ModulesListView: View
     public init(names: Binding<[String]>, selected_name: Binding<String>, add_module: @escaping (String) -> Void, rename_module: @escaping (String) -> Void, delete_module: @escaping () -> Void)
     {
         self._names = names
+        #if os(macOS)
         self._selected_name = selected_name
+        #else
+        self._selected_name = Binding<String?>(get: { selected_name.wrappedValue }, set: { selected_name.wrappedValue = $0 ?? "" })
+        #endif
         
         self.add_module = add_module
         self.rename_module = rename_module
@@ -44,9 +52,17 @@ struct ModulesListView: View
                     }
                     .popover(isPresented: $new_name_presented)
                     {
-                        NewNameView(is_presented: $new_name_presented, name: selected_name, names: names) { new_name in
+                        #if os(macOS)
+                        NewNameView(is_presented: $new_name_presented, name: selected_name, names: names)
+                            { new_name in
                                 rename_module(new_name)
                             }
+                        #else
+                        NewNameView(is_presented: $new_name_presented, name: selected_name ?? "", names: names)
+                            { new_name in
+                                rename_module(new_name)
+                            }
+                        #endif
                     }
                     .listStyle(.plain)
                     .contextMenu
@@ -67,7 +83,6 @@ struct ModulesListView: View
                 {
                     Rectangle()
                         .foregroundColor(.white)
-                    //Text("No Modules")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
@@ -129,7 +144,7 @@ struct NewNameView: View
         {
             #if os(macOS)
             TextField(old_name, text: $new_name)
-                .frame(minWidth: 96)
+                .frame(minWidth: 128, maxWidth: 256)
                 .onSubmit
                 {
                     rename_perform()
@@ -138,6 +153,8 @@ struct NewNameView: View
             TextField("Name", text: $new_name, onCommit: {
                 rename_perform()
             })
+            .frame(idealWidth: 256)
+            .textFieldStyle(.roundedBorder)
             #endif
         }
         .padding()

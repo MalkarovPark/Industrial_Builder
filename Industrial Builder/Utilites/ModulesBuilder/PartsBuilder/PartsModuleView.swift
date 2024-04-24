@@ -25,6 +25,12 @@ struct PartsModuleView: View
                 TextEditor(text: $part_module.description)
                     .modifier(TextFrame())
                     .frame(maxHeight: 256)
+                #if !os(macOS)
+                    .onChange(of: part_module.description)
+                    { _, _ in
+                        document_handler.document_update_parts()
+                    }
+                #endif
             }
             
             DisclosureGroup("Resources")

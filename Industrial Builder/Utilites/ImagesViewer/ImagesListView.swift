@@ -34,9 +34,8 @@ struct ImagesListView: View
                         { index in
                             ImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index])
                             { is_presented in
-                                ImageView(image: base_stc.images[index])
+                                ImageView(is_presented: is_presented, image: base_stc.images[index], label: base_stc.images_files_names[index])
                                     .frame(maxWidth: 800)
-                                    .modifier(ViewCloseButton(is_presented: is_presented))
                             }
                         }
                     }

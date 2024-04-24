@@ -92,7 +92,7 @@ struct InfoView: View
                         { index in
                             SimpleImageCard(image: document.package_info.gallery[index]) //(images: $document.package_info.gallery, image: document.package_info.gallery[index])
                             { is_presented in
-                                ImageView(image: document.package_info.gallery[index])
+                                SimpleImageView(image: document.package_info.gallery[index])
                                     .frame(maxWidth: 320)
                             }
                         }

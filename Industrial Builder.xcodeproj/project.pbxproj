@@ -35,7 +35,6 @@
 		629AABC42BC8561500720386 /* STCPackageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC32BC8561500720386 /* STCPackageInfo.swift */; };
 		629AABC62BC856D300720386 /* KinematicGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC52BC856D300720386 /* KinematicGroup.swift */; };
 		629AABC82BC8580C00720386 /* IndustrialModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC72BC8580C00720386 /* IndustrialModule.swift */; };
-		629AABCA2BC85CFD00720386 /* ChangerModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC92BC85CFD00720386 /* ChangerModule.swift */; };
 		629AABCC2BC85E4600720386 /* PartModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABCB2BC85E4600720386 /* PartModule.swift */; };
 		629B526A2AF68902003F45D2 /* SceneSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629B52692AF68902003F45D2 /* SceneSelectorView.swift */; };
 		629B526C2AF69056003F45D2 /* ScenesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629B526B2AF69056003F45D2 /* ScenesListView.swift */; };
@@ -390,7 +389,6 @@
 				629AABC62BC856D300720386 /* KinematicGroup.swift in Sources */,
 				629B526A2AF68902003F45D2 /* SceneSelectorView.swift in Sources */,
 				6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */,
-				629AABCA2BC85CFD00720386 /* ChangerModule.swift in Sources */,
 				629AABC82BC8580C00720386 /* IndustrialModule.swift in Sources */,
 				62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */,
 				629AABC42BC8561500720386 /* STCPackageInfo.swift in Sources */,
