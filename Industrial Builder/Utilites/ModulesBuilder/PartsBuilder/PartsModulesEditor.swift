@@ -39,18 +39,25 @@ struct PartsModulesEditor: View
                     if selected_module_index() != -1
                     {
                         PartsModuleView(part_module: $base_stc.part_modules[selected_module_index()])
+                            .modifier(ListBorderer())
                     }
                     else
                     {
                         GroupBox
                         {
-                            Text("Select Module")
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            ContentUnavailableView
+                            {
+                                Label("No module selected", systemImage: "shippingbox")
+                            }
+                            description:
+                            {
+                                Text("Select an existing part module to edit.")
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .modifier(ListBorderer())
             }
             .padding()
         }

@@ -75,6 +75,7 @@ struct PartsModuleView: View
         {
             part_module.additional_resources_names?.append(name)
             resources_names_update.toggle()
+            document_handler.document_update_parts()
         }
     }
     
@@ -89,6 +90,7 @@ struct PartsModuleView: View
                 part_module.additional_resources_names = nil
             }
             resources_names_update.toggle()
+            document_handler.document_update_parts()
         }
     }
     

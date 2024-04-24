@@ -39,18 +39,25 @@ struct ChangerModulesEditor: View
                     if selected_module_index() != -1
                     {
                         ChangerModuleView(changer_module: $base_stc.changer_modules[selected_module_index()])
+                            .modifier(ListBorderer())
                     }
                     else
                     {
                         GroupBox
                         {
-                            Text("Select Module")
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            ContentUnavailableView
+                            {
+                                Label("No module selected", systemImage: "wand.and.rays")
+                            }
+                            description:
+                            {
+                                Text("Select an existing changer module to edit.")
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .modifier(ListBorderer())
             }
             .padding()
         }
