@@ -18,31 +18,6 @@ struct ImageView: View
     {
         VStack(spacing: 0)
         {
-            ZStack
-            {
-                HStack(alignment: .center)
-                {
-                    Text(label)
-                        .padding(0)
-                }
-                
-                HStack(spacing: 0)
-                {
-                    Button(action: { is_presented = false })
-                    {
-                        Image(systemName: "xmark")
-                    }
-                    .keyboardShortcut(.cancelAction)
-                    .buttonStyle(.borderless)
-                    .controlSize(.extraLarge)
-                    .padding()
-                    
-                    Spacer()
-                }
-            }
-            
-            Divider()
-            
             Spacer(minLength: 0)
             
             #if os(macOS)
@@ -57,6 +32,7 @@ struct ImageView: View
             
             Spacer(minLength: 0)
         }
+        .modifier(Caption(is_presented: $is_presented, label: label))
         #if os(macOS)
         .frame(minWidth: 320, maxWidth: 800, minHeight: 240, maxHeight: 600)
         #else

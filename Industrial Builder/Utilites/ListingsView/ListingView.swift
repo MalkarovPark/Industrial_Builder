@@ -20,31 +20,6 @@ struct ListingView: View
     {
         VStack(spacing: 0)
         {
-            ZStack
-            {
-                HStack(alignment: .center)
-                {
-                    Text(label)
-                        .padding(0)
-                }
-                
-                HStack(spacing: 0)
-                {
-                    Button(action: { is_presented = false })
-                    {
-                        Image(systemName: "xmark")
-                    }
-                    .keyboardShortcut(.cancelAction)
-                    .buttonStyle(.borderless)
-                    .controlSize(.extraLarge)
-                    .padding()
-                    
-                    Spacer()
-                }
-            }
-            
-            Divider()
-            
             ScrollView(.vertical)
             {
                 Spacer()
@@ -56,6 +31,7 @@ struct ListingView: View
                     }
             }
         }
+        .modifier(Caption(is_presented: $is_presented, label: label))
         #if os(macOS)
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
