@@ -20,28 +20,30 @@ struct ListingView: View
     {
         VStack(spacing: 0)
         {
-            #if !os(macOS)
-            HStack(spacing: 0)
+            ZStack
             {
-                Button(action: { is_presented = false })
+                HStack(alignment: .center)
                 {
-                    Image(systemName: "xmark")
+                    Text(label)
+                        .padding(0)
                 }
-                .keyboardShortcut(.cancelAction)
-                .controlSize(.extraLarge)
-                .padding()
                 
-                Spacer()
-                
-                Text(label)
+                HStack(spacing: 0)
+                {
+                    Button(action: { is_presented = false })
+                    {
+                        Image(systemName: "xmark")
+                    }
+                    .keyboardShortcut(.cancelAction)
+                    .buttonStyle(.borderless)
+                    .controlSize(.extraLarge)
                     .padding()
-                
-                Spacer()
+                    
+                    Spacer()
+                }
             }
-            .frame(maxWidth: .infinity)
             
             Divider()
-            #endif
             
             ScrollView(.vertical)
             {
@@ -55,15 +57,6 @@ struct ListingView: View
             }
         }
         #if os(macOS)
-        .toolbar
-        {
-            Button(action: { is_presented = false })
-            {
-                Image(systemName: "xmark")
-            }
-            .keyboardShortcut(.cancelAction)
-            .controlSize(.extraLarge)
-        }
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
         .frame(maxWidth: .infinity, maxHeight: .infinity)

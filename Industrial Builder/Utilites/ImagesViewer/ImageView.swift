@@ -18,28 +18,32 @@ struct ImageView: View
     {
         VStack(spacing: 0)
         {
-            #if !os(macOS)
-            HStack(spacing: 0)
+            ZStack
             {
-                Button(action: { is_presented = false })
+                HStack(alignment: .center)
                 {
-                    Image(systemName: "xmark")
+                    Text(label)
+                        .padding(0)
                 }
-                .keyboardShortcut(.cancelAction)
-                .controlSize(.extraLarge)
-                .padding()
                 
-                Spacer()
-                
-                Text(label)
+                HStack(spacing: 0)
+                {
+                    Button(action: { is_presented = false })
+                    {
+                        Image(systemName: "xmark")
+                    }
+                    .keyboardShortcut(.cancelAction)
+                    .buttonStyle(.borderless)
+                    .controlSize(.extraLarge)
                     .padding()
-                
-                Spacer()
+                    
+                    Spacer()
+                }
             }
-            .frame(maxWidth: .infinity)
             
             Divider()
-            #endif
+            
+            Spacer(minLength: 0)
             
             #if os(macOS)
             Image(nsImage: image)
@@ -50,25 +54,10 @@ struct ImageView: View
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             #endif
+            
+            Spacer(minLength: 0)
         }
         #if os(macOS)
-        .toolbar
-        {
-            ToolbarItem(placement: .automatic)
-            {
-                Button(action: { is_presented = false })
-                {
-                    Image(systemName: "xmark")
-                }
-                .keyboardShortcut(.cancelAction)
-                .controlSize(.extraLarge)
-            }
-            
-            ToolbarItem(placement: .cancellationAction)
-            {
-                Text(label)
-            }
-        }
         .frame(minWidth: 320, maxWidth: 800, minHeight: 240, maxHeight: 600)
         #else
         .frame(maxWidth: .infinity, maxHeight: .infinity)
