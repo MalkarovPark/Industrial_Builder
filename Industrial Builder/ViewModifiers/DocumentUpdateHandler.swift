@@ -20,6 +20,11 @@ class DocumentUpdateHandler: ObservableObject
     @Published var update_parts_document_notify = true
     @Published var update_ima_document_notify = true
     
+    //For drop
+    @Published var drop_update_scenes_document_notify = 0
+    @Published var drop_update_images_document_notify = 0
+    @Published var drop_update_listings_document_notify = 0
+    
     //MARK: Update functions
     public func document_update_scenes() { update_scenes_document_notify.toggle() }
     public func document_update_images() { update_images_document_notify.toggle() }
@@ -28,6 +33,11 @@ class DocumentUpdateHandler: ObservableObject
     
     public func document_update_parts() { update_parts_document_notify.toggle() }
     public func document_update_ima() { update_ima_document_notify.toggle() }
+    
+    //For drop
+    public func drop_document_update_scenes() { drop_update_scenes_document_notify = (drop_update_scenes_document_notify + 1) % 5 }
+    public func drop_document_update_images() { drop_update_images_document_notify = (drop_update_images_document_notify + 1) % 5 }
+    public func drop_document_update_listings() { drop_update_listings_document_notify = (drop_update_listings_document_notify + 1) % 5 }
 }
 
 struct DocumentUpdateModifier: ViewModifier
@@ -61,6 +71,7 @@ struct DocumentUpdateModifier: ViewModifier
                 
                 update_deferred_import()
             }
+            
             .onChange(of: document_handler.update_parts_document_notify)
             { _, _ in
                 document.part_modules = base_stc.part_modules
@@ -70,6 +81,23 @@ struct DocumentUpdateModifier: ViewModifier
             .onChange(of: document_handler.update_ima_document_notify)
             { _, _ in
                 document.changer_modules = base_stc.changer_modules
+                
+                update_deferred_import()
+            }
+            
+            //Drop
+            .onChange(of: document_handler.drop_update_scenes_document_notify)
+            { _, _ in
+                update_deferred_import()
+            }
+            .onChange(of: document_handler.drop_update_images_document_notify)
+            { _, _ in
+                update_deferred_import()
+            }
+            .onChange(of: document_handler.drop_update_listings_document_notify)
+            { _, _ in
+                document.listings_files_names = base_stc.listings_files_names
+                document.listings = base_stc.listings
                 
                 update_deferred_import()
             }

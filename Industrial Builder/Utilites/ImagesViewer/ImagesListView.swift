@@ -99,8 +99,6 @@ struct ImagesListView: View
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
-        var even = false
-        
         for provider in providers
         {
             DispatchQueue.main.async
@@ -121,12 +119,7 @@ struct ImagesListView: View
                             base_stc.images.append(image)
                             base_stc.images_files_names.append(file_name)
                             
-                            document_handler.document_update_images()
-                            if even
-                            {
-                                document_handler.document_update_images()
-                            }
-                            even.toggle()
+                            document_handler.drop_document_update_images()
                         }
                     }
                 }

@@ -115,8 +115,6 @@ struct ScenesListView: View
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
-        var even = false
-        
         for provider in providers
         {
             if provider.hasItemConformingToTypeIdentifier("com.apple.scenekit.scene")
@@ -133,12 +131,7 @@ struct ScenesListView: View
                                 self.base_stc.scenes.append(scene)
                                 self.base_stc.scenes_files_names.append(fileURL.lastPathComponent)
                                 
-                                document_handler.document_update_scenes()
-                                if even
-                                {
-                                    document_handler.document_update_scenes()
-                                }
-                                even.toggle()
+                                document_handler.drop_document_update_scenes()
                             }
                             catch
                             {

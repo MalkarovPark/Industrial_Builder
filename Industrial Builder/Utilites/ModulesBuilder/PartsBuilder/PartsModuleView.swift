@@ -35,7 +35,7 @@ struct PartsModuleView: View
             
             DisclosureGroup("Resources")
             {
-                Menu("Add resource")
+                Menu("Add a resource")
                 {
                     ForEach (base_stc.images_files_names, id: \.self)
                     { name in

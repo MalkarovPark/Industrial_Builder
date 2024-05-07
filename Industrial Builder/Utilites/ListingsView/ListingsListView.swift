@@ -41,7 +41,7 @@ struct ListingsListView: View
                     }
                     .padding(20)
                 }
-                .modifier(DoubleModifier(update_toggle: $document_handler.update_images_document_notify))
+                //.modifier(DoubleModifier(update_toggle: $document_handler.update_listings_document_notify))
             }
             else
             {
@@ -115,8 +115,6 @@ struct ListingsListView: View
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
     {
-        var even = false
-        
         for provider in providers
         {
             DispatchQueue.main.async
@@ -137,12 +135,7 @@ struct ListingsListView: View
                             base_stc.listings.append(listing)
                             base_stc.listings_files_names.append(String(file_name.split(separator: ".").first!))
                             
-                            document_handler.document_update_listings()
-                            if even
-                            {
-                                document_handler.document_update_listings()
-                            }
-                            even.toggle()
+                            document_handler.drop_document_update_listings()
                         }
                     }
                 }
