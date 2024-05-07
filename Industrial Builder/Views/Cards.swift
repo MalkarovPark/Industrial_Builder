@@ -172,10 +172,6 @@ struct ImageCard<Content: View>: View
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .shadow(radius: 8)
-                .onTapGesture
-                {
-                    is_presented.toggle()
-                }
                 .overlay(alignment: .bottomTrailing)
                 {
                     Text(name)
@@ -208,6 +204,10 @@ struct ImageCard<Content: View>: View
             #endif
         }
         .frame(height: 192)
+        .onTapGesture
+        {
+            is_presented.toggle()
+        }
         .sheet(isPresented: $is_presented, content: { content($is_presented) })
         .contextMenu
         {
@@ -262,11 +262,11 @@ struct ListingCard<Content: View>: View
                 }
         }
         .frame(height: 192)
-        .sheet(isPresented: $is_presented, content: { content($is_presented) })
         .onTapGesture
         {
             is_presented.toggle()
         }
+        .sheet(isPresented: $is_presented, content: { content($is_presented) })
         .contextMenu
         {
             Button(role: .destructive, action: delete_listing)
