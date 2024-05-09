@@ -256,6 +256,7 @@ struct STCDocument: FileDocument
         
         for (_, file_wrapper) in file_wrappers
         {
+            #if os(macOS)
             if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
             {
                 if let scene_data = file_wrapper.regularFileContents
@@ -274,6 +275,26 @@ struct STCDocument: FileDocument
                     }
                 }
             }
+            #else
+            if let filename = file_wrapper.filename
+            {
+                if let scene_data = file_wrapper.regularFileContents
+                {
+                    let scene_source = SCNSceneSource(data: scene_data, options: nil)
+                    if let scene = scene_source?.scene(options: nil)
+                    {
+                        scenes.append(scene_view(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
+                        
+                        let filename_no_ext = URL(fileURLWithPath: filename).lastPathComponent
+                        names.append(filename_no_ext)
+                    }
+                    else
+                    {
+                        print("Error load from \(filename)")
+                    }
+                }
+            }
+            #endif
         }
         
         return (scenes, names)
@@ -288,9 +309,6 @@ struct STCDocument: FileDocument
             var is_stale = false
             let url = try URL(resolvingBookmarkData: folder_bookmark, bookmarkDataIsStale: &is_stale)
             
-            print(url)
-            print(scene_folder_adress)
-            
             guard !is_stale else
             {
                 return scene
@@ -298,8 +316,8 @@ struct STCDocument: FileDocument
             
             do
             {
-                print(url.absoluteString + scene_address)
-                let scene = try SCNScene(url: URL(string: url.absoluteString + scene_address)!)
+                print(url.absoluteString + "/" + scene_address)
+                let scene = try SCNScene(url: URL(string: url.absoluteString + "/" + scene_address)!)
                 return scene
             }
         }
