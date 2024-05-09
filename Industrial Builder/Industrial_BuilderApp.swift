@@ -19,7 +19,7 @@ struct Industrial_BuilderApp: App
     {
         DocumentGroup(newDocument: STCDocument())
         { file in
-            ContentView(document: file.$document)
+            ContentView(document: file.$document, document_url: file.fileURL)
         }
         .environmentObject(app_state)
         .commands

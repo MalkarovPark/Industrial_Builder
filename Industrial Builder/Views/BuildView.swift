@@ -11,8 +11,6 @@ struct BuildView: View
 {
     @State private var targets_palette_view_presented = false
     
-    @AppStorage("WorkFolderBookmark") private var work_folder_bookmark: Data?
-    
     var body: some View
     {
         HStack(spacing: 0)
@@ -39,42 +37,11 @@ struct BuildView: View
                     .foregroundColor(false ? Color.secondary : Color.primary)
                 #endif
             }
-            /*.popover(isPresented: $targets_palette_view_presented, arrowEdge: .leading)
+            .popover(isPresented: $targets_palette_view_presented, arrowEdge: .leading)
             {
                 TargetsPalette(is_presented: $targets_palette_view_presented)
-            }*/
-            .fileImporter(isPresented: $targets_palette_view_presented,
-                                  allowedContentTypes: [.folder],
-                                  allowsMultipleSelection: false)
-            { result in
-                switch result
-                {
-                case .success(let success):
-                    get_additive(url: success.first)
-                case .failure(_):
-                    break
-                }
             }
             .padding(.trailing)
-        }
-    }
-    
-    func get_additive(url: URL?)
-    {
-        guard url!.startAccessingSecurityScopedResource() else
-        {
-            return
-        }
-        
-        defer { url?.stopAccessingSecurityScopedResource() }
-        
-        do
-        {
-            work_folder_bookmark = try url!.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
-        }
-        catch
-        {
-            //print(error.localizedDescription)
         }
     }
 }

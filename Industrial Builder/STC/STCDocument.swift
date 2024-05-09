@@ -200,7 +200,7 @@ struct STCDocument: FileDocument
                             {
                                 //scenes_process(file_wrapper)
                                 scene_wrapper = wrapper
-                                scene_folder_adress = "\(configuration.file.filename ?? "")/Components/Resources/"
+                                scene_folder_adress = "Components/Resources/"
                             }
                             
                             if let filename = file_wrapper.filename
@@ -263,7 +263,7 @@ struct STCDocument: FileDocument
                     let scene_source = SCNSceneSource(data: scene_data, options: nil)
                     if let scene = scene_source?.scene(options: nil)
                     {
-                        scenes.append(scene_viewer(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
+                        scenes.append(scene_view(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
                         
                         let filename_no_ext = URL(fileURLWithPath: filename).lastPathComponent
                         names.append(filename_no_ext)
@@ -279,7 +279,7 @@ struct STCDocument: FileDocument
         return (scenes, names)
     }
     
-    private func scene_viewer(scene_address: String, folder_bookmark: Data) -> SCNScene
+    private func scene_view(scene_address: String, folder_bookmark: Data) -> SCNScene
     {
         var scene = SCNScene()
         do
@@ -298,6 +298,7 @@ struct STCDocument: FileDocument
             
             do
             {
+                print(url.absoluteString + scene_address)
                 let scene = try SCNScene(url: URL(string: url.absoluteString + scene_address)!)
                 return scene
             }

@@ -13,6 +13,7 @@ struct PackageView: View
     @Binding var document: STCDocument
     
     @State private var pkg_tab_selection = 0
+    @State private var work_folder_selector_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
@@ -31,6 +32,26 @@ struct PackageView: View
         }
         .toolbar
         {
+            /*Button(action: { work_folder_selector_presented = true })
+            {
+                Image(systemName: "folder")
+            }
+            .fileImporter(isPresented: $work_folder_selector_presented,
+                                  allowedContentTypes: [.folder],
+                                  allowsMultipleSelection: false)
+            { result in
+                switch result
+                {
+                case .success(let success):
+                    if let folder_bookmark = get_bookmark(url: success.first)
+                    {
+                        work_folder_bookmark = folder_bookmark
+                    }
+                case .failure(_):
+                    break
+                }
+            }*/
+            
             Picker("Package", selection: $pkg_tab_selection)
             {
                 Text("Info").tag(0)

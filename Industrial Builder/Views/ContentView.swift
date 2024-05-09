@@ -10,14 +10,13 @@ import SwiftUI
 struct ContentView: View
 {
     @Binding var document: STCDocument
+    let document_url: URL?
     
     @State var first_loaded = true
     @State var sidebar_selection: navigation_item? = .PackageView //Selected sidebar item
     
     @StateObject private var base_stc = StandardTemplateConstruct()
     @StateObject private var document_handler = DocumentUpdateHandler()
-    
-    @AppStorage("WorkFolderBookmark") private var work_folder_bookmark: Data?
     
     @ViewBuilder var body: some View
     {
@@ -30,9 +29,9 @@ struct ContentView: View
             {
                 base_stc.document_view(document)
                 
-                if work_folder_bookmark != nil
+                if let folder_bookmark = get_bookmark(url: document_url)
                 {
-                    let scene_file_data = document.deferred_scene_view(folder_bookmark: work_folder_bookmark!)
+                    let scene_file_data = document.deferred_scene_view(folder_bookmark: folder_bookmark)
                     base_stc.scenes = scene_file_data.scenes
                     base_stc.scenes_files_names = scene_file_data.names
                 }
@@ -44,6 +43,27 @@ struct ContentView: View
             }
             .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
             .environmentObject(document_handler)
+    }
+}
+
+func get_bookmark(url: URL?) -> Data?
+{
+    guard url!.startAccessingSecurityScopedResource() else
+    {
+        return nil
+    }
+    
+    defer { url?.stopAccessingSecurityScopedResource() }
+    
+    do
+    {
+        let bookmark = try url?.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
+        return bookmark
+    }
+    catch
+    {
+        print(error.localizedDescription)
+        return nil
     }
 }
 
@@ -251,5 +271,5 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
 
 #Preview
 {
-    ContentView(document: .constant(STCDocument()))
+    ContentView(document: .constant(STCDocument()), document_url: nil)
 }
