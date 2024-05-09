@@ -54,9 +54,9 @@ struct ChangerModuleView: View
                     
                     Button(action: push_code_internal)
                     {
-                        Text("To Internal")
                         Image(systemName: "arrow.up.doc")
                     }
+                    .buttonStyle(.bordered)
                 }
                 .disabled(base_stc.listings_files_names.count == 0)
             }

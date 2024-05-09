@@ -36,7 +36,6 @@ public class StandardTemplateConstruct: ObservableObject
     {
         self.package_info = document.package_info
         
-        //self.scenes = document.scenes
         self.images = document.images
         self.listings = document.listings
         self.listings_files_names = document.listings_files_names
@@ -46,7 +45,8 @@ public class StandardTemplateConstruct: ObservableObject
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
         
-        if let folder_bookmark = get_bookmark(url: bookmark_url)
+        //Deferred import for scenes
+        if let folder_bookmark = get_bookmark(url: bookmark_url) //self.scenes = document.scenes
         {
             let scene_file_data = document.deferred_scene_view(folder_bookmark: folder_bookmark)
             self.scenes = scene_file_data.scenes
@@ -56,7 +56,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     private func get_bookmark(url: URL?) -> Data?
     {
-        guard url!.startAccessingSecurityScopedResource() else
+        guard ((url?.startAccessingSecurityScopedResource()) != nil) else
         {
             return nil
         }

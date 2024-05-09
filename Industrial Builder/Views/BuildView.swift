@@ -13,53 +13,70 @@ struct BuildView: View
     
     var body: some View
     {
-        HStack(spacing: 0)
+        VStack(spacing: 0)
         {
-            GroupBox//(label: Text("App"))
+            BuildItemView(title: "RCWorkspace", subtitle: "None", image: Image(systemName: "swift"))
             {
-                VStack(spacing: 0)
-                {
-                    Text("None")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                print("App")
             }
-            .padding()
+            .padding([.horizontal, .top])
             
-            Button(action: { targets_palette_view_presented = true })
+            BuildItemView(title: "Packages", subtitle: "None", image: Image(systemName: "cube.fill"))
             {
-                Image(systemName: "plus")
-                    .imageScale(.large)
-                    .frame(width: 8, height: 16)
-                    .padding()
-                #if os(iOS)
-                    .foregroundColor(false ? Color.secondary : Color.black)
-                #elseif os(visionOS)
-                    .foregroundColor(false ? Color.secondary : Color.primary)
-                #endif
+                print("Packages")
             }
-            .popover(isPresented: $targets_palette_view_presented, arrowEdge: .leading)
-            {
-                TargetsPalette(is_presented: $targets_palette_view_presented)
-            }
-            .padding(.trailing)
+            .padding([.horizontal, .top])
+            
+            Spacer()
         }
     }
 }
 
-struct TargetsPalette: View
+struct BuildItemView: View
 {
-    @Binding var is_presented: Bool
+    let title: String
+    let subtitle: String
+    let image: Image
+    let on_tap: (() -> ())
     
     var body: some View
     {
-        VStack(spacing: 0)
+        GroupBox
         {
-            Text("Palette")
-                .padding()
+            HStack
+            {
+                ZStack
+                {
+                    Rectangle()
+                        .foregroundStyle(Color.accentColor)
+                    image
+                        .scaledToFit()
+                        .foregroundStyle(.white)
+                }
+                .frame(width: 32, height: 32)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .shadow(radius: 2)
+                
+                VStack(alignment: .leading)
+                {
+                    Text(title)
+                    
+                    Text(subtitle)
+                        .font(.subheadline)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .padding(.trailing, 8)
+            }
+            .padding(8)
+            .frame(maxWidth: .infinity)
         }
-        #if os(macOS) || os(visionOS)
-        .frame(width: 320, height: 320)
-        #endif
+        .onTapGesture
+        {
+            on_tap()
+        }
     }
 }
 
@@ -70,5 +87,8 @@ struct TargetsPalette: View
 
 #Preview
 {
-    TargetsPalette(is_presented: .constant(true))
+    BuildItemView(title: "Packages", subtitle: "None", image: Image(systemName: "cube.fill"))
+    {
+        print("Packages")
+    }
 }
