@@ -27,43 +27,12 @@ struct ContentView: View
         #endif
             .onAppear
             {
-                base_stc.document_view(document)
-                
-                if let folder_bookmark = get_bookmark(url: document_url)
-                {
-                    let scene_file_data = document.deferred_scene_view(folder_bookmark: folder_bookmark)
-                    base_stc.scenes = scene_file_data.scenes
-                    base_stc.scenes_files_names = scene_file_data.names
-                }
+                base_stc.document_view(document, document_url)
                 
                 base_stc.images_files_names = document.images_files_names
-                
-                //print(document.scenes_files_names)
-                //print(document.images_files_names)
             }
             .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
             .environmentObject(document_handler)
-    }
-}
-
-func get_bookmark(url: URL?) -> Data?
-{
-    guard url!.startAccessingSecurityScopedResource() else
-    {
-        return nil
-    }
-    
-    defer { url?.stopAccessingSecurityScopedResource() }
-    
-    do
-    {
-        let bookmark = try url?.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
-        return bookmark
-    }
-    catch
-    {
-        print(error.localizedDescription)
-        return nil
     }
 }
 

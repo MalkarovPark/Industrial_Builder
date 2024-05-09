@@ -32,26 +32,6 @@ struct PackageView: View
         }
         .toolbar
         {
-            /*Button(action: { work_folder_selector_presented = true })
-            {
-                Image(systemName: "folder")
-            }
-            .fileImporter(isPresented: $work_folder_selector_presented,
-                                  allowedContentTypes: [.folder],
-                                  allowsMultipleSelection: false)
-            { result in
-                switch result
-                {
-                case .success(let success):
-                    if let folder_bookmark = get_bookmark(url: success.first)
-                    {
-                        work_folder_bookmark = folder_bookmark
-                    }
-                case .failure(_):
-                    break
-                }
-            }*/
-            
             Picker("Package", selection: $pkg_tab_selection)
             {
                 Text("Info").tag(0)

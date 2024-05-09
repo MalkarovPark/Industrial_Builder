@@ -32,7 +32,7 @@ public class StandardTemplateConstruct: ObservableObject
         self.tool_modules = tool_modules
     }
     
-    func document_view(_ document: STCDocument)
+    func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
     {
         self.package_info = document.package_info
         
@@ -45,6 +45,34 @@ public class StandardTemplateConstruct: ObservableObject
         self.tool_modules = document.tool_modules
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
+        
+        if let folder_bookmark = get_bookmark(url: bookmark_url)
+        {
+            let scene_file_data = document.deferred_scene_view(folder_bookmark: folder_bookmark)
+            self.scenes = scene_file_data.scenes
+            self.scenes_files_names = scene_file_data.names
+        }
+    }
+    
+    private func get_bookmark(url: URL?) -> Data?
+    {
+        guard url!.startAccessingSecurityScopedResource() else
+        {
+            return nil
+        }
+        
+        defer { url?.stopAccessingSecurityScopedResource() }
+        
+        do
+        {
+            let bookmark = try url?.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
+            return bookmark
+        }
+        catch
+        {
+            print(error.localizedDescription)
+            return nil
+        }
     }
     
     //MARK: - Components handling
