@@ -115,4 +115,5 @@ struct PartsModuleView: View
 #Preview
 {
     PartsModuleView(part_module: .constant(PartModule()))
+        .environmentObject(StandardTemplateConstruct())
 }

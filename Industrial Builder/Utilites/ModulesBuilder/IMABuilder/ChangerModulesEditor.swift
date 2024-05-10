@@ -102,4 +102,5 @@ struct ChangerModulesEditor: View
 #Preview
 {
     ChangerModulesEditor()
+        .environmentObject(StandardTemplateConstruct())
 }

@@ -2,7 +2,7 @@
 //  PartsModulesEditor.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 17.04.2024.
+//  Created by Artem on 17.04.2024.
 //
 
 import SwiftUI
@@ -40,8 +40,22 @@ struct PartsModulesEditor: View
                 {
                     if smi != -1
                     {
-                        PartsModuleView(part_module: $base_stc.part_modules[smi])
+                        if smi != -2
+                        {
+                            PartsModuleView(part_module: $base_stc.part_modules[smi])
+                                .modifier(ListBorderer())
+                        }
+                        else
+                        {
+                            //ChangerModuleView(changer_module: .constant(ChangerModule()))
+                            ZStack
+                            {
+                                Rectangle()
+                                    .foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
                             .modifier(ListBorderer())
+                        }
                     }
                     else
                     {
@@ -70,7 +84,7 @@ struct PartsModulesEditor: View
         }
         .onChange(of: selected_name)
         {
-            smi = -1
+            smi = -2
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
             {
                 smi = selected_module_index()
@@ -87,4 +101,5 @@ struct PartsModulesEditor: View
 #Preview
 {
     PartsModulesEditor()
+        .environmentObject(StandardTemplateConstruct())
 }

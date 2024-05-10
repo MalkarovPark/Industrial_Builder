@@ -29,7 +29,7 @@ struct ModulesView: View
                             RobotsModulesEditor()
                         }
                         
-                        StandardNavigationCard(name: "Tools", count_number: 0, image_name: "hammer", color: .mint)
+                        StandardNavigationCard(name: "Tools", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .mint)
                         {
                             ToolsModulesEditor()
                         }

@@ -108,46 +108,23 @@ public class StandardTemplateConstruct: ObservableObject
     //MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
     
-    #if os(macOS)
-    @Published var selected_tool_module_name = ""
-    #else
-    @Published var selected_tool_module_name: String? = ""
-    #endif
-    
     public var tool_modules_names: [String]
-    {
-        var names = [String]()
-        for tool_module in tool_modules
-        {
-            names.append(tool_module.name)
-        }
-        
-        return names
-    }
-    
-    public var selected_tool_module: ToolModule
     {
         get
         {
-            return tool_modules.first { $0.name == selected_tool_module_name } ?? ToolModule()
+            var names = [String]()
+            for tool_module in tool_modules
+            {
+                names.append(tool_module.name)
+            }
+            
+            return names
         }
+        
         set
         {
-            if let index = tool_modules.firstIndex(where: { $0.name == selected_tool_module_name })
-            {
-                tool_modules[index] = newValue
-            }
+            print(newValue)
         }
-    }
-    
-    public func remove_selected_tool_module()
-    {
-        tool_modules.removeAll { $0.name == selected_tool_module_name }
-    }
-    
-    public func deselect_tool_module()
-    {
-        selected_tool_module_name = ""
     }
     
     //MARK: Part modules functions

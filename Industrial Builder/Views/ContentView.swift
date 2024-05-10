@@ -136,6 +136,7 @@ struct Sidebar: View
             {
                 Text("Select an item")
                     .font(.largeTitle)
+                    .modifier(WindowFramer())
                 #if os(macOS)
                     .foregroundColor(Color(NSColor.quaternaryLabelColor))
                 #else
@@ -192,6 +193,7 @@ struct ModulesSidebarGroup: View
         NavigationLink(destination: ToolsModulesEditor())
         {
             Label("Tools", systemImage: "hammer")
+                .badge(base_stc.tool_modules.count)
         }
         NavigationLink(destination: PartsModulesEditor())
         {
