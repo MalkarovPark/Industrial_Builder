@@ -18,6 +18,11 @@ struct ChangerModuleView: View
     @State private var code_file_name = String()
     @State private var code_field_update = false
     
+    /*init(changer_module: Binding<ChangerModule>)
+    {
+        self._changer_module = changer_module
+    }*/
+    
     var body: some View
     {
         List
@@ -39,6 +44,10 @@ struct ChangerModuleView: View
                 Toggle(isOn: $changer_module.is_internal_change)
                 {
                     Text("Internal")
+                }
+                .onChange(of: changer_module.is_internal_change)
+                {
+                    document_handler.document_update_ima()
                 }
                 
                 HStack

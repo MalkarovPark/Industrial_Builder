@@ -13,21 +13,24 @@ struct BuildView: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        ScrollView(.vertical)
         {
-            BuildItemView(title: "RCWorkspace", subtitle: "None", image: Image(systemName: "swift"))
+            VStack(spacing: 0)
             {
-                print("App")
+                BuildItemView(title: "RCWorkspace", subtitle: "None", image: Image(systemName: "swift"))
+                {
+                    print("App")
+                }
+                .padding([.horizontal, .top])
+                
+                BuildItemView(title: "Packages", subtitle: "None", image: Image(systemName: "cube.fill"))
+                {
+                    print("Packages")
+                }
+                .padding([.horizontal, .top])
+                
+                Spacer()
             }
-            .padding([.horizontal, .top])
-            
-            BuildItemView(title: "Packages", subtitle: "None", image: Image(systemName: "cube.fill"))
-            {
-                print("Packages")
-            }
-            .padding([.horizontal, .top])
-            
-            Spacer()
         }
     }
 }

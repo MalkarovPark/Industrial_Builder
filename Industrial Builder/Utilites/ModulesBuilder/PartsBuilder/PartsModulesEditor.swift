@@ -14,6 +14,7 @@ struct PartsModulesEditor: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var selected_name = String()
+    @State private var smi = -1
     
     var body: some View
     {
@@ -37,9 +38,9 @@ struct PartsModulesEditor: View
                 
                 VStack(spacing: 0)
                 {
-                    if selected_module_index() != -1
+                    if smi != -1
                     {
-                        PartsModuleView(part_module: $base_stc.part_modules[selected_module_index()])
+                        PartsModuleView(part_module: $base_stc.part_modules[smi])
                             .modifier(ListBorderer())
                     }
                     else
@@ -66,6 +67,14 @@ struct PartsModulesEditor: View
         .onChange(of: base_stc.part_modules)
         {
             document_handler.document_update_parts()
+        }
+        .onChange(of: selected_name)
+        {
+            smi = -1
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+            {
+                smi = selected_module_index()
+            }
         }
     }
     

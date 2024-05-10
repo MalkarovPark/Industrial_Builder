@@ -30,6 +30,7 @@ struct PackageView: View
                 BuildView()
             }
         }
+        .modifier(WindowFramer())
         .toolbar
         {
             Picker("Package", selection: $pkg_tab_selection)

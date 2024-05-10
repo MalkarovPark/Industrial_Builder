@@ -15,6 +15,8 @@ struct ChangerModulesEditor: View
     
     @State private var selected_name = String()
     
+    @State private var smi = -1
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -37,10 +39,24 @@ struct ChangerModulesEditor: View
                 
                 VStack(spacing: 0)
                 {
-                    if selected_module_index() != -1
+                    if smi != -1
                     {
-                        ChangerModuleView(changer_module: $base_stc.changer_modules[selected_module_index()])
+                        if smi != -2
+                        {
+                            ChangerModuleView(changer_module: $base_stc.changer_modules[smi])
+                                .modifier(ListBorderer())
+                        }
+                        else
+                        {
+                            //ChangerModuleView(changer_module: .constant(ChangerModule()))
+                            ZStack
+                            {
+                                Rectangle()
+                                    .foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
                             .modifier(ListBorderer())
+                        }
                     }
                     else
                     {
@@ -66,6 +82,14 @@ struct ChangerModulesEditor: View
         .onChange(of: base_stc.changer_modules)
         {
             document_handler.document_update_ima()
+        }
+        .onChange(of: selected_name)
+        {
+            smi = -2
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001)
+            {
+                smi = selected_module_index()
+            }
         }
     }
     
