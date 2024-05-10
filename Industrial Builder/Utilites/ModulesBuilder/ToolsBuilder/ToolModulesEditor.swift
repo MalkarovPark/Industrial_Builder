@@ -42,7 +42,7 @@ struct ToolModulesEditor: View
                     {
                         if smi != -2
                         {
-                            ToolsModuleView(tool_module: $base_stc.tool_modules[smi])
+                            ToolModuleView(tool_module: $base_stc.tool_modules[smi])
                                 //.modifier(ListBorderer())
                         }
                         else

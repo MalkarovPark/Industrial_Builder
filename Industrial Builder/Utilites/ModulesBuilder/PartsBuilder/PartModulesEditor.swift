@@ -42,7 +42,7 @@ struct PartModulesEditor: View
                     {
                         if smi != -2
                         {
-                            PartsModuleView(part_module: $base_stc.part_modules[smi])
+                            PartModuleView(part_module: $base_stc.part_modules[smi])
                                 .modifier(ListBorderer())
                         }
                         else
