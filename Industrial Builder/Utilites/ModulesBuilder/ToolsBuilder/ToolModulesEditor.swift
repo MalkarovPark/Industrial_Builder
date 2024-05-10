@@ -1,14 +1,14 @@
 //
-//  PartsModulesEditor.swift
+//  ToolModulesEditor.swift
 //  Industrial Builder
 //
-//  Created by Artem on 17.04.2024.
+//  Created by Artem on 13.10.2023.
 //
 
 import SwiftUI
 import IndustrialKit
 
-struct PartsModulesEditor: View
+struct ToolModulesEditor: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -22,18 +22,18 @@ struct PartsModulesEditor: View
         {
             HStack(spacing: 0)
             {
-                ModulesListView(names: $base_stc.part_modules_names, selected_name: $selected_name)
+                ModulesListView(names: $base_stc.tool_modules_names, selected_name: $selected_name)
                 { name in
-                    base_stc.part_modules.append(PartModule(name: name))
+                    base_stc.tool_modules.append(ToolModule(name: name))
                 }
                 rename_module:
                 { new_name in
-                    base_stc.part_modules[selected_module_index()].name = new_name
-                    document_handler.document_update_parts()
+                    base_stc.tool_modules[selected_module_index()].name = new_name
+                    //document_handler.document_update_tools()
                 }
                 delete_module:
                 {
-                    base_stc.part_modules.remove(at: selected_module_index())
+                    base_stc.tool_modules.remove(at: selected_module_index())
                 }
                 
                 VStack(spacing: 0)
@@ -42,19 +42,20 @@ struct PartsModulesEditor: View
                     {
                         if smi != -2
                         {
-                            PartsModuleView(part_module: $base_stc.part_modules[smi])
-                                .modifier(ListBorderer())
+                            ToolsModuleView(tool_module: $base_stc.tool_modules[smi])
+                                //.modifier(ListBorderer())
                         }
                         else
                         {
                             //ChangerModuleView(changer_module: .constant(ChangerModule()))
-                            ZStack
+                            GroupBox
                             {
-                                Rectangle()
-                                    .foregroundStyle(.white)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                ZStack
+                                {
+                                    
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                            .modifier(ListBorderer())
                         }
                     }
                     else
@@ -63,11 +64,11 @@ struct PartsModulesEditor: View
                         {
                             ContentUnavailableView
                             {
-                                Label("No module selected", systemImage: "shippingbox")
+                                Label("No module selected", systemImage: "hammer")
                             }
                             description:
                             {
-                                Text("Select an existing part module to edit.")
+                                Text("Select an existing tool module to edit.")
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
@@ -78,9 +79,9 @@ struct PartsModulesEditor: View
             .padding()
         }
         .modifier(WindowFramer())
-        .onChange(of: base_stc.part_modules)
+        .onChange(of: base_stc.tool_modules)
         {
-            document_handler.document_update_parts()
+            //document_handler.document_update_tools()
         }
         .onChange(of: selected_name)
         {
@@ -94,12 +95,12 @@ struct PartsModulesEditor: View
     
     private func selected_module_index() -> Int
     {
-        return base_stc.part_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
+        return base_stc.tool_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
 }
 
 #Preview
 {
-    PartsModulesEditor()
+    ToolModulesEditor()
         .environmentObject(StandardTemplateConstruct())
 }

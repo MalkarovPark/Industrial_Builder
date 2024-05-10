@@ -190,12 +190,12 @@ struct ModulesSidebarGroup: View
         {
             Label("Robots", systemImage: "r.square")
         }
-        NavigationLink(destination: ToolsModulesEditor())
+        NavigationLink(destination: ToolModulesEditor())
         {
             Label("Tools", systemImage: "hammer")
                 .badge(base_stc.tool_modules.count)
         }
-        NavigationLink(destination: PartsModulesEditor())
+        NavigationLink(destination: PartModulesEditor())
         {
             Label("Parts", systemImage: "shippingbox")
                 .badge(base_stc.part_modules.count)

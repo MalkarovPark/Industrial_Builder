@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ToolsModuleView: View
+struct ToolModuleView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -355,5 +355,5 @@ struct StatisticsListView: View
 
 #Preview
 {
-    ToolsModuleView(tool_module: .constant(ToolModule()))
+    ToolModuleView(tool_module: .constant(ToolModule()))
 }

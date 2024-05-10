@@ -31,12 +31,12 @@ struct ModulesView: View
                         
                         StandardNavigationCard(name: "Tools", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .mint)
                         {
-                            ToolsModulesEditor()
+                            ToolModulesEditor()
                         }
                         
                         StandardNavigationCard(name: "Parts", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .brown)
                         {
-                            PartsModulesEditor()
+                            PartModulesEditor()
                         }
                         
                         StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)

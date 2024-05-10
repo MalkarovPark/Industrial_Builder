@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct PartsModuleView: View
+struct PartModuleView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -114,6 +114,6 @@ struct PartsModuleView: View
 
 #Preview
 {
-    PartsModuleView(part_module: .constant(PartModule()))
+    PartModuleView(part_module: .constant(PartModule()))
         .environmentObject(StandardTemplateConstruct())
 }
