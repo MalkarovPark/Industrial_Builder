@@ -41,7 +41,6 @@ struct RobotsModulesEditor: View
             }
             .padding()
         }
-        .modifier(SheetFramer())
     }
     
     private func remove_part_model()

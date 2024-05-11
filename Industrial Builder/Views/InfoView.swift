@@ -73,11 +73,15 @@ struct InfoView: View
                     })
                     {
                         Image(systemName: "eraser")
+                        #if os(iOS)
+                            .frame(width: 48, height: 48)
+                        #else
                             .frame(maxHeight: 24)
+                        #endif
                     }
                     .buttonBorderShape(.roundedRectangle)
                     #if os(iOS)
-                    .buttonStyle(.borderedProminent)
+                    .modifier(ButtonBorderer())
                     #endif
                     .controlSize(.extraLarge)
                     .padding()
@@ -87,11 +91,15 @@ struct InfoView: View
                     Button(action: { load_panel_presented.toggle() })
                     {
                         Image(systemName: "square.and.arrow.down")
+                        #if os(iOS)
+                            .frame(width: 48, height: 48)
+                        #else
                             .frame(maxHeight: 24)
+                        #endif
                     }
                     .buttonBorderShape(.roundedRectangle)
                     #if os(iOS)
-                    .buttonStyle(.borderedProminent)
+                    .modifier(ButtonBorderer())
                     #endif
                     .controlSize(.extraLarge)
                     .padding()

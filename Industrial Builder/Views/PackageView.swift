@@ -13,7 +13,7 @@ struct PackageView: View
     @Binding var document: STCDocument
     
     @State private var pkg_tab_selection = 0
-    @State private var work_folder_selector_presented = false
+    @State private var build_view_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
@@ -21,24 +21,24 @@ struct PackageView: View
     {
         VStack(spacing: 0)
         {
-            switch pkg_tab_selection
-            {
-            case 0:
-                InfoView(document: $document)
-                    .modifier(WindowFramer())
-            default:
-                BuildView()
-            }
+            InfoView(document: $document)
+                .modifier(WindowFramer())
         }
         .modifier(WindowFramer())
+        .sheet(isPresented: $build_view_presented)
+        {
+            BuildView()
+                .modifier(Caption(is_presented: $build_view_presented, label: "Build"))
+            #if os(macOS)
+                .frame(minWidth: 600, maxWidth: 600, minHeight: 480, maxHeight: 640)
+            #endif
+        }
         .toolbar
         {
-            Picker("Package", selection: $pkg_tab_selection)
+            Button(action: { build_view_presented = true })
             {
-                Text("Info").tag(0)
-                Text("Build").tag(1)
+                Image(systemName: "square.and.arrow.up.on.square")
             }
-            .pickerStyle(.segmented)
         }
     }
 }
