@@ -6,13 +6,18 @@
 //
 
 import SwiftUI
+import IndustrialKit
 
 struct BuildView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    @Binding var document: STCDocument
+    
     @State private var targets_palette_view_presented = false
+    @State private var selected_name = String()
+    @State private var new_panel_presented = false
     
     #if os(iOS)
     //MARK: Horizontal window size handler
@@ -25,29 +30,45 @@ struct BuildView: View
         {
             HStack
             {
-                Picker(selection: /*@START_MENU_TOKEN@*/.constant(1)/*@END_MENU_TOKEN@*/, label: Text("List"))
+                Picker(selection: $selected_name, label: Text("List"))
                 {
-                    /*@START_MENU_TOKEN@*/Text("1").tag(1)/*@END_MENU_TOKEN@*/
-                    /*@START_MENU_TOKEN@*/Text("2").tag(2)/*@END_MENU_TOKEN@*/
+                    ForEach (base_stc.package_info.build_modules_lists_names, id: \.self)
+                    { name in
+                        Text(name)
+                    }
                 }
                 .frame(maxWidth: .infinity)
+                .disabled(base_stc.package_info.build_modules_lists.count == 0)
                 #if os(iOS)
                 .modifier(ButtonBorderer())
                 #endif
                 
-                Button(action: {})
+                Button(action: { new_panel_presented = true })
                 {
                     Image(systemName: "plus")
+                    #if os(macOS)
+                        .frame(width: 16)
+                    #else
                         .frame(width: 32)
+                    #endif
                 }
-                .buttonBorderShape(.circle)
+                .popover(isPresented: $new_panel_presented, arrowEdge: .top)
+                {
+                    AddNewView(is_presented: $new_panel_presented, names: base_stc.package_info.build_modules_lists_names)
+                    { new_name in
+                        add_modules_list(new_name)
+                    }
+                }
                 
-                Button(action: {})
+                Button(action: { delete_modules_list(selected_name) })
                 {
                     Image(systemName: "minus")
+                    #if os(macOS)
+                        .frame(width: 16)
+                    #else
                         .frame(width: 32)
+                    #endif
                 }
-                .buttonBorderShape(.circle)
             }
             .padding(.bottom)
             
@@ -250,6 +271,34 @@ struct BuildView: View
             #endif
         }
         .padding()
+        .onChange(of: base_stc.package_info.build_modules_lists)
+        { _, new_value in
+            document.package_info.build_modules_lists = new_value
+        }
+        .onAppear
+        {
+            if base_stc.package_info.build_modules_lists.count > 0
+            {
+                selected_name = base_stc.package_info.build_modules_lists_names.first ?? ""
+            }
+        }
+    }
+    
+    private func add_modules_list(_ name: String)
+    {
+        base_stc.package_info.build_modules_lists.append(BuildModulesList(name: name))
+        selected_name = base_stc.package_info.build_modules_lists_names.first ?? ""
+    }
+    
+    private func delete_modules_list(_ name: String)
+    {
+        guard let index = base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name })
+        else
+        {
+            return
+        }
+        
+        base_stc.package_info.build_modules_lists.remove(at: index)
     }
     
     private func add_module_name(_ name: String)
@@ -329,7 +378,7 @@ struct BuildItemView: View
 
 #Preview
 {
-    BuildView()
+    BuildView(document: .constant(STCDocument()))
         .environmentObject(StandardTemplateConstruct())
 }
 

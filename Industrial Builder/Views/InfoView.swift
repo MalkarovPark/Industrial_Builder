@@ -31,8 +31,8 @@ struct InfoView: View
                         .font(.title2)
                         .padding()
                         .onChange(of: base_stc.package_info.title)
-                        { oldValue, newValue in
-                            document.package_info.title = newValue
+                        { _, new_value in
+                            document.package_info.title = new_value
                         }
                     
                     Divider()
@@ -43,8 +43,8 @@ struct InfoView: View
                         .padding()
                         .frame(maxHeight: .infinity)
                         .onChange(of: base_stc.package_info.description)
-                        { oldValue, newValue in
-                            document.package_info.description = newValue
+                        { _, new_value in
+                            document.package_info.description = new_value
                         }
                 }
                 .frame(maxWidth: .infinity)

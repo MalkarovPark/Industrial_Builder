@@ -171,6 +171,19 @@ public class StandardTemplateConstruct: ObservableObject
             print(newValue)
         }
     }
+    
+    //MARK: Build functions
+    ///Builds modules in separated files.
+    public func build_modules_files(list: BuildModulesList)
+    {
+        
+    }
+    
+    ///Builds application project to compile with modules.
+    public func build_application_project(list: BuildModulesList)
+    {
+        
+    }
 }
 
 //MARK: - Typealiases

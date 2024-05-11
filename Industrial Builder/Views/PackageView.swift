@@ -27,7 +27,7 @@ struct PackageView: View
         .modifier(WindowFramer())
         .sheet(isPresented: $build_view_presented)
         {
-            BuildView()
+            BuildView(document: $document)
                 .modifier(Caption(is_presented: $build_view_presented, label: "Build"))
             #if os(macOS)
                 .frame(minWidth: 600, maxWidth: 600, minHeight: 480, maxHeight: 640)
