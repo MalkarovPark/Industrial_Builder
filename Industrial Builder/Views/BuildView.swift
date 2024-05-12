@@ -74,144 +74,111 @@ struct BuildView: View
             
             List
             {
-                DisclosureGroup("Robots")
+                if selected_module_index() != -1
                 {
-                    Menu("Select")
+                    DisclosureGroup("Robots")
                     {
-                        ForEach (base_stc.images_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        Menu("Add Module")
+                        {
+                            ForEach (base_stc.tool_modules_names, id: \.self)
+                            { name in
+                                Button(name)
+                                {
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names)
+                                }
                             }
                         }
+                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .disabled(base_stc.tool_modules.count == 0)
                         
-                        Divider()
-                        
-                        ForEach (base_stc.scenes_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        if base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.count > 0
+                        {
+                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.indices, id: \.self)
+                            { index in
+                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names[index])
                             }
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names) })
                         }
                     }
-                    .frame(maxWidth: .infinity)
                     
-                    /*if part_module.additional_resources_names != nil
+                    DisclosureGroup("Tools")
                     {
-                        ForEach (part_module.additional_resources_names!.indices, id: \.self)
-                        { index in
-                            Text(part_module.additional_resources_names![index])
-                        }
-                        .onDelete(perform: delete_module_name)
-                        //.modifier(DoubleModifier(update_toggle: $resources_names_update))
-                    }*/
-                }
-                
-                DisclosureGroup("Tools")
-                {
-                    Menu("Select")
-                    {
-                        ForEach (base_stc.images_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        Menu("Add Module")
+                        {
+                            ForEach (base_stc.tool_modules_names, id: \.self)
+                            { name in
+                                Button(name)
+                                {
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names)
+                                }
                             }
                         }
+                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .disabled(base_stc.tool_modules.count == 0)
                         
-                        Divider()
-                        
-                        ForEach (base_stc.scenes_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        if base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.count > 0
+                        {
+                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.indices, id: \.self)
+                            { index in
+                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names[index])
                             }
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names) })
                         }
                     }
-                    .frame(maxWidth: .infinity)
                     
-                    /*if part_module.additional_resources_names != nil
+                    DisclosureGroup("Parts")
                     {
-                        ForEach (part_module.additional_resources_names!.indices, id: \.self)
-                        { index in
-                            Text(part_module.additional_resources_names![index])
-                        }
-                        .onDelete(perform: delete_module_name)
-                        //.modifier(DoubleModifier(update_toggle: $resources_names_update))
-                    }*/
-                }
-                
-                DisclosureGroup("Parts")
-                {
-                    Menu("Select")
-                    {
-                        ForEach (base_stc.images_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        Menu("Add Module")
+                        {
+                            ForEach (base_stc.part_modules_names, id: \.self)
+                            { name in
+                                Button(name)
+                                {
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names)
+                                }
                             }
                         }
+                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .disabled(base_stc.part_modules.count == 0)
                         
-                        Divider()
-                        
-                        ForEach (base_stc.scenes_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        if base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names.count > 0
+                        {
+                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names.indices, id: \.self)
+                            { index in
+                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names[index])
                             }
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names) })
                         }
                     }
-                    .frame(maxWidth: .infinity)
                     
-                    /*if part_module.additional_resources_names != nil
+                    DisclosureGroup("Changers")
                     {
-                        ForEach (part_module.additional_resources_names!.indices, id: \.self)
-                        { index in
-                            Text(part_module.additional_resources_names![index])
-                        }
-                        .onDelete(perform: delete_module_name)
-                        //.modifier(DoubleModifier(update_toggle: $resources_names_update))
-                    }*/
-                }
-                
-                DisclosureGroup("Changers")
-                {
-                    Menu("Select")
-                    {
-                        ForEach (base_stc.images_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        Menu("Add Module")
+                        {
+                            ForEach (base_stc.changer_modules_names, id: \.self)
+                            { name in
+                                Button(name)
+                                {
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names)
+                                }
                             }
                         }
+                        .buttonStyle(.borderless)
+                        .frame(maxWidth: .infinity)
+                        .disabled(base_stc.changer_modules.count == 0)
                         
-                        Divider()
-                        
-                        ForEach (base_stc.scenes_files_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                add_module_name(name)
+                        if base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names.count > 0
+                        {
+                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names.indices, id: \.self)
+                            { index in
+                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names[index])
                             }
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names) })
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    
-                    /*if part_module.additional_resources_names != nil
-                    {
-                        ForEach (part_module.additional_resources_names!.indices, id: \.self)
-                        { index in
-                            Text(part_module.additional_resources_names![index])
-                        }
-                        .onDelete(perform: delete_module_name)
-                        //.modifier(DoubleModifier(update_toggle: $resources_names_update))
-                    }*/
                 }
             }
             .modifier(ListBorderer())
@@ -301,34 +268,27 @@ struct BuildView: View
         base_stc.package_info.build_modules_lists.remove(at: index)
     }
     
-    private func add_module_name(_ name: String)
+    private func selected_module_index() -> Int
     {
-        /*if part_module.additional_resources_names == nil
-        {
-            part_module.additional_resources_names = [String]()
-        }
-        
-        if resource_name_index(name) == -1
-        {
-            part_module.additional_resources_names?.append(name)
-            resources_names_update.toggle()
-            document_handler.document_update_parts()
-        }*/
+        return base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
     
-    private func delete_module_name(at offsets: IndexSet)
+    private func add_module_name(_ name: String, names: inout [String])
     {
-        /*withAnimation
+        guard let _ = names.firstIndex(where: { $0 == name })
+        else
         {
-            part_module.additional_resources_names!.remove(atOffsets: offsets)
-            
-            if part_module.additional_resources_names?.count == 0
-            {
-                part_module.additional_resources_names = nil
-            }
-            resources_names_update.toggle()
-            document_handler.document_update_parts()
-        }*/
+            names.append(name)
+            return
+        }
+    }
+    
+    private func delete_module_name(at offsets: IndexSet, names: inout [String])
+    {
+        withAnimation
+        {
+            names.remove(atOffsets: offsets)
+        }
     }
 }
 

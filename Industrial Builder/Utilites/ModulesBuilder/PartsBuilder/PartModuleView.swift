@@ -36,7 +36,7 @@ struct PartModuleView: View
             
             DisclosureGroup("Resources")
             {
-                Menu("Add a resource")
+                Menu("Add Resource")
                 {
                     ForEach (base_stc.images_files_names, id: \.self)
                     { name in
@@ -56,6 +56,7 @@ struct PartModuleView: View
                         }
                     }
                 }
+                .buttonStyle(.borderless)
                 .frame(maxWidth: .infinity)
                 
                 if part_module.additional_resources_names != nil
