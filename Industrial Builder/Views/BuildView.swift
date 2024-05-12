@@ -19,6 +19,9 @@ struct BuildView: View
     @State private var selected_name = String()
     @State private var new_panel_presented = false
     
+    @State private var external_export_panel_presented = false
+    @State private var internal_export_panel_presented = false
+    
     #if os(iOS)
     //MARK: Horizontal window size handler
     @Environment(\.horizontalSizeClass) private var horizontal_size_class
@@ -74,7 +77,7 @@ struct BuildView: View
             
             List
             {
-                if selected_module_index() != -1
+                if selected_list_index() != -1
                 {
                     DisclosureGroup("Robots")
                     {
@@ -84,7 +87,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names)
                                 }
                             }
                         }
@@ -92,13 +95,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.tool_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names) })
                         }
                     }
                     
@@ -110,7 +113,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names)
                                 }
                             }
                         }
@@ -118,13 +121,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.tool_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].tool_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names) })
                         }
                     }
                     
@@ -136,7 +139,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names)
                                 }
                             }
                         }
@@ -144,13 +147,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.part_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].part_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names) })
                         }
                     }
                     
@@ -162,7 +165,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names)
                                 }
                             }
                         }
@@ -170,13 +173,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.changer_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_module_index()].changer_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names) })
                         }
                     }
                 }
@@ -187,52 +190,64 @@ struct BuildView: View
             #if !os(iOS)
             HStack(spacing: 0)
             {
-                Button(action: {})
+                Button(action: { external_export_panel_presented = true })
                 {
                     BuildItemView(title: "Files", subtitle: "Export to separated module files", image: Image(systemName: "folder.fill"))
                 }
                 .padding(.trailing)
+                .fileImporter(isPresented: $external_export_panel_presented,
+                              allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: { result in })
                 
-                Button(action: {})
+                Button(action: { internal_export_panel_presented = true })
                 {
-                    BuildItemView(title: "App", subtitle: "Make a project with internal files", image: Image(systemName: "cube.fill"))
+                    BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
                 }
+                .fileImporter(isPresented: $internal_export_panel_presented,
+                              allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: { result in })
             }
             #else
             if horizontal_size_class != .compact
             {
                 HStack(spacing: 0)
                 {
-                    Button(action: {})
+                    Button(action: { external_export_panel_presented = true })
                     {
                         BuildItemView(title: "Files", subtitle: "Export to separated module files", image: Image(systemName: "folder.fill"))
                     }
                     .modifier(ButtonBorderer())
                     .padding(.trailing)
+                    .fileImporter(isPresented: $external_export_panel_presented,
+                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
                     
-                    Button(action: {})
+                    Button(action: { internal_export_panel_presented = true })
                     {
-                        BuildItemView(title: "App", subtitle: "Make a project with internal files", image: Image(systemName: "cube.fill"))
+                        BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
                     }
                     .modifier(ButtonBorderer())
+                    .fileImporter(isPresented: $internal_export_panel_presented,
+                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
                 }
             }
             else
             {
                 VStack(spacing: 0)
                 {
-                    Button(action: {})
+                    Button(action: { external_export_panel_presented = true })
                     {
                         BuildItemView(title: "Files", subtitle: "Export to separated module files", image: Image(systemName: "folder.fill"))
                     }
                     .modifier(ButtonBorderer())
                     .padding(.bottom)
+                    .fileImporter(isPresented: $external_export_panel_presented,
+                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
                     
-                    Button(action: {})
+                    Button(action: { internal_export_panel_presented = true })
                     {
-                        BuildItemView(title: "App", subtitle: "Make a project with internal files", image: Image(systemName: "cube.fill"))
+                        BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
                     }
                     .modifier(ButtonBorderer())
+                    .fileImporter(isPresented: $internal_export_panel_presented,
+                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
                 }
             }
             #endif
@@ -251,6 +266,7 @@ struct BuildView: View
         }
     }
     
+    //MARK: Module lists handling
     private func add_modules_list(_ name: String)
     {
         base_stc.package_info.build_modules_lists.append(BuildModulesList(name: name))
@@ -268,11 +284,12 @@ struct BuildView: View
         base_stc.package_info.build_modules_lists.remove(at: index)
     }
     
-    private func selected_module_index() -> Int
+    private func selected_list_index() -> Int
     {
         return base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
     
+    //MARK: Module names handling
     private func add_module_name(_ name: String, names: inout [String])
     {
         guard let _ = names.firstIndex(where: { $0 == name })
@@ -290,6 +307,8 @@ struct BuildView: View
             names.remove(atOffsets: offsets)
         }
     }
+    
+    //MARK: Export handling
 }
 
 struct BuildItemView: View
@@ -297,7 +316,6 @@ struct BuildItemView: View
     let title: String
     let subtitle: String
     let image: Image
-    //let on_tap: (() -> ())
     
     var body: some View
     {
@@ -345,7 +363,4 @@ struct BuildItemView: View
 #Preview
 {
     BuildItemView(title: "Packages", subtitle: "None", image: Image(systemName: "cube.fill"))
-    /*{
-        print("Packages")
-    }*/
 }

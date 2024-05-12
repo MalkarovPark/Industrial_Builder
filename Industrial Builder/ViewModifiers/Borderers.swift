@@ -23,16 +23,3 @@ struct ListBorderer: ViewModifier
             .shadow(radius: 1)
     }
 }
-
-#if os(iOS)
-struct ButtonBorderer: ViewModifier
-{
-    public func body(content: Content) -> some View
-    {
-        content
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .shadow(radius: 1)
-    }
-}
-#endif
