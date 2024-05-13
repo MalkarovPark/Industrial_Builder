@@ -16,7 +16,7 @@
 		626872422BC1A3D2005F8B3C /* ListingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872412BC1A3D2005F8B3C /* ListingsListView.swift */; };
 		626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872432BC1A3E5005F8B3C /* ListingView.swift */; };
 		627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627D3EBE2AD3F61400D5988D /* PackageView.swift */; };
-		627DA0702BEEDB7B00FD957F /* ToolModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627DA06F2BEEDB7B00FD957F /* ToolModuleView.swift */; };
+		627DA0702BEEDB7B00FD957F /* ToolModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */; };
 		6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */; };
 		6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCC82AD0398100BB7F5E /* ContentView.swift */; };
 		6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6289FCCC2AD0398300BB7F5E /* Assets.xcassets */; };
@@ -25,15 +25,15 @@
 		628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */; };
 		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
 		628E14562AD8AAF400BC8FD9 /* BuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14552AD8AAF400BC8FD9 /* BuildView.swift */; };
-		628E14582AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift */; };
-		628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */; };
+		628E14582AD8ADCC00BC8FD9 /* RobotsModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotsModulesView.swift */; };
+		628E145A2AD8ADE100BC8FD9 /* ToolModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */; };
 		628E3A7E2BED86B10005A929 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3A7D2BED86B10005A929 /* InfoView.swift */; };
 		6296D28A2AEC55580094FB19 /* Cards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2892AEC55580094FB19 /* Cards.swift */; };
 		6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2A92AED6E290094FB19 /* AppState.swift */; };
 		6296D2AE2AED9C2C0094FB19 /* 6DOFController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2AC2AED9C2C0094FB19 /* 6DOFController.swift */; };
 		6296D2AF2AED9C2C0094FB19 /* PortalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2AD2AED9C2C0094FB19 /* PortalController.swift */; };
 		62988BD62BD05D8200371AFE /* ModulesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD52BD05D8200371AFE /* ModulesListView.swift */; };
-		62988BD82BD0600100371AFE /* PartModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD72BD0600100371AFE /* PartModulesEditor.swift */; };
+		62988BD82BD0600100371AFE /* PartModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD72BD0600100371AFE /* PartModulesView.swift */; };
 		629AABC42BC8561500720386 /* STCPackageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC32BC8561500720386 /* STCPackageInfo.swift */; };
 		629AABC62BC856D300720386 /* KinematicGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC52BC856D300720386 /* KinematicGroup.swift */; };
 		629AABC82BC8580C00720386 /* IndustrialModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC72BC8580C00720386 /* IndustrialModule.swift */; };
@@ -43,9 +43,9 @@
 		62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE552F2AE962CA00554A5B /* ComponentsView.swift */; };
 		62AE55322AE96B3D00554A5B /* KinematicsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62AE55312AE96B3D00554A5B /* KinematicsListView.swift */; };
 		62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */; };
-		62BAE7772BD71846000972EA /* PartModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleView.swift */; };
-		62BAE7782BD71D89000972EA /* ChangerModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */; };
-		62BAE7792BD71DE5000972EA /* ChangerModulesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5A0FE2BD1BF9500356FD2 /* ChangerModulesEditor.swift */; };
+		62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleDesigner.swift */; };
+		62BAE7782BD71D89000972EA /* ChangerModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */; };
+		62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */; };
 		62BAE77B2BDBC149000972EA /* Caption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE77A2BDBC149000972EA /* Caption.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,7 +59,7 @@
 		626872412BC1A3D2005F8B3C /* ListingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsListView.swift; sourceTree = "<group>"; };
 		626872432BC1A3E5005F8B3C /* ListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingView.swift; sourceTree = "<group>"; };
 		627D3EBE2AD3F61400D5988D /* PackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageView.swift; sourceTree = "<group>"; };
-		627DA06F2BEEDB7B00FD957F /* ToolModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModuleView.swift; sourceTree = "<group>"; };
+		627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModuleDesigner.swift; sourceTree = "<group>"; };
 		6289FCC32AD0398100BB7F5E /* Industrial Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Industrial Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Industrial_BuilderApp.swift; sourceTree = "<group>"; };
 		6289FCC82AD0398100BB7F5E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -69,17 +69,17 @@
 		6289FCD12AD0398300BB7F5E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6289FCF62AD1EB2600BB7F5E /* STCDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCDocument.swift; sourceTree = "<group>"; };
 		628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardTemplateConstruct.swift; sourceTree = "<group>"; };
-		628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModuleView.swift; sourceTree = "<group>"; };
+		628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModuleDesigner.swift; sourceTree = "<group>"; };
 		628E14552AD8AAF400BC8FD9 /* BuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildView.swift; sourceTree = "<group>"; };
-		628E14572AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotsModulesEditor.swift; sourceTree = "<group>"; };
-		628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesEditor.swift; sourceTree = "<group>"; };
+		628E14572AD8ADCC00BC8FD9 /* RobotsModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotsModulesView.swift; sourceTree = "<group>"; };
+		628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesView.swift; sourceTree = "<group>"; };
 		628E3A7D2BED86B10005A929 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		6296D2892AEC55580094FB19 /* Cards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cards.swift; sourceTree = "<group>"; };
 		6296D2A92AED6E290094FB19 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		6296D2AC2AED9C2C0094FB19 /* 6DOFController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 6DOFController.swift; sourceTree = "<group>"; };
 		6296D2AD2AED9C2C0094FB19 /* PortalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortalController.swift; sourceTree = "<group>"; };
 		62988BD52BD05D8200371AFE /* ModulesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulesListView.swift; sourceTree = "<group>"; };
-		62988BD72BD0600100371AFE /* PartModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModulesEditor.swift; sourceTree = "<group>"; };
+		62988BD72BD0600100371AFE /* PartModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModulesView.swift; sourceTree = "<group>"; };
 		629AABC32BC8561500720386 /* STCPackageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCPackageInfo.swift; sourceTree = "<group>"; };
 		629AABC52BC856D300720386 /* KinematicGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicGroup.swift; sourceTree = "<group>"; };
 		629AABC72BC8580C00720386 /* IndustrialModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndustrialModule.swift; sourceTree = "<group>"; };
@@ -91,9 +91,9 @@
 		62AE552F2AE962CA00554A5B /* ComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsView.swift; sourceTree = "<group>"; };
 		62AE55312AE96B3D00554A5B /* KinematicsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicsListView.swift; sourceTree = "<group>"; };
 		62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = KinematicComponents.scnassets; sourceTree = "<group>"; };
-		62BAE7762BD71846000972EA /* PartModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleView.swift; sourceTree = "<group>"; };
+		62BAE7762BD71846000972EA /* PartModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleDesigner.swift; sourceTree = "<group>"; };
 		62BAE77A2BDBC149000972EA /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caption.swift; sourceTree = "<group>"; };
-		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesEditor.swift; sourceTree = "<group>"; };
+		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,25 +127,25 @@
 			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
-		6255B9212B9D242F002B575C /* IMABuilder */ = {
+		6255B9212B9D242F002B575C /* IMADesigner */ = {
 			isa = PBXGroup;
 			children = (
-				62D5A0FE2BD1BF9500356FD2 /* ChangerModulesEditor.swift */,
-				628E14532AD7E44C00BC8FD9 /* ChangerModuleView.swift */,
+				62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */,
+				628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */,
 			);
-			path = IMABuilder;
+			path = IMADesigner;
 			sourceTree = "<group>";
 		};
-		6255B9222B9D26AA002B575C /* ModulesBuilder */ = {
+		6255B9222B9D26AA002B575C /* ModulesDesigners */ = {
 			isa = PBXGroup;
 			children = (
 				62988BD52BD05D8200371AFE /* ModulesListView.swift */,
-				62988BD42BD046F900371AFE /* RobotsBuilder */,
-				62988BD32BD046E400371AFE /* ToolsBuilder */,
-				62988BD22BD0419E00371AFE /* PartsBuilder */,
-				6255B9212B9D242F002B575C /* IMABuilder */,
+				62988BD42BD046F900371AFE /* RobotsDesigner */,
+				62988BD32BD046E400371AFE /* ToolsDesigner */,
+				62988BD22BD0419E00371AFE /* PartsDesigner */,
+				6255B9212B9D242F002B575C /* IMADesigner */,
 			);
-			path = ModulesBuilder;
+			path = ModulesDesigners;
 			sourceTree = "<group>";
 		};
 		626872402BC1A3A6005F8B3C /* ListingsView */ = {
@@ -222,30 +222,30 @@
 			path = ModelControllers;
 			sourceTree = "<group>";
 		};
-		62988BD22BD0419E00371AFE /* PartsBuilder */ = {
+		62988BD22BD0419E00371AFE /* PartsDesigner */ = {
 			isa = PBXGroup;
 			children = (
-				62988BD72BD0600100371AFE /* PartModulesEditor.swift */,
-				62BAE7762BD71846000972EA /* PartModuleView.swift */,
+				62988BD72BD0600100371AFE /* PartModulesView.swift */,
+				62BAE7762BD71846000972EA /* PartModuleDesigner.swift */,
 			);
-			path = PartsBuilder;
+			path = PartsDesigner;
 			sourceTree = "<group>";
 		};
-		62988BD32BD046E400371AFE /* ToolsBuilder */ = {
+		62988BD32BD046E400371AFE /* ToolsDesigner */ = {
 			isa = PBXGroup;
 			children = (
-				628E14592AD8ADE100BC8FD9 /* ToolModulesEditor.swift */,
-				627DA06F2BEEDB7B00FD957F /* ToolModuleView.swift */,
+				628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */,
+				627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */,
 			);
-			path = ToolsBuilder;
+			path = ToolsDesigner;
 			sourceTree = "<group>";
 		};
-		62988BD42BD046F900371AFE /* RobotsBuilder */ = {
+		62988BD42BD046F900371AFE /* RobotsDesigner */ = {
 			isa = PBXGroup;
 			children = (
-				628E14572AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift */,
+				628E14572AD8ADCC00BC8FD9 /* RobotsModulesView.swift */,
 			);
-			path = RobotsBuilder;
+			path = RobotsDesigner;
 			sourceTree = "<group>";
 		};
 		629AABC12BC855D200720386 /* STC */ = {
@@ -285,7 +285,7 @@
 				629B52682AF6887D003F45D2 /* ModelsViewer */,
 				626872402BC1A3A6005F8B3C /* ListingsView */,
 				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
-				6255B9222B9D26AA002B575C /* ModulesBuilder */,
+				6255B9222B9D26AA002B575C /* ModulesDesigners */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -386,9 +386,9 @@
 				62988BD62BD05D8200371AFE /* ModulesListView.swift in Sources */,
 				6296D28A2AEC55580094FB19 /* Cards.swift in Sources */,
 				621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */,
-				627DA0702BEEDB7B00FD957F /* ToolModuleView.swift in Sources */,
+				627DA0702BEEDB7B00FD957F /* ToolModuleDesigner.swift in Sources */,
 				6296D2AE2AED9C2C0094FB19 /* 6DOFController.swift in Sources */,
-				628E14582AD8ADCC00BC8FD9 /* RobotsModulesEditor.swift in Sources */,
+				628E14582AD8ADCC00BC8FD9 /* RobotsModulesView.swift in Sources */,
 				62AE552E2AE7086B00554A5B /* KinematicEditorView.swift in Sources */,
 				629AABC62BC856D300720386 /* KinematicGroup.swift in Sources */,
 				629B526A2AF68902003F45D2 /* SceneSelectorView.swift in Sources */,
@@ -399,19 +399,19 @@
 				628E3A7E2BED86B10005A929 /* InfoView.swift in Sources */,
 				6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */,
 				6255B9202B9BDC86002B575C /* Framers.swift in Sources */,
-				628E145A2AD8ADE100BC8FD9 /* ToolModulesEditor.swift in Sources */,
+				628E145A2AD8ADE100BC8FD9 /* ToolModulesView.swift in Sources */,
 				626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */,
-				62BAE7792BD71DE5000972EA /* ChangerModulesEditor.swift in Sources */,
+				62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */,
 				623D72482ADAFD8500927DEA /* SceneView.swift in Sources */,
-				62BAE7772BD71846000972EA /* PartModuleView.swift in Sources */,
+				62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */,
 				6296D2AF2AED9C2C0094FB19 /* PortalController.swift in Sources */,
 				6255B9242B9E0DD4002B575C /* DocumentUpdateHandler.swift in Sources */,
 				6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */,
 				628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */,
-				62988BD82BD0600100371AFE /* PartModulesEditor.swift in Sources */,
+				62988BD82BD0600100371AFE /* PartModulesView.swift in Sources */,
 				629B526C2AF69056003F45D2 /* ScenesListView.swift in Sources */,
 				627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */,
-				62BAE7782BD71D89000972EA /* ChangerModuleView.swift in Sources */,
+				62BAE7782BD71D89000972EA /* ChangerModuleDesigner.swift in Sources */,
 				626872422BC1A3D2005F8B3C /* ListingsListView.swift in Sources */,
 				6268723F2BC18D21005F8B3C /* ModulesView.swift in Sources */,
 				622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */,

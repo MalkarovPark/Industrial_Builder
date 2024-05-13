@@ -186,21 +186,21 @@ struct ModulesSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: RobotsModulesEditor())
+        NavigationLink(destination: RobotsModulesView())
         {
             Label("Robots", systemImage: "r.square")
         }
-        NavigationLink(destination: ToolModulesEditor())
+        NavigationLink(destination: ToolModulesView())
         {
             Label("Tools", systemImage: "hammer")
                 .badge(base_stc.tool_modules.count)
         }
-        NavigationLink(destination: PartModulesEditor())
+        NavigationLink(destination: PartModulesView())
         {
             Label("Parts", systemImage: "shippingbox")
                 .badge(base_stc.part_modules.count)
         }
-        NavigationLink(destination: ChangerModulesEditor())
+        NavigationLink(destination: ChangerModulesView())
         {
             Label("Changers", systemImage: "wand.and.rays")
                 .badge(base_stc.changer_modules.count)

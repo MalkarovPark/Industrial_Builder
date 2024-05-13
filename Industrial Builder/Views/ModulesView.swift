@@ -26,22 +26,22 @@ struct ModulesView: View
                     {
                         StandardNavigationCard(name: "Robots", count_number: 0, image_name: "r.square", color: .green)
                         {
-                            RobotsModulesEditor()
+                            RobotsModulesView()
                         }
                         
                         StandardNavigationCard(name: "Tools", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .mint)
                         {
-                            ToolModulesEditor()
+                            ToolModulesView()
                         }
                         
                         StandardNavigationCard(name: "Parts", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .brown)
                         {
-                            PartModulesEditor()
+                            PartModulesView()
                         }
                         
                         StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
                         {
-                            ChangerModulesEditor()
+                            ChangerModulesView()
                         }
                     }
                     .padding(20)

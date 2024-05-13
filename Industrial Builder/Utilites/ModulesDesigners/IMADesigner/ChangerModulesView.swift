@@ -1,5 +1,5 @@
 //
-//  ChangerModulesEditor.swift
+//  ChangerModulesView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 18.04.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ChangerModulesEditor: View
+struct ChangerModulesView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -43,7 +43,7 @@ struct ChangerModulesEditor: View
                     {
                         if smi != -2
                         {
-                            ChangerModuleView(changer_module: $base_stc.changer_modules[smi])
+                            ChangerModuleDesigner(changer_module: $base_stc.changer_modules[smi])
                                 .modifier(ViewBorderer())
                         }
                         else
@@ -101,6 +101,6 @@ struct ChangerModulesEditor: View
 
 #Preview
 {
-    ChangerModulesEditor()
+    ChangerModulesView()
         .environmentObject(StandardTemplateConstruct())
 }

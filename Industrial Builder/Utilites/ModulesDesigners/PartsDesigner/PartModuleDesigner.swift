@@ -1,5 +1,5 @@
 //
-//  PartsModuleView.swift
+//  PartsModuleDesigner.swift
 //  Industrial Builder
 //
 //  Created by Artem on 23.04.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct PartModuleView: View
+struct PartModuleDesigner: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -115,6 +115,6 @@ struct PartModuleView: View
 
 #Preview
 {
-    PartModuleView(part_module: .constant(PartModule()))
+    PartModuleDesigner(part_module: .constant(PartModule()))
         .environmentObject(StandardTemplateConstruct())
 }

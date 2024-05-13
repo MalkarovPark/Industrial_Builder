@@ -1,5 +1,5 @@
 //
-//  RobotModulesEditor.swift
+//  RobotModulesView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 13.10.2023.
@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct RobotsModulesEditor: View
+struct RobotsModulesView: View
 {
     @State private var names = [String]()
     @State private var selected_name = String()
@@ -52,5 +52,5 @@ struct RobotsModulesEditor: View
 
 #Preview
 {
-    RobotsModulesEditor()
+    RobotsModulesView()
 }

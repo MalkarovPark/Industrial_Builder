@@ -1,5 +1,5 @@
 //
-//  ToolsModuleView.swift
+//  ToolsModuleDesigner.swift
 //  Industrial Builder
 //
 //  Created by Artem on 11.05.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ToolModuleView: View
+struct ToolModuleDesigner: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -355,5 +355,5 @@ struct StatisticsListView: View
 
 #Preview
 {
-    ToolModuleView(tool_module: .constant(ToolModule()))
+    ToolModuleDesigner(tool_module: .constant(ToolModule()))
 }
