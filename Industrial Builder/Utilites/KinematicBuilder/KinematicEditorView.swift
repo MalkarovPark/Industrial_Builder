@@ -103,7 +103,7 @@ struct KinematicInspectorView: View
             #if os(macOS)
             .listStyle(.plain)
             #endif
-            .modifier(ListBorderer())
+            .modifier(ViewBorderer())
             .padding(.bottom)
             
             List
@@ -130,11 +130,11 @@ struct KinematicInspectorView: View
                     }
                 }
             }
-            .frame(height: 192)//144)
+            .frame(height: 192)
             #if os(macOS)
             .listStyle(.plain)
             #endif
-            .modifier(ListBorderer())
+            .modifier(ViewBorderer())
         }
         .padding()
         .onAppear

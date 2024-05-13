@@ -44,7 +44,7 @@ struct ChangerModulesEditor: View
                         if smi != -2
                         {
                             ChangerModuleView(changer_module: $base_stc.changer_modules[smi])
-                                .modifier(ListBorderer())
+                                .modifier(ViewBorderer())
                         }
                         else
                         {
@@ -55,7 +55,7 @@ struct ChangerModulesEditor: View
                                     .foregroundStyle(.white)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                            .modifier(ListBorderer())
+                            .modifier(ViewBorderer())
                         }
                     }
                     else

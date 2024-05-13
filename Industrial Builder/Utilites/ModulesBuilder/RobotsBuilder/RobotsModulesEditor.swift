@@ -37,7 +37,7 @@ struct RobotsModulesEditor: View
                     
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .modifier(ListBorderer())
+                .modifier(ViewBorderer())
             }
             .padding()
         }

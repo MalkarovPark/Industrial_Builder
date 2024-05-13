@@ -184,7 +184,7 @@ struct BuildView: View
                     }
                 }
             }
-            .modifier(ListBorderer())
+            .modifier(ViewBorderer())
             .padding(.bottom)
             
             #if !os(iOS)

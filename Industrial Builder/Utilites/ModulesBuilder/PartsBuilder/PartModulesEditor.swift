@@ -43,7 +43,7 @@ struct PartModulesEditor: View
                         if smi != -2
                         {
                             PartModuleView(part_module: $base_stc.part_modules[smi])
-                                .modifier(ListBorderer())
+                                .modifier(ViewBorderer())
                         }
                         else
                         {
@@ -54,7 +54,7 @@ struct PartModulesEditor: View
                                     .foregroundStyle(.white)
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                            .modifier(ListBorderer())
+                            .modifier(ViewBorderer())
                         }
                     }
                     else

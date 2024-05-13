@@ -103,7 +103,7 @@ struct ModulesListView: View
             }
         }
         .frame(width: 200)
-        .modifier(ListBorderer())
+        .modifier(ViewBorderer())
         .padding(.trailing)
     }
 }
