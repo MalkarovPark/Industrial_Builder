@@ -1,5 +1,5 @@
 //
-//  KinematicEditorView.swift
+//  KinematicDesignerView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 23.10.2023.
@@ -9,7 +9,7 @@ import SwiftUI
 import SceneKit
 import IndustrialKit
 
-struct KinematicEditorView: View
+struct KinematicDesignerView: View
 {
     @Binding var group: KinematicGroup
     @EnvironmentObject var app_state: AppState
@@ -277,7 +277,7 @@ let quaternary_label_color: Color = Color(UIColor.quaternaryLabel)
 
 #Preview
 {
-    KinematicEditorView(group: .constant(KinematicGroup()))
+    KinematicDesignerView(group: .constant(KinematicGroup()))
         .frame(minWidth: 256, minHeight: 512)
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(AppState())

@@ -31,7 +31,7 @@ struct KinematicsListView: View
                         { index in
                             StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
                             {
-                                KinematicEditorView(group: $base_stc.kinematic_groups[index])
+                                KinematicDesignerView(group: $base_stc.kinematic_groups[index])
                             }
                             .contextMenu
                             {
