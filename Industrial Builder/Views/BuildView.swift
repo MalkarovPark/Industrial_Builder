@@ -79,7 +79,7 @@ struct BuildView: View
             {
                 if selected_list_index() != -1
                 {
-                    DisclosureGroup("Robots")
+                    DisclosureGroup("Robot")
                     {
                         Menu("Add Module")
                         {
@@ -105,7 +105,7 @@ struct BuildView: View
                         }
                     }
                     
-                    DisclosureGroup("Tools")
+                    DisclosureGroup("Tool")
                     {
                         Menu("Add Module")
                         {
@@ -131,7 +131,7 @@ struct BuildView: View
                         }
                     }
                     
-                    DisclosureGroup("Parts")
+                    DisclosureGroup("Part")
                     {
                         Menu("Add Module")
                         {
@@ -157,7 +157,7 @@ struct BuildView: View
                         }
                     }
                     
-                    DisclosureGroup("Changers")
+                    DisclosureGroup("Changer")
                     {
                         Menu("Add Module")
                         {

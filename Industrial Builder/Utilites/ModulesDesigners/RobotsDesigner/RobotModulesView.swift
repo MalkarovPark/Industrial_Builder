@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct RobotsModulesView: View
+struct RobotModulesView: View
 {
     @State private var names = [String]()
     @State private var selected_name = String()
@@ -52,5 +52,5 @@ struct RobotsModulesView: View
 
 #Preview
 {
-    RobotsModulesView()
+    RobotModulesView()
 }

@@ -25,7 +25,7 @@
 		628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */; };
 		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
 		628E14562AD8AAF400BC8FD9 /* BuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14552AD8AAF400BC8FD9 /* BuildView.swift */; };
-		628E14582AD8ADCC00BC8FD9 /* RobotsModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotsModulesView.swift */; };
+		628E14582AD8ADCC00BC8FD9 /* RobotModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14572AD8ADCC00BC8FD9 /* RobotModulesView.swift */; };
 		628E145A2AD8ADE100BC8FD9 /* ToolModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */; };
 		628E3A7E2BED86B10005A929 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3A7D2BED86B10005A929 /* InfoView.swift */; };
 		6296D28A2AEC55580094FB19 /* Cards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2892AEC55580094FB19 /* Cards.swift */; };
@@ -71,7 +71,7 @@
 		628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardTemplateConstruct.swift; sourceTree = "<group>"; };
 		628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModuleDesigner.swift; sourceTree = "<group>"; };
 		628E14552AD8AAF400BC8FD9 /* BuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildView.swift; sourceTree = "<group>"; };
-		628E14572AD8ADCC00BC8FD9 /* RobotsModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotsModulesView.swift; sourceTree = "<group>"; };
+		628E14572AD8ADCC00BC8FD9 /* RobotModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModulesView.swift; sourceTree = "<group>"; };
 		628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesView.swift; sourceTree = "<group>"; };
 		628E3A7D2BED86B10005A929 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		6296D2892AEC55580094FB19 /* Cards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cards.swift; sourceTree = "<group>"; };
@@ -243,7 +243,7 @@
 		62988BD42BD046F900371AFE /* RobotsDesigner */ = {
 			isa = PBXGroup;
 			children = (
-				628E14572AD8ADCC00BC8FD9 /* RobotsModulesView.swift */,
+				628E14572AD8ADCC00BC8FD9 /* RobotModulesView.swift */,
 			);
 			path = RobotsDesigner;
 			sourceTree = "<group>";
@@ -388,7 +388,7 @@
 				621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */,
 				627DA0702BEEDB7B00FD957F /* ToolModuleDesigner.swift in Sources */,
 				6296D2AE2AED9C2C0094FB19 /* 6DOFController.swift in Sources */,
-				628E14582AD8ADCC00BC8FD9 /* RobotsModulesView.swift in Sources */,
+				628E14582AD8ADCC00BC8FD9 /* RobotModulesView.swift in Sources */,
 				62AE552E2AE7086B00554A5B /* KinematicDesignerView.swift in Sources */,
 				629AABC62BC856D300720386 /* KinematicGroup.swift in Sources */,
 				629B526A2AF68902003F45D2 /* SceneSelectorView.swift in Sources */,

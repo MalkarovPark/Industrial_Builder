@@ -24,22 +24,22 @@ struct ModulesView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Robots", count_number: 0, image_name: "r.square", color: .green)
+                        StandardNavigationCard(name: "Robot", count_number: 0, image_name: "r.square", color: .green)
                         {
-                            RobotsModulesView()
+                            RobotModulesView()
                         }
                         
-                        StandardNavigationCard(name: "Tools", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .mint)
+                        StandardNavigationCard(name: "Tool", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .mint)
                         {
                             ToolModulesView()
                         }
                         
-                        StandardNavigationCard(name: "Parts", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .brown)
+                        StandardNavigationCard(name: "Part", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .brown)
                         {
                             PartModulesView()
                         }
                         
-                        StandardNavigationCard(name: "Changers", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
+                        StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
                         {
                             ChangerModulesView()
                         }

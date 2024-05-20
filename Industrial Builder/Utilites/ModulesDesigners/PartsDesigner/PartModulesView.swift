@@ -1,5 +1,5 @@
 //
-//  PartsModulesView.swift
+//  PartModulesView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 17.04.2024.
@@ -85,7 +85,7 @@ struct PartModulesView: View
         .onChange(of: selected_name)
         {
             smi = -2
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001)
             {
                 smi = selected_module_index()
             }

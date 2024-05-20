@@ -98,13 +98,13 @@ struct STCDocument: FileDocument
                     {
                         switch file_wrapper.filename
                         {
-                        case "Robots":
+                        case "Robot":
                             break //robot_modules_process(file_wrapper)
-                        case "Tools":
+                        case "Tool":
                             modules_process(file_wrapper, type: ToolModule.self)
-                        case "Parts":
+                        case "Part":
                             modules_process(file_wrapper, type: PartModule.self)
-                        case "Changers":
+                        case "Changer":
                             modules_process(file_wrapper, type: ChangerModule.self)
                         default:
                             break
@@ -381,13 +381,13 @@ struct STCDocument: FileDocument
         var file_wrappers = [String: FileWrapper]()
         
         //Tool Modules
-        file_wrappers["Tools"] = prepare_tool_modules_wrapper()
+        file_wrappers["Tool"] = prepare_tool_modules_wrapper()
         
         //Part Modules
-        file_wrappers["Parts"] = prepare_part_modules_wrapper()
+        file_wrappers["Part"] = prepare_part_modules_wrapper()
         
         //Changer Modules
-        file_wrappers["Changers"] = prepare_changer_modules_wrapper()
+        file_wrappers["Changer"] = prepare_changer_modules_wrapper()
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
         
