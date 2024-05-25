@@ -15,87 +15,36 @@ struct ChangerModuleDesigner: View
     
     @Binding var changer_module: ChangerModule
     
-    @State private var code_file_name = String()
-    @State private var code_field_update = false
-    
-    /*init(changer_module: Binding<ChangerModule>)
-    {
-        self._changer_module = changer_module
-    }*/
+    @State private var editor_selection = 0
     
     var body: some View
     {
-        List
+        VStack(spacing: 0)
         {
-            Section("Description")
+            Picker(selection: $editor_selection, label: Text("Picker"))
             {
-                TextEditor(text: $changer_module.description)
-                    .modifier(TextFrame())
-                    .frame(maxHeight: 256)
+                Text("Code").tag(0)
+                Text("Description").tag(1)
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding()
             
-            Section("Code")
+            Divider()
+            
+            switch editor_selection
             {
-                TextEditor(text: $changer_module.internal_code)
-                    .modifier(TextFrame())
-                    .frame(maxHeight: 256)
-                    .modifier(DoubleModifier(update_toggle: $code_field_update))
-                
-                Toggle(isOn: $changer_module.is_internal_change)
-                {
-                    Text("Internal")
-                }
-                .onChange(of: changer_module.is_internal_change)
+            case 0:
+                CodeEditorView(code: $changer_module.internal_code)
                 {
                     document_handler.document_update_ima()
                 }
-                
-                HStack
-                {
-                    Picker(selection: $code_file_name, label: Text("File"))
-                    {
-                        ForEach(base_stc.listings_files_names, id: \.self)
-                        { listing_file_name in
-                            Text(listing_file_name)
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button(action: push_code_internal)
-                    {
-                        Image(systemName: "arrow.up.doc")
-                    }
-                    .buttonStyle(.bordered)
-                }
-                .disabled(base_stc.listings_files_names.count == 0)
+            default:
+                TextEditor(text: $changer_module.description)
+                    .textFieldStyle(.plain)
             }
         }
-        .listStyle(.plain)
-        .onAppear
-        {
-            if base_stc.listings_files_names.count > 0
-            {
-                code_file_name = base_stc.listings_files_names.first!
-            }
-        }
-    }
-    
-    private func push_code_internal()
-    {
-        guard let index = base_stc.listings_files_names.firstIndex(where: { $0 == code_file_name })
-        else
-        {
-            return
-        }
-        
-        changer_module.internal_code = base_stc.listings[index]
-        code_field_update.toggle()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
-        {
-            document_handler.document_update_ima()
-        }
-        //document_handler.document_update_ima()
+        .background(.white)
     }
 }
 

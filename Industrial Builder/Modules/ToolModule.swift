@@ -1,37 +1,16 @@
 //
-//  IndustrialModule.swift
+//  ToolModule.swift
 //  Industrial Builder
 //
 //  Created by Artem on 11.04.2024.
 //
 
 import Foundation
+import IndustrialKit
 
-//MARK: - Structures
-//MARK: - File
-/*public struct FileHolder: Equatable
+public class ToolModule: IndustrialModule
 {
-    public static func == (lhs: FileHolder, rhs: FileHolder) -> Bool
-    {
-        lhs.name == rhs.name
-    }
-    
-    var name = String()
-    var data = (Any).self
-}*/
-
-//MARK: App Modules
-/*public struct ChangerModule: Equatable, Codable
-{
-    var name = ""
-    var code = ""
-}*/
-
-public struct ToolModule: Equatable, Codable
-{
-    var name = ""
-    
-    var operation_codes = [OperationCode]()
+    public var operation_codes = [OperationCode]()
     
     var controller = ToolControllerModule()
     var connector = ToolConnectorModule()
@@ -76,3 +55,15 @@ public struct OperationCode: Equatable, Codable
     var controller_code = ""
     var connector_code = ""
 }
+
+//MARK: - File
+/*public struct FileHolder: Equatable
+{
+    public static func == (lhs: FileHolder, rhs: FileHolder) -> Bool
+    {
+        lhs.name == rhs.name
+    }
+    
+    var name = String()
+    var data = (Any).self
+}*/
