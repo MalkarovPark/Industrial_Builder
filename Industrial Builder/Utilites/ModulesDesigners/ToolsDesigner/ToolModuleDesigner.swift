@@ -15,45 +15,41 @@ struct ToolModuleDesigner: View
     
     @Binding var tool_module: ToolModule
     
-    @State private var resources_names_update = false
-    @State private var tab_selection = 0
+    @State private var editor_selection = 0
     
-    private let editor_tabs = ["Codes", "Controller", "Connector"]
+    @State private var resources_names_update = false
     
     var body: some View
     {
-        GroupBox
+        VStack(spacing: 0)
         {
-            VStack(spacing: 0)
+            Picker(selection: $editor_selection, label: Text("Picker"))
             {
-                Picker("", selection: $tab_selection)
-                {
-                    ForEach(0..<editor_tabs.count, id: \.self)
-                    { index in
-                        Text(self.editor_tabs[index]).tag(index)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .padding()
-                
-                /*switch tab_selection
-                {
-                case 0:
-                    ToolOperationCodesEditor(operation_codes: $tool_module.operation_codes)
-                case 1:
-                    ToolControllerEditor(controller: $tool_module.controller)
-                case 2:
-                    ToolConnectorEditor(connector: $tool_module.connector)
-                default:
-                    Text("None")
-                }*/
+                Text("Description").tag(0)
+                Text("Code").tag(1)
+                Text("Model").tag(2)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding()
+            
+            Divider()
+            
+            switch editor_selection
+            {
+            case 0:
+                TextEditor(text: $tool_module.description)
+                    .textFieldStyle(.plain)
+            case 1:
+                CodeEditorView(code_items: $tool_module.code_items)
+                {
+                    document_handler.document_update_tools()
+                }
+            default:
+                EmptyView()
+            }
         }
-        #if os(visionOS)
-        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-        #endif
+        .background(.white)
     }
 }
 

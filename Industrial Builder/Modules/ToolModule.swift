@@ -16,7 +16,31 @@ public class ToolModule: IndustrialModule
     public init(name: String = String(), description: String = String(), package_file_name: String = String(), is_internal_change: Bool = Bool(), internal_code: String = String())
     {
         super.init(name: name, description: description, package_file_name: package_file_name)
-        code_items = [CodeItem(name: "Change")]
+        code_items = [
+            //Model Controller
+            CodeItem(name: "nodes_connect"),
+            CodeItem(name: "nodes_perform"),
+            CodeItem(name: "reset_model"),
+            
+            //Model Statistics
+            CodeItem(name: "model_charts_data"),
+            CodeItem(name: "model_clear_charts_data"),
+            CodeItem(name: "model_states_data"),
+            CodeItem(name: "model_clear_states_data"),
+            
+            //Connector
+            CodeItem(name: "connection_process"),
+            CodeItem(name: "disconnection_process"),
+            
+            CodeItem(name: "perform"),
+            CodeItem(name: "pause_operations"),
+            
+            //Model Statistics
+            CodeItem(name: "charts_data"),
+            CodeItem(name: "clear_charts_data"),
+            CodeItem(name: "states_data"),
+            CodeItem(name: "clear_states_data")
+        ]
     }
     
     //MARK: Codable handling

@@ -29,7 +29,7 @@ struct ToolModulesView: View
                 rename_module:
                 { new_name in
                     base_stc.tool_modules[selected_module_index()].name = new_name
-                    //document_handler.document_update_tools()
+                    document_handler.document_update_tools()
                 }
                 delete_module:
                 {
@@ -43,7 +43,7 @@ struct ToolModulesView: View
                         if smi != -2
                         {
                             ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
-                                //.modifier(ViewBorderer())
+                                .modifier(ViewBorderer())
                         }
                         else
                         {
@@ -81,7 +81,7 @@ struct ToolModulesView: View
         .modifier(WindowFramer())
         .onChange(of: base_stc.tool_modules)
         {
-            //document_handler.document_update_tools()
+            document_handler.document_update_tools()
         }
         .onChange(of: selected_name)
         {

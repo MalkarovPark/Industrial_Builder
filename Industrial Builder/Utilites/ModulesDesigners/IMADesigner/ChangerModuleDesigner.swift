@@ -23,8 +23,8 @@ struct ChangerModuleDesigner: View
         {
             Picker(selection: $editor_selection, label: Text("Picker"))
             {
-                Text("Code").tag(0)
-                Text("Description").tag(1)
+                Text("Description").tag(0)
+                Text("Code").tag(1)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -35,13 +35,13 @@ struct ChangerModuleDesigner: View
             switch editor_selection
             {
             case 0:
+                TextEditor(text: $changer_module.description)
+                    .textFieldStyle(.plain)
+            default:
                 CodeEditorView(code_items: $changer_module.code_items)
                 {
                     document_handler.document_update_ima()
                 }
-            default:
-                TextEditor(text: $changer_module.description)
-                    .textFieldStyle(.plain)
             }
         }
         .background(.white)
