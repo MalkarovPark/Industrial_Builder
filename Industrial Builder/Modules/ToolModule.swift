@@ -12,8 +12,18 @@ public class ToolModule: IndustrialModule
 {
     public var operation_codes = [OperationCode]()
     
-    var controller = ToolControllerModule()
-    var connector = ToolConnectorModule()
+    //MARK: - Work with file system
+    public init(name: String = String(), description: String = String(), package_file_name: String = String(), is_internal_change: Bool = Bool(), internal_code: String = String())
+    {
+        super.init(name: name, description: description, package_file_name: package_file_name)
+        code_items = [CodeItem(name: "Change")]
+    }
+    
+    //MARK: Codable handling
+    required public init(from decoder: any Decoder) throws
+    {
+        try super.init(from: decoder)
+    }
 }
 
 public struct ToolControllerModule: Equatable, Codable

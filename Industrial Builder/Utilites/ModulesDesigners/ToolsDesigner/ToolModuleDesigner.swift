@@ -37,7 +37,7 @@ struct ToolModuleDesigner: View
                 .labelsHidden()
                 .padding()
                 
-                switch tab_selection
+                /*switch tab_selection
                 {
                 case 0:
                     ToolOperationCodesEditor(operation_codes: $tool_module.operation_codes)
@@ -47,7 +47,7 @@ struct ToolModuleDesigner: View
                     ToolConnectorEditor(connector: $tool_module.connector)
                 default:
                     Text("None")
-                }
+                }*/
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

@@ -57,8 +57,3 @@ struct Caption: ViewModifier
         }
     }
 }
-
-#Preview
-{
-    Caption(is_presented: .constant(true), label: "Label") as! any View
-}

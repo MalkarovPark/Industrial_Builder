@@ -192,7 +192,7 @@ struct BuildView: View
             {
                 Button(action: { external_export_panel_presented = true })
                 {
-                    BuildItemView(title: "Files", subtitle: "Export to separated module files", image: Image(systemName: "folder.fill"))
+                    BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
                 }
                 .padding(.trailing)
                 .fileImporter(isPresented: $external_export_panel_presented,
@@ -212,7 +212,7 @@ struct BuildView: View
                 {
                     Button(action: { external_export_panel_presented = true })
                     {
-                        BuildItemView(title: "Files", subtitle: "Export to separated module files", image: Image(systemName: "folder.fill"))
+                        BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
                     }
                     .modifier(ButtonBorderer())
                     .padding(.trailing)
@@ -234,7 +234,7 @@ struct BuildView: View
                 {
                     Button(action: { external_export_panel_presented = true })
                     {
-                        BuildItemView(title: "Files", subtitle: "Export to separated module files", image: Image(systemName: "folder.fill"))
+                        BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
                     }
                     .modifier(ButtonBorderer())
                     .padding(.bottom)

@@ -35,7 +35,7 @@ struct ChangerModuleDesigner: View
             switch editor_selection
             {
             case 0:
-                CodeEditorView(code: $changer_module.internal_code)
+                CodeEditorView(code_items: $changer_module.code_items)
                 {
                     document_handler.document_update_ima()
                 }

@@ -34,6 +34,7 @@ struct PartModulesView: View
                 delete_module:
                 {
                     base_stc.part_modules.remove(at: selected_module_index())
+                    smi = -1
                 }
                 
                 VStack(spacing: 0)
