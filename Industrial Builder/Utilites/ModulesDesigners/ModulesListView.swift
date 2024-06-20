@@ -2,7 +2,7 @@
 //  ModulesListView.swift
 //  Industrial Builder
 //
-//  Created by Artiom Malkarov on 17.04.2024.
+//  Created by Artem on 17.04.2024.
 //
 
 import SwiftUI

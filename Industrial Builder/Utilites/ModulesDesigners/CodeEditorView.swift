@@ -85,7 +85,7 @@ struct CodeEditorView: View
     
     private func code_item_index() -> Int
     {
-        guard let index = base_stc.listings_files_names.firstIndex(where: { $0 == code_item_name })
+        guard let index = code_items_names().firstIndex(where: { $0 == code_item_name })
         else
         {
             return 0

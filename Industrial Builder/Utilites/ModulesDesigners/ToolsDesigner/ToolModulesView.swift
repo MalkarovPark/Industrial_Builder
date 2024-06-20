@@ -40,7 +40,9 @@ struct ToolModulesView: View
                 {
                     if smi != -1
                     {
-                        if smi != -2
+                        ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
+                            .modifier(ViewBorderer())
+                        /*if smi != -2
                         {
                             ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
                                 .modifier(ViewBorderer())
@@ -56,7 +58,7 @@ struct ToolModulesView: View
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                        }
+                        }*/
                     }
                     else
                     {
@@ -85,11 +87,12 @@ struct ToolModulesView: View
         }
         .onChange(of: selected_name)
         {
-            smi = -2
+            smi = selected_module_index()
+            /*smi = -2
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
             {
                 smi = selected_module_index()
-            }
+            }*/
         }
     }
     
