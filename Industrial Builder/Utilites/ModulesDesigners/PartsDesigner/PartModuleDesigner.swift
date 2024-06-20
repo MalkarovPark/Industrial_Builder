@@ -15,61 +15,69 @@ struct PartModuleDesigner: View
     
     @Binding var part_module: PartModule
     
+    @State private var editor_selection = 0
+    
     @State private var resources_names_update = false
     
     var body: some View
     {
-        List
+        VStack(spacing: 0)
         {
-            Section("Description")
+            Picker(selection: $editor_selection, label: Text("Picker"))
             {
-                TextEditor(text: $part_module.description)
-                    .modifier(TextFrame())
-                    .frame(maxHeight: 256)
-                #if !os(macOS)
-                    .onChange(of: part_module.description)
-                    { _, _ in
-                        document_handler.document_update_parts()
-                    }
-                #endif
+                Text("Description").tag(0)
+                Text("Components").tag(1)
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding()
             
-            DisclosureGroup("Resources")
+            Divider()
+            
+            switch editor_selection
             {
-                Menu("Add Resource")
+            case 0:
+                TextEditor(text: $part_module.description)
+                    .textFieldStyle(.plain)
+            default:
+                DisclosureGroup("Resources")
                 {
-                    ForEach (base_stc.images_files_names, id: \.self)
-                    { name in
-                        Button(name)
-                        {
-                            add_resource_file_name(name)
+                    Menu("Add Resource")
+                    {
+                        ForEach (base_stc.images_files_names, id: \.self)
+                        { name in
+                            Button(name)
+                            {
+                                add_resource_file_name(name)
+                            }
+                        }
+                        
+                        Divider()
+                        
+                        ForEach (base_stc.scenes_files_names, id: \.self)
+                        { name in
+                            Button(name)
+                            {
+                                add_resource_file_name(name)
+                            }
                         }
                     }
+                    .buttonStyle(.borderless)
+                    .frame(maxWidth: .infinity)
                     
-                    Divider()
-                    
-                    ForEach (base_stc.scenes_files_names, id: \.self)
-                    { name in
-                        Button(name)
-                        {
-                            add_resource_file_name(name)
+                    if part_module.additional_resources_names != nil
+                    {
+                        ForEach (part_module.additional_resources_names!.indices, id: \.self)
+                        { index in
+                            Text(part_module.additional_resources_names![index])
                         }
+                        .onDelete(perform: delete_resource_file_name)
+                        .modifier(DoubleModifier(update_toggle: $resources_names_update))
                     }
-                }
-                .buttonStyle(.borderless)
-                .frame(maxWidth: .infinity)
-                
-                if part_module.additional_resources_names != nil
-                {
-                    ForEach (part_module.additional_resources_names!.indices, id: \.self)
-                    { index in
-                        Text(part_module.additional_resources_names![index])
-                    }
-                    .onDelete(perform: delete_resource_file_name)
-                    .modifier(DoubleModifier(update_toggle: $resources_names_update))
                 }
             }
         }
+        .background(.white)
     }
     
     private func add_resource_file_name(_ name: String)
