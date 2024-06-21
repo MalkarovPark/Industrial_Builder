@@ -345,12 +345,15 @@ struct SelectImageCard: View
 {
     @Binding var image: UIImage
     
-    @State private var is_selected = false
-    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     let name: String
+    
+    @State var is_selected = false
+    
+    let on_select: () -> ()
+    let on_deselect: () -> ()
     
     var body: some View
     {
@@ -365,20 +368,6 @@ struct SelectImageCard: View
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             #endif
-            
-            /*if is_selected
-            {
-                ZStack
-                {
-                    Image(systemName: "checkmark")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 16, height: 16)
-                        .foregroundStyle(.primary)
-                }
-                .frame(width: 48, height: 48)
-                .background(.ultraThinMaterial)
-            }*/
         }
         .overlay
         {
@@ -392,7 +381,7 @@ struct SelectImageCard: View
                         .frame(width: 16, height: 16)
                         .foregroundStyle(.primary)
                 }
-                .frame(width: 48, height: 48)//(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(width: 40, height: 40)//(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.ultraThinMaterial)
             }
         }
@@ -406,6 +395,15 @@ struct SelectImageCard: View
         .onTapGesture
         {
             is_selected.toggle()
+            
+            if is_selected
+            {
+                on_select()
+            }
+            else
+            {
+                on_deselect()
+            }
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
         .frame(height: 96)
@@ -496,7 +494,7 @@ struct ModelCard<Content: View>: View
 {
     HStack(spacing: 0)
     {
-        SelectImageCard(image: .constant(UIImage()), name: "Image")
+        SelectImageCard(image: .constant(UIImage()), name: "Image", on_select: {}, on_deselect: {})
             .padding()
     }
 }

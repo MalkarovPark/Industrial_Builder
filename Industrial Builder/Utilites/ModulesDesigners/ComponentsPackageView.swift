@@ -13,9 +13,11 @@ struct ComponentsPackageView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    @Binding var additional_resources_names: [String]?
+    
     @State private var resources_names_update = false
     
-    @State private var part_module = PartModule()
+    //@State private var module = IndustrialModule()
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     
@@ -25,38 +27,13 @@ struct ComponentsPackageView: View
         {
             Section("Scenes")
             {
-                Menu("Add Resource")
+                /*if additional_resources_names != nil
                 {
-                    ForEach (base_stc.images_files_names, id: \.self)
-                    { name in
-                        Button(name)
-                        {
-                            add_resource_file_name(name)
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    ForEach (base_stc.scenes_files_names, id: \.self)
-                    { name in
-                        Button(name)
-                        {
-                            add_resource_file_name(name)
-                        }
-                    }
-                }
-                .buttonStyle(.borderless)
-                .frame(maxWidth: .infinity)
-                
-                if part_module.additional_resources_names != nil
-                {
-                    ForEach (part_module.additional_resources_names!.indices, id: \.self)
+                    ForEach (additional_resources_names!.indices, id: \.self)
                     { index in
-                        Text(part_module.additional_resources_names![index])
+                        Text(additional_resources_names![index])
                     }
-                    .onDelete(perform: delete_resource_file_name)
-                    .modifier(DoubleModifier(update_toggle: $resources_names_update))
-                }
+                }*/
             }
             
             Section("Images")
@@ -65,7 +42,14 @@ struct ComponentsPackageView: View
                 {
                     ForEach(base_stc.images.indices, id: \.self)
                     { index in
-                        SelectImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index])
+                        SelectImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index], is_selected: additional_resources_names?.contains(base_stc.images_files_names[index]) ?? false)
+                        {
+                            add_resource_file_name(base_stc.images_files_names[index])
+                        }
+                        on_deselect:
+                        {
+                            delete_resource_file_name(base_stc.images_files_names[index])
+                        }
                     }
                 }
                 .padding(.horizontal, 8)
@@ -77,28 +61,28 @@ struct ComponentsPackageView: View
     
     private func add_resource_file_name(_ name: String)
     {
-        if part_module.additional_resources_names == nil
+        if additional_resources_names == nil
         {
-            part_module.additional_resources_names = [String]()
+            additional_resources_names = [String]()
         }
         
         if resource_name_index(name) == -1
         {
-            part_module.additional_resources_names?.append(name)
+            additional_resources_names?.append(name)
             resources_names_update.toggle()
             document_handler.document_update_parts()
         }
     }
     
-    private func delete_resource_file_name(at offsets: IndexSet)
+    private func delete_resource_file_name(_ name: String)
     {
         withAnimation
         {
-            part_module.additional_resources_names!.remove(atOffsets: offsets)
+            additional_resources_names!.remove(at: (additional_resources_names?.firstIndex(of: name))!)
             
-            if part_module.additional_resources_names?.count == 0
+            if additional_resources_names?.count == 0
             {
-                part_module.additional_resources_names = nil
+                additional_resources_names = nil
             }
             resources_names_update.toggle()
             document_handler.document_update_parts()
@@ -107,7 +91,7 @@ struct ComponentsPackageView: View
     
     private func resource_name_index(_ selected_name: String) -> Int
     {
-        guard let names = part_module.additional_resources_names
+        guard let names = additional_resources_names
         else
         {
             return -1
@@ -118,6 +102,6 @@ struct ComponentsPackageView: View
 
 #Preview
 {
-    ComponentsPackageView()
+    ComponentsPackageView(additional_resources_names: .constant([String]()))
         .environmentObject(StandardTemplateConstruct())
 }

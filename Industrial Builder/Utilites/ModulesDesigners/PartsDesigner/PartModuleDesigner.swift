@@ -38,7 +38,7 @@ struct PartModuleDesigner: View
                 TextEditor(text: $part_module.description)
                     .textFieldStyle(.plain)
             default:
-                ComponentsPackageView()
+                ComponentsPackageView(additional_resources_names: $part_module.additional_resources_names)
             }
         }
         .background(.white)
