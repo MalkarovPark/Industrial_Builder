@@ -165,13 +165,10 @@ struct ImageCard<Content: View>: View
     {
         ZStack
         {
-            //Rectangle()
-                //.foregroundStyle(.regularMaterial)
             #if os(macOS)
             Image(nsImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .shadow(radius: 8)
                 .overlay(alignment: .bottomTrailing)
                 {
                     Text(name)
@@ -186,7 +183,6 @@ struct ImageCard<Content: View>: View
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .shadow(radius: 8)
                 .onTapGesture
                 {
                     is_presented.toggle()
@@ -202,6 +198,12 @@ struct ImageCard<Content: View>: View
                         }
                 }
             #endif
+        }
+        .background
+        {
+            Rectangle()
+                .foregroundStyle(.regularMaterial)
+                .shadow(radius: 8)
         }
         .frame(height: 192)
         .onTapGesture
@@ -339,6 +341,78 @@ struct SimpleImageCard<Content: View>: View
     }*/
 }
 
+struct SelectImageCard: View
+{
+    @Binding var image: UIImage
+    
+    @State private var is_selected = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    let name: String
+    
+    var body: some View
+    {
+        ZStack
+        {
+            #if os(macOS)
+            Image(nsImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            #else
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            #endif
+            
+            /*if is_selected
+            {
+                ZStack
+                {
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundStyle(.primary)
+                }
+                .frame(width: 48, height: 48)
+                .background(.ultraThinMaterial)
+            }*/
+        }
+        .overlay
+        {
+            if is_selected
+            {
+                ZStack
+                {
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundStyle(.primary)
+                }
+                .frame(width: 48, height: 48)//(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.ultraThinMaterial)
+            }
+        }
+        .background
+        {
+            Rectangle()
+                .foregroundStyle(.regularMaterial)
+                .shadow(radius: is_selected ? 4 : 0)
+        }
+        .scaleEffect(is_selected ? 1 : 0.95)
+        .onTapGesture
+        {
+            is_selected.toggle()
+        }
+        .animation(.easeInOut(duration: 0.2), value: is_selected)
+        .frame(height: 96)
+        .help(name)
+    }
+}
+
 struct ModelCard<Content: View>: View
 {
     @Binding var scene: SCNScene
@@ -397,32 +471,34 @@ struct ModelCard<Content: View>: View
 
 #Preview
 {
-    StandardCard(name: "Name", image_name: "gearshape.2.fill", color: .gray)
-        .frame(width: 256)
+    VStack(spacing: 0)
+    {
+        StandardCard(name: "Name", image_name: "gearshape.2.fill", color: .gray)
+            .frame(width: 256)
+            .padding(.bottom)
+        
+        StandardCard(name: "Name", count_number: 2, image_name: "cylinder.fill", color: .mint)
+            .frame(width: 256)
+    }
+    .padding()
 }
 
 #Preview
 {
-    StandardCard(name: "Name", count_number: 2, image_name: "gearshape.2.fill", color: .gray)
-        .frame(width: 256)
-}
-
-#Preview
-{
-    StandardSheetCard(name: "Name", count_number: 2, image_name: "gearshape.2.fill", color: .gray)
+    ImageCard(image: .constant(UIImage()), name: "Image")
     { is_presented in
         EmptyView()
     }
-    .frame(width: 256)
+    .padding()
 }
 
 #Preview
 {
-    StandardNavigationCard(name: "Name", image_name: "cylinder.fill", color: .mint)
+    HStack(spacing: 0)
     {
-        EmptyView()
+        SelectImageCard(image: .constant(UIImage()), name: "Image")
+            .padding()
     }
-    .frame(width: 256)
 }
 
 #Preview
@@ -432,4 +508,5 @@ struct ModelCard<Content: View>: View
         EmptyView()
     }
     .frame(width: 256)
+    .padding()
 }

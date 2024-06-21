@@ -41,22 +41,8 @@ struct PartModulesView: View
                 {
                     if smi != -1
                     {
-                        if smi != -2
-                        {
-                            PartModuleDesigner(part_module: $base_stc.part_modules[smi])
-                                .modifier(ViewBorderer())
-                        }
-                        else
-                        {
-                            //ChangerModuleView(changer_module: .constant(ChangerModule()))
-                            ZStack
-                            {
-                                Rectangle()
-                                    .foregroundStyle(.white)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
+                        PartModuleDesigner(part_module: $base_stc.part_modules[smi])
                             .modifier(ViewBorderer())
-                        }
                     }
                     else
                     {
@@ -85,11 +71,7 @@ struct PartModulesView: View
         }
         .onChange(of: selected_name)
         {
-            smi = -2
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001)
-            {
-                smi = selected_module_index()
-            }
+            smi = selected_module_index()
         }
     }
     
