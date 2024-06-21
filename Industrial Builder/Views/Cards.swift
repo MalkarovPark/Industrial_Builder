@@ -228,64 +228,6 @@ struct ImageCard<Content: View>: View
     }
 }
 
-struct ListingCard<Content: View>: View
-{
-    @Binding var code: String
-    
-    @State private var is_presented = false
-    
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
-    let name: String
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
-    
-    var body: some View
-    {
-        ZStack
-        {
-            Rectangle()
-                .foregroundStyle(.white)
-                .shadow(radius: 8)
-                .overlay(alignment: .topLeading)
-                {
-                    Text(code)
-                }
-                .overlay(alignment: .bottomTrailing)
-                {
-                    Text(name)
-                        .padding(8)
-                        .background
-                        {
-                            Rectangle()
-                                .foregroundStyle(.thinMaterial)
-                        }
-                }
-        }
-        .frame(height: 192)
-        .onTapGesture
-        {
-            is_presented.toggle()
-        }
-        .sheet(isPresented: $is_presented, content: { content($is_presented) })
-        .contextMenu
-        {
-            Button(role: .destructive, action: delete_listing)
-            {
-                Label("Delete", systemImage: "xmark")
-            }
-        }
-    }
-    
-    func delete_listing()
-    {
-        base_stc.listings_files_names.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
-        base_stc.listings.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
-        document_handler.document_update_listings()
-    }
-}
-
 struct SimpleImageCard<Content: View>: View
 {
     //@Binding var images: [UIImage]
@@ -406,12 +348,70 @@ struct SelectImageCard: View
             }
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .frame(height: 96)
+        .frame(width: 96, height: 96)
         .help(name)
     }
 }
 
-struct ModelCard<Content: View>: View
+struct ListingCard<Content: View>: View
+{
+    @Binding var code: String
+    
+    @State private var is_presented = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    let name: String
+    
+    let content: (_ is_presented: Binding<Bool>) -> Content
+    
+    var body: some View
+    {
+        ZStack
+        {
+            Rectangle()
+                .foregroundStyle(.white)
+                .shadow(radius: 8)
+                .overlay(alignment: .topLeading)
+                {
+                    Text(code)
+                }
+                .overlay(alignment: .bottomTrailing)
+                {
+                    Text(name)
+                        .padding(8)
+                        .background
+                        {
+                            Rectangle()
+                                .foregroundStyle(.thinMaterial)
+                        }
+                }
+        }
+        .frame(height: 192)
+        .onTapGesture
+        {
+            is_presented.toggle()
+        }
+        .sheet(isPresented: $is_presented, content: { content($is_presented) })
+        .contextMenu
+        {
+            Button(role: .destructive, action: delete_listing)
+            {
+                Label("Delete", systemImage: "xmark")
+            }
+        }
+    }
+    
+    func delete_listing()
+    {
+        base_stc.listings_files_names.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
+        base_stc.listings.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
+        document_handler.document_update_listings()
+    }
+}
+
+struct SceneCard<Content: View>: View
 {
     @Binding var scene: SCNScene
     
@@ -467,6 +467,69 @@ struct ModelCard<Content: View>: View
     }
 }
 
+struct SelectSceneCard: View
+{
+    @Binding var scene: SCNScene
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    let name: String
+    
+    @State var is_selected = false
+    
+    let on_select: () -> ()
+    let on_deselect: () -> ()
+    
+    var body: some View
+    {
+        Button(action: selecttion_toggle)
+        {
+            ObjectSceneView(scene: scene)
+                .disabled(true)
+                .overlay
+                {
+                    if is_selected
+                    {
+                        ZStack
+                        {
+                            Image(systemName: "checkmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 16, height: 16)
+                                .foregroundStyle(.primary)
+                        }
+                        .frame(width: 40, height: 40)//(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(.ultraThinMaterial)
+                    }
+                }
+        }
+        .buttonStyle(.borderless)
+        .background(.regularMaterial)
+        .frame(width: 96, height: 96)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .shadow(radius: is_selected ? 4 : 0)
+        .scaleEffect(is_selected ? 1 : 0.95)
+        .animation(.easeInOut(duration: 0.2), value: is_selected)
+        .frame(height: 96)
+        .help(name)
+    }
+    
+    private func selecttion_toggle()
+    {
+        is_selected.toggle()
+        
+        if is_selected
+        {
+            on_select()
+        }
+        else
+        {
+            on_deselect()
+        }
+    }
+}
+
 #Preview
 {
     VStack(spacing: 0)
@@ -492,19 +555,24 @@ struct ModelCard<Content: View>: View
 
 #Preview
 {
-    HStack(spacing: 0)
-    {
-        SelectImageCard(image: .constant(UIImage()), name: "Image", on_select: {}, on_deselect: {})
-            .padding()
-    }
-}
-
-#Preview
-{
-    ModelCard(scene: .constant(SCNScene()), name: "Name")
+    SceneCard(scene: .constant(SCNScene()), name: "Name")
     { is_presented in
         EmptyView()
     }
     .frame(width: 256)
+    .padding()
+}
+
+#Preview
+{
+    HStack(spacing: 0)
+    {
+        SelectImageCard(image: .constant(UIImage()), name: "Image", on_select: {}, on_deselect: {})
+            .frame(width: 96)
+            .padding(.trailing)
+        
+        SelectSceneCard(scene: .constant(SCNScene()), name: "Image", on_select: {}, on_deselect: {})
+            .frame(width: 96)
+    }
     .padding()
 }

@@ -270,21 +270,21 @@
 			path = Modules;
 			sourceTree = "<group>";
 		};
-		629B52682AF6887D003F45D2 /* ModelsViewer */ = {
+		629B52682AF6887D003F45D2 /* ScenesViewer */ = {
 			isa = PBXGroup;
 			children = (
 				623D72472ADAFD8500927DEA /* SceneView.swift */,
 				629B526B2AF69056003F45D2 /* ScenesListView.swift */,
 				629B52692AF68902003F45D2 /* SceneSelectorView.swift */,
 			);
-			path = ModelsViewer;
+			path = ScenesViewer;
 			sourceTree = "<group>";
 		};
 		62AE55292AE7079100554A5B /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
 				622C88A32BB73C7300A53213 /* ImagesViewer */,
-				629B52682AF6887D003F45D2 /* ModelsViewer */,
+				629B52682AF6887D003F45D2 /* ScenesViewer */,
 				626872402BC1A3A6005F8B3C /* ListingsView */,
 				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
 				6255B9222B9D26AA002B575C /* ModulesDesigners */,
