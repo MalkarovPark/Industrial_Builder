@@ -25,15 +25,31 @@ struct ComponentsPackageView: View
     {
         List
         {
+            /*if additional_resources_names != nil
+            {
+                ForEach (additional_resources_names!.indices, id: \.self)
+                { index in
+                    Text(additional_resources_names![index])
+                }
+            }*/
+            
             Section("Scenes")
             {
-                /*if additional_resources_names != nil
+                LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ForEach (additional_resources_names!.indices, id: \.self)
+                    ForEach(base_stc.scenes.indices, id: \.self)
                     { index in
-                        Text(additional_resources_names![index])
+                        SelectSceneCard(scene: $base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: additional_resources_names?.contains(base_stc.scenes_files_names[index]) ?? false)
+                        {
+                            add_resource_file_name(base_stc.scenes_files_names[index])
+                        }
+                        on_deselect:
+                        {
+                            delete_resource_file_name(base_stc.scenes_files_names[index])
+                        }
                     }
-                }*/
+                }
+                .padding(.horizontal, 8)
             }
             
             Section("Images")

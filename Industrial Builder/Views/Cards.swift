@@ -348,7 +348,7 @@ struct SelectImageCard: View
             }
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .frame(width: 96, height: 96)
+        .frame(height: 96)
         .help(name)
     }
 }
@@ -506,12 +506,11 @@ struct SelectSceneCard: View
         }
         .buttonStyle(.borderless)
         .background(.regularMaterial)
-        .frame(width: 96, height: 96)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .frame(height: 64)
         .shadow(radius: is_selected ? 4 : 0)
         .scaleEffect(is_selected ? 1 : 0.95)
         .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .frame(height: 96)
         .help(name)
     }
     
