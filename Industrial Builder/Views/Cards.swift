@@ -230,7 +230,6 @@ struct ImageCard<Content: View>: View
 
 struct SimpleImageCard<Content: View>: View
 {
-    //@Binding var images: [UIImage]
     @State var image: UIImage
     
     @State private var is_presented = false

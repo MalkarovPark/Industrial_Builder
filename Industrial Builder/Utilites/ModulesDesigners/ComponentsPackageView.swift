@@ -13,7 +13,7 @@ struct ComponentsPackageView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var additional_resources_names: [String]?
+    @Binding var resources_names: [String]?
     
     @State private var resources_names_update = false
     
@@ -25,11 +25,11 @@ struct ComponentsPackageView: View
     {
         List
         {
-            /*if additional_resources_names != nil
+            /*if resources_names != nil
             {
-                ForEach (additional_resources_names!.indices, id: \.self)
+                ForEach (resources_names!.indices, id: \.self)
                 { index in
-                    Text(additional_resources_names![index])
+                    Text(resources_names![index])
                 }
             }*/
             
@@ -39,7 +39,7 @@ struct ComponentsPackageView: View
                 {
                     ForEach(base_stc.scenes.indices, id: \.self)
                     { index in
-                        SelectSceneCard(scene: $base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: additional_resources_names?.contains(base_stc.scenes_files_names[index]) ?? false)
+                        SelectSceneCard(scene: $base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: resources_names?.contains(base_stc.scenes_files_names[index]) ?? false)
                         {
                             add_resource_file_name(base_stc.scenes_files_names[index])
                         }
@@ -59,7 +59,7 @@ struct ComponentsPackageView: View
                 {
                     ForEach(base_stc.images.indices, id: \.self)
                     { index in
-                        SelectImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index], is_selected: additional_resources_names?.contains(base_stc.images_files_names[index]) ?? false)
+                        SelectImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index], is_selected: resources_names?.contains(base_stc.images_files_names[index]) ?? false)
                         {
                             add_resource_file_name(base_stc.images_files_names[index])
                         }
@@ -70,7 +70,7 @@ struct ComponentsPackageView: View
                     }
                 }
                 .padding(8)
-                .padding(.vertical, 8)
+                .padding(.vertical, 6)
             }
         }
         .listStyle(.plain)
@@ -79,14 +79,14 @@ struct ComponentsPackageView: View
     
     private func add_resource_file_name(_ name: String)
     {
-        if additional_resources_names == nil
+        if resources_names == nil
         {
-            additional_resources_names = [String]()
+            resources_names = [String]()
         }
         
         if resource_name_index(name) == -1
         {
-            additional_resources_names?.append(name)
+            resources_names?.append(name)
             resources_names_update.toggle()
             document_handler.document_update_parts()
         }
@@ -96,11 +96,11 @@ struct ComponentsPackageView: View
     {
         withAnimation
         {
-            additional_resources_names!.remove(at: (additional_resources_names?.firstIndex(of: name))!)
+            resources_names!.remove(at: (resources_names?.firstIndex(of: name))!)
             
-            if additional_resources_names?.count == 0
+            if resources_names?.count == 0
             {
-                additional_resources_names = nil
+                resources_names = nil
             }
             resources_names_update.toggle()
             document_handler.document_update_parts()
@@ -109,7 +109,7 @@ struct ComponentsPackageView: View
     
     private func resource_name_index(_ selected_name: String) -> Int
     {
-        guard let names = additional_resources_names
+        guard let names = resources_names
         else
         {
             return -1
@@ -120,6 +120,6 @@ struct ComponentsPackageView: View
 
 #Preview
 {
-    ComponentsPackageView(additional_resources_names: .constant([String]()))
+    ComponentsPackageView(resources_names: .constant([String]()))
         .environmentObject(StandardTemplateConstruct())
 }
