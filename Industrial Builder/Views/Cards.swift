@@ -323,7 +323,7 @@ struct SelectImageCard: View
                         .frame(width: 16, height: 16)
                         .foregroundStyle(.primary)
                 }
-                .frame(width: 40, height: 40)//(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(width: 40, height: 40)
                 .background(.ultraThinMaterial)
             }
         }
@@ -499,8 +499,9 @@ struct SelectSceneCard: View
                                 .frame(width: 16, height: 16)
                                 .foregroundStyle(.primary)
                         }
-                        .frame(width: 40, height: 40)//(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(width: 40, height: 40)
                         .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                     }
                 }
         }

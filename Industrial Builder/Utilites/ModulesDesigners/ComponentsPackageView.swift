@@ -49,7 +49,8 @@ struct ComponentsPackageView: View
                         }
                     }
                 }
-                .padding(.horizontal, 8)
+                .padding(8)
+                .padding(.vertical, 4)
             }
             
             Section("Images")
