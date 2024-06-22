@@ -348,7 +348,7 @@ struct SelectImageCard: View
             }
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .frame(height: 96)
+        .frame(width: 64, height: 64)
         .help(name)
     }
 }
@@ -508,7 +508,7 @@ struct SelectSceneCard: View
         .buttonStyle(.borderless)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .frame(height: 64)
+        .frame(width: 64, height: 64)
         .shadow(radius: is_selected ? 4 : 0)
         .scaleEffect(is_selected ? 1 : 0.95)
         .animation(.easeInOut(duration: 0.2), value: is_selected)
@@ -568,11 +568,9 @@ struct SelectSceneCard: View
     HStack(spacing: 0)
     {
         SelectImageCard(image: .constant(UIImage()), name: "Image", on_select: {}, on_deselect: {})
-            .frame(width: 96)
             .padding(.trailing)
         
         SelectSceneCard(scene: .constant(SCNScene()), name: "Image", on_select: {}, on_deselect: {})
-            .frame(width: 96)
     }
     .padding()
 }

@@ -50,7 +50,7 @@ struct ComponentsPackageView: View
                     }
                 }
                 .padding(8)
-                .padding(.vertical, 4)
+                .padding(.vertical, 6)
             }
             
             Section("Images")
@@ -69,7 +69,8 @@ struct ComponentsPackageView: View
                         }
                     }
                 }
-                .padding(.horizontal, 8)
+                .padding(8)
+                .padding(.vertical, 8)
             }
         }
         .listStyle(.plain)
