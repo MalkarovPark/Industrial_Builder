@@ -41,10 +41,10 @@ struct PartModulesView: View
                 {
                     if smi != -1
                     {
-                        //PartModuleDesigner(part_module: $base_stc.part_modules[smi])
-                            //.modifier(ViewBorderer())
+                        PartModuleDesigner(part_module: $base_stc.part_modules[smi])
+                            .modifier(ViewBorderer())
                         
-                        if smi != -2
+                        /*if smi != -2
                         {
                             PartModuleDesigner(part_module: $base_stc.part_modules[smi])
                                 .modifier(ViewBorderer())
@@ -58,7 +58,7 @@ struct PartModulesView: View
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                             .modifier(ViewBorderer())
-                        }
+                        }*/
                     }
                     else
                     {
@@ -87,13 +87,13 @@ struct PartModulesView: View
         }
         .onChange(of: selected_name)
         {
-            //smi = selected_module_index()
+            smi = selected_module_index()
             
-            smi = -2
+            /*smi = -2
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.001)
             {
                 smi = selected_module_index()
-            }
+            }*/
         }
     }
     

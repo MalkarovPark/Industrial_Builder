@@ -40,25 +40,8 @@ struct ToolModulesView: View
                 {
                     if smi != -1
                     {
-                        //ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
-                            //.modifier(ViewBorderer())
-                        if smi != -2
-                        {
-                            ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
-                                .modifier(ViewBorderer())
-                        }
-                        else
-                        {
-                            //ChangerModuleView(changer_module: .constant(ChangerModule()))
-                            GroupBox
-                            {
-                                ZStack
-                                {
-                                    
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
-                        }
+                        ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
+                            .modifier(ViewBorderer())
                     }
                     else
                     {
@@ -87,12 +70,7 @@ struct ToolModulesView: View
         }
         .onChange(of: selected_name)
         {
-            //smi = selected_module_index()
-            smi = -2
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
-            {
-                smi = selected_module_index()
-            }
+            smi = selected_module_index()
         }
     }
     

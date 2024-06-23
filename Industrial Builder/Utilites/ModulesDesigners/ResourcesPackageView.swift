@@ -40,15 +40,7 @@ struct ResourcesPackageView: View
             {
                 ForEach(base_stc.scenes.indices, id: \.self)
                 { index in
-                    SelectSceneCard(scene: $base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: resources_names?.contains(base_stc.scenes_files_names[index]) ?? false, is_main: main_state(base_stc.scenes_files_names[index]))
-                    {
-                        add_resource_file_name(base_stc.scenes_files_names[index])
-                    }
-                    on_deselect:
-                    {
-                        delete_resource_file_name(base_stc.scenes_files_names[index])
-                    }
-                    on_main_set:
+                    SelectSceneCard(scene: base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: is_scene_selected(index: index), is_main: main_state(base_stc.scenes_files_names[index]))
                     {
                         main_scene_name = base_stc.scenes_files_names[index]
                     }
@@ -67,14 +59,7 @@ struct ResourcesPackageView: View
             {
                 ForEach(base_stc.images.indices, id: \.self)
                 { index in
-                    SelectImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index], is_selected: resources_names?.contains(base_stc.images_files_names[index]) ?? false)
-                    {
-                        add_resource_file_name(base_stc.images_files_names[index])
-                    }
-                    on_deselect:
-                    {
-                        delete_resource_file_name(base_stc.images_files_names[index])
-                    }
+                    SelectImageCard(image: base_stc.images[index], name: base_stc.images_files_names[index], is_selected: is_image_selected(index: index))
                 }
             }
             .padding(.horizontal, 16)
@@ -82,6 +67,48 @@ struct ResourcesPackageView: View
         }
         .listStyle(.plain)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func is_image_selected(index: Int) -> Binding<Bool>
+    {
+        Binding<Bool>(
+            get:
+            {
+                resources_names?.contains(base_stc.images_files_names[index]) ?? false
+            },
+            set:
+            {_ in
+                if resources_names?.contains(base_stc.images_files_names[index]) ?? false
+                {
+                    delete_resource_file_name(base_stc.images_files_names[index])
+                }
+                else
+                {
+                    add_resource_file_name(base_stc.images_files_names[index])
+                }
+            }
+        )
+    }
+    
+    private func is_scene_selected(index: Int) -> Binding<Bool>
+    {
+        Binding<Bool>(
+            get:
+            {
+                resources_names?.contains(base_stc.scenes_files_names[index]) ?? false
+            },
+            set:
+            {_ in
+                if resources_names?.contains(base_stc.scenes_files_names[index]) ?? false
+                {
+                    delete_resource_file_name(base_stc.scenes_files_names[index])
+                }
+                else
+                {
+                    add_resource_file_name(base_stc.scenes_files_names[index])
+                }
+            }
+        )
     }
     
     private func add_resource_file_name(_ name: String)

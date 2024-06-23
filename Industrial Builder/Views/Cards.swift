@@ -284,17 +284,20 @@ struct SimpleImageCard<Content: View>: View
 
 struct SelectImageCard: View
 {
-    @Binding var image: UIImage
+    let image: UIImage
+    let name: String
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    let name: String
+    @Binding var is_selected: Bool
     
-    @State var is_selected = false
-    
-    let on_select: () -> ()
-    let on_deselect: () -> ()
+    public init(image: UIImage, name: String, is_selected: Binding<Bool>, on_select: @escaping () -> Void = {}, on_deselect: @escaping () -> Void = {})
+    {
+        self.image = image
+        self.name = name
+        self._is_selected = is_selected
+    }
     
     var body: some View
     {
@@ -336,15 +339,6 @@ struct SelectImageCard: View
         .onTapGesture
         {
             is_selected.toggle()
-            
-            if is_selected
-            {
-                on_select()
-            }
-            else
-            {
-                on_deselect()
-            }
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
         .frame(width: 64, height: 64)
@@ -468,30 +462,24 @@ struct SceneCard<Content: View>: View
 
 struct SelectSceneCard: View
 {
-    @Binding var scene: SCNScene
-    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    let scene: SCNScene
     let name: String
     
-    @State var is_selected = false
+    @Binding var is_selected: Bool
     @State var is_main = false
-    
-    let on_select: () -> ()
-    let on_deselect: () -> ()
     
     let on_main_set: () -> ()
     let on_main_unset: () -> ()
     
-    public init(scene: Binding<SCNScene>, name: String, is_selected: Bool = false, is_main: Bool = false, on_select: @escaping () -> Void = {}, on_deselect: @escaping () -> Void = {}, on_main_set: @escaping () -> Void = {}, on_main_unset: @escaping () -> Void = {})
+    public init(scene: SCNScene, name: String, is_selected: Binding<Bool>, is_main: Bool = false, on_main_set: @escaping () -> Void = {}, on_main_unset: @escaping () -> Void = {})
     {
-        self._scene = scene
+        self.scene = scene
         self.name = name
-        self.is_selected = is_selected
+        self._is_selected = is_selected
         self.is_main = is_main
-        self.on_select = on_select
-        self.on_deselect = on_deselect
         self.on_main_set = on_main_set
         self.on_main_unset = on_main_unset
     }
@@ -562,14 +550,8 @@ struct SelectSceneCard: View
     {
         is_selected.toggle()
         
-        if is_selected
+        if !is_selected
         {
-            on_select()
-        }
-        else
-        {
-            on_deselect()
-            
             if is_main
             {
                 is_selected = false
@@ -594,7 +576,6 @@ struct SelectSceneCard: View
         if !is_selected
         {
             is_selected.toggle()
-            on_select()
         }
     }
 }
@@ -636,10 +617,10 @@ struct SelectSceneCard: View
 {
     HStack(spacing: 0)
     {
-        SelectImageCard(image: .constant(UIImage()), name: "Image", on_select: {}, on_deselect: {})
+        SelectImageCard(image: UIImage(), name: "Image", is_selected: .constant(true), on_select: {}, on_deselect: {})
             .padding(.trailing)
         
-        SelectSceneCard(scene: .constant(SCNScene()), name: "Image", on_select: {}, on_deselect: {}, on_main_set: {}, on_main_unset: {})
+        SelectSceneCard(scene: SCNScene(), name: "Image", is_selected: .constant(true), on_main_set: {}, on_main_unset: {})
     }
     .padding()
 }
