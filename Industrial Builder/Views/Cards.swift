@@ -469,19 +469,14 @@ struct SelectSceneCard: View
     let name: String
     
     @Binding var is_selected: Bool
-    @State var is_main = false
+    @Binding var is_main: Bool
     
-    let on_main_set: () -> ()
-    let on_main_unset: () -> ()
-    
-    public init(scene: SCNScene, name: String, is_selected: Binding<Bool>, is_main: Bool = false, on_main_set: @escaping () -> Void = {}, on_main_unset: @escaping () -> Void = {})
+    public init(scene: SCNScene, name: String, is_selected: Binding<Bool>, is_main: Binding<Bool>, on_main_set: @escaping () -> Void = {}, on_main_unset: @escaping () -> Void = {})
     {
         self.scene = scene
         self.name = name
         self._is_selected = is_selected
-        self.is_main = is_main
-        self.on_main_set = on_main_set
-        self.on_main_unset = on_main_unset
+        self._is_main = is_main
     }
     
     var body: some View
@@ -522,61 +517,13 @@ struct SelectSceneCard: View
         }
         .contextMenu
         {
-            if !is_main
-            {
-                Button(role: .destructive, action: pin_toggle)
-                {
-                    Label("Set as main", systemImage: "pin")
-                }
-            }
-            else
-            {
-                Button(role: .destructive, action: pin_toggle)
-                {
-                    Label("Unset as main", systemImage: "pin.slash")
-                }
-            }
-            
-            /*
-             Toggle(isOn: $is_main)
-             {
-                 Label("Main", systemImage: "pin")
-             }
-             */
+            Toggle("Is main scene", isOn: $is_main)
         }
     }
     
     private func selecttion_toggle()
     {
         is_selected.toggle()
-        
-        if !is_selected
-        {
-            if is_main
-            {
-                is_selected = false
-                on_main_unset()
-            }
-        }
-    }
-    
-    private func pin_toggle()
-    {
-        is_main.toggle()
-        
-        if is_main
-        {
-            on_main_set()
-        }
-        else
-        {
-            on_main_unset()
-        }
-        
-        if !is_selected
-        {
-            is_selected.toggle()
-        }
     }
 }
 
@@ -620,7 +567,7 @@ struct SelectSceneCard: View
         SelectImageCard(image: UIImage(), name: "Image", is_selected: .constant(true), on_select: {}, on_deselect: {})
             .padding(.trailing)
         
-        SelectSceneCard(scene: SCNScene(), name: "Image", is_selected: .constant(true), on_main_set: {}, on_main_unset: {})
+        SelectSceneCard(scene: SCNScene(), name: "Image", is_selected: .constant(true), is_main: .constant(false), on_main_set: {}, on_main_unset: {})
     }
     .padding()
 }

@@ -40,14 +40,7 @@ struct ResourcesPackageView: View
             {
                 ForEach(base_stc.scenes.indices, id: \.self)
                 { index in
-                    SelectSceneCard(scene: base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: is_scene_selected(index: index), is_main: main_state(base_stc.scenes_files_names[index]))
-                    {
-                        main_scene_name = base_stc.scenes_files_names[index]
-                    }
-                    on_main_unset:
-                    {
-                        main_scene_name = nil
-                    }
+                    SelectSceneCard(scene: base_stc.scenes[index], name: base_stc.scenes_files_names[index], is_selected: is_scene_selected(index: index), is_main: is_main_scene(index: index))
                 }
             }
             .padding(.horizontal, 16)
@@ -77,14 +70,14 @@ struct ResourcesPackageView: View
                 resources_names?.contains(base_stc.images_files_names[index]) ?? false
             },
             set:
-            {_ in
-                if resources_names?.contains(base_stc.images_files_names[index]) ?? false
+            { is_selected in
+                if is_selected
                 {
-                    delete_resource_file_name(base_stc.images_files_names[index])
+                    add_resource_file_name(base_stc.images_files_names[index])
                 }
                 else
                 {
-                    add_resource_file_name(base_stc.images_files_names[index])
+                    delete_resource_file_name(base_stc.images_files_names[index])
                 }
             }
         )
@@ -98,14 +91,16 @@ struct ResourcesPackageView: View
                 resources_names?.contains(base_stc.scenes_files_names[index]) ?? false
             },
             set:
-            {_ in
-                if resources_names?.contains(base_stc.scenes_files_names[index]) ?? false
+            { is_selected in
+                if is_selected
                 {
-                    delete_resource_file_name(base_stc.scenes_files_names[index])
+                    add_resource_file_name(base_stc.scenes_files_names[index])
                 }
                 else
                 {
-                    add_resource_file_name(base_stc.scenes_files_names[index])
+                    delete_resource_file_name(base_stc.scenes_files_names[index])
+                    
+                    main_scene_name = nil
                 }
             }
         )
@@ -139,6 +134,32 @@ struct ResourcesPackageView: View
             resources_names_update.toggle()
             document_handler.document_update_parts()
         }
+    }
+    
+    private func is_main_scene(index: Int) -> Binding<Bool>
+    {
+        Binding<Bool>(
+            get:
+            {
+                main_state(base_stc.scenes_files_names[index])
+            },
+            set:
+            { is_main in
+                if is_main
+                {
+                    if !(resources_names?.contains(base_stc.scenes_files_names[index]) ?? false)
+                    {
+                        add_resource_file_name(base_stc.scenes_files_names[index])
+                    }
+                    
+                    main_scene_name = base_stc.scenes_files_names[index]
+                }
+                else
+                {
+                    main_scene_name = nil
+                }
+            }
+        )
     }
     
     private func resource_name_index(_ selected_name: String) -> Int
