@@ -27,7 +27,7 @@ struct ToolModuleDesigner: View
             {
                 Text("Description").tag(0)
                 Text("Code").tag(1)
-                Text("Model").tag(2)
+                Text("Resources").tag(2)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -46,7 +46,7 @@ struct ToolModuleDesigner: View
                     document_handler.document_update_tools()
                 }
             default:
-                EmptyView()
+                ResourcesPackageView(resources_names: $tool_module.resources_names, main_scene_name: $tool_module.main_scene_name)
             }
         }
         .background(.white)

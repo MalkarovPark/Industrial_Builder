@@ -476,13 +476,29 @@ struct SelectSceneCard: View
     let name: String
     
     @State var is_selected = false
+    @State var is_main = false
     
     let on_select: () -> ()
     let on_deselect: () -> ()
     
+    let on_main_set: () -> ()
+    let on_main_unset: () -> ()
+    
+    public init(scene: Binding<SCNScene>, name: String, is_selected: Bool = false, is_main: Bool = false, on_select: @escaping () -> Void = {}, on_deselect: @escaping () -> Void = {}, on_main_set: @escaping () -> Void = {}, on_main_unset: @escaping () -> Void = {})
+    {
+        self._scene = scene
+        self.name = name
+        self.is_selected = is_selected
+        self.is_main = is_main
+        self.on_select = on_select
+        self.on_deselect = on_deselect
+        self.on_main_set = on_main_set
+        self.on_main_unset = on_main_unset
+    }
+    
     var body: some View
     {
-        Button(action: selecttion_toggle)
+        ZStack
         {
             ObjectSceneView(scene: scene)
                 .disabled(true)
@@ -492,7 +508,7 @@ struct SelectSceneCard: View
                     {
                         ZStack
                         {
-                            Image(systemName: "checkmark")
+                            Image(systemName: is_main ? "diamond" : "checkmark")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 16, height: 16)
@@ -512,6 +528,34 @@ struct SelectSceneCard: View
         .scaleEffect(is_selected ? 1 : 0.95)
         .animation(.easeInOut(duration: 0.2), value: is_selected)
         .help(name)
+        .onTapGesture
+        {
+            selecttion_toggle()
+        }
+        .contextMenu
+        {
+            if !is_main
+            {
+                Button(role: .destructive, action: pin_toggle)
+                {
+                    Label("Set as main", systemImage: "pin")
+                }
+            }
+            else
+            {
+                Button(role: .destructive, action: pin_toggle)
+                {
+                    Label("Unset as main", systemImage: "pin.slash")
+                }
+            }
+            
+            /*
+             Toggle(isOn: $is_main)
+             {
+                 Label("Main", systemImage: "pin")
+             }
+             */
+        }
     }
     
     private func selecttion_toggle()
@@ -525,6 +569,32 @@ struct SelectSceneCard: View
         else
         {
             on_deselect()
+            
+            if is_main
+            {
+                is_selected = false
+                on_main_unset()
+            }
+        }
+    }
+    
+    private func pin_toggle()
+    {
+        is_main.toggle()
+        
+        if is_main
+        {
+            on_main_set()
+        }
+        else
+        {
+            on_main_unset()
+        }
+        
+        if !is_selected
+        {
+            is_selected.toggle()
+            on_select()
         }
     }
 }
@@ -569,7 +639,7 @@ struct SelectSceneCard: View
         SelectImageCard(image: .constant(UIImage()), name: "Image", on_select: {}, on_deselect: {})
             .padding(.trailing)
         
-        SelectSceneCard(scene: .constant(SCNScene()), name: "Image", on_select: {}, on_deselect: {})
+        SelectSceneCard(scene: .constant(SCNScene()), name: "Image", on_select: {}, on_deselect: {}, on_main_set: {}, on_main_unset: {})
     }
     .padding()
 }

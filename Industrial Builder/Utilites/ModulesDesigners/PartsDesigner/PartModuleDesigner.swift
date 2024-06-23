@@ -24,7 +24,7 @@ struct PartModuleDesigner: View
             Picker(selection: $editor_selection, label: Text("Picker"))
             {
                 Text("Description").tag(0)
-                Text("Components").tag(1)
+                Text("Resources").tag(1)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -38,7 +38,7 @@ struct PartModuleDesigner: View
                 TextEditor(text: $part_module.description)
                     .textFieldStyle(.plain)
             default:
-                ComponentsPackageView(resources_names: $part_module.resources_names)
+                ResourcesPackageView(resources_names: $part_module.resources_names, main_scene_name: $part_module.main_scene_name)
             }
         }
         .background(.white)
