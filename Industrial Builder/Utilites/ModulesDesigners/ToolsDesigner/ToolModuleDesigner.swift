@@ -47,6 +47,9 @@ struct ToolModuleDesigner: View
                 }
             default:
                 ResourcesPackageView(resources_names: $tool_module.resources_names, main_scene_name: $tool_module.main_scene_name)
+                {
+                    document_handler.document_update_tools()
+                }
             }
         }
         .background(.white)

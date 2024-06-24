@@ -11,14 +11,11 @@ import IndustrialKit
 struct ResourcesPackageView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @Binding var resources_names: [String]?
     @Binding var main_scene_name: String?
     
-    @State private var resources_names_update = false
-    
-    //@State private var module = IndustrialModule()
+    let on_update: () -> ()// = {}
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     
@@ -116,8 +113,7 @@ struct ResourcesPackageView: View
         if resource_name_index(name) == -1
         {
             resources_names?.append(name)
-            resources_names_update.toggle()
-            document_handler.document_update_parts()
+            on_update()
         }
     }
     
@@ -131,8 +127,8 @@ struct ResourcesPackageView: View
             {
                 resources_names = nil
             }
-            resources_names_update.toggle()
-            document_handler.document_update_parts()
+            
+            on_update()
         }
     }
     
@@ -158,6 +154,8 @@ struct ResourcesPackageView: View
                 {
                     main_scene_name = nil
                 }
+                
+                on_update()
             }
         )
     }
@@ -192,6 +190,6 @@ struct ResourcesPackageView: View
 
 #Preview
 {
-    ResourcesPackageView(resources_names: .constant([String]()), main_scene_name: .constant(""))
+    ResourcesPackageView(resources_names: .constant([String]()), main_scene_name: .constant(""), on_update: {})
         .environmentObject(StandardTemplateConstruct())
 }

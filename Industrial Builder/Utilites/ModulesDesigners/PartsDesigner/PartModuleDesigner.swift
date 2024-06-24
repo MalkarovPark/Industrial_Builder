@@ -39,6 +39,9 @@ struct PartModuleDesigner: View
                     .textFieldStyle(.plain)
             default:
                 ResourcesPackageView(resources_names: $part_module.resources_names, main_scene_name: $part_module.main_scene_name)
+                {
+                    document_handler.document_update_parts()
+                }
             }
         }
         .background(.white)
