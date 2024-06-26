@@ -24,7 +24,7 @@ struct ModulesView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Robot", count_number: 0, image_name: "r.square", color: .green)
+                        StandardNavigationCard(name: "Robot", count_number: base_stc.robot_modules.count, image_name: "r.square", color: .green)
                         {
                             RobotModulesView()
                         }

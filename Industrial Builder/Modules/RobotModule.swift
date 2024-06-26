@@ -1,17 +1,15 @@
 //
-//  ToolModule.swift
+//  RobotModule.swift
 //  Industrial Builder
 //
-//  Created by Artem on 11.04.2024.
+//  Created by Artem on 26.06.2024.
 //
 
 import Foundation
 import IndustrialKit
 
-public class ToolModule: IndustrialModule
+public class RobotModule: IndustrialModule
 {
-    public var operation_codes = [OperationCode]()
-    
     //MARK: - Work with file system
     public init(name: String = String(), description: String = String(), package_file_name: String = String(), is_internal_change: Bool = Bool(), internal_code: String = String())
     {
@@ -19,7 +17,7 @@ public class ToolModule: IndustrialModule
         code_items = [
             //Model Controller
             CodeItem(name: "nodes_connect"),
-            CodeItem(name: "nodes_perform"),
+            CodeItem(name: "nodes_update"),
             CodeItem(name: "reset_model"),
             
             //Model Statistics
@@ -32,7 +30,7 @@ public class ToolModule: IndustrialModule
             CodeItem(name: "connection_process"),
             CodeItem(name: "disconnection_process"),
             
-            CodeItem(name: "perform"),
+            CodeItem(name: "move_to"),
             CodeItem(name: "pause_operations"),
             
             //Model Statistics
@@ -49,26 +47,3 @@ public class ToolModule: IndustrialModule
         try super.init(from: decoder)
     }
 }
-
-public struct OperationCode: Equatable, Codable
-{
-    var value = 0
-    var name = ""
-    var symbol = "questionmark"
-    
-    //var code = ""
-    var controller_code = ""
-    var connector_code = ""
-}
-
-//MARK: - File
-/*public struct FileHolder: Equatable
-{
-    public static func == (lhs: FileHolder, rhs: FileHolder) -> Bool
-    {
-        lhs.name == rhs.name
-    }
-    
-    var name = String()
-    var data = (Any).self
-}*/

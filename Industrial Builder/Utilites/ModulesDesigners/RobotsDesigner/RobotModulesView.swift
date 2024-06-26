@@ -10,8 +10,11 @@ import IndustrialKit
 
 struct RobotModulesView: View
 {
-    @State private var names = [String]()
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
     @State private var selected_name = String()
+    @State private var smi = -1
     
     var body: some View
     {
@@ -19,34 +22,62 @@ struct RobotModulesView: View
         {
             HStack(spacing: 0)
             {
-                ModulesListView(names: $names, selected_name: $selected_name)
+                ModulesListView(names: $base_stc.robot_modules_names, selected_name: $selected_name)
                 { name in
-                    names.append(name)
+                    base_stc.robot_modules.append(RobotModule(name: name))
                 }
                 rename_module:
                 { new_name in
-                    
+                    base_stc.robot_modules[selected_module_index()].name = new_name
+                    document_handler.document_update_parts()
                 }
                 delete_module:
                 {
-                    names.remove(at: names.firstIndex(of: selected_name)!)
+                    base_stc.robot_modules.remove(at: selected_module_index())
+                    smi = -1
                 }
                 
                 VStack(spacing: 0)
                 {
-                    
+                    if smi != -1
+                    {
+                        RobotModuleDesigner(robot_module: $base_stc.robot_modules[smi])
+                            .modifier(ViewBorderer())
+                    }
+                    else
+                    {
+                        GroupBox
+                        {
+                            ContentUnavailableView
+                            {
+                                Label("No module selected", systemImage: "r.square")
+                            }
+                            description:
+                            {
+                                Text("Select an existing robot module to edit.")
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .modifier(ViewBorderer())
             }
             .padding()
         }
+        .modifier(WindowFramer())
+        .onChange(of: base_stc.robot_modules)
+        {
+            document_handler.document_update_robots()
+        }
+        .onChange(of: selected_name)
+        {
+            smi = selected_module_index()
+        }
     }
     
-    private func remove_part_model()
+    private func selected_module_index() -> Int
     {
-        //base_stc.remove_selected_tool_module()
-        //base_stc.deselect_tool_module()
+        return base_stc.robot_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
 }
 

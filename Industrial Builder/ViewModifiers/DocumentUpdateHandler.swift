@@ -17,6 +17,7 @@ class DocumentUpdateHandler: ObservableObject
     @Published var update_listings_document_notify = true
     @Published var update_kinematics_document_notify = true
     
+    @Published var update_robots_document_notify = true
     @Published var update_tools_document_notify = true
     @Published var update_parts_document_notify = true
     @Published var update_ima_document_notify = true
@@ -32,6 +33,7 @@ class DocumentUpdateHandler: ObservableObject
     public func document_update_listings() { update_listings_document_notify.toggle() }
     public func document_update_kinematics() { update_kinematics_document_notify.toggle() }
     
+    public func document_update_robots() { update_robots_document_notify.toggle() }
     public func document_update_tools() { update_tools_document_notify.toggle() }
     public func document_update_parts() { update_parts_document_notify.toggle() }
     public func document_update_ima() { update_ima_document_notify.toggle() }
@@ -74,6 +76,12 @@ struct DocumentUpdateModifier: ViewModifier
                 update_deferred_import()
             }
             
+            .onChange(of: document_handler.update_robots_document_notify)
+            { _, _ in
+                document.robot_modules = base_stc.robot_modules
+                
+                update_deferred_import()
+            }
             .onChange(of: document_handler.update_tools_document_notify)
             { _, _ in
                 document.tool_modules = base_stc.tool_modules

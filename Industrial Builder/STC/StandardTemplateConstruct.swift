@@ -41,6 +41,7 @@ public class StandardTemplateConstruct: ObservableObject
         self.listings_files_names = document.listings_files_names
         self.kinematic_groups = document.kinematic_groups
         
+        self.robot_modules = document.robot_modules
         self.tool_modules = document.tool_modules
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
@@ -104,6 +105,26 @@ public class StandardTemplateConstruct: ObservableObject
     
     //MARK: - Modules handling
     //MARK: Robot modules
+    @Published var robot_modules = [RobotModule]()
+    
+    public var robot_modules_names: [String]
+    {
+        get
+        {
+            var names = [String]()
+            for robot_module in robot_modules
+            {
+                names.append(robot_module.name)
+            }
+            
+            return names
+        }
+        
+        set
+        {
+            print(newValue)
+        }
+    }
     
     //MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
@@ -127,7 +148,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    //MARK: Part modules functions
+    //MARK: Part modules
     @Published var part_modules = [PartModule]()
     
     public var part_modules_names: [String]
@@ -150,7 +171,7 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     
-    //MARK: Changer modules functions
+    //MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
     
     public var changer_modules_names: [String]

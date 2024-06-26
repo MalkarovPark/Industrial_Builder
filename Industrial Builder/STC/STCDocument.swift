@@ -24,6 +24,7 @@ struct STCDocument: FileDocument
     var listings = [String]()
     var kinematic_groups = [KinematicGroup]()
     
+    var robot_modules = [RobotModule]()
     var tool_modules = [ToolModule]()
     var part_modules = [PartModule]()
     var changer_modules = [ChangerModule]()
@@ -99,7 +100,7 @@ struct STCDocument: FileDocument
                         switch file_wrapper.filename
                         {
                         case "Robot":
-                            break //robot_modules_process(file_wrapper)
+                            modules_process(file_wrapper, type: RobotModule.self)
                         case "Tool":
                             modules_process(file_wrapper, type: ToolModule.self)
                         case "Part":
@@ -141,6 +142,8 @@ struct STCDocument: FileDocument
                             {
                                 switch type
                                 {
+                                    case is RobotModule.Type:
+                                        robot_modules.append(json_decode(fileWrapper, type: RobotModule.self) ?? RobotModule())
                                     case is ToolModule.Type:
                                         tool_modules.append(json_decode(fileWrapper, type: ToolModule.self) ?? ToolModule())
                                     case is PartModule.Type:
@@ -380,6 +383,9 @@ struct STCDocument: FileDocument
     {
         var file_wrappers = [String: FileWrapper]()
         
+        //Robot Modules
+        file_wrappers["Robot"] = prepare_robot_modules_wrapper()
+        
         //Tool Modules
         file_wrappers["Tool"] = prepare_tool_modules_wrapper()
         
@@ -390,6 +396,28 @@ struct STCDocument: FileDocument
         file_wrappers["Changer"] = prepare_changer_modules_wrapper()
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        
+        func prepare_robot_modules_wrapper() -> FileWrapper
+        {
+            var file_wrappers = [String: FileWrapper]()
+            
+            for robot_module in robot_modules
+            {
+                guard let data = try? make_json_data(robot_module) else
+                {
+                    break
+                }
+                
+                let file_name = "\(robot_module.name)"//.json"
+                let file_wrapper = FileWrapper(regularFileWithContents: data)
+                file_wrapper.filename = file_name
+                file_wrapper.preferredFilename = file_name
+                
+                file_wrappers[file_name] = file_wrapper
+            }
+            
+            return FileWrapper(directoryWithFileWrappers: file_wrappers)
+        }
         
         func prepare_tool_modules_wrapper() -> FileWrapper
         {

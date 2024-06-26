@@ -189,6 +189,7 @@ struct ModulesSidebarGroup: View
         NavigationLink(destination: RobotModulesView())
         {
             Label("Robot", systemImage: "r.square")
+                .badge(base_stc.robot_modules.count)
         }
         NavigationLink(destination: ToolModulesView())
         {

@@ -43,23 +43,6 @@ struct ChangerModulesView: View
                     {
                         ChangerModuleDesigner(changer_module: $base_stc.changer_modules[smi])
                             .modifier(ViewBorderer())
-                        
-                        /*if smi != -2
-                        {
-                            ChangerModuleDesigner(changer_module: $base_stc.changer_modules[smi])
-                                .modifier(ViewBorderer())
-                        }
-                        else
-                        {
-                            //ChangerModuleView(changer_module: .constant(ChangerModule()))
-                            ZStack
-                            {
-                                Rectangle()
-                                    .foregroundStyle(.white)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
-                            .modifier(ViewBorderer())
-                        }*/
                     }
                     else
                     {
@@ -89,12 +72,6 @@ struct ChangerModulesView: View
         .onChange(of: selected_name)
         {
             smi = selected_module_index()
-            
-            /*smi = -2
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001)
-            {
-                smi = selected_module_index()
-            }*/
         }
     }
     

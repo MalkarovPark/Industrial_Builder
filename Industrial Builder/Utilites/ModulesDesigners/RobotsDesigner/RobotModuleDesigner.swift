@@ -1,21 +1,22 @@
 //
-//  PartModulesDesigner.swift
+//  RobotModuleDesigner.swift
 //  Industrial Builder
 //
-//  Created by Artem on 23.04.2024.
+//  Created by Artem Malkarov on 26.06.2024.
 //
 
 import SwiftUI
-import IndustrialKit
 
-struct PartModuleDesigner: View
+struct RobotModuleDesigner: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var part_module: PartModule
+    @Binding var robot_module: RobotModule
     
     @State private var editor_selection = 0
+    
+    @State private var resources_names_update = false
     
     var body: some View
     {
@@ -24,7 +25,8 @@ struct PartModuleDesigner: View
             Picker(selection: $editor_selection, label: Text("Picker"))
             {
                 Text("Description").tag(0)
-                Text("Resources").tag(1)
+                Text("Code").tag(1)
+                Text("Resources").tag(2)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
@@ -35,12 +37,17 @@ struct PartModuleDesigner: View
             switch editor_selection
             {
             case 0:
-                TextEditor(text: $part_module.description)
+                TextEditor(text: $robot_module.description)
                     .textFieldStyle(.plain)
-            default:
-                ResourcesPackageView(resources_names: $part_module.resources_names, main_scene_name: $part_module.main_scene_name)
+            case 1:
+                CodeEditorView(code_items: $robot_module.code_items)
                 {
-                    document_handler.document_update_parts()
+                    document_handler.document_update_tools()
+                }
+            default:
+                ResourcesPackageView(resources_names: $robot_module.resources_names, main_scene_name: $robot_module.main_scene_name)
+                {
+                    document_handler.document_update_tools()
                 }
             }
         }
@@ -50,6 +57,5 @@ struct PartModuleDesigner: View
 
 #Preview
 {
-    PartModuleDesigner(part_module: .constant(PartModule()))
-        .environmentObject(StandardTemplateConstruct())
+    RobotModuleDesigner(robot_module: .constant(RobotModule()))
 }
