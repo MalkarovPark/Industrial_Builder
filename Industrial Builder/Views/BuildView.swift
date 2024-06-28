@@ -83,11 +83,11 @@ struct BuildView: View
                     {
                         Menu("Add Module")
                         {
-                            ForEach (base_stc.tool_modules_names, id: \.self)
+                            ForEach (base_stc.robot_modules_names, id: \.self)
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names)
                                 }
                             }
                         }
@@ -95,13 +95,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.tool_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names) })
                         }
                     }
                     
