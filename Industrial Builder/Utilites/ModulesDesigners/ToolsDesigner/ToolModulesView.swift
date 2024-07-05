@@ -14,7 +14,6 @@ struct ToolModulesView: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var selected_name = String()
-    @State private var smi = -1
     
     var body: some View
     {
@@ -38,9 +37,9 @@ struct ToolModulesView: View
                 
                 VStack(spacing: 0)
                 {
-                    if smi != -1
+                    if selected_module_index() != -1
                     {
-                        ToolModuleDesigner(tool_module: $base_stc.tool_modules[smi])
+                        ToolModuleDesigner(tool_module: $base_stc.tool_modules[selected_module_index()])
                             .modifier(ViewBorderer())
                     }
                     else
@@ -67,10 +66,6 @@ struct ToolModulesView: View
         .onChange(of: base_stc.tool_modules)
         {
             document_handler.document_update_tools()
-        }
-        .onChange(of: selected_name)
-        {
-            smi = selected_module_index()
         }
     }
     

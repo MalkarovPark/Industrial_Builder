@@ -55,7 +55,11 @@ struct CodeEditorView: View
                         }
                     }
                 }
+                #if os(macOS)
                 .menuStyle(.borderedButton)
+                #else
+                .modifier(PickerBorderer())
+                #endif
                 .frame(width: 112)
                 .disabled(base_stc.listings_files_names.count == 0)
             }

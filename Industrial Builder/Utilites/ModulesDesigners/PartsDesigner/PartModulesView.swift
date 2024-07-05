@@ -14,7 +14,6 @@ struct PartModulesView: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var selected_name = String()
-    @State private var smi = -1
     
     var body: some View
     {
@@ -34,14 +33,13 @@ struct PartModulesView: View
                 delete_module:
                 {
                     base_stc.part_modules.remove(at: selected_module_index())
-                    smi = -1
                 }
                 
                 VStack(spacing: 0)
                 {
-                    if smi != -1
+                    if selected_module_index() != -1
                     {
-                        PartModuleDesigner(part_module: $base_stc.part_modules[smi])
+                        PartModuleDesigner(part_module: $base_stc.part_modules[selected_module_index()])
                             .modifier(ViewBorderer())
                     }
                     else
@@ -68,10 +66,6 @@ struct PartModulesView: View
         .onChange(of: base_stc.part_modules)
         {
             document_handler.document_update_parts()
-        }
-        .onChange(of: selected_name)
-        {
-            smi = selected_module_index()
         }
     }
     

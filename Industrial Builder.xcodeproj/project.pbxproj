@@ -49,6 +49,7 @@
 		62BAE7782BD71D89000972EA /* ChangerModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */; };
 		62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */; };
 		62BAE77B2BDBC149000972EA /* Caption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE77A2BDBC149000972EA /* Caption.swift */; };
+		62D52D712C37EA91009A3DC7 /* OperationCodesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D52D702C37EA91009A3DC7 /* OperationCodesEditor.swift */; };
 		62F1AC462C2C693100C0B8E6 /* RobotModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F1AC452C2C693100C0B8E6 /* RobotModule.swift */; };
 		62F1AC4C2C2C702800C0B8E6 /* RobotModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */; };
 /* End PBXBuildFile section */
@@ -97,6 +98,7 @@
 		62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = KinematicComponents.scnassets; sourceTree = "<group>"; };
 		62BAE7762BD71846000972EA /* PartModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleDesigner.swift; sourceTree = "<group>"; };
 		62BAE77A2BDBC149000972EA /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caption.swift; sourceTree = "<group>"; };
+		62D52D702C37EA91009A3DC7 /* OperationCodesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationCodesEditor.swift; sourceTree = "<group>"; };
 		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesView.swift; sourceTree = "<group>"; };
 		62F1AC452C2C693100C0B8E6 /* RobotModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModule.swift; sourceTree = "<group>"; };
 		62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModuleDesigner.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 			children = (
 				628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */,
 				627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */,
+				62D52D702C37EA91009A3DC7 /* OperationCodesEditor.swift */,
 			);
 			path = ToolsDesigner;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */,
 				62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */,
 				623D72482ADAFD8500927DEA /* SceneView.swift in Sources */,
+				62D52D712C37EA91009A3DC7 /* OperationCodesEditor.swift in Sources */,
 				62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */,
 				6296D2AF2AED9C2C0094FB19 /* PortalController.swift in Sources */,
 				6255B9242B9E0DD4002B575C /* DocumentUpdateHandler.swift in Sources */,

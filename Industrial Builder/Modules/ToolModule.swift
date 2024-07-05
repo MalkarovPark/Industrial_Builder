@@ -10,7 +10,7 @@ import IndustrialKit
 
 public class ToolModule: IndustrialModule
 {
-    public var operation_codes = [OperationCode]()
+    public var operation_codes = [ToolOperation]()
     
     //MARK: - Work with file system
     public init(name: String = String(), description: String = String(), package_file_name: String = String(), is_internal_change: Bool = Bool(), internal_code: String = String())
@@ -50,15 +50,25 @@ public class ToolModule: IndustrialModule
     }
 }
 
-public struct OperationCode: Equatable, Codable
+/**
+ Provides information about the operating code.
+ 
+ An array of them determines the opcode values ​​available for a given model.
+ */
+public struct ToolOperation: Equatable, Codable
 {
-    var value = 0
-    var name = ""
-    var symbol = "questionmark"
+    var value: Int
+    var name: String
+    var symbol: String
+    var info: String
     
-    //var code = ""
-    var controller_code = ""
-    var connector_code = ""
+    public init(value: Int = 0, name: String = "", symbol: String = "", info: String = "")
+    {
+        self.value = value
+        self.name = name
+        self.symbol = symbol
+        self.info = info
+    }
 }
 
 //MARK: - File
