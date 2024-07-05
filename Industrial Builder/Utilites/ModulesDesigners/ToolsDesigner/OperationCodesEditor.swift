@@ -10,7 +10,9 @@ import IndustrialKit
 
 struct OperationCodesEditor: View
 {
-    @Binding var item: [ToolOperation]
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    @Binding var tool_operations: [ToolOperation]
     
     @State private var new_code_value = 0
     @State private var new_code_name = ""
@@ -25,14 +27,14 @@ struct OperationCodesEditor: View
             {
                 LazyVGrid(columns: columns, spacing: 24)
                 {
-                    ForEach(item.indices, id: \.self)
+                    ForEach(tool_operations.indices, id: \.self)
                     { index in
-                        ToolOperationCard(item: $item[index])
+                        ToolOperationCard(item: $tool_operations[index])
                             .contextMenu
                             {
                                 Button("Delete", systemImage: "trash", role: .destructive)
                                 {
-                                    item.remove(at: index)
+                                    tool_operations.remove(at: index)
                                 }
                             }
                     }
@@ -49,6 +51,7 @@ struct OperationCodesEditor: View
                 {
                     TextField("0", value: $new_code_value, format: .number)
                         .textFieldStyle(.roundedBorder)
+                        .frame(width: 48)
                     
                     Stepper("Value", value: $new_code_value, in: 0...1000)
                         .labelsHidden()
@@ -61,16 +64,20 @@ struct OperationCodesEditor: View
                 
                 Button("Add")
                 {
-                    item.append(ToolOperation(value: new_code_value, name: new_code_name, symbol: "questionmark"))
+                    tool_operations.append(ToolOperation(value: new_code_value, name: new_code_name, symbol: "questionmark"))
                     new_code_value += 1
                 }
                 .keyboardShortcut(.defaultAction)
-                .disabled(item.contains(where: { $0.value == new_code_value }))
+                .disabled(tool_operations.contains(where: { $0.value == new_code_value }))
                 .padding()
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onChange(of: tool_operations)
+        { oldValue, newValue in
+            document_handler.document_update_tools()
+        }
     }
 }
 
@@ -87,7 +94,7 @@ struct ToolOperationCard: View
             Text("\(item.value)")
                 .font(.title2)
                 .padding()
-                //.frame(width: 48, height: 48)
+            
             Divider()
             
             TextField("Name", text: $item.name)
@@ -103,6 +110,7 @@ struct ToolOperationCard: View
                 .popover(isPresented: $is_presented)
                 {
                     TextField("Symbol", text: $item.symbol)
+                        .frame(minWidth: 256)
                         .padding()
                 }
                 .onTapGesture
@@ -156,7 +164,7 @@ struct ToolOperationView: View
 
 #Preview
 {
-    OperationCodesEditor(item: .constant([ToolOperation(), ToolOperation(), ToolOperation()]))
+    OperationCodesEditor(tool_operations: .constant([ToolOperation(), ToolOperation(), ToolOperation()]))
         .frame(width: 512)
 }
 
