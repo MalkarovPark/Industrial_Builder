@@ -517,7 +517,7 @@ struct SelectSceneCard: View
         }
         .contextMenu
         {
-            Toggle("Is main scene", isOn: $is_main)
+            Toggle("Is Main Scene", isOn: $is_main)
         }
     }
     

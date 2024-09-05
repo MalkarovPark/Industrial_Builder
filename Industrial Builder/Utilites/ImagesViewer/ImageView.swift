@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IndustrialKit
 
 struct ImageView: View
 {
@@ -32,7 +33,7 @@ struct ImageView: View
             
             Spacer(minLength: 0)
         }
-        .modifier(Caption(is_presented: $is_presented, label: label))
+        .modifier(SheetCaption(is_presented: $is_presented, label: label))
         #if os(macOS)
         .frame(minWidth: 320, maxWidth: 800, minHeight: 240, maxHeight: 600)
         #else

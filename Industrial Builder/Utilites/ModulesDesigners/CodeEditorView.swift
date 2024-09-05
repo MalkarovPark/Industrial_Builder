@@ -45,7 +45,7 @@ struct CodeEditorView: View
                 .padding(.trailing)
                 .disabled(code_items.count == 1)
                 
-                Menu("Import from...")
+                Menu("Import From...")
                 {
                     ForEach (base_stc.listings_files_names, id: \.self)
                     { name in

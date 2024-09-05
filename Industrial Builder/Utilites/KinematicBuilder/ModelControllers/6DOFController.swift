@@ -12,7 +12,7 @@ import IndustrialKit
 class _6DOFController: RobotModelController
 {
     //MARK: - 6DOF nodes connect
-    override func nodes_connect(_ node: SCNNode)
+    override func connect_nodes(_ node: SCNNode)
     {
         let without_lengths = lengths.count == 0
         if without_lengths
@@ -44,7 +44,7 @@ class _6DOFController: RobotModelController
     }
     
     //MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
-    override func inverse_kinematic_calculate(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
+    override func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
     {
         var angles = [Float]()
         var C3 = Float()
@@ -123,7 +123,7 @@ class _6DOFController: RobotModelController
         return angles
     }
     
-    override func nodes_update(values: [Float])
+    override func update_nodes(values: [Float])
     {
         #if os(macOS)
         nodes[0].eulerAngles.y = CGFloat(values[0])
@@ -223,7 +223,7 @@ class _6DOFController: RobotModelController
     private var chart_ik_values = [Float](repeating: 0, count: 6)
     private var domain_index: Float = 0
     
-    override func charts_data() -> [WorkspaceObjectChart]?
+    override func updated_charts_data() -> [WorkspaceObjectChart]?
     {
         if charts.count == 0
         {
@@ -261,14 +261,14 @@ class _6DOFController: RobotModelController
         return charts
     }
     
-    override func clear_charts_data()
+    override func reset_charts_data()
     {
         domain_index = 0
         chart_ik_values = [Float](repeating: 0, count: 6)
         charts = [WorkspaceObjectChart]()
     }
     
-    override func state_data() -> [StateItem]?
+    override func updated_states_data() -> [StateItem]?
     {
         var state = [StateItem]()
         state.append(StateItem(name: "Temperature", value: "+10º", image: "thermometer"))

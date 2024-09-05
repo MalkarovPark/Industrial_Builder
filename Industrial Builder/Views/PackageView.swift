@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import IndustrialKit
 
 struct PackageView: View
 {
@@ -28,7 +29,7 @@ struct PackageView: View
         .sheet(isPresented: $build_view_presented)
         {
             BuildView(document: $document)
-                .modifier(Caption(is_presented: $build_view_presented, label: "Build"))
+                .modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
             #if os(macOS)
                 .frame(minWidth: 600, maxWidth: 600, minHeight: 480, maxHeight: 640)
             #endif

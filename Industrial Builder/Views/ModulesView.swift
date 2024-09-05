@@ -29,12 +29,12 @@ struct ModulesView: View
                             RobotModulesView()
                         }
                         
-                        StandardNavigationCard(name: "Tool", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .mint)
+                        StandardNavigationCard(name: "Tool", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .teal)
                         {
                             ToolModulesView()
                         }
                         
-                        StandardNavigationCard(name: "Part", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .brown)
+                        StandardNavigationCard(name: "Part", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .indigo)
                         {
                             PartModulesView()
                         }

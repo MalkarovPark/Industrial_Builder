@@ -25,13 +25,10 @@ struct KinematicDesignerView: View
         ZStack
         {
             ObjectSceneView(scene: viewed_scene)
-            { scene_view in
-                app_state.kinematic_preview_robot.update_model()
-            }
             .onAppear
             {
-                let clear_node = viewed_scene.rootNode.childNode(withName: "robot", recursively: true)
-                clear_node?.removeFromParentNode()
+                let cleaning_node = viewed_scene.rootNode.childNode(withName: "robot", recursively: true)
+                cleaning_node?.removeFromParentNode()
                 
                 app_state.prepare_robot(group, scene: viewed_scene)
             }

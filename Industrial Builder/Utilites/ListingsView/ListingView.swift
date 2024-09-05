@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IndustrialKit
 
 struct ListingView: View
 {
@@ -31,7 +32,7 @@ struct ListingView: View
                     }
             }
         }
-        .modifier(Caption(is_presented: $is_presented, label: label))
+        .modifier(SheetCaption(is_presented: $is_presented, label: label))
         #if os(macOS)
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
