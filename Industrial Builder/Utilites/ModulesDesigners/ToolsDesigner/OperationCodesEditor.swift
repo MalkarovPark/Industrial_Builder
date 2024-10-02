@@ -12,7 +12,7 @@ struct OperationCodesEditor: View
 {
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var tool_operations: [ToolOperation]
+    @Binding var tool_operations: [OperationCodeInfo]
     
     @State private var new_code_value = 0
     @State private var new_code_name = ""
@@ -64,7 +64,7 @@ struct OperationCodesEditor: View
                 
                 Button("Add")
                 {
-                    tool_operations.append(ToolOperation(value: new_code_value, name: new_code_name, symbol: "questionmark"))
+                    tool_operations.append(OperationCodeInfo(value: new_code_value, name: new_code_name, symbol: "questionmark"))
                     new_code_value += 1
                 }
                 .keyboardShortcut(.defaultAction)
@@ -83,7 +83,7 @@ struct OperationCodesEditor: View
 
 struct ToolOperationCard: View
 {
-    @Binding var item: ToolOperation
+    @Binding var item: OperationCodeInfo
     
     @State private var is_presented = false
     
@@ -126,7 +126,7 @@ struct ToolOperationCard: View
 
 struct ToolOperationView: View
 {
-    @Binding var item: ToolOperation
+    @Binding var item: OperationCodeInfo
     
     var body: some View
     {
@@ -164,18 +164,18 @@ struct ToolOperationView: View
 
 #Preview
 {
-    OperationCodesEditor(tool_operations: .constant([ToolOperation(), ToolOperation(), ToolOperation()]))
+    OperationCodesEditor(tool_operations: .constant([OperationCodeInfo(), OperationCodeInfo(), OperationCodeInfo()]))
         .frame(width: 512)
 }
 
 #Preview
 {
-    ToolOperationCard(item: .constant(ToolOperation(value: 5, name: "Nameless", symbol: "applelogo")))
+    ToolOperationCard(item: .constant(OperationCodeInfo(value: 5, name: "Nameless", symbol: "applelogo")))
         .padding()
 }
 
 #Preview
 {
-    ToolOperationView(item: .constant(ToolOperation(value: 5, name: "Nameless", symbol: "applelogo")))
+    ToolOperationView(item: .constant(OperationCodeInfo(value: 5, name: "Nameless", symbol: "applelogo")))
         .padding()
 }

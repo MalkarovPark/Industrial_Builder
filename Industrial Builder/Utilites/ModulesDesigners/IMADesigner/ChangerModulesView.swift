@@ -25,7 +25,7 @@ struct ChangerModulesView: View
             {
                 ModulesListView(names: $base_stc.changer_modules_names, selected_name: $selected_name)
                 { name in
-                    base_stc.changer_modules.append(ChangerModule(name: name))
+                    base_stc.changer_modules.append(ChangerModule(new_name: name))
                 }
                 rename_module:
                 { new_name in

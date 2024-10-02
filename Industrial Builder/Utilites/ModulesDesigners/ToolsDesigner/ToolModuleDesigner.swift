@@ -42,7 +42,7 @@ struct ToolModuleDesigner: View
                 TextEditor(text: $tool_module.description)
                     .textFieldStyle(.plain)
             case 1:
-                OperationCodesEditor(tool_operations: $tool_module.operation_codes)
+                OperationCodesEditor(tool_operations: $tool_module.codes)
             case 2:
                 CodeEditorView(code_items: $tool_module.code_items)
                 {

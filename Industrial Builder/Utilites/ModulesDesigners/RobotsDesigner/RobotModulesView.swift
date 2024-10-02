@@ -23,7 +23,7 @@ struct RobotModulesView: View
             {
                 ModulesListView(names: $base_stc.robot_modules_names, selected_name: $selected_name)
                 { name in
-                    base_stc.robot_modules.append(RobotModule(name: name))
+                    base_stc.robot_modules.append(RobotModule(new_name: name))
                 }
                 rename_module:
                 { new_name in

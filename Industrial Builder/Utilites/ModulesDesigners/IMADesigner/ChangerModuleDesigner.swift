@@ -50,6 +50,6 @@ struct ChangerModuleDesigner: View
 
 #Preview
 {
-    ChangerModuleDesigner(changer_module: .constant(ChangerModule(name: "None")))
+    ChangerModuleDesigner(changer_module: .constant(ChangerModule()))
         .environmentObject(StandardTemplateConstruct())
 }

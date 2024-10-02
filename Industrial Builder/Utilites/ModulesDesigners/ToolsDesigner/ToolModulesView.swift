@@ -23,7 +23,7 @@ struct ToolModulesView: View
             {
                 ModulesListView(names: $base_stc.tool_modules_names, selected_name: $selected_name)
                 { name in
-                    base_stc.tool_modules.append(ToolModule(name: name))
+                    base_stc.tool_modules.append(ToolModule(new_name: name))
                 }
                 rename_module:
                 { new_name in

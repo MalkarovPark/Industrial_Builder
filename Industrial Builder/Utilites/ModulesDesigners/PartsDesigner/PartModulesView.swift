@@ -23,7 +23,7 @@ struct PartModulesView: View
             {
                 ModulesListView(names: $base_stc.part_modules_names, selected_name: $selected_name)
                 { name in
-                    base_stc.part_modules.append(PartModule(name: name))
+                    base_stc.part_modules.append(PartModule(new_name: name))
                 }
                 rename_module:
                 { new_name in
