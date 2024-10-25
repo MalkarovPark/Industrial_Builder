@@ -13,7 +13,7 @@ struct CodeEditorView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var code_items: [CodeItem]
+    @Binding var code_items: [String: String]
     
     @State private var code_item_name = String()
     @State private var code_field_update = false
@@ -24,9 +24,12 @@ struct CodeEditorView: View
     {
         VStack(spacing: 0)
         {
-            TextEditor(text: $code_items[code_item_index()].code)
-                .textFieldStyle(.plain)
-                .modifier(DoubleModifier(update_toggle: $code_field_update))
+            TextEditor(text: Binding(
+                get: { code_items[code_item_name] ?? "" },
+                set: { code_items[code_item_name] = $0 }
+            ))
+            .textFieldStyle(.plain)
+            .modifier(DoubleModifier(update_toggle: $code_field_update))
             
             Divider()
             
@@ -34,12 +37,11 @@ struct CodeEditorView: View
             {
                 Picker(selection: $code_item_name, label: Text("Item"))
                 {
-                    ForEach(code_items_names(), id: \.self)
-                    { code_item_name in
-                        Text(code_item_name)
+                    ForEach(Array(code_items.keys), id: \.self)
+                    { name in
+                        Text(name)
                     }
                 }
-                //.labelsHidden()
                 .buttonStyle(.bordered)
                 .frame(maxWidth: .infinity)
                 .padding(.trailing)
@@ -47,7 +49,7 @@ struct CodeEditorView: View
                 
                 Menu("Import From...")
                 {
-                    ForEach (base_stc.listings_files_names, id: \.self)
+                    ForEach(base_stc.listings_files_names, id: \.self)
                     { name in
                         Button(name)
                         {
@@ -61,53 +63,27 @@ struct CodeEditorView: View
                 .modifier(PickerBorderer())
                 #endif
                 .frame(width: 112)
-                .disabled(base_stc.listings_files_names.count == 0)
+                .disabled(base_stc.listings_files_names.isEmpty)
             }
-            .disabled(base_stc.listings_files_names.count == 0)
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear
         {
-            if base_stc.listings_files_names.count > 0
+            if let firstKey = Array(code_items.keys).first
             {
-                code_item_name = code_items_names().first!
+                code_item_name = firstKey
             }
         }
     }
     
-    private func code_items_names() -> [String]
-    {
-        var names = [String]()
-        for code_item in code_items
-        {
-            names.append(code_item.name)
-        }
-        
-        return names
-    }
-    
-    private func code_item_index() -> Int
-    {
-        guard let index = code_items_names().firstIndex(where: { $0 == code_item_name })
-        else
-        {
-            return 0
-        }
-        
-        return index
-    }
-    
     private func import_from_listing(_ file_name: String)
     {
-        guard let index = base_stc.listings_files_names.firstIndex(where: { $0 == file_name })
-        else
-        {
+        guard let index = base_stc.listings_files_names.firstIndex(of: file_name) else {
             return
         }
         
-        code_items[code_item_index()].code = base_stc.listings[index]
-        //code_field_update.toggle()
+        code_items[code_item_name] = base_stc.listings[index]
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
@@ -119,7 +95,7 @@ struct CodeEditorView: View
 
 #Preview
 {
-    CodeEditorView(code_items: .constant([CodeItem()]))
+    CodeEditorView(code_items: .constant(["Code Item": "code"]))
     {
         
     }
@@ -136,7 +112,7 @@ struct CodeEditorView: View
         
         Divider()
         
-        CodeEditorView(code_items: .constant([CodeItem()]))
+        CodeEditorView(code_items: .constant(["Code Item": "code"]))
         {
             
         }

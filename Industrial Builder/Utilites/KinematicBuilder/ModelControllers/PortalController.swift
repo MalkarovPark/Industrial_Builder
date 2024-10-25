@@ -1,18 +1,11 @@
-//
-//  PortalController.swift
-//  Robotic Complex Workspace
-//
-//  Created by Malkarov Park on 16.11.2022.
-//
-
 import Foundation
 import SceneKit
 import IndustrialKit
 
-class PortalController: RobotModelController
+class Portal_Controller: RobotModelController
 {
     //MARK: - Portal nodes connect
-    override func connect_nodes(_ node: SCNNode)
+    override func connect_nodes(of node: SCNNode)
     {
         let without_lengths = lengths.count == 0
         
@@ -34,10 +27,10 @@ class PortalController: RobotModelController
         }
         
         //Connect to part nodes from robot scene
-        nodes.append(node.childNode(withName: "frame", recursively: true)!) //Base position
+        nodes["frame"] = node.childNode(withName: "frame", recursively: true) ?? nodes["frame"] //Base position
         for i in 0...2
         {
-            nodes.append(node.childNode(withName: "d\(i)", recursively: true)!)
+            nodes["d\(i)"] = node.childNode(withName: "d\(i)", recursively: true) ?? nodes["d\(i)"]
         }
         
         if without_lengths
@@ -45,7 +38,7 @@ class PortalController: RobotModelController
             lengths.append(Float(node.childNode(withName: "frame", recursively: true)!.position.y)) //Append base height [8]
         }
         
-        nodes.append(node.childNode(withName: "base", recursively: true)!) //Base pillar node [4]
+        nodes["base"] = node.childNode(withName: "base", recursively: true) ?? nodes["base"] //Base pillar node [4]
     }
     
     //MARK: - Inverse kinematic parts calculation for roataion angles of portal
@@ -102,13 +95,13 @@ class PortalController: RobotModelController
     override func update_nodes(values: [Float])
     {
         #if os(macOS)
-        nodes[1].position.x = CGFloat(values[1])
-        nodes[3].position.y = CGFloat(values[2])
-        nodes[2].position.z = CGFloat(values[0])
+        nodes[safe: "d0", default: SCNNode()].position.x = CGFloat(values[1])
+        nodes[safe: "d2", default: SCNNode()].position.y = CGFloat(values[2])
+        nodes[safe: "d1", default: SCNNode()].position.z = CGFloat(values[0])
         #else
-        nodes[1].position.x = values[1]
-        nodes[3].position.y = values[2]
-        nodes[2].position.z = values[0]
+        nodes[safe: "d0", default: SCNNode()].position.x = values[1]
+        nodes[safe: "d2", default: SCNNode()].position.y = values[2]
+        nodes[safe: "d1", default: SCNNode()].position.z = values[0]
         #endif
     }
     
@@ -120,7 +113,7 @@ class PortalController: RobotModelController
         var saved_material = SCNMaterial()
         
         //Base
-        modified_node = nodes[4]
+        modified_node = nodes[safe: "base", default: SCNNode()]
         saved_material = (modified_node.geometry?.firstMaterial)!
         
         modified_node.geometry = SCNCylinder(radius: 80, height: CGFloat(lengths[8]))
@@ -133,7 +126,7 @@ class PortalController: RobotModelController
         modified_node.geometry?.firstMaterial = saved_material
         
         //Frames
-        var node = nodes.first!
+        var node = nodes[safe: "frame", default: SCNNode()]
         
         modified_node = node.childNode(withName: "part_v", recursively: true)!
         
@@ -148,7 +141,7 @@ class PortalController: RobotModelController
         modified_node.position.y = vf_length / 2
         #endif
         
-        node = nodes.first!
+        node = nodes[safe: "frame", default: SCNNode()]
         #if os(macOS)
         node.position.y = CGFloat(lengths[8])
         node.childNode(withName: "frame2", recursively: true)!.position.y = CGFloat(lengths[0]) //Set vertical position for frame portal
@@ -237,7 +230,7 @@ class PortalController: RobotModelController
         }
         
         //Update tool location chart
-        let tool_node = nodes.last
+        let tool_node = pointer_node
         
         var axis_names = ["X", "Y", "Z"]
         var components = [tool_node?.worldPosition.x, tool_node?.worldPosition.z, tool_node?.worldPosition.y]
@@ -259,22 +252,45 @@ class PortalController: RobotModelController
         return charts
     }
     
-    override func reset_charts_data()
+    override func initial_charts_data() -> [WorkspaceObjectChart]?
     {
         domain_index = 0
         chart_ik_values = [Float](repeating: 0, count: 3)
         charts = [WorkspaceObjectChart]()
+        
+        charts.append(WorkspaceObjectChart(name: "Tool Location", style: .line))
+        charts.append(WorkspaceObjectChart(name: "Tool Rotation", style: .line))
+        
+        /*if let initial_charts_data = updated_charts_data()
+        {
+            charts = initial_charts_data
+        }*/
+        
+        return charts
     }
     
     override func updated_states_data() -> [StateItem]?
     {
-        var state = [StateItem]()
-        state.append(StateItem(name: "Temperature", value: "+10º", image: "thermometer"))
-        state[0].children = [StateItem(name: "Еngine", value: "+50º", image: "thermometer.transmission"),
+        var states = [StateItem]()
+        states.append(StateItem(name: "Temperature", value: "+10º", image: "thermometer"))
+        states[0].children = [StateItem(name: "Еngine", value: "+50º", image: "thermometer.transmission"),
                              StateItem(name: "Fridge", value: "-40º", image: "thermometer.snowflake.circle")]
         
-        state.append(StateItem(name: "Speed", value: "10 mm/sec", image: "windshield.front.and.wiper.intermittent"))
+        states.append(StateItem(name: "Speed", value: "10 mm/sec", image: "windshield.front.and.wiper.intermittent"))
         
-        return state
+        return states
+    }
+    
+    override func initial_states_data() -> [StateItem]?
+    {
+        var states = [StateItem]()
+        
+        states.append(StateItem(name: "Temperature", value: "0º", image: "thermometer"))
+        states[0].children = [StateItem(name: "Еngine", value: "0º", image: "thermometer.transmission"),
+                             StateItem(name: "Fridge", value: "0º", image: "thermometer.snowflake.circle")]
+        
+        states.append(StateItem(name: "Speed", value: "10 mm/sec", image: "windshield.front.and.wiper.intermittent"))
+        
+        return states
     }
 }

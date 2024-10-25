@@ -15,7 +15,7 @@ struct ResourcesPackageView: View
     @Binding var resources_names: [String]?
     @Binding var main_scene_name: String?
     
-    let on_update: () -> ()// = {}
+    let on_update: () -> ()
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     

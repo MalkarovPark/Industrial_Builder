@@ -93,6 +93,7 @@ struct ToolOperationCard: View
         {
             Text("\(item.value)")
                 .font(.title2)
+                .foregroundStyle(.tertiary)
                 .padding()
             
             Divider()

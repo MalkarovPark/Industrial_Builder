@@ -19,18 +19,36 @@ struct RobotModuleDesigner: View
     
     @State private var resources_names_update = false
     
+    @State private var linked_components_view_presented: Bool = false
+    
     var body: some View
     {
         VStack(spacing: 0)
         {
-            Picker(selection: $editor_selection, label: Text("Picker"))
+            HStack(spacing: 0)
             {
-                Text("Description").tag(0)
-                Text("Code").tag(1)
-                Text("Resources").tag(2)
+                Picker(selection: $editor_selection, label: Text("Picker"))
+                {
+                    Text("Description").tag(0)
+                    Text("Operations").tag(1)
+                    Text("Resources").tag(2)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(.trailing)
+                
+                Button("Linked")
+                {
+                    linked_components_view_presented.toggle()
+                }
+                .popover(isPresented: $linked_components_view_presented, arrowEdge: .bottom)
+                {
+                    LinkedComponentsView(linked_components: $robot_module.linked_components)
+                    {
+                        document_handler.document_update_robots()
+                    }
+                }
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
             .padding()
             
             Divider()
@@ -45,11 +63,13 @@ struct RobotModuleDesigner: View
                 {
                     document_handler.document_update_tools()
                 }
-            default:
+            case 2:
                 ResourcesPackageView(resources_names: $robot_module.resources_names, main_scene_name: $robot_module.main_scene_name)
                 {
                     document_handler.document_update_tools()
                 }
+            default:
+                EmptyView()
             }
         }
         .background(.white)

@@ -19,19 +19,37 @@ struct ToolModuleDesigner: View
     
     @State private var resources_names_update = false
     
+    @State private var linked_components_view_presented: Bool = false
+    
     var body: some View
     {
         VStack(spacing: 0)
         {
-            Picker(selection: $editor_selection, label: Text("Picker"))
+            HStack(spacing: 0)
             {
-                Text("Description").tag(0)
-                Text("Operations").tag(1)
-                Text("Code").tag(2)
-                Text("Resources").tag(3)
+                Picker(selection: $editor_selection, label: Text("Picker"))
+                {
+                    Text("Description").tag(0)
+                    Text("Operations").tag(1)
+                    Text("Code").tag(2)
+                    Text("Resources").tag(3)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(.trailing)
+                
+                Button("Linked")
+                {
+                    linked_components_view_presented.toggle()
+                }
+                .popover(isPresented: $linked_components_view_presented, arrowEdge: .bottom)
+                {
+                    LinkedComponentsView(linked_components: $tool_module.linked_components)
+                    {
+                        document_handler.document_update_tools()
+                    }
+                }
             }
-            .pickerStyle(.segmented)
-            .labelsHidden()
             .padding()
             
             Divider()
@@ -48,11 +66,13 @@ struct ToolModuleDesigner: View
                 {
                     document_handler.document_update_tools()
                 }
-            default:
+            case 3:
                 ResourcesPackageView(resources_names: $tool_module.resources_names, main_scene_name: $tool_module.main_scene_name)
                 {
                     document_handler.document_update_tools()
                 }
+            default:
+                EmptyView()
             }
         }
         .background(.white)

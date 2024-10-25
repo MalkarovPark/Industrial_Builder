@@ -43,9 +43,9 @@ class AppState : ObservableObject
         switch kinematic.type
         {
         case ._6DOF:
-            kinematic_preview_robot = Robot(name: "robot", scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn", model_controller: _6DOFController(), connector: RobotConnector())
+            kinematic_preview_robot = Robot(name: "robot", scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn", model_controller: _6DOF_Controller(), connector: RobotConnector())
         case .portal:
-            kinematic_preview_robot = Robot(name: "robot", scene_name: "KinematicComponents.scnassets/Robots/Portal.scn", model_controller: PortalController(), connector: RobotConnector())
+            kinematic_preview_robot = Robot(name: "robot", scene_name: "KinematicComponents.scnassets/Robots/Portal.scn", model_controller: Portal_Controller(), connector: RobotConnector())
         }
         
         kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: false)
