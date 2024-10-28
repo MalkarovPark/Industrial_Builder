@@ -142,9 +142,7 @@ struct StandardSheetCard<Content: View>: View
             {
                 is_presented = true
             }
-            .sheet(isPresented: $is_presented, content: {
-                content($is_presented)
-            })
+            .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
     }
 }
 
@@ -210,7 +208,7 @@ struct ImageCard<Content: View>: View
         {
             is_presented.toggle()
         }
-        .sheet(isPresented: $is_presented, content: { content($is_presented) })
+        .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
         .contextMenu
         {
             Button(role: .destructive, action: delete_image)
@@ -386,7 +384,7 @@ struct ListingCard<Content: View>: View
         {
             is_presented.toggle()
         }
-        .sheet(isPresented: $is_presented, content: { content($is_presented) })
+        .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
         .contextMenu
         {
             Button(role: .destructive, action: delete_listing)
@@ -426,7 +424,7 @@ struct SceneCard<Content: View>: View
         }
         .buttonStyle(.borderless)
         .background(.regularMaterial)
-        .sheet(isPresented: $is_presented, content: { content($is_presented) })
+        .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
         .frame(height: 192)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .shadow(radius: 8)

@@ -61,13 +61,16 @@ struct ToolModuleDesigner: View
                     .textFieldStyle(.plain)
             case 1:
                 OperationCodesEditor(tool_operations: $tool_module.codes)
+                {
+                    document_handler.document_update_tools()
+                }
             case 2:
                 CodeEditorView(code_items: $tool_module.code_items)
                 {
                     document_handler.document_update_tools()
                 }
             case 3:
-                ResourcesPackageView(resources_names: $tool_module.resources_names, main_scene_name: $tool_module.main_scene_name)
+                ResourcesPackageView(resources_names: $tool_module.resources_names, main_scene_name: $tool_module.main_scene_name, nodes_names: $tool_module.nodes_names)
                 {
                     document_handler.document_update_tools()
                 }

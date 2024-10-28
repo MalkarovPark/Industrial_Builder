@@ -30,7 +30,7 @@ struct RobotModuleDesigner: View
                 Picker(selection: $editor_selection, label: Text("Picker"))
                 {
                     Text("Description").tag(0)
-                    Text("Operations").tag(1)
+                    Text("Code").tag(1)
                     Text("Resources").tag(2)
                 }
                 .pickerStyle(.segmented)
@@ -64,7 +64,7 @@ struct RobotModuleDesigner: View
                     document_handler.document_update_tools()
                 }
             case 2:
-                ResourcesPackageView(resources_names: $robot_module.resources_names, main_scene_name: $robot_module.main_scene_name)
+                ResourcesPackageView(resources_names: $robot_module.resources_names, main_scene_name: $robot_module.main_scene_name, nodes_names: $robot_module.nodes_names)
                 {
                     document_handler.document_update_tools()
                 }

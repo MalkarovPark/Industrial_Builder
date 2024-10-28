@@ -10,9 +10,9 @@ import IndustrialKit
 
 struct OperationCodesEditor: View
 {
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
     @Binding var tool_operations: [OperationCodeInfo]
+    
+    public var update_document_func: () -> ()
     
     @State private var new_code_value = 0
     @State private var new_code_name = ""
@@ -75,8 +75,8 @@ struct OperationCodesEditor: View
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onChange(of: tool_operations)
-        { oldValue, newValue in
-            document_handler.document_update_tools()
+        { _, _ in
+            update_document_func()
         }
     }
 }
@@ -111,7 +111,7 @@ struct ToolOperationCard: View
                 .popover(isPresented: $is_presented)
                 {
                     TextField("Symbol", text: $item.symbol)
-                        .frame(minWidth: 256)
+                        .frame(minWidth: 200)
                         .padding()
                 }
                 .onTapGesture
@@ -165,7 +165,7 @@ struct ToolOperationView: View
 
 #Preview
 {
-    OperationCodesEditor(tool_operations: .constant([OperationCodeInfo(), OperationCodeInfo(), OperationCodeInfo()]))
+    OperationCodesEditor(tool_operations: .constant([OperationCodeInfo(), OperationCodeInfo(), OperationCodeInfo()]), update_document_func: {})
         .frame(width: 512)
 }
 

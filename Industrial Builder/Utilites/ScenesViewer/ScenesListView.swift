@@ -35,7 +35,7 @@ struct ScenesListView: View
                             SceneCard(scene: $base_stc.scenes[index], name: "\(base_stc.scenes_files_names[index])")
                             { is_presented in
                                 SceneView(node: root_node_binding(for: base_stc.scenes[index]))
-                                    .modifier(WindowFramer())
+                                    .frame(minWidth: 320, idealWidth: 640, maxWidth: 800, minHeight: 240, idealHeight: 480, maxHeight: 600)
                                     .modifier(ViewCloseButton(is_presented: is_presented))
                             }
                         }
@@ -181,4 +181,5 @@ struct ScenesListView: View
 #Preview
 {
     ScenesListView()
+        .environmentObject(StandardTemplateConstruct())
 }
