@@ -39,10 +39,19 @@ class Portal_Controller: RobotModelController
         }
         
         nodes["base"] = node.childNode(withName: "base", recursively: true) ?? nodes["base"] //Base pillar node [4]
+        nodes["column"] = node.childNode(withName: "column", recursively: true) ?? nodes["column"]
     }
     
     //MARK: - Inverse kinematic parts calculation for roataion angles of portal
-    override func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
+    override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
+    {
+        if lengths.count == description_lengths_count
+        {
+            apply_nodes_positions(values: inverse_kinematic_calculation(pointer_location: pointer_location, pointer_rotation: pointer_rotation, origin_location: origin_location, origin_rotation: origin_rotation))
+        }
+    }
+    
+    public func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
     {
         var px, py, pz: Float
         
@@ -92,7 +101,7 @@ class Portal_Controller: RobotModelController
         return [px, py, pz]
     }
     
-    override func update_nodes(values: [Float])
+    public func apply_nodes_positions(values: [Float])
     {
         #if os(macOS)
         nodes[safe: "d0", default: SCNNode()].position.x = CGFloat(values[1])
@@ -112,8 +121,17 @@ class Portal_Controller: RobotModelController
         var modified_node = SCNNode()
         var saved_material = SCNMaterial()
         
-        //Base
+        //Change height of base
         modified_node = nodes[safe: "base", default: SCNNode()]
+        
+        #if os(macOS)
+        modified_node.position.y = CGFloat(lengths[8])
+        #else
+        modified_node.position.y = lengths[8]
+        #endif
+        
+        //Change height of column
+        modified_node = nodes[safe: "column", default: SCNNode()]
         saved_material = (modified_node.geometry?.firstMaterial)!
         
         modified_node.geometry = SCNCylinder(radius: 80, height: CGFloat(lengths[8]))
@@ -141,16 +159,9 @@ class Portal_Controller: RobotModelController
         modified_node.position.y = vf_length / 2
         #endif
         
-        node = nodes[safe: "frame", default: SCNNode()]
-        #if os(macOS)
-        node.position.y = CGFloat(lengths[8])
-        node.childNode(withName: "frame2", recursively: true)!.position.y = CGFloat(lengths[0]) //Set vertical position for frame portal
-        #else
-        node.position.y = lengths[8]
-        node.childNode(withName: "frame2", recursively: true)!.position.y = lengths[0] //Set vertical position for frame portal
-        #endif
-        
         var frame_element_length: CGFloat
+        
+        node = nodes[safe: "frame", default: SCNNode()]
         
         //X shift
         #if os(macOS)
