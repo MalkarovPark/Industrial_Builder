@@ -43,9 +43,21 @@ class AppState : ObservableObject
         switch kinematic.type
         {
         case ._6DOF:
-            kinematic_preview_robot = Robot(name: "robot", scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn", model_controller: _6DOF_Controller(), connector: RobotConnector())
+            kinematic_preview_robot = Robot(
+                name: "robot",
+                model_controller: _6DOF_Controller(),
+                connector: RobotConnector(),
+                scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn",
+                nodes_names: ["base", "column", "d0", "d1", "d2", "d3", "d4", "d5", "d6"]
+            )
         case .portal:
-            kinematic_preview_robot = Robot(name: "robot", scene_name: "KinematicComponents.scnassets/Robots/Portal.scn", model_controller: Portal_Controller(), connector: RobotConnector())
+            kinematic_preview_robot = Robot(
+                name: "robot",
+                model_controller: Portal_Controller(),
+                connector: RobotConnector(),
+                scene_name: "KinematicComponents.scnassets/Robots/Portal.scn",
+                nodes_names: ["base", "column", "frame", "d0", "d1", "d2"]
+            )
         }
         
         kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: false)
@@ -62,7 +74,12 @@ class AppState : ObservableObject
             lengths.append(element.value)
         }
         
-        kinematic_preview_robot.model_controller.transform_by_lengths(lengths)
+        guard let controller = kinematic_preview_robot.model_controller as? DesignerRobotModelController
+        else
+        {
+            return
+        }
+        controller.transform_by_lengths(lengths)
         kinematic_preview_robot.update_model()
         kinematic_preview_robot.robot_location_place()
     }

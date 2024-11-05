@@ -2,37 +2,8 @@ import Foundation
 import SceneKit
 import IndustrialKit
 
-class Portal_Controller: RobotModelController
+class Portal_Controller: DesignerRobotModelController
 {
-    //MARK: - Portal nodes connect
-    override func connect_nodes(of node: SCNNode)
-    {
-        //Get lengths from robot scene if they is not set in plist
-        lengths = [Float]()
-        
-        lengths.append(Float(node.childNode(withName: "frame2", recursively: true)!.position.y)) //Portal frame height [0]        
-        lengths.append(Float(node.childNode(withName: "limit1_min", recursively: true)!.position.z)) //Position X shift [1]
-        lengths.append(Float(node.childNode(withName: "limit0_min", recursively: true)!.position.x + node.childNode(withName: "limit2_min", recursively: true)!.position.x)) //Position Y shift [2]
-        lengths.append(Float(-node.childNode(withName: "limit2_min", recursively: true)!.position.y)) //Position Z shift [3]
-        lengths.append(Float(node.childNode(withName: "target", recursively: true)!.position.y)) //Tool length for adding to Z shift [4]
-        
-        lengths.append(Float(node.childNode(withName: "limit0_max", recursively: true)!.position.x)) //Limit for X [5]
-        lengths.append(Float(node.childNode(withName: "limit1_max", recursively: true)!.position.z)) //Limit for Y [6]
-        lengths.append(Float(-node.childNode(withName: "limit2_max", recursively: true)!.position.y)) //Limit for Z [7]
-        
-        //Connect to part nodes from robot scene
-        nodes["frame"] = node.childNode(withName: "frame", recursively: true) ?? nodes["frame"] //Base position
-        for i in 0...2
-        {
-            nodes["d\(i)"] = node.childNode(withName: "d\(i)", recursively: true) ?? nodes["d\(i)"]
-        }
-        
-        lengths.append(Float(node.childNode(withName: "frame", recursively: true)!.position.y)) //Append base height [8]
-        
-        nodes["base"] = node.childNode(withName: "base", recursively: true) ?? nodes["base"] //Base pillar node [4]
-        nodes["column"] = node.childNode(withName: "column", recursively: true) ?? nodes["column"]
-    }
-    
     //MARK: - Inverse kinematic parts calculation for roataion angles of portal
     override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
     {
