@@ -100,7 +100,7 @@ struct AddKinematicView: View
     
     var body: some View
     {
-        VStack
+        VStack(spacing: 0)
         {
             HStack
             {
@@ -111,8 +111,9 @@ struct AddKinematicView: View
                     .textFieldStyle(.roundedBorder)
                 #endif
             }
+            .padding(.bottom)
             
-            HStack(spacing: 12)
+            HStack
             {
                 Picker("Type", selection: $kinematic_preset)
                 {
@@ -133,7 +134,7 @@ struct AddKinematicView: View
                     .keyboardShortcut(.defaultAction)
             }
         }
-        .padding(12)
+        .padding()
     }
     
     private func add_kinematic_group()

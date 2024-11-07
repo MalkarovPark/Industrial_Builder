@@ -89,6 +89,33 @@ public class StandardTemplateConstruct: ObservableObject
     public var listings_files_names = [String]()
     
     //MARK: Kinematic groups functions
+    //Build virtual robot components by kinematic group
+    public func make_copmponents_from_kinematic(group: KinematicGroup, node: SCNNode, make_controller: Bool, make_model: Bool, listings_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
+    {
+        if make_controller
+        {
+            var controller_code = String()
+            listings.append(controller_code)
+            
+            //listings_files_names.append("\(group.name)_Controller")
+            listings_files_names.append(mismatched_name(name: "\(group.name)_Controller", names: listings_files_names))
+            
+            listings_update_function()
+        }
+        
+        if make_model
+        {
+            let scene = SCNScene()
+            scene.rootNode.addChildNode(node.clone())
+            
+            scenes.append(scene)
+            
+            //scenes_files_names.append("\(group.name).scn")
+            scenes_files_names.append(mismatched_name(name: "\(group.name).scn", names: scenes_files_names))
+            
+            scenes_update_function()
+        }
+    }
     
     //MARK: Model nodes functions
     @Published var viewed_model_node = SCNNode()

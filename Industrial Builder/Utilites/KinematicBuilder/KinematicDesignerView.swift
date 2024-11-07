@@ -16,11 +16,13 @@ struct KinematicDesignerView: View
     
     @State private var pointer_location: [Float] = [0, 0, 0]
     @State private var pointer_rotation: [Float] = [0, 0, 0]
+    
     @State private var show_inspector = true
     
     @State private var origin_move_view_presented = false
     @State private var origin_rotate_view_presented = false
     @State private var space_scale_view_presented = false
+    @State private var make_components_view_presented = false
     
     private let viewed_scene = SCNScene(named: "KinematicComponents.scnassets/Cell.scn")!
     
@@ -102,6 +104,10 @@ struct KinematicDesignerView: View
                 {
                     SpaceScaleView(space_scale_view_presented: $space_scale_view_presented, space_scale: $app_state.kinematic_preview_robot.space_scale)
                 }
+                .onChange(of: app_state.kinematic_preview_robot.space_scale)
+                { _, _ in
+                    app_state.kinematic_preview_robot.update_space_scale()
+                }
                 .onDisappear
                 {
                     space_scale_view_presented.toggle()
@@ -116,9 +122,20 @@ struct KinematicDesignerView: View
         }
         .toolbar
         {
+            Button (action: { make_components_view_presented.toggle() })
+            {
+                //Image(systemName: "hexagon")
+                Label("Make Module", systemImage: "hexagon")
+            }
+            .popover(isPresented: $make_components_view_presented, arrowEdge: .bottom)
+            {
+                MakeRobotComponentsView(group: $group)
+            }
+            
             Button (action: { show_inspector.toggle() })
             {
-                Image(systemName: "sidebar.trailing")
+                //Image(systemName: "sidebar.trailing")
+                Label("Kinematic Inspector", systemImage: "sidebar.trailing")
             }
         }
         .inspector(isPresented: $show_inspector)
@@ -141,7 +158,7 @@ struct SpaceScaleView: View
         {
             Text("Space Scale")
                 .font(.title3)
-                .padding([.top, .leading, .trailing])
+                .padding([.horizontal, .top])
             
             HStack(spacing: 8)
             {
@@ -203,7 +220,7 @@ struct OriginMoveView: View
         {
             Text("Origin Location")
                 .font(.title3)
-                .padding([.top, .leading, .trailing])
+                .padding([.horizontal, .top])
             
             HStack(spacing: 8)
             {
@@ -265,7 +282,7 @@ struct OriginRotateView: View
         {
             Text("Origin Rotation")
                 .font(.title3)
-                .padding([.top, .leading, .trailing])
+                .padding([.horizontal, .top])
             
             HStack(spacing: 8)
             {
