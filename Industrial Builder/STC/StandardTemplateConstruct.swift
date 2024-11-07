@@ -148,9 +148,9 @@ public class StandardTemplateConstruct: ObservableObject
             switch group.type
             {
             case .portal:
-                code = import_text_data(from: "PortalController")
+                code = import_text_data(from: "Portal_Controller")
             case ._6DOF:
-                code = import_text_data(from: "6DOFController")
+                code = import_text_data(from: "6DOF_Controller")
             }
             
             return code

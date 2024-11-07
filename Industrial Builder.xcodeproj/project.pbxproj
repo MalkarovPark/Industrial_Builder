@@ -10,8 +10,8 @@
 		620AA43F2CDA4CF0008C2918 /* DesignerRobotModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA43E2CDA4CEF008C2918 /* DesignerRobotModelController.swift */; };
 		620AA4412CDA5701008C2918 /* KinematicInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA4402CDA5701008C2918 /* KinematicInspectorView.swift */; };
 		620AA4432CDA63DE008C2918 /* MakeRobotComponentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA4422CDA63DE008C2918 /* MakeRobotComponentsView.swift */; };
-		620AA4462CDD584F008C2918 /* PortalController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 620AA4452CDD584F008C2918 /* PortalController.txt */; };
-		620AA4482CDD58A0008C2918 /* 6DOFController.txt in Resources */ = {isa = PBXBuildFile; fileRef = 620AA4472CDD58A0008C2918 /* 6DOFController.txt */; };
+		620AA4462CDD584F008C2918 /* Portal_Controller.txt in Resources */ = {isa = PBXBuildFile; fileRef = 620AA4452CDD584F008C2918 /* Portal_Controller.txt */; };
+		620AA4482CDD58A0008C2918 /* 6DOF_Controller.txt in Resources */ = {isa = PBXBuildFile; fileRef = 620AA4472CDD58A0008C2918 /* 6DOF_Controller.txt */; };
 		621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A4E9F2BB73DEB006A081A /* ImageView.swift */; };
 		622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225786F2C24A9940023004E /* ResourcesPackageView.swift */; };
 		622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C88A12BB71C7200A53213 /* ImagesListView.swift */; };
@@ -61,8 +61,8 @@
 		620AA43E2CDA4CEF008C2918 /* DesignerRobotModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignerRobotModelController.swift; sourceTree = "<group>"; };
 		620AA4402CDA5701008C2918 /* KinematicInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicInspectorView.swift; sourceTree = "<group>"; };
 		620AA4422CDA63DE008C2918 /* MakeRobotComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeRobotComponentsView.swift; sourceTree = "<group>"; };
-		620AA4452CDD584F008C2918 /* PortalController.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PortalController.txt; sourceTree = "<group>"; };
-		620AA4472CDD58A0008C2918 /* 6DOFController.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = 6DOFController.txt; sourceTree = "<group>"; };
+		620AA4452CDD584F008C2918 /* Portal_Controller.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Portal_Controller.txt; sourceTree = "<group>"; };
+		620AA4472CDD58A0008C2918 /* 6DOF_Controller.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = 6DOF_Controller.txt; sourceTree = "<group>"; };
 		621A4E9F2BB73DEB006A081A /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		6225786F2C24A9940023004E /* ResourcesPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesPackageView.swift; sourceTree = "<group>"; };
 		622C88A12BB71C7200A53213 /* ImagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListView.swift; sourceTree = "<group>"; };
@@ -125,8 +125,8 @@
 		620AA4442CDD5732008C2918 /* CodeTemplates */ = {
 			isa = PBXGroup;
 			children = (
-				620AA4472CDD58A0008C2918 /* 6DOFController.txt */,
-				620AA4452CDD584F008C2918 /* PortalController.txt */,
+				620AA4472CDD58A0008C2918 /* 6DOF_Controller.txt */,
+				620AA4452CDD584F008C2918 /* Portal_Controller.txt */,
 			);
 			path = CodeTemplates;
 			sourceTree = "<group>";
@@ -394,11 +394,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620AA4462CDD584F008C2918 /* PortalController.txt in Resources */,
+				620AA4462CDD584F008C2918 /* Portal_Controller.txt in Resources */,
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
 				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
-				620AA4482CDD58A0008C2918 /* 6DOFController.txt in Resources */,
+				620AA4482CDD58A0008C2918 /* 6DOF_Controller.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
