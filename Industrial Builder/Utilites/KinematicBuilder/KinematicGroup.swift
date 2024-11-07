@@ -22,7 +22,7 @@ public struct KinematicGroup: Identifiable, Equatable, Codable, Hashable
     }
     
     var name = String()
-    var type: KinematicGroupTypes = .portal
+    var type: KinematicGroupType = .portal
     var data = [KinematicElement]()
 }
 
@@ -34,7 +34,7 @@ public struct KinematicElement: Identifiable, Equatable, Codable
     var value = Float()
 }
 
-public enum KinematicGroupTypes: String, Codable, Equatable, CaseIterable
+public enum KinematicGroupType: String, Codable, Equatable, CaseIterable
 {
     //case none = "None"
     case _6DOF = "6DOF"

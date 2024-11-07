@@ -94,7 +94,7 @@ struct AddKinematicView: View
     @Binding var items: [KinematicGroup]
     
     @State private var new_item_name = ""
-    @State private var kinematic_preset: KinematicGroupTypes = .portal
+    @State private var kinematic_preset: KinematicGroupType = .portal
     
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
@@ -117,7 +117,7 @@ struct AddKinematicView: View
             {
                 Picker("Type", selection: $kinematic_preset)
                 {
-                    ForEach(KinematicGroupTypes.allCases, id: \.self)
+                    ForEach(KinematicGroupType.allCases, id: \.self)
                     { preset in
                         Text(preset.rawValue).tag(preset)
                     }

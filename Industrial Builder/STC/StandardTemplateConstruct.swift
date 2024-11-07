@@ -94,8 +94,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         if make_controller
         {
-            var controller_code = String()
-            listings.append(controller_code)
+            listings.append(generate_controller_code(group: group))
             
             //listings_files_names.append("\(group.name)_Controller")
             listings_files_names.append(mismatched_name(name: "\(group.name)_Controller", names: listings_files_names))
@@ -114,6 +113,45 @@ public class StandardTemplateConstruct: ObservableObject
             scenes_files_names.append(mismatched_name(name: "\(group.name).scn", names: scenes_files_names))
             
             scenes_update_function()
+        }
+    }
+    
+    public func generate_controller_code(group: KinematicGroup) -> String
+    {
+        var controller_code = String()
+        
+        controller_code.append("\(kinematic_data_to_code(group.data))\n")
+        controller_code.append("\(generate_ik_func(type: group.type))\n")
+        
+        return controller_code
+        
+        func kinematic_data_to_code(_ kinematic_data: [KinematicElement]) -> String
+        {
+            var code = String()
+            
+            //code.append(kinematic_data.map { "\($0.name): \($0.value)" }.joined(separator: "\n"))
+            code = """
+                let lengths: [Float] = [
+                    \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n    "))
+                ]
+                """
+            
+            return code
+        }
+        
+        func generate_ik_func(type: KinematicGroupType) -> String
+        {
+            var code = String()
+            
+            switch group.type
+            {
+            case .portal:
+                break
+            case ._6DOF:
+                break
+            }
+            
+            return code
         }
     }
     
