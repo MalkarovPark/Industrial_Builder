@@ -118,10 +118,13 @@ public class StandardTemplateConstruct: ObservableObject
     
     public func generate_controller_code(group: KinematicGroup) -> String
     {
-        var controller_code = String()
+        var controller_code = listing_template(type: group.type)
         
-        controller_code.append("\(kinematic_data_to_code(group.data))\n")
-        controller_code.append("\(generate_ik_func(type: group.type))\n")
+        //controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: group.name)
+        controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: group.name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(group.name)" : group.name)
+
+        
+        controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
         
         return controller_code
         
@@ -129,26 +132,25 @@ public class StandardTemplateConstruct: ObservableObject
         {
             var code = String()
             
-            //code.append(kinematic_data.map { "\($0.name): \($0.value)" }.joined(separator: "\n"))
             code = """
                 let lengths: [Float] = [
-                    \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n    "))
-                ]
+                        \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n        "))
+                    ]
                 """
             
             return code
         }
         
-        func generate_ik_func(type: KinematicGroupType) -> String
+        func listing_template(type: KinematicGroupType) -> String
         {
             var code = String()
             
             switch group.type
             {
             case .portal:
-                break
+                code = import_text_data(from: "PortalController")
             case ._6DOF:
-                break
+                code = import_text_data(from: "6DOFController")
             }
             
             return code
@@ -269,6 +271,27 @@ public class StandardTemplateConstruct: ObservableObject
     public func build_application_project(list: BuildModulesList)
     {
         
+    }
+}
+
+//MARK: - Functions
+func import_text_data(from file_name: String) -> String
+{
+    if let fileURL = Bundle.main.url(forResource: file_name, withExtension: "txt")
+    {
+        do
+        {
+            let content = try String(contentsOf: fileURL, encoding: .utf8)
+            return content
+        }
+        catch
+        {
+            return String()
+        }
+    }
+    else
+    {
+        return String()
     }
 }
 
