@@ -128,7 +128,8 @@ public class StandardTemplateConstruct: ObservableObject
         if make_controller
         {
             module.code_items["Controller"] = generate_controller_code(group: group, name: module.name)
-            print(module.name)
+            
+            robots_update_function()
         }
         
         if make_model
@@ -153,9 +154,6 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             //Connect scene to module
-            print(module.resources_names)
-            print(module.main_scene_name)
-            
             if module.resources_names == nil
             {
                 module.resources_names = [new_scene_name]
@@ -189,7 +187,7 @@ public class StandardTemplateConstruct: ObservableObject
             class_name = group.name
         }
         
-        //controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: group.name)
+        //controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: class_name)
         controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: class_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(class_name)" : class_name)
 
         
