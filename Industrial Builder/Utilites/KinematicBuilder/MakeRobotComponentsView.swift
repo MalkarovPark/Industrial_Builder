@@ -37,19 +37,45 @@ struct MakeRobotComponentsView: View
                 .padding(.bottom)
             }
             
-            Button(action: {
-                base_stc.make_copmponents_from_kinematic(
-                    group: group, node: app_state.kinematic_preview_robot.node ?? SCNNode(),
-                    make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic,
-                    listings_update_function: { document_handler.document_update_listings() },
-                    scenes_update_function: { document_handler.document_update_scenes() }
-                )
-            })
+            Menu("Make For...")
             {
-                Text("Make Components")
-                    .frame(maxWidth: .infinity)
+                if base_stc.robot_modules.count > 0
+                {
+                    ForEach(base_stc.robot_modules_names, id: \.self)
+                    { name in
+                        Button(name)
+                        {
+                            base_stc.make_copmponents_from_kinematic(
+                                group: group,
+                                to: name,
+                                node: app_state.kinematic_preview_robot.node ?? SCNNode(),
+                                make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic,
+                                robots_update_function: { document_handler.document_update_robots() },
+                                scenes_update_function: { document_handler.document_update_scenes() }
+                            )
+                        }
+                    }
+                    
+                    Divider()
+                }
+                
+                Button("Separated Files")
+                {
+                    base_stc.make_copmponents_from_kinematic(
+                        group: group, node: app_state.kinematic_preview_robot.node ?? SCNNode(),
+                        make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic,
+                        listings_update_function: { document_handler.document_update_listings() },
+                        scenes_update_function: { document_handler.document_update_scenes() }
+                    )
+                }
             }
-            .disabled(!app_state.make_model_from_kinematic && !app_state.make_controller_from_kinematic)
+            #if os(macOS)
+            .menuStyle(.borderedButton)
+            #else
+            .modifier(PickerBorderer())
+            #endif
+            .disabled((base_stc.robot_modules.isEmpty) && (!app_state.make_model_from_kinematic && !app_state.make_controller_from_kinematic))
+            //.disabled((base_stc.robot_modules.isEmpty) || (!app_state.make_model_from_kinematic && !app_state.make_controller_from_kinematic))
         }
         .padding()
     }
@@ -59,4 +85,6 @@ struct MakeRobotComponentsView: View
 {
     MakeRobotComponentsView(group: .constant(KinematicGroup()))
         .frame(width: 256)
+        .environmentObject(StandardTemplateConstruct())
+        .environmentObject(AppState())
 }

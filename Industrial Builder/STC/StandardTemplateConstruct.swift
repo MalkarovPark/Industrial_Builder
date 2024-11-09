@@ -116,12 +116,81 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    public func generate_controller_code(group: KinematicGroup) -> String
+    //Build virtual robot components by kinematic group to robot model
+    public func make_copmponents_from_kinematic(group: KinematicGroup, to module_name: String, node: SCNNode, make_controller: Bool, make_model: Bool, robots_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
+    {
+        guard let module = robot_modules.first(where: { $0.name == module_name })
+        else
+        {
+            return
+        }
+        
+        if make_controller
+        {
+            module.code_items["Controller"] = generate_controller_code(group: group, name: module.name)
+            print(module.name)
+        }
+        
+        if make_model
+        {
+            //Make scene
+            let scene = SCNScene()
+            scene.rootNode.addChildNode(node.clone())
+            
+            //Pass scene to resources
+            //scenes.append(scene)
+            let new_scene_name = "\(group.name).scn" //mismatched_name(name: "\(group.name).scn", names: scenes_files_names)
+            //scenes_files_names.append(new_scene_name)
+            if let existing_index = scenes_files_names.firstIndex(of: new_scene_name)
+            {
+                scenes[existing_index] = scene
+                scenes_files_names[existing_index] = new_scene_name
+            }
+            else
+            {
+                scenes.append(scene)
+                scenes_files_names.append(new_scene_name)
+            }
+            
+            //Connect scene to module
+            print(module.resources_names)
+            print(module.main_scene_name)
+            
+            if module.resources_names == nil
+            {
+                module.resources_names = [new_scene_name]
+            }
+            else
+            {
+                if module.resources_names?.firstIndex(of: new_scene_name) == nil
+                {
+                    module.resources_names?.append(new_scene_name)
+                }
+            }
+            
+            module.main_scene_name = new_scene_name
+            
+            scenes_update_function()
+        }
+    }
+    
+    public func generate_controller_code(group: KinematicGroup, name: String = String()) -> String
     {
         var controller_code = listing_template(type: group.type)
         
+        var class_name = String()
+        
+        if !name.isEmpty
+        {
+            class_name = name
+        }
+        else
+        {
+            class_name = group.name
+        }
+        
         //controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: group.name)
-        controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: group.name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(group.name)" : group.name)
+        controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: class_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(class_name)" : class_name)
 
         
         controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
