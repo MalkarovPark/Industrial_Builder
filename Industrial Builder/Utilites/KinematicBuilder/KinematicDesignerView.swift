@@ -125,7 +125,7 @@ struct KinematicDesignerView: View
             Button (action: { make_components_view_presented.toggle() })
             {
                 //Image(systemName: "hexagon")
-                Label("Make Module", systemImage: "hexagon")
+                Label("Make Module", systemImage: "square.badge.plus")
             }
             .popover(isPresented: $make_components_view_presented, arrowEdge: .bottom)
             {

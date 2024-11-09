@@ -17,6 +17,8 @@ struct CodeEditorView: View
     @State private var code_item_name = String()
     @State private var code_field_update = false
     
+    @State private var code_builder_presented = false
+    
     public var update_document_func: () -> ()
     
     var body: some View
@@ -46,23 +48,23 @@ struct CodeEditorView: View
                 .padding(.trailing)
                 .disabled(code_items.count == 1)
                 
-                Menu("Import From...")
+                Button("Build")
                 {
-                    ForEach(base_stc.listings_files_names, id: \.self)
-                    { name in
-                        Button(name)
-                        {
-                            import_from_listing(name)
-                        }
-                    }
+                    code_builder_presented.toggle()
                 }
                 #if os(macOS)
                 .menuStyle(.borderedButton)
                 #else
                 .modifier(PickerBorderer())
                 #endif
-                .frame(width: 112)
-                .disabled(base_stc.listings_files_names.isEmpty)
+                .popover(isPresented: $code_builder_presented, arrowEdge: .top)
+                {
+                    CodeBuilderView(code: code_item_binding(from: $code_items, key: code_item_name))
+                    {
+                        code_field_update.toggle()
+                        update_document_func()
+                    }
+                }
             }
             .padding()
         }
@@ -89,6 +91,14 @@ struct CodeEditorView: View
             code_field_update.toggle()
             update_document_func()
         }
+    }
+    
+    private func code_item_binding(from dictionary: Binding<[String: String]>, key: String) -> Binding<String>
+    {
+        Binding<String>(
+            get: { dictionary.wrappedValue[key] ?? "" },
+            set: { newValue in dictionary.wrappedValue[key] = newValue }
+        )
     }
 }
 

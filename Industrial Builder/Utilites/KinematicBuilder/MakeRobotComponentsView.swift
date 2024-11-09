@@ -16,23 +16,20 @@ struct MakeRobotComponentsView: View
     
     @Binding var group: KinematicGroup
     
-    @State private var make_model = true
-    @State private var make_controller = true
-    
     var body: some View
     {
         VStack(spacing: 0)
         {
             VStack(alignment: .trailing, spacing: 0)
             {
-                Toggle(isOn: $make_model)
+                Toggle(isOn: $app_state.make_model_from_kinematic)
                 {
                     Text("Visual Model")
                 }
                 .toggleStyle(.switch)
                 .padding(.bottom)
                 
-                Toggle(isOn: $make_controller)
+                Toggle(isOn: $app_state.make_controller_from_kinematic)
                 {
                     Text("Controller")
                 }
@@ -43,7 +40,7 @@ struct MakeRobotComponentsView: View
             Button(action: {
                 base_stc.make_copmponents_from_kinematic(
                     group: group, node: app_state.kinematic_preview_robot.node ?? SCNNode(),
-                    make_controller: make_controller, make_model: make_model,
+                    make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic,
                     listings_update_function: { document_handler.document_update_listings() },
                     scenes_update_function: { document_handler.document_update_scenes() }
                 )
@@ -52,7 +49,7 @@ struct MakeRobotComponentsView: View
                 Text("Make Components")
                     .frame(maxWidth: .infinity)
             }
-            .disabled(!make_model && !make_controller)
+            .disabled(!app_state.make_model_from_kinematic && !app_state.make_controller_from_kinematic)
         }
         .padding()
     }

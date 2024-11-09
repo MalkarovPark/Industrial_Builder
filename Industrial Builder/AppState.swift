@@ -84,6 +84,29 @@ class AppState : ObservableObject
         kinematic_preview_robot.update_model()
         kinematic_preview_robot.robot_location_place()
     }
+    
+    @Published var make_model_from_kinematic = true
+    @Published var make_controller_from_kinematic = true
+}
+
+func import_text_data(from file_name: String) -> String
+{
+    if let fileURL = Bundle.main.url(forResource: file_name, withExtension: "txt")
+    {
+        do
+        {
+            let content = try String(contentsOf: fileURL, encoding: .utf8)
+            return content
+        }
+        catch
+        {
+            return String()
+        }
+    }
+    else
+    {
+        return String()
+    }
 }
 
 //MARK - Control modifier
