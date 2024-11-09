@@ -38,7 +38,9 @@ struct ChangerModuleDesigner: View
                 TextEditor(text: $changer_module.description)
                     .textFieldStyle(.plain)
             default:
-                CodeEditorView(code_items: $changer_module.code_items)
+                CodeEditorView(code_items: $changer_module.code_items, avaliable_templates_names: [
+                    "Change": ["Change Internal", "Change External"]
+                ])
                 {
                     document_handler.document_update_ima()
                 }

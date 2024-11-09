@@ -19,6 +19,8 @@ struct CodeEditorView: View
     
     @State private var code_builder_presented = false
     
+    public var avaliable_templates_names: [String: [String]] = [:]
+    
     public var update_document_func: () -> ()
     
     var body: some View
@@ -59,7 +61,7 @@ struct CodeEditorView: View
                 #endif
                 .popover(isPresented: $code_builder_presented, arrowEdge: .top)
                 {
-                    CodeBuilderView(code: code_item_binding(from: $code_items, key: code_item_name))
+                    CodeBuilderView(code: code_item_binding(from: $code_items, key: code_item_name), avaliable_templates_names: avaliable_templates_names[code_item_name] ?? [String]())
                     {
                         code_field_update.toggle()
                         update_document_func()

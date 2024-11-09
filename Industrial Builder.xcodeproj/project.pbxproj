@@ -3,15 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		620AA43F2CDA4CF0008C2918 /* DesignerRobotModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA43E2CDA4CEF008C2918 /* DesignerRobotModelController.swift */; };
 		620AA4412CDA5701008C2918 /* KinematicInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA4402CDA5701008C2918 /* KinematicInspectorView.swift */; };
 		620AA4432CDA63DE008C2918 /* MakeRobotComponentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA4422CDA63DE008C2918 /* MakeRobotComponentsView.swift */; };
-		620AA4462CDD584F008C2918 /* Portal_Controller.txt in Resources */ = {isa = PBXBuildFile; fileRef = 620AA4452CDD584F008C2918 /* Portal_Controller.txt */; };
-		620AA4482CDD58A0008C2918 /* 6DOF_Controller.txt in Resources */ = {isa = PBXBuildFile; fileRef = 620AA4472CDD58A0008C2918 /* 6DOF_Controller.txt */; };
 		620AA44C2CDF92C9008C2918 /* CodeBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */; };
 		621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A4E9F2BB73DEB006A081A /* ImageView.swift */; };
 		622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225786F2C24A9940023004E /* ResourcesPackageView.swift */; };
@@ -62,8 +60,6 @@
 		620AA43E2CDA4CEF008C2918 /* DesignerRobotModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignerRobotModelController.swift; sourceTree = "<group>"; };
 		620AA4402CDA5701008C2918 /* KinematicInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicInspectorView.swift; sourceTree = "<group>"; };
 		620AA4422CDA63DE008C2918 /* MakeRobotComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeRobotComponentsView.swift; sourceTree = "<group>"; };
-		620AA4452CDD584F008C2918 /* Portal_Controller.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Portal_Controller.txt; sourceTree = "<group>"; };
-		620AA4472CDD58A0008C2918 /* 6DOF_Controller.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = 6DOF_Controller.txt; sourceTree = "<group>"; };
 		620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBuilderView.swift; sourceTree = "<group>"; };
 		621A4E9F2BB73DEB006A081A /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		6225786F2C24A9940023004E /* ResourcesPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesPackageView.swift; sourceTree = "<group>"; };
@@ -112,6 +108,12 @@
 		62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModuleDesigner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		620AA44E2CDFAC08008C2918 /* Robot */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Robot; sourceTree = "<group>"; };
+		620AA4542CDFAC1C008C2918 /* Tool */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tool; sourceTree = "<group>"; };
+		620AA4552CDFAC25008C2918 /* Changer */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Changer; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		6289FCC02AD0398100BB7F5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -127,8 +129,9 @@
 		620AA4442CDD5732008C2918 /* CodeTemplates */ = {
 			isa = PBXGroup;
 			children = (
-				620AA4472CDD58A0008C2918 /* 6DOF_Controller.txt */,
-				620AA4452CDD584F008C2918 /* Portal_Controller.txt */,
+				620AA4552CDFAC25008C2918 /* Changer */,
+				620AA4542CDFAC1C008C2918 /* Tool */,
+				620AA44E2CDFAC08008C2918 /* Robot */,
 			);
 			path = CodeTemplates;
 			sourceTree = "<group>";
@@ -348,6 +351,11 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				620AA44E2CDFAC08008C2918 /* Robot */,
+				620AA4542CDFAC1C008C2918 /* Tool */,
+				620AA4552CDFAC25008C2918 /* Changer */,
+			);
 			name = "Industrial Builder";
 			packageProductDependencies = (
 				628E14512AD73C0400BC8FD9 /* IndustrialKit */,
@@ -397,11 +405,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620AA4462CDD584F008C2918 /* Portal_Controller.txt in Resources */,
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
 				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
-				620AA4482CDD58A0008C2918 /* 6DOF_Controller.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

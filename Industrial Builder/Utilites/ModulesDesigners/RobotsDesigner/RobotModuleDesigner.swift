@@ -59,7 +59,10 @@ struct RobotModuleDesigner: View
                 TextEditor(text: $robot_module.description)
                     .textFieldStyle(.plain)
             case 1:
-                CodeEditorView(code_items: $robot_module.code_items)
+                CodeEditorView(code_items: $robot_module.code_items, avaliable_templates_names: [
+                    "Controller": ["Internal Robot Controller", "External Robot Controller"],
+                    "Connector": ["Internal Robot Connector", "External Robot Connector"]
+                ])
                 {
                     document_handler.document_update_tools()
                 }

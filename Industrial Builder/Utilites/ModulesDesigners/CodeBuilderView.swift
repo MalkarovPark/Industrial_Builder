@@ -13,9 +13,9 @@ struct CodeBuilderView: View
     
     @Binding var code: String
     
-    public var update_document_func: () -> () = { }
-    
     public var avaliable_templates_names: [String] = [String]()
+    
+    public var update_document_func: () -> () = { }
     
     var body: some View
     {

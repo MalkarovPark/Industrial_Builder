@@ -65,7 +65,10 @@ struct ToolModuleDesigner: View
                     document_handler.document_update_tools()
                 }
             case 2:
-                CodeEditorView(code_items: $tool_module.code_items)
+                CodeEditorView(code_items: $tool_module.code_items, avaliable_templates_names: [
+                    "Controller": ["Internal Tool Controller", "External Tool Controller"],
+                    "Connector": ["Internal Tool Connector", "External Tool Connector"]
+                ])
                 {
                     document_handler.document_update_tools()
                 }
