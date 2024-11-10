@@ -168,13 +168,16 @@ public class StandardTemplateConstruct: ObservableObject
             
             module.main_scene_name = new_scene_name
             
+            //Set nodes names connect in scene
+            module.nodes_names = group.type.nodes_list
+            
             scenes_update_function()
         }
     }
     
-    public func generate_controller_code(group: KinematicGroup, name: String = String()) -> String
+    private func generate_controller_code(group: KinematicGroup, name: String = String()) -> String
     {
-        var controller_code = listing_template(type: group.type)
+        var controller_code = group.type.listing_template
         
         var class_name = String()
         
@@ -194,34 +197,19 @@ public class StandardTemplateConstruct: ObservableObject
         controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
         
         return controller_code
+    }
+    
+    func kinematic_data_to_code(_ kinematic_data: [KinematicElement]) -> String
+    {
+        var code = String()
         
-        func kinematic_data_to_code(_ kinematic_data: [KinematicElement]) -> String
-        {
-            var code = String()
-            
-            code = """
-                let lengths: [Float] = [
-                        \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n        "))
-                    ]
-                """
-            
-            return code
-        }
+        code = """
+            let lengths: [Float] = [
+                    \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n        "))
+                ]
+            """
         
-        func listing_template(type: KinematicGroupType) -> String
-        {
-            var code = String()
-            
-            switch group.type
-            {
-            case .portal:
-                code = import_text_data(from: "Portal_Controller")
-            case ._6DOF:
-                code = import_text_data(from: "6DOF_Controller")
-            }
-            
-            return code
-        }
+        return code
     }
     
     //MARK: Model nodes functions

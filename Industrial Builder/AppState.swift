@@ -39,27 +39,10 @@ class AppState : ObservableObject
     
     public func prepare_robot(_ kinematic: KinematicGroup, scene: SCNScene)
     {
-        //Connect workcell box and pointer
-        switch kinematic.type
-        {
-        case ._6DOF:
-            kinematic_preview_robot = Robot(
-                name: "robot",
-                model_controller: _6DOF_Controller(),
-                connector: RobotConnector(),
-                scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn",
-                nodes_names: ["base", "column", "d0", "d1", "d2", "d3", "d4", "d5", "d6"]
-            )
-        case .portal:
-            kinematic_preview_robot = Robot(
-                name: "robot",
-                model_controller: Portal_Controller(),
-                connector: RobotConnector(),
-                scene_name: "KinematicComponents.scnassets/Robots/Portal.scn",
-                nodes_names: ["base", "column", "frame", "d0", "d1", "d2"]
-            )
-        }
+        //Build design robot
+        kinematic_preview_robot = kinematic.type.design_robot
         
+        //Connect workcell box and pointer
         kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: false)
         kinematic_preview_robot.origin_location = [100, 100, 100]
         

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IndustrialKit
 
 public struct KinematicGroup: Identifiable, Equatable, Codable, Hashable
 {
@@ -36,9 +37,53 @@ public struct KinematicElement: Identifiable, Equatable, Codable
 
 public enum KinematicGroupType: String, Codable, Equatable, CaseIterable
 {
-    //case none = "None"
     case _6DOF = "6DOF"
     case portal = "Portal"
+    
+    var design_robot: Robot
+    {
+        switch self
+        {
+        case .portal:
+            return Robot(
+                name: "robot",
+                model_controller: Portal_Controller(),
+                connector: RobotConnector(),
+                scene_name: "KinematicComponents.scnassets/Robots/Portal.scn",
+                nodes_names: ["base", "column", "frame", "d0", "d1", "d2"]
+            )
+        case ._6DOF:
+            return Robot(
+                name: "robot",
+                model_controller: _6DOF_Controller(),
+                connector: RobotConnector(),
+                scene_name: "KinematicComponents.scnassets/Robots/6DOF.scn",
+                nodes_names: ["base", "column", "d0", "d1", "d2", "d3", "d4", "d5", "d6"]
+            )
+        }
+    }
+    
+    var listing_template: String
+    {
+        switch self 
+        {
+        case .portal:
+            return import_text_data(from: "Portal_Controller")
+        case ._6DOF:
+            return import_text_data(from: "6DOF_Controller")
+        }
+    }
+    
+    var nodes_list: [String]
+    {
+        switch self 
+        {
+        case .portal:
+            return ["base", "column", "frame", "d0", "d1", "d2"]
+        case ._6DOF:
+            return ["base", "column", "d0", "d1", "d2", "d3", "d4", "d5", "d6"]
+        }
+    }
 }
 
 public func _6DOFGroupMake(name: String) -> KinematicGroup
