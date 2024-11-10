@@ -1,0 +1,37 @@
+//
+// Robot Model Controller
+//
+
+import Foundation
+import SceneKit
+import IndustrialKit
+
+class <#Name#>_Controller: RobotModelController
+{
+    //MARK: - Performing
+    override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+    }
+    
+    //MARK: - Statistics
+    override func updated_charts_data() -> [WorkspaceObjectChart]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func initial_charts_data() -> [WorkspaceObjectChart]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func updated_states_data() -> [StateItem]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func initial_states_data() -> [StateItem]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    }
+}

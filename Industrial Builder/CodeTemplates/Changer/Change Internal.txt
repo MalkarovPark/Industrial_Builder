@@ -1,0 +1,10 @@
+//
+// Change Func
+//
+
+import Foundation
+
+func <#name#>_Change(registers: inout [Float])
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+}
