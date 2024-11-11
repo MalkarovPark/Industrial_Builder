@@ -92,26 +92,6 @@ func import_text_data(from file_name: String) -> String
     }
 }
 
-//MARK - Control modifier
-struct MenuHandlingModifier: ViewModifier
-{
-    @EnvironmentObject var app_state: AppState
-    
-    @Binding var performed: Bool
-    
-    let toggle_perform: () -> ()
-    let stop_perform: () -> ()
-    
-    public func body(content: Content) -> some View
-    {
-        content
-            .onAppear
-            {
-                
-            }
-    }
-}
-
 func color_from_string(_ text: String) -> Color
 {
     var r: CGFloat = 0

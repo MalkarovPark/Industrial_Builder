@@ -37,7 +37,7 @@ struct MakeRobotComponentsView: View
                 .padding(.bottom)
             }
             
-            Menu("Make For...")
+            Menu("Export to...")
             {
                 if base_stc.robot_modules.count > 0
                 {
@@ -59,7 +59,7 @@ struct MakeRobotComponentsView: View
                     Divider()
                 }
                 
-                Button("Separated Files")
+                Button("Separated components")
                 {
                     base_stc.make_copmponents_from_kinematic(
                         group: group, node: app_state.kinematic_preview_robot.node ?? SCNNode(),

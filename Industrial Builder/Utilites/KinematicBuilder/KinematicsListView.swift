@@ -29,7 +29,7 @@ struct KinematicsListView: View
                     {
                         ForEach(base_stc.kinematic_groups.indices, id: \.self)
                         { index in
-                            StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: color_from_string(base_stc.kinematic_groups[index].type.rawValue))
+                            StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: .gray)
                             {
                                 KinematicDesignerView(group: $base_stc.kinematic_groups[index])
                             }

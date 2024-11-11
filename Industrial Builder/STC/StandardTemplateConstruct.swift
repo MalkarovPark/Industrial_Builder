@@ -94,10 +94,16 @@ public class StandardTemplateConstruct: ObservableObject
     {
         if make_controller
         {
-            listings.append(generate_controller_code(group: group))
-            
-            //listings_files_names.append("\(group.name)_Controller")
-            listings_files_names.append(mismatched_name(name: "\(group.name)_Controller", names: listings_files_names))
+            if let existing_index = listings_files_names.firstIndex(of: group.name)
+            {
+                listings[existing_index] = generate_controller_code(group: group)
+                listings_files_names[existing_index] = group.name
+            }
+            else
+            {
+                listings.append(generate_controller_code(group: group))
+                listings_files_names.append(group.name)
+            }
             
             listings_update_function()
         }
@@ -107,10 +113,16 @@ public class StandardTemplateConstruct: ObservableObject
             let scene = SCNScene()
             scene.rootNode.addChildNode(node.clone())
             
-            scenes.append(scene)
-            
-            //scenes_files_names.append("\(group.name).scn")
-            scenes_files_names.append(mismatched_name(name: "\(group.name).scn", names: scenes_files_names))
+            if let existing_index = scenes_files_names.firstIndex(of: "\(group.name).scn")
+            {
+                scenes[existing_index] = scene
+                scenes_files_names[existing_index] = "\(group.name).scn"
+            }
+            else
+            {
+                scenes.append(scene)
+                scenes_files_names.append(group.name)
+            }
             
             scenes_update_function()
         }
@@ -139,9 +151,8 @@ public class StandardTemplateConstruct: ObservableObject
             scene.rootNode.addChildNode(node.clone())
             
             //Pass scene to resources
-            //scenes.append(scene)
-            let new_scene_name = "\(group.name).scn" //mismatched_name(name: "\(group.name).scn", names: scenes_files_names)
-            //scenes_files_names.append(new_scene_name)
+            let new_scene_name = "\(group.name).scn"
+            
             if let existing_index = scenes_files_names.firstIndex(of: new_scene_name)
             {
                 scenes[existing_index] = scene
