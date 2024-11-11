@@ -32,7 +32,7 @@ struct PackageView: View
                 .modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
                 .fitted()
             #if os(macOS)
-                .frame(minWidth: 600, maxWidth: 600, minHeight: 480, maxHeight: 640)
+                .frame(minWidth: 320, maxWidth: 600, minHeight: 480, maxHeight: 640)
             #endif
         }
         .toolbar

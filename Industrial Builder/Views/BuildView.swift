@@ -27,6 +27,8 @@ struct BuildView: View
     @Environment(\.horizontalSizeClass) private var horizontal_size_class
     #endif
     
+    @State private var is_compact = false
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -185,16 +187,15 @@ struct BuildView: View
                 }
             }
             .modifier(ViewBorderer())
+            //.frame(maxWidth: .infinity)
             .padding(.bottom)
             
-            #if !os(iOS)
-            HStack(spacing: 0)
-            {
+            DynamicStack(content: {
                 Button(action: { external_export_panel_presented = true })
                 {
                     BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
                 }
-                .padding(.trailing)
+                .padding(!is_compact ? .trailing : .bottom)
                 .fileImporter(isPresented: $external_export_panel_presented,
                               allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: { result in })
                 
@@ -204,53 +205,25 @@ struct BuildView: View
                 }
                 .fileImporter(isPresented: $internal_export_panel_presented,
                               allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: { result in })
-            }
-            #else
-            if horizontal_size_class != .compact
+            }, is_compact: $is_compact, spacing: 0)
+            .background
             {
-                HStack(spacing: 0)
-                {
-                    Button(action: { external_export_panel_presented = true })
-                    {
-                        BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
-                    }
-                    .modifier(ButtonBorderer())
-                    .padding(.trailing)
-                    .fileImporter(isPresented: $external_export_panel_presented,
-                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
+                GeometryReader { geometry in
+                    let width = geometry.size.width
                     
-                    Button(action: { internal_export_panel_presented = true })
+                    VStack
                     {
-                        BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
+                        
                     }
-                    .modifier(ButtonBorderer())
-                    .fileImporter(isPresented: $internal_export_panel_presented,
-                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
+                    .onAppear
+                    {
+                        is_compact = width < 550
+                    }
+                    .onChange(of: width) { newWidth, _ in
+                        is_compact = newWidth < 550
+                    }
                 }
             }
-            else
-            {
-                VStack(spacing: 0)
-                {
-                    Button(action: { external_export_panel_presented = true })
-                    {
-                        BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
-                    }
-                    .modifier(ButtonBorderer())
-                    .padding(.bottom)
-                    .fileImporter(isPresented: $external_export_panel_presented,
-                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
-                    
-                    Button(action: { internal_export_panel_presented = true })
-                    {
-                        BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
-                    }
-                    .modifier(ButtonBorderer())
-                    .fileImporter(isPresented: $internal_export_panel_presented,
-                                  allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: {result in })
-                }
-            }
-            #endif
         }
         .padding()
         .onChange(of: base_stc.package_info.build_modules_lists)
@@ -358,6 +331,7 @@ struct BuildItemView: View
 {
     BuildView(document: .constant(STCDocument()))
         .environmentObject(StandardTemplateConstruct())
+        .frame(width: 256)
 }
 
 #Preview
