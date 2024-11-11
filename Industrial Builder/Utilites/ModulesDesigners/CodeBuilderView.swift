@@ -14,6 +14,7 @@ struct CodeBuilderView: View
     @Binding var code: String
     
     public var avaliable_templates_names: [String] = [String]()
+    public var model_name: String
     
     public var update_document_func: () -> () = { }
     
@@ -31,7 +32,7 @@ struct CodeBuilderView: View
                         { name in
                             Button(name)
                             {
-                                import_from_listing(name)
+                                import_from_template(name)
                             }
                         }
                     }
@@ -47,7 +48,7 @@ struct CodeBuilderView: View
                 {
                     Button("Import From Template")
                     {
-                        import_from_listing(avaliable_templates_names.first ?? "")
+                        import_from_template(avaliable_templates_names.first ?? "")
                     }
                     #if os(macOS)
                     .buttonStyle(.bordered)
@@ -80,7 +81,13 @@ struct CodeBuilderView: View
     
     private func import_from_template(_ file_name: String)
     {
-        code = import_text_data(from: file_name)
+        code = import_text_data(from: file_name).replacingOccurrences(of: "<#Name#>", with: model_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(model_name)" : model_name)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            //code_field_update.toggle()
+            update_document_func()
+        }
     }
     
     private func import_from_listing(_ file_name: String)
@@ -101,7 +108,7 @@ struct CodeBuilderView: View
 
 #Preview
 {
-    CodeBuilderView(code: .constant("Code"), avaliable_templates_names: ["UwU", "OwO"])
+    CodeBuilderView(code: .constant("Code"), avaliable_templates_names: ["UwU", "OwO"], model_name: "Name")
         .environmentObject(StandardTemplateConstruct())
         .frame(width: 256)
 }

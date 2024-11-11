@@ -62,7 +62,7 @@ struct RobotModuleDesigner: View
                 CodeEditorView(code_items: $robot_module.code_items, avaliable_templates_names: [
                     "Controller": ["Internal Robot Controller", "External Robot Controller"],
                     "Connector": ["Internal Robot Connector", "External Robot Connector"]
-                ])
+                ], model_name: robot_module.name)
                 {
                     document_handler.document_update_tools()
                 }

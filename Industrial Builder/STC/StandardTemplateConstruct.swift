@@ -190,9 +190,8 @@ public class StandardTemplateConstruct: ObservableObject
             class_name = group.name
         }
         
-        //controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: class_name)
-        controller_code = controller_code.replacingOccurrences(of: "<#name#>", with: class_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(class_name)" : class_name)
-
+        //controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name)
+        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(class_name)" : class_name)
         
         controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
         

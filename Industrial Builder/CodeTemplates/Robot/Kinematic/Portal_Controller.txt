@@ -2,7 +2,7 @@ import Foundation
 import SceneKit
 import IndustrialKit
 
-class <#name#>_Controller: RobotModelController
+class <#Name#>_Controller: RobotModelController
 {
     //MARK: - Inverse kinematic parts calculation for roataion angles of portal
     override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])

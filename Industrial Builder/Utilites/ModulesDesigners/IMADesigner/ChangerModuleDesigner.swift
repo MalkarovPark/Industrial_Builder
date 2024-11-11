@@ -40,7 +40,7 @@ struct ChangerModuleDesigner: View
             default:
                 CodeEditorView(code_items: $changer_module.code_items, avaliable_templates_names: [
                     "Change": ["Change Internal", "Change External"]
-                ])
+                ], model_name: changer_module.name)
                 {
                     document_handler.document_update_ima()
                 }
