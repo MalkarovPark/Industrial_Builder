@@ -327,7 +327,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     //MARK: Build functions
     ///Builds modules in separated files.
-    public func build_modules_files(list: BuildModulesList, to folder_url: URL)
+    public func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
     {
         guard (folder_url.startAccessingSecurityScopedResource()) else
         {
@@ -336,22 +336,22 @@ public class StandardTemplateConstruct: ObservableObject
         
         for robot_module in robot_modules
         {
-            build_module_file(module: robot_module, to: folder_url, as_internal: false)
+            build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
         }
         
         for tool_module in tool_modules
         {
-            build_module_file(module: tool_module, to: folder_url, as_internal: false)
+            build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
         }
         
         for part_module in part_modules
         {
-            build_module_file(module: part_module, to: folder_url, as_internal: false)
+            build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
         }
         
         for changer_module in changer_modules
         {
-            build_module_file(module: changer_module, to: folder_url, as_internal: false)
+            build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
         }
         
         do { folder_url.stopAccessingSecurityScopedResource() }
@@ -360,7 +360,41 @@ public class StandardTemplateConstruct: ObservableObject
     ///Builds application project to compile with modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
+        build_modules_files(list: list, to: folder_url, as_internal: true)
         
+        //Make List
+        guard (folder_url.startAccessingSecurityScopedResource()) else
+        {
+            return
+        }
+        
+        var list_code = import_text_data(from: "List")
+        
+        let placeholders = [
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", robot_modules_names),
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", tool_modules_names),
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", part_modules_names),
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", changer_modules_names)
+        ]
+        
+        for (placeholder, names) in placeholders
+        {
+            for module_name in names
+            {
+                list_code = list_code.replacingOccurrences(of: placeholder, with: module_name, options: .literal, range: nil)
+            }
+        }
+        
+        do
+        {
+            try list_code.write(to: folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
+        }
+        catch
+        {
+            print(error.localizedDescription)
+        }
+        
+        do { folder_url.stopAccessingSecurityScopedResource() }
     }
     
     private func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
