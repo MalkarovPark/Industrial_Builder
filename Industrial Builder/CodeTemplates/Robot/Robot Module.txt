@@ -1,0 +1,28 @@
+import Foundation
+import IndustrialKit
+import SceneKit
+
+public let <#Name#>_Module = RobotModule(
+    name: "<#Name#>",
+    model_controller: <#Name#>_Controller(),
+    connector: <#Name#>_Connector(),
+    node: <#Name#>_Node,
+    nodes_names: <#nodes_names#>
+)
+
+public var <#Name#>_Node: SCNNode
+{
+    guard let new_scene = SCNScene(named: "<#Name#>_Resources.scnassets/<#main_scene_name#>")
+    else
+    {
+        return SCNNode()
+    }
+    
+    guard let node = new_scene.rootNode.childNode(withName: "robot", recursively: false)
+    else
+    {
+        return SCNNode()
+    }
+    
+    return node
+}

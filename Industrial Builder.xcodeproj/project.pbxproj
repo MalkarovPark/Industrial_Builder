@@ -114,6 +114,7 @@
 		620AA44E2CDFAC08008C2918 /* Robot */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Robot; sourceTree = "<group>"; };
 		620AA4542CDFAC1C008C2918 /* Tool */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tool; sourceTree = "<group>"; };
 		620AA4552CDFAC25008C2918 /* Changer */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Changer; sourceTree = "<group>"; };
+		62D311A02CE3882A002A39B8 /* Part */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Part; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,9 +133,10 @@
 			isa = PBXGroup;
 			children = (
 				62D3118D2CE2905C002A39B8 /* List.txt */,
-				620AA4552CDFAC25008C2918 /* Changer */,
-				620AA4542CDFAC1C008C2918 /* Tool */,
 				620AA44E2CDFAC08008C2918 /* Robot */,
+				620AA4542CDFAC1C008C2918 /* Tool */,
+				62D311A02CE3882A002A39B8 /* Part */,
+				620AA4552CDFAC25008C2918 /* Changer */,
 			);
 			path = CodeTemplates;
 			sourceTree = "<group>";
@@ -358,6 +360,7 @@
 				620AA44E2CDFAC08008C2918 /* Robot */,
 				620AA4542CDFAC1C008C2918 /* Tool */,
 				620AA4552CDFAC25008C2918 /* Changer */,
+				62D311A02CE3882A002A39B8 /* Part */,
 			);
 			name = "Industrial Builder";
 			packageProductDependencies = (

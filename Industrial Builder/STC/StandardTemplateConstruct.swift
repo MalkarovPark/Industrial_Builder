@@ -202,7 +202,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         //controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name)
-        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(class_name)" : class_name)
+        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(class_name))
         
         controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
         
@@ -334,15 +334,25 @@ public class StandardTemplateConstruct: ObservableObject
             return
         }
         
-        for module in tool_modules
+        for robot_module in robot_modules
         {
-            build_module_file(module: module, to: folder_url, as_internal: false)
+            build_module_file(module: robot_module, to: folder_url, as_internal: false)
         }
         
-        /*for module in list.part_modules_names
+        for tool_module in tool_modules
         {
-            build_module_file(module: module, to: folder_url)
-        }*/
+            build_module_file(module: tool_module, to: folder_url, as_internal: false)
+        }
+        
+        for part_module in part_modules
+        {
+            build_module_file(module: part_module, to: folder_url, as_internal: false)
+        }
+        
+        for changer_module in changer_modules
+        {
+            build_module_file(module: changer_module, to: folder_url, as_internal: false)
+        }
         
         do { folder_url.stopAccessingSecurityScopedResource() }
     }
@@ -353,7 +363,7 @@ public class StandardTemplateConstruct: ObservableObject
         
     }
     
-    func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
+    private func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
     {
         do
         {
@@ -361,17 +371,17 @@ public class StandardTemplateConstruct: ObservableObject
             try FileManager.default.createDirectory(at: module_url, withIntermediateDirectories: true, attributes: nil)
             
             //Info file store
-            let info_data = module.json_data()
-            let info_url = module_url.appendingPathComponent("Info")
-            try info_data.write(to: info_url)
+            if as_internal
+            {
+                try make_module_code(url: module_url)
+            }
+            else
+            {
+                try make_info(url: module_url)
+            }
             
             //Code folder store
-            let code_url = module_url.appendingPathComponent("Code")
-            if FileManager.default.fileExists(atPath: code_url.path)
-            {
-                try FileManager.default.removeItem(at: code_url)
-            }
-            try FileManager.default.createDirectory(at: code_url, withIntermediateDirectories: true, attributes: nil)
+            let code_url = try make_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
             
             for code_item in module.code_items
             {
@@ -379,13 +389,10 @@ public class StandardTemplateConstruct: ObservableObject
                 try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
             
+            guard !(module is ChangerModule) else { return }
+            
             //Resources folder store
-            let resources_url = module_url.appendingPathComponent("Resources.scnassets")
-            if FileManager.default.fileExists(atPath: resources_url.path)
-            {
-                try FileManager.default.removeItem(at: resources_url)
-            }
-            try FileManager.default.createDirectory(at: resources_url, withIntermediateDirectories: true, attributes: nil)
+            let resources_url = try make_folder("Resources.scnassets", module_url: module_url, module_name: module.name, as_internal: as_internal)
             
             if let resources_names = module.resources_names
             {
@@ -402,12 +409,55 @@ public class StandardTemplateConstruct: ObservableObject
             return
         }
         
+        func make_module_code(url: URL) throws
+        {
+            let code_item_url = url.appendingPathComponent("\(module.name)_Module.swift")
+            
+            var module_code = String()
+
+            switch module
+            {
+            case is RobotModule:
+                module_code = robot_module_code(module as? RobotModule ?? RobotModule())
+            case is ToolModule:
+                module_code = tool_module_code(module as? ToolModule ?? ToolModule())
+            case is PartModule:
+                module_code = part_module_code(module as? PartModule ?? PartModule())
+            case is ChangerModule:
+                module_code = changer_module_code(module as? ChangerModule ?? ChangerModule())
+            default:
+                break
+            }
+            
+            try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+        }
+        
+        func make_info(url: URL) throws
+        {
+            let info_data = module.json_data()
+            let info_url = url.appendingPathComponent("Info")
+            try info_data.write(to: url)
+        }
+        
+        func make_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool = true) throws -> URL
+        {
+            let folder_url = module_url.appendingPathComponent(as_internal ? "\(module_name)_\(folder_name)" : folder_name)
+            
+            if FileManager.default.fileExists(atPath: folder_url.path)
+            {
+                try FileManager.default.removeItem(at: folder_url)
+            }
+            try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
+            
+            return folder_url
+        }
+        
         func resource_data(_ name: String) -> Data?
         {
             var data: Data? = nil
 
             let file_extension = (name as NSString).pathExtension.lowercased()
-            let file_name = (name as NSString).deletingPathExtension
+            //let file_name = (name as NSString).deletingPathExtension
             
             if file_extension == "scn"
             {
@@ -436,12 +486,87 @@ public class StandardTemplateConstruct: ObservableObject
             return data
         }
     }
+    
+    private func robot_module_code(_ module: RobotModule) -> String
+    {
+        var code = import_text_data(from: "Robot Module")
+        
+        //Naming
+        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        
+        //Connected nodes names
+        let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
+        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)
+        
+        return code
+    }
+    
+    private func tool_module_code(_ module: ToolModule) -> String
+    {
+        var code = import_text_data(from: "Tool Module")
+        
+        //Naming
+        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        
+        //Connected nodes names
+        let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
+        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)
+        
+        //Operation codes
+        let operation_codes = ""
+        code = code.replacingOccurrences(of: "<#operation_codes#>", with: operation_codes)
+        
+        return code
+        
+        func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
+        {
+            var code = String()
+            
+            code = "return [\n" + data.map
+            {
+                "    OperationCodeInfo(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol)\", info: \"\($0.info)\")"
+            }
+            .joined(separator: ",\n") + "\n]"
+            
+            return code
+        }
+    }
+    
+    private func part_module_code(_ module: PartModule) -> String
+    {
+        //Naming
+        var code = import_text_data(from: "Part Module")
+        
+        return code
+    }
+    
+    private func changer_module_code(_ module: ChangerModule) -> String
+    {
+        var code = import_text_data(from: "Changer Module")
+        
+        //Naming
+        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        
+        return code
+    }
+}
+
+public func code_correct_name(_ name: String) -> String
+{
+    let new_name = name.replacingOccurrences(of: " ", with: "_")
+    return new_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(name)" : name
+}
+
+public func safe_spaces_name(_ name: String) -> String
+{
+    return name.replacingOccurrences(of: " ", with: "_") //For SCNScene import...
 }
 
 //MARK: - Typealiases
 #if os(macOS)
 typealias UIImage = NSImage
 
+//MARK: - Extensions
 extension UIImage
 {
     func pngData() -> Data?
