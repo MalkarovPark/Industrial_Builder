@@ -52,6 +52,7 @@
 		62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleDesigner.swift */; };
 		62BAE7782BD71D89000972EA /* ChangerModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */; };
 		62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */; };
+		62D3118E2CE2905C002A39B8 /* List.txt in Resources */ = {isa = PBXBuildFile; fileRef = 62D3118D2CE2905C002A39B8 /* List.txt */; };
 		62D52D712C37EA91009A3DC7 /* OperationCodesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D52D702C37EA91009A3DC7 /* OperationCodesEditor.swift */; };
 		62F1AC4C2C2C702800C0B8E6 /* RobotModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */; };
 /* End PBXBuildFile section */
@@ -103,6 +104,7 @@
 		62AE55312AE96B3D00554A5B /* KinematicsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicsListView.swift; sourceTree = "<group>"; };
 		62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = KinematicComponents.scnassets; sourceTree = "<group>"; };
 		62BAE7762BD71846000972EA /* PartModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleDesigner.swift; sourceTree = "<group>"; };
+		62D3118D2CE2905C002A39B8 /* List.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = List.txt; sourceTree = "<group>"; };
 		62D52D702C37EA91009A3DC7 /* OperationCodesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationCodesEditor.swift; sourceTree = "<group>"; };
 		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesView.swift; sourceTree = "<group>"; };
 		62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModuleDesigner.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 		620AA4442CDD5732008C2918 /* CodeTemplates */ = {
 			isa = PBXGroup;
 			children = (
+				62D3118D2CE2905C002A39B8 /* List.txt */,
 				620AA4552CDFAC25008C2918 /* Changer */,
 				620AA4542CDFAC1C008C2918 /* Tool */,
 				620AA44E2CDFAC08008C2918 /* Robot */,
@@ -407,6 +410,7 @@
 			files = (
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
+				62D3118E2CE2905C002A39B8 /* List.txt in Resources */,
 				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

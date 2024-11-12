@@ -27,19 +27,19 @@ struct RobotModulesView: View
                 }
                 rename_module:
                 { new_name in
-                    base_stc.robot_modules[selected_module_index()].name = new_name
+                    base_stc.robot_modules[selected_module_index].name = new_name
                     document_handler.document_update_parts()
                 }
                 delete_module:
                 {
-                    base_stc.robot_modules.remove(at: selected_module_index())
+                    base_stc.robot_modules.remove(at: selected_module_index)
                 }
                 
                 VStack(spacing: 0)
                 {
-                    if selected_module_index() != -1
+                    if selected_module_index != -1
                     {
-                        RobotModuleDesigner(robot_module: $base_stc.robot_modules[selected_module_index()])
+                        RobotModuleDesigner(robot_module: $base_stc.robot_modules[selected_module_index])
                             .modifier(ViewBorderer())
                     }
                     else
@@ -69,7 +69,7 @@ struct RobotModulesView: View
         }
     }
     
-    private func selected_module_index() -> Int
+    private var selected_module_index: Int
     {
         return base_stc.robot_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
     }

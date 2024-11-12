@@ -79,7 +79,7 @@ struct BuildView: View
             
             List
             {
-                if selected_list_index() != -1
+                if selected_list_index != -1
                 {
                     DisclosureGroup("Robot")
                     {
@@ -89,7 +89,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names)
                                 }
                             }
                         }
@@ -97,13 +97,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.tool_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].robot_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names) })
                         }
                     }
                     
@@ -115,7 +115,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names)
                                 }
                             }
                         }
@@ -123,13 +123,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.tool_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].tool_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names) })
                         }
                     }
                     
@@ -141,7 +141,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names)
                                 }
                             }
                         }
@@ -149,13 +149,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.part_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].part_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names) })
                         }
                     }
                     
@@ -167,7 +167,7 @@ struct BuildView: View
                             { name in
                                 Button(name)
                                 {
-                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names)
+                                    add_module_name(name, names: &base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names)
                                 }
                             }
                         }
@@ -175,13 +175,13 @@ struct BuildView: View
                         .frame(maxWidth: .infinity)
                         .disabled(base_stc.changer_modules.count == 0)
                         
-                        if base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names.count > 0
+                        if base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names.count > 0
                         {
-                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names.indices, id: \.self)
+                            ForEach (base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names.indices, id: \.self)
                             { index in
-                                Text(base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names[index])
+                                Text(base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names[index])
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index()].changer_modules_names) })
+                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names) })
                         }
                     }
                 }
@@ -197,21 +197,49 @@ struct BuildView: View
                 }
                 .padding(!is_compact ? .trailing : .bottom)
                 .fileImporter(isPresented: $external_export_panel_presented,
-                              allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: { result in })
+                              allowedContentTypes: [.folder],
+                              allowsMultipleSelection: false)
+                { result in
+                    switch result
+                    {
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            base_stc.build_modules_files(list: selected_list, to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }
                 
                 Button(action: { internal_export_panel_presented = true })
                 {
                     BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
                 }
                 .fileImporter(isPresented: $internal_export_panel_presented,
-                              allowedContentTypes: [.folder], allowsMultipleSelection: false, onCompletion: { result in })
+                              allowedContentTypes: [.folder],
+                              allowsMultipleSelection: false)
+                { result in
+                    switch result
+                    {
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            base_stc.build_application_project(list: selected_list, to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }
             }, is_compact: $is_compact, spacing: 0)
             .background
             {
                 GeometryReader { geometry in
                     let width = geometry.size.width
                     
-                    VStack
+                    HStack
                     {
                         
                     }
@@ -257,9 +285,19 @@ struct BuildView: View
         base_stc.package_info.build_modules_lists.remove(at: index)
     }
     
-    private func selected_list_index() -> Int
+    private var selected_list_index: Int
     {
         return base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name }) ?? -1
+    }
+    
+    private var selected_list: BuildModulesList
+    {
+        guard let index = base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name })
+        else
+        {
+            return BuildModulesList(name: "")
+        }
+        return base_stc.package_info.build_modules_lists[index]
     }
     
     //MARK: Module names handling

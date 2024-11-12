@@ -327,15 +327,114 @@ public class StandardTemplateConstruct: ObservableObject
     
     //MARK: Build functions
     ///Builds modules in separated files.
-    public func build_modules_files(list: BuildModulesList)
+    public func build_modules_files(list: BuildModulesList, to folder_url: URL)
+    {
+        guard (folder_url.startAccessingSecurityScopedResource()) else
+        {
+            return
+        }
+        
+        for module in tool_modules
+        {
+            build_module_file(module: module, to: folder_url, as_internal: false)
+        }
+        
+        /*for module in list.part_modules_names
+        {
+            build_module_file(module: module, to: folder_url)
+        }*/
+        
+        do { folder_url.stopAccessingSecurityScopedResource() }
+    }
+    
+    ///Builds application project to compile with modules.
+    public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
         
     }
     
-    ///Builds application project to compile with modules.
-    public func build_application_project(list: BuildModulesList)
+    func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
     {
+        do
+        {
+            let module_url = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)") //type(of: module).extension_name
+            try FileManager.default.createDirectory(at: module_url, withIntermediateDirectories: true, attributes: nil)
+            
+            //Info file store
+            let info_data = module.json_data()
+            let info_url = module_url.appendingPathComponent("Info")
+            try info_data.write(to: info_url)
+            
+            //Code folder store
+            let code_url = module_url.appendingPathComponent("Code")
+            if FileManager.default.fileExists(atPath: code_url.path)
+            {
+                try FileManager.default.removeItem(at: code_url)
+            }
+            try FileManager.default.createDirectory(at: code_url, withIntermediateDirectories: true, attributes: nil)
+            
+            for code_item in module.code_items
+            {
+                let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
+                try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            //Resources folder store
+            let resources_url = module_url.appendingPathComponent("Resources.scnassets")
+            if FileManager.default.fileExists(atPath: resources_url.path)
+            {
+                try FileManager.default.removeItem(at: resources_url)
+            }
+            try FileManager.default.createDirectory(at: resources_url, withIntermediateDirectories: true, attributes: nil)
+            
+            if let resources_names = module.resources_names
+            {
+                for resource_name in resources_names
+                {
+                    let resource_url = resources_url.appendingPathComponent(resource_name)
+                    try resource_data(resource_name)?.write(to: resource_url)
+                }
+            }
+        }
+        catch
+        {
+            print(error.localizedDescription)
+            return
+        }
         
+        func resource_data(_ name: String) -> Data?
+        {
+            var data: Data? = nil
+
+            let file_extension = (name as NSString).pathExtension.lowercased()
+            let file_name = (name as NSString).deletingPathExtension
+            
+            if file_extension == "scn"
+            {
+                if let scene_index = scenes_files_names.firstIndex(of: name)
+                {
+                    data = try? NSKeyedArchiver.archivedData(withRootObject: scenes[scene_index], requiringSecureCoding: false)
+                }
+            }
+            else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
+            {
+                print(images_files_names)
+                if let image_index = images_files_names.firstIndex(of: name)
+                {
+                    guard let image_data = images[image_index].pngData() else
+                    {
+                        return nil
+                    }
+                    data = image_data
+                }
+            }
+            else
+            {
+                print("Uncompatible file format: \(file_extension)")
+            }
+
+            return data
+        }
     }
 }
 

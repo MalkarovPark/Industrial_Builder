@@ -27,19 +27,19 @@ struct PartModulesView: View
                 }
                 rename_module:
                 { new_name in
-                    base_stc.part_modules[selected_module_index()].name = new_name
+                    base_stc.part_modules[selected_module_index].name = new_name
                     document_handler.document_update_parts()
                 }
                 delete_module:
                 {
-                    base_stc.part_modules.remove(at: selected_module_index())
+                    base_stc.part_modules.remove(at: selected_module_index)
                 }
                 
                 VStack(spacing: 0)
                 {
-                    if selected_module_index() != -1
+                    if selected_module_index != -1
                     {
-                        PartModuleDesigner(part_module: $base_stc.part_modules[selected_module_index()])
+                        PartModuleDesigner(part_module: $base_stc.part_modules[selected_module_index])
                             .modifier(ViewBorderer())
                     }
                     else
@@ -69,7 +69,7 @@ struct PartModulesView: View
         }
     }
     
-    private func selected_module_index() -> Int
+    private var selected_module_index: Int
     {
         return base_stc.part_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
     }

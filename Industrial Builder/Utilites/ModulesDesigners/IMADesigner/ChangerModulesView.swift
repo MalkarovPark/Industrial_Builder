@@ -29,12 +29,12 @@ struct ChangerModulesView: View
                 }
                 rename_module:
                 { new_name in
-                    base_stc.changer_modules[selected_module_index()].name = new_name
+                    base_stc.changer_modules[selected_module_index].name = new_name
                     document_handler.document_update_ima()
                 }
                 delete_module:
                 {
-                    base_stc.changer_modules.remove(at: selected_module_index())
+                    base_stc.changer_modules.remove(at: selected_module_index)
                 }
                 
                 VStack(spacing: 0)
@@ -71,11 +71,11 @@ struct ChangerModulesView: View
         }
         .onChange(of: selected_name)
         {
-            smi = selected_module_index()
+            smi = selected_module_index
         }
     }
     
-    private func selected_module_index() -> Int
+    private var selected_module_index: Int
     {
         return base_stc.changer_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
