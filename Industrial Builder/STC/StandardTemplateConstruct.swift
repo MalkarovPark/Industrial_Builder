@@ -436,7 +436,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             let info_data = module.json_data()
             let info_url = url.appendingPathComponent("Info")
-            try info_data.write(to: url)
+            try info_data.write(to: info_url)
         }
         
         func make_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool = true) throws -> URL
@@ -494,6 +494,9 @@ public class StandardTemplateConstruct: ObservableObject
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
         
+        //Main Nodes
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
+        
         //Connected nodes names
         let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
         code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)
@@ -507,6 +510,9 @@ public class StandardTemplateConstruct: ObservableObject
         
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        
+        //Main Nodes
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
         
         //Connected nodes names
         let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
@@ -534,8 +540,13 @@ public class StandardTemplateConstruct: ObservableObject
     
     private func part_module_code(_ module: PartModule) -> String
     {
-        //Naming
         var code = import_text_data(from: "Part Module")
+        
+        //Naming
+        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        
+        //Main Nodes
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
         
         return code
     }
