@@ -48,14 +48,14 @@ struct BuildView: View
                 .modifier(ButtonBorderer())
                 #endif
                 
-                Button(action: { new_panel_presented = true })
+                Button("-")
                 {
-                    Image(systemName: "plus")
-                    #if os(macOS)
-                        .frame(width: 16)
-                    #else
-                        .frame(width: 32)
-                    #endif
+                    delete_modules_list(selected_name)
+                }
+                
+                Button("+")
+                {
+                    new_panel_presented = true
                 }
                 .popover(isPresented: $new_panel_presented, arrowEdge: .top)
                 {
@@ -63,16 +63,6 @@ struct BuildView: View
                     { new_name in
                         add_modules_list(new_name)
                     }
-                }
-                
-                Button(action: { delete_modules_list(selected_name) })
-                {
-                    Image(systemName: "minus")
-                    #if os(macOS)
-                        .frame(width: 16)
-                    #else
-                        .frame(width: 32)
-                    #endif
                 }
             }
             .padding(.bottom)
