@@ -4,6 +4,22 @@ import IndustrialKit
 
 class _6DOF_Controller: DesignerRobotModelController
 {
+    //MARK: - Nodes names
+    override var nodes_names: [String]
+    {
+        [
+            "base",
+            "column",
+            "d0",
+            "d1",
+            "d2",
+            "d3",
+            "d4",
+            "d5",
+            "d6"
+        ]
+    }
+    
     //MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
     override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
     {

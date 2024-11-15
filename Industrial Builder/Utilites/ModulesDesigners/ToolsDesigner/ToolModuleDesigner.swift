@@ -19,6 +19,7 @@ struct ToolModuleDesigner: View
     
     @State private var resources_names_update = false
     
+    @State private var connection_parameters_view_presented: Bool = false
     @State private var linked_components_view_presented: Bool = false
     
     var body: some View
@@ -38,9 +39,19 @@ struct ToolModuleDesigner: View
                 .labelsHidden()
                 .padding(.trailing)
                 
-                Button("Linked")
+                Button(action: { connection_parameters_view_presented.toggle() })
                 {
-                    linked_components_view_presented.toggle()
+                    Image(systemName: "link")
+                }
+                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .bottom)
+                {
+                    
+                }
+                .padding(.trailing)
+                
+                Button(action: { linked_components_view_presented.toggle() })
+                {
+                    Image(systemName: "list.triangle")
                 }
                 .popover(isPresented: $linked_components_view_presented, arrowEdge: .bottom)
                 {

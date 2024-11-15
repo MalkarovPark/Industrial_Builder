@@ -180,7 +180,7 @@ public class StandardTemplateConstruct: ObservableObject
             module.main_scene_name = new_scene_name
             
             //Set nodes names connect in scene
-            module.nodes_names = group.type.nodes_list
+            //module.nodes_names = group.type.nodes_list
             
             scenes_update_function()
         }

@@ -47,7 +47,7 @@ struct LinkedComponentsView: View
                                 }
                             }))
                     {
-                        Image(systemName: "link")
+                        Image(systemName: "app.connected.to.app.below.fill")
                     }
                     .toggleStyle(.button)
                     .disabled(linked_components[key]?.isEmpty ?? true)

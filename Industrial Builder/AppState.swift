@@ -64,7 +64,7 @@ class AppState : ObservableObject
         }
         
         controller.transform_by_lengths(lengths)
-        kinematic_preview_robot.update_model()
+        kinematic_preview_robot.update()
         kinematic_preview_robot.robot_location_place()
     }
     
