@@ -45,7 +45,10 @@ struct ToolModuleDesigner: View
                 }
                 .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .bottom)
                 {
-                    
+                    ConnectionParametersView(connection_parameters: $tool_module.connection_parameters)
+                    {
+                        document_handler.document_update_tools()
+                    }
                 }
                 .padding(.trailing)
                 

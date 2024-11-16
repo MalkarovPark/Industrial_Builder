@@ -4,11 +4,15 @@ import SceneKit
 
 public let <#Name#>_Module = ToolModule(
     name: "<#Name#>",
-    model_controller: <#Name#>_Controller(),
-    connector: <#Name#>_Connector(),
-    operation_codes: <#Name#>_Codes,
+    
     node: <#Name#>_Node,
-    nodes_names: <#nodes_names#>
+    
+    operation_codes: [
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/
+    ],
+    
+    model_controller: <#Name#>_Controller(),
+    connector: <#Name#>_Connector()
 )
 
 public var <#Name#>_Node: SCNNode
@@ -26,11 +30,4 @@ public var <#Name#>_Node: SCNNode
     }
     
     return node
-}
-
-public var Drill_Codes: [OperationCodeInfo]
-{
-    return [
-        <#operation_codes#>
-    ]
 }

@@ -209,15 +209,13 @@ public class StandardTemplateConstruct: ObservableObject
         return controller_code
     }
     
-    func kinematic_data_to_code(_ kinematic_data: [KinematicElement]) -> String
+    private func kinematic_data_to_code(_ kinematic_data: [KinematicElement]) -> String
     {
         var code = String()
         
         code = """
-            let lengths: [Float] = [
-                    \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n        "))
-                ]
-            """
+        \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n        "))
+        """
         
         return code
     }
@@ -549,26 +547,23 @@ public class StandardTemplateConstruct: ObservableObject
         code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
         
         //Connected nodes names
-        let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)
+        //let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
+        //code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
         
         //Operation codes
-        let operation_codes = ""
-        code = code.replacingOccurrences(of: "<#operation_codes#>", with: operation_codes)
+        code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
         
         return code
         
         func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
         {
-            var code = String()
-            
-            code = "return [\n" + data.map
+            return """
+            \(data.map
             {
-                "    OperationCodeInfo(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol)\", info: \"\($0.info)\")"
+                ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol)\", info: \"\($0.info)\")"
             }
-            .joined(separator: ",\n") + "\n]"
-            
-            return code
+            .joined(separator: ",\n        "))
+            """
         }
     }
     

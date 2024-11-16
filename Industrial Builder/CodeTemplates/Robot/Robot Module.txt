@@ -4,10 +4,11 @@ import SceneKit
 
 public let <#Name#>_Module = RobotModule(
     name: "<#Name#>",
-    model_controller: <#Name#>_Controller(),
-    connector: <#Name#>_Connector(),
+    
     node: <#Name#>_Node,
-    nodes_names: <#nodes_names#>
+    
+    model_controller: <#Name#>_Controller(),
+    connector: <#Name#>_Connector()
 )
 
 public var <#Name#>_Node: SCNNode

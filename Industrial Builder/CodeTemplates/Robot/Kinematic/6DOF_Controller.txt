@@ -4,13 +4,31 @@ import IndustrialKit
 
 class <#Name#>_Controller: RobotModelController
 {
+    //MARK: - Nodes names
+    override var nodes_names: [String]
+    {
+        [
+            "base",
+            "column",
+            "d0",
+            "d1",
+            "d2",
+            "d3",
+            "d4",
+            "d5",
+            "d6"
+        ]
+    }
+    
     //MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
     override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
     {
         apply_nodes_positions(values: inverse_kinematic_calculation(pointer_location: pointer_location, pointer_rotation: pointer_rotation, origin_location: origin_location, origin_rotation: origin_rotation))
     }
     
-    <#lengths#>
+    let lengths: [Float] = [
+        <#lengths#>
+    ]
     
     private func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
     {

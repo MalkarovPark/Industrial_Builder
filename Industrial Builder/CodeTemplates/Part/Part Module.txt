@@ -4,6 +4,7 @@ import SceneKit
 
 public let Cup_Module = PartModule(
     name: "<#Name#>",
+    
     node: Cup_Node
 )
 
