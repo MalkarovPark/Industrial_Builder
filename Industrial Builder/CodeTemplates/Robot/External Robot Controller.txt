@@ -17,7 +17,7 @@ var output = String()
 switch input.first //Function Name
 {
 case "reset_model":
-    output = reset_nodes()0
+    output = reset_nodes()
 case "updated_charts_data":
     output = updated_charts_data().json_string()
 case "updated_states_data":
