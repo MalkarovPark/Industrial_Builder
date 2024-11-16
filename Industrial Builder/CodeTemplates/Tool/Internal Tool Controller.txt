@@ -17,9 +17,9 @@ class <#Name#>_Controller: ToolModelController
     }
     
     //MARK: - Performing
-    override func nodes_perform(code: Int)
+    override func nodes_perform(code: Int, completion: @escaping () -> Void)
     {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=completion()@*/completion()/*@END_MENU_TOKEN@*/
     }
     
     override func reset_nodes()
@@ -28,22 +28,22 @@ class <#Name#>_Controller: ToolModelController
     }
     
     //MARK: - Statistics
-    override func initial_charts_data() -> [WorkspaceObjectChart]
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
-    }
-    
     override func updated_charts_data() -> [WorkspaceObjectChart]?
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
     }
     
-    override func initial_states_data() -> [StateItem]
+    override func initial_charts_data() -> [WorkspaceObjectChart]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func updated_states_data() -> [StateItem]?
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
     }
     
-    override func updated_states_data() -> [StateItem]?
+    override func initial_states_data() -> [StateItem]
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
     }

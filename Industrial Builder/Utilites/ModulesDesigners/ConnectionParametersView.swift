@@ -99,14 +99,12 @@ struct ConnectionParametersView: View
     
     private func add_item(value: Any)
     {
-        //connection_parameters.append(ConnectionParameter(name: new_parameter_name, value: value))
-        //connection_parameters.append(ConnectionParameter(name: mismatched_name(name: new_parameter_name, names: connection_parameters.map { $0.name }), value: value))
-        
         var name = new_parameter_name
         if new_parameter_name.isEmpty
         {
             name = "Name"
         }
+        
         connection_parameters.append(ConnectionParameter(name: mismatched_name(name: name, names: connection_parameters.map { $0.name }), value: value))
         
         update_file_data()

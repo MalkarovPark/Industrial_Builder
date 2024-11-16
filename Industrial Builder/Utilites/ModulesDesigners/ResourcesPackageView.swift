@@ -76,7 +76,7 @@ struct ResourcesPackageView: View
                     .buttonStyle(.link)
                     .popover(isPresented: $is_connect_view_presented, arrowEdge: .bottom)
                     {
-                        ConnectedNodesView(names: $connected_nodes_names, nested_nodes_names: nested_names, on_update: on_update)
+                        ConnectedNodesView(names: $connected_nodes_names, nested_nodes_names: nested_nodes_names, on_update: on_update)
                     }
                 }
             }
@@ -198,7 +198,7 @@ struct ResourcesPackageView: View
         )
     }
     
-    private var nested_names: [String]
+    private var nested_nodes_names: [String]
     {
         if let main_scene_name = main_scene_name,
            let scene_index = base_stc.scenes_files_names.firstIndex(of: main_scene_name)
@@ -314,10 +314,13 @@ struct ConnectedNodesView: View
                     on_update()
                 }
                 
-                Button("All")
+                if nested_nodes_names.count > 0
                 {
-                    names.append(contentsOf: nested_nodes_names)
-                    on_update()
+                    Button("All")
+                    {
+                        names.append(contentsOf: nested_nodes_names)
+                        on_update()
+                    }
                 }
             }
             label:

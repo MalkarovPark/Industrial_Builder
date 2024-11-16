@@ -323,7 +323,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    //MARK: Build functions
+    //MARK: - Building functions
     ///Builds modules in separated files.
     public func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
     {
@@ -360,7 +360,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         build_modules_files(list: list, to: folder_url, as_internal: true)
         
-        //Make List
+        //Make Internal Modules List
         guard (folder_url.startAccessingSecurityScopedResource()) else
         {
             return
@@ -395,6 +395,7 @@ public class StandardTemplateConstruct: ObservableObject
         do { folder_url.stopAccessingSecurityScopedResource() }
     }
     
+    //MARK: Build module file
     private func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
     {
         do
@@ -409,19 +410,36 @@ public class StandardTemplateConstruct: ObservableObject
             }
             else
             {
-                try make_info(url: module_url)
+                try make_info_file(url: module_url)
             }
             
             //Code folder store
             let code_url = try make_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
             
-            for code_item in module.code_items
+            if as_internal
             {
-                let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
-                try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
+                if module is RobotModule || module is ToolModule //Inject parameters in code items
+                {
+                    var updated_code_items = module.code_items
+                    
+                    inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
+                    
+                    inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
+                    
+                    updated_code_items = updated_code_items.reduce(into: [String: String]())
+                    { result, entry in
+                        result["\(safe_spaces_name(module.name))_\(entry.key)"] = entry.value
+                    }
+                    
+                    try code_files_store(code_items: updated_code_items, to: code_url)
+                }
+            }
+            else
+            {
+                try code_files_store(code_items: module.code_items, to: code_url) //Store external files without parameters inject
             }
             
-            guard !(module is ChangerModule) else { return }
+            guard !(module is ChangerModule) else { return } //Changer module has no visual resources...
             
             //Resources folder store
             let resources_url = try make_folder("Resources.scnassets", module_url: module_url, module_name: module.name, as_internal: as_internal)
@@ -441,7 +459,7 @@ public class StandardTemplateConstruct: ObservableObject
             return
         }
         
-        func make_module_code(url: URL) throws
+        func make_module_code(url: URL) throws //For internal modules
         {
             let code_item_url = url.appendingPathComponent("\(module.name)_Module.swift")
             
@@ -464,7 +482,7 @@ public class StandardTemplateConstruct: ObservableObject
             try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
         }
         
-        func make_info(url: URL) throws
+        func make_info_file(url: URL) throws //For external modules
         {
             let info_data = module.json_data()
             let info_url = url.appendingPathComponent("Info")
@@ -484,10 +502,53 @@ public class StandardTemplateConstruct: ObservableObject
             return folder_url
         }
         
-        func resource_data(_ name: String) -> Data?
+        func code_files_store(code_items: [String: String], to code_url: URL) throws //Store code items to listings
+        {
+            for code_item in code_items //Store external files without parameters inject
+            {
+                let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
+                try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+        }
+        
+        func inject_controller_parameters(code: inout String?, module: IndustrialModule) //Inject model controller parameters (nodes names) to internal code file
+        {
+            var nodes_names = String()
+            
+            if let robot_module = module as? RobotModule
+            {
+                nodes_names = robot_module.nodes_names.map { "\($0)" }.joined(separator: ",\n            ")
+            }
+            
+            if let tool_odule = module as? ToolModule
+            {
+                nodes_names = tool_odule.nodes_names.map { "\($0)" }.joined(separator: ",\n            ")
+            }
+            
+            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
+        }
+        
+        func inject_connector_parameters(code: inout String?, module: IndustrialModule) //Inject model connection parameters to internal code file
+        {
+            var connection_parameters = String()
+            
+            if let robot_module = module as? RobotModule
+            {
+                connection_parameters = robot_module.connector.parameters.map { "\($0)" }.joined(separator: ",\n            ")
+            }
+            
+            if let tool_module = module as? ToolModule
+            {
+                connection_parameters = tool_module.connector.parameters.map { "\($0)" }.joined(separator: ",\n            ")
+            }
+            
+            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
+        }
+        
+        func resource_data(_ name: String) -> Data? //Store visual data
         {
             var data: Data? = nil
-
+            
             let file_extension = (name as NSString).pathExtension.lowercased()
             //let file_name = (name as NSString).deletingPathExtension
             
@@ -519,6 +580,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
+    //MARK: - Module code (for internal)
     private func robot_module_code(_ module: RobotModule) -> String
     {
         var code = import_text_data(from: "Robot Module")
@@ -543,12 +605,8 @@ public class StandardTemplateConstruct: ObservableObject
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
         
-        //Main Nodes
+        //Main scene
         code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
-        
-        //Connected nodes names
-        //let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-        //code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
         
         //Operation codes
         code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
@@ -574,7 +632,7 @@ public class StandardTemplateConstruct: ObservableObject
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
         
-        //Main Nodes
+        //Main scene
         code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
         
         return code
@@ -591,6 +649,7 @@ public class StandardTemplateConstruct: ObservableObject
     }
 }
 
+//MARK: - Code correction functions
 public func code_correct_name(_ name: String) -> String
 {
     let new_name = name.replacingOccurrences(of: " ", with: "_")

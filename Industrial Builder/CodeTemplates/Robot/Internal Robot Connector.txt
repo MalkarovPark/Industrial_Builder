@@ -1,0 +1,54 @@
+//
+// Robot Connector
+//
+
+import Foundation
+import IndustrialKit
+
+class <#Name#>_Connector: RobotConnector
+{
+    //MARK: - Connecting
+    override var parameters: [ConnectionParameter]
+    {
+        [
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/
+        ]
+    }
+    
+    override func connection_process() async -> Bool
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return false@*/return false/*@END_MENU_TOKEN@*/
+    }
+    
+    override func disconnection_process() async
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+    }
+    
+    //MARK: - Performing
+    override func move_to(point: PositionPoint)
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+    }
+    
+    //MARK: - Statistics
+    override func initial_charts_data() -> [WorkspaceObjectChart]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func updated_charts_data() -> [WorkspaceObjectChart]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func initial_states_data() -> [StateItem]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func updated_states_data() -> [StateItem]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    }
+}
