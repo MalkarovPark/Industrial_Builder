@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IndustrialKit
+import SceneKit
 
 struct ResourcesPackageView: View
 {
@@ -75,7 +76,7 @@ struct ResourcesPackageView: View
                     .buttonStyle(.link)
                     .popover(isPresented: $is_connect_view_presented, arrowEdge: .bottom)
                     {
-                        ConnectedNodesView(names: $connected_nodes_names, on_update: on_update)
+                        ConnectedNodesView(names: $connected_nodes_names, nested_nodes_names: nested_names, on_update: on_update)
                     }
                 }
             }
@@ -197,6 +198,34 @@ struct ResourcesPackageView: View
         )
     }
     
+    private var nested_names: [String]
+    {
+        if let main_scene_name = main_scene_name,
+           let scene_index = base_stc.scenes_files_names.firstIndex(of: main_scene_name)
+        {
+            return get_nodes_names(from: base_stc.scenes[scene_index].rootNode)
+        }
+        
+        return [String]()
+        
+        func get_nodes_names(from node: SCNNode) -> [String]
+        {
+            var names: [String] = []
+            
+            if let name = node.name
+            {
+                names.append(name)
+            }
+            
+            for child in node.childNodes
+            {
+                names.append(contentsOf: get_nodes_names(from: child))
+            }
+            
+            return names
+        }
+    }
+    
     private func resource_name_index(_ selected_name: String) -> Int
     {
         guard let names = resources_names else
@@ -229,6 +258,8 @@ struct ConnectedNodesView: View
 {
     @Binding var names: [String]
     
+    let nested_nodes_names: [String]
+    
     let on_update: () -> ()
     
     var body: some View
@@ -245,30 +276,58 @@ struct ConnectedNodesView: View
                         {
                             on_update()
                         }
+                        .contextMenu
+                        {
+                            Button(role: .destructive)
+                            {
+                                delete_items(at: IndexSet(integer: index))
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                     }
                     .onDelete(perform: delete_items)
                 }
                 .listStyle(.inset)
-                .frame(minWidth: 256, minHeight: 128)
+                .frame(minWidth: 128, minHeight: 160)
                 .scrollContentBackground(.hidden)
             }
-            
-            Divider()
-            
-            HStack(spacing: 0)
+        }
+        .overlay(alignment: .bottomTrailing)
+        {
+            Menu
             {
-                Spacer()
-                
-                Button(action:
-                {
-                    names.append("Node")
-                    on_update()
-                })
-                {
-                    Image(systemName: "plus")
+                ForEach(nested_nodes_names, id: \.self)
+                { name in
+                    Button(name)
+                    {
+                        names.append(name)
+                        on_update()
+                    }
                 }
-                .buttonStyle(.link)
+                
+                Divider()
+                
+                Button("Without name")
+                {
+                    names.append("")
+                    on_update()
+                }
+                
+                Button("All")
+                {
+                    names.append(contentsOf: nested_nodes_names)
+                    on_update()
+                }
             }
+            label:
+            {
+                Image(systemName: "plus")
+                    .padding(4)
+            }
+            .buttonStyle(.plain)
+            .background(Color.secondary.opacity(0.2))
+            .clipShape(Circle())
             .padding(8)
         }
     }

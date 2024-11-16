@@ -33,13 +33,13 @@ struct ConnectionParametersView: View
                             {
                                 Button(role: .destructive)
                                 {
-                                    delete_item(at: IndexSet(integer: index))
+                                    delete_items(at: IndexSet(integer: index))
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
                         }
-                        .onDelete(perform: delete_item)
+                        .onDelete(perform: delete_items)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -61,29 +61,36 @@ struct ConnectionParametersView: View
             {
                 TextField("Name", text: $new_parameter_name)
                     .frame(maxWidth: .infinity)
-                    .textFieldStyle(.roundedBorder)
+                    .textFieldStyle(.plain)
                     .padding(.trailing)
                 
-                MenuButton(label: Text("+"))
+                Menu
                 {
-                    Button("String")
+                    Button("String", systemImage: "text.justify")
                     {
                         add_item(value: "String")
                     }
-                    Button("Int")
+                    
+                    Button("Int", systemImage: "number")
                     {
                         add_item(value: 0)
                     }
-                    Button("Float")
+                    
+                    Button("Float", systemImage: "percent")
                     {
                         add_item(value: Float(0.0))
                     }
-                    Button("Bool")
+                    
+                    Button("Bool", systemImage: "switch.2")
                     {
                         add_item(value: true)
                     }
                 }
-                .frame(width: 42)
+                label:
+                {
+                    Image(systemName: "plus")
+                }
+                .buttonStyle(.plain)
             }
         }
         .padding()
@@ -105,7 +112,7 @@ struct ConnectionParametersView: View
         update_file_data()
     }
     
-    private func delete_item(at offsets: IndexSet)
+    private func delete_items(at offsets: IndexSet)
     {
         connection_parameters.remove(atOffsets: offsets)
         update_file_data()
