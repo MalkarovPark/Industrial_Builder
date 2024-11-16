@@ -16,8 +16,11 @@ var output = String()
 
 switch input.first
 {
+case "nodes_perform":
+    output = nodes_perform(code: Int(input[1]) ?? 0)
 case "reset_model":
     output = reset_nodes()
+
 case "updated_charts_data":
     output = updated_charts_data().json_string()
 case "updated_states_data":
@@ -26,9 +29,6 @@ case "initial_charts_data":
     output = initial_charts_data().json_string()
 case "initial_states_data":
     output = updated_states_data().json_string()
-
-case "nodes_perform":
-    output = nodes_perform(code: Int(input[1]) ?? 0)
 
 default:
     break

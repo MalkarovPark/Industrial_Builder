@@ -16,8 +16,11 @@ var output = String()
 
 switch input.first //Function Name
 {
+case "update_nodes_positions":
+    output = update_nodes_positions(pointer_location: [Float(input[1]) ?? 0, Float(input[2]) ?? 0, Float(input[3]) ?? 0], pointer_rotation: [Float(input[4]) ?? 0, Float(input[5]) ?? 0, Float(input[6]) ?? 0], origin_location: [Float(input[7]) ?? 0, Float(input[8]) ?? 0, Float(input[9]) ?? 0], origin_rotation: [Float(input[10]) ?? 0, Float(input[11]) ?? 0, Float(input[12]) ?? 0])
 case "reset_model":
     output = reset_nodes()
+
 case "updated_charts_data":
     output = updated_charts_data().json_string()
 case "updated_states_data":
@@ -26,9 +29,6 @@ case "initial_charts_data":
     output = initial_charts_data().json_string()
 case "initial_states_data":
     output = updated_states_data().json_string()
-
-case "update_nodes_positions":
-    output = update_nodes_positions(pointer_location: [Float(input[1]) ?? 0, Float(input[2]) ?? 0, Float(input[3]) ?? 0], pointer_rotation: [Float(input[4]) ?? 0, Float(input[5]) ?? 0, Float(input[6]) ?? 0], origin_location: [Float(input[7]) ?? 0, Float(input[8]) ?? 0, Float(input[9]) ?? 0], origin_rotation: [Float(input[10]) ?? 0, Float(input[11]) ?? 0, Float(input[12]) ?? 0])
 
 default:
     break

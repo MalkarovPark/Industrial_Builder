@@ -7,7 +7,7 @@ import IndustrialKit
 
 class <#Name#>_Connector: RobotConnector
 {
-    //MARK: - Connecting
+    //MARK: - Connection
     override var parameters: [ConnectionParameter]
     {
         [
