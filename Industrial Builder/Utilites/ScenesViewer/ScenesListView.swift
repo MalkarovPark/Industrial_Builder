@@ -76,7 +76,7 @@ struct ScenesListView: View
         .modifier(WindowFramer())
         .toolbar
         {
-            Button(action: { clear_message_presented.toggle() })
+            /*Button(action: { clear_message_presented.toggle() })
             {
                 Image(systemName: "eraser")
             }
@@ -88,7 +88,7 @@ struct ScenesListView: View
                     base_stc.scenes_files_names.removeAll()
                     document_handler.document_update_scenes()
                 }
-            }
+            }*/
             
             Button(action: { load_panel_presented = true })
             {

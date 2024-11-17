@@ -406,8 +406,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         do
         {
-            let module_url = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)") //type(of: module).extension_name
-            try FileManager.default.createDirectory(at: module_url, withIntermediateDirectories: true, attributes: nil)
+            let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
             
             //Info file store
             if as_internal
@@ -495,9 +494,22 @@ public class StandardTemplateConstruct: ObservableObject
             try info_data.write(to: info_url)
         }
         
-        func make_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool = true) throws -> URL
+        func make_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool) throws -> URL
         {
             let folder_url = module_url.appendingPathComponent(as_internal ? "\(module_name)_\(folder_name)" : folder_name)
+            
+            if FileManager.default.fileExists(atPath: folder_url.path)
+            {
+                try FileManager.default.removeItem(at: folder_url)
+            }
+            try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
+            
+            return folder_url
+        }
+        
+        func make_folder(_ folder_name: String, module_url: URL) throws -> URL
+        {
+            let folder_url = module_url.appendingPathComponent(folder_name)
             
             if FileManager.default.fileExists(atPath: folder_url.path)
             {

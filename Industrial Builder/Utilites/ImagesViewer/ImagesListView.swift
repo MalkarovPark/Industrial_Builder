@@ -74,7 +74,7 @@ struct ImagesListView: View
         .modifier(WindowFramer())
         .toolbar
         {
-            Button(action: { clear_message_presented.toggle() })
+            /*Button(action: { clear_message_presented.toggle() })
             {
                 Image(systemName: "eraser")
             }
@@ -86,7 +86,7 @@ struct ImagesListView: View
                     base_stc.images_files_names.removeAll()
                     document_handler.document_update_images()
                 }
-            }
+            }*/
             
             Button(action: { load_panel_presented = true })
             {

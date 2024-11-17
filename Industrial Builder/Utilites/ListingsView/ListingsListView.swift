@@ -90,7 +90,7 @@ struct ListingsListView: View
                 }
             }
             
-            Button(action: { clear_message_presented.toggle() })
+            /*Button(action: { clear_message_presented.toggle() })
             {
                 Image(systemName: "eraser")
             }
@@ -102,7 +102,7 @@ struct ListingsListView: View
                     base_stc.listings_files_names.removeAll()
                     document_handler.document_update_listings()
                 }
-            }
+            }*/
             
             Button(action: { load_panel_presented = true })
             {
