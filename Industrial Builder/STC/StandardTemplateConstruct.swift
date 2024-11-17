@@ -206,7 +206,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         //controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name)
-        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(class_name))
+        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name.code_correct_format())
         
         controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
         
@@ -434,7 +434,7 @@ public class StandardTemplateConstruct: ObservableObject
                     
                     updated_code_items = updated_code_items.reduce(into: [String: String]())
                     { result, entry in
-                        result["\(safe_spaces_name(module.name))_\(entry.key)"] = entry.value
+                        result["\(module.name)_\(entry.key)"] = entry.value
                     }
                     
                     try code_files_store(code_items: updated_code_items, to: code_url)
@@ -592,10 +592,10 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Robot Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
         
         //Main Nodes
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
         
         //Connected nodes names
         let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
@@ -609,10 +609,10 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Tool Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
         
         //Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
         
         //Operation codes
         code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
@@ -636,10 +636,10 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Part Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
         
         //Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: code_correct_name(module.main_scene_name ?? "\(module.name).scn"))
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
         
         return code
     }
@@ -649,22 +649,20 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Changer Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: code_correct_name(module.name))
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
         
         return code
     }
 }
 
 //MARK: - Code correction functions
-public func code_correct_name(_ name: String) -> String
+extension String
 {
-    let new_name = name.replacingOccurrences(of: " ", with: "_")
-    return new_name.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(name)" : name
-}
-
-public func safe_spaces_name(_ name: String) -> String
-{
-    return name.replacingOccurrences(of: " ", with: "_") //For SCNScene import...
+    func code_correct_format() -> String
+    {
+        let correctedName = self.replacingOccurrences(of: " ", with: "_")
+        return correctedName.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(correctedName)" : correctedName
+    }
 }
 
 //MARK: - Typealiases
