@@ -71,6 +71,34 @@ public enum KinematicGroupType: String, Codable, Equatable, CaseIterable
             return import_text_data(from: "6DOF_Controller")
         }
     }
+    
+    var nodes_names: [String]
+    {
+        switch self
+        {
+        case .portal:
+            return [
+                "base",
+                "column",
+                "frame",
+                "d0",
+                "d1",
+                "d2"
+            ]
+        case ._6DOF:
+            return [
+                "base",
+                "column",
+                "d0",
+                "d1",
+                "d2",
+                "d3",
+                "d4",
+                "d5",
+                "d6"
+            ]
+        }
+    }
 }
 
 public func _6DOFGroupMake(name: String) -> KinematicGroup

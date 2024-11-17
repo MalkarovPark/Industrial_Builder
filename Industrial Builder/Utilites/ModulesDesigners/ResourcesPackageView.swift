@@ -297,28 +297,28 @@ struct ConnectedNodesView: View
         {
             Menu
             {
-                ForEach(nested_nodes_names, id: \.self)
-                { name in
-                    Button(name)
-                    {
-                        names.append(name)
-                        on_update()
-                    }
-                }
-                
-                Divider()
-                
                 Button("Without name")
                 {
                     names.append("")
                     on_update()
                 }
                 
+                Divider()
+                
                 if nested_nodes_names.count > 0
                 {
                     Button("All")
                     {
                         names.append(contentsOf: nested_nodes_names)
+                        on_update()
+                    }
+                }
+                
+                ForEach(nested_nodes_names, id: \.self)
+                { name in
+                    Button(name)
+                    {
+                        names.append(name)
                         on_update()
                     }
                 }

@@ -85,7 +85,7 @@ struct BuildView: View
                         }
                         .buttonStyle(.borderless)
                         .frame(maxWidth: .infinity)
-                        .disabled(base_stc.tool_modules.count == 0)
+                        .disabled(base_stc.robot_modules.count == 0)
                         
                         if base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names.count > 0
                         {

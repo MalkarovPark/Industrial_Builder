@@ -8,15 +8,7 @@ class <#Name#>_Controller: RobotModelController
     override var nodes_names: [String]
     {
         [
-            "base",
-            "column",
-            "d0",
-            "d1",
-            "d2",
-            "d3",
-            "d4",
-            "d5",
-            "d6"
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/
         ]
     }
     

@@ -105,6 +105,8 @@ public class StandardTemplateConstruct: ObservableObject
                 listings_files_names.append(group.name)
             }
             
+            
+            
             listings_update_function()
         }
         
@@ -140,6 +142,8 @@ public class StandardTemplateConstruct: ObservableObject
         if make_controller
         {
             module.code_items["Controller"] = generate_controller_code(group: group, name: module.name)
+            
+            module.nodes_names = group.type.nodes_names
             
             robots_update_function()
         }
@@ -327,32 +331,36 @@ public class StandardTemplateConstruct: ObservableObject
     ///Builds modules in separated files.
     public func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
     {
-        guard (folder_url.startAccessingSecurityScopedResource()) else
+        guard folder_url.startAccessingSecurityScopedResource() else
         {
             return
         }
         
-        for robot_module in robot_modules
+        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
+        for robot_module in filtered_robot_modules
         {
             build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
         }
         
-        for tool_module in tool_modules
+        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
+        for tool_module in filtered_tool_modules
         {
             build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
         }
         
-        for part_module in part_modules
+        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        for part_module in filtered_part_modules
         {
             build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
         }
         
-        for changer_module in changer_modules
+        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        for changer_module in filtered_changer_modules
         {
             build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
         }
         
-        do { folder_url.stopAccessingSecurityScopedResource() }
+        folder_url.stopAccessingSecurityScopedResource()
     }
     
     ///Builds application project to compile with modules.
@@ -369,18 +377,16 @@ public class StandardTemplateConstruct: ObservableObject
         var list_code = import_text_data(from: "List")
         
         let placeholders = [
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", robot_modules_names),
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", tool_modules_names),
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", part_modules_names),
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", changer_modules_names)
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
+            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
         ]
         
         for (placeholder, names) in placeholders
         {
-            for module_name in names
-            {
-                list_code = list_code.replacingOccurrences(of: placeholder, with: module_name, options: .literal, range: nil)
-            }
+            let formatted_names = names.map { "\"\($0)\"" }.joined(separator: ",\n        ")
+            list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
         }
         
         do
@@ -534,15 +540,15 @@ public class StandardTemplateConstruct: ObservableObject
             
             if let robot_module = module as? RobotModule
             {
-                connection_parameters = robot_module.connector.parameters.map { "\($0)" }.joined(separator: ",\n            ")
+                connection_parameters = robot_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
             }
             
             if let tool_module = module as? ToolModule
             {
-                connection_parameters = tool_module.connector.parameters.map { "\($0)" }.joined(separator: ",\n            ")
+                connection_parameters = tool_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
             }
             
-            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
+            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
         }
         
         func resource_data(_ name: String) -> Data? //Store visual data
@@ -679,3 +685,23 @@ extension UIImage
     }
 }
 #endif
+
+extension ConnectionParameter
+{
+    public var code_text: String
+    {
+        let valueString: String
+        switch value
+        {
+        case let stringValue as String:
+            valueString = "\"\(stringValue)\""
+        case let boolValue as Bool:
+            valueString = "\(boolValue)"
+        case let numberValue as NSNumber:
+            valueString = "\(numberValue)"
+        default:
+            valueString = "nil"
+        }
+        return ".init(name: \"\(name)\", value: \(valueString))"
+    }
+}
