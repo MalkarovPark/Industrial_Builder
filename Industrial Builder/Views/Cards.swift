@@ -248,13 +248,6 @@ struct SimpleImageCard<Content: View>: View
                 is_presented.toggle()
             }
             .popover(isPresented: $is_presented, arrowEdge: .trailing, content: { content($is_presented) })
-            /*.contextMenu
-            {
-                Button(role: .destructive, action: delete_image)
-                {
-                    Label("Delete", systemImage: "xmark")
-                }
-            }*/
         #else
         Image(uiImage: image)
             .resizable()
@@ -264,20 +257,8 @@ struct SimpleImageCard<Content: View>: View
                 is_presented.toggle()
             }
             .popover(isPresented: $is_presented, arrowEdge: .trailing, content: { content($is_presented) })
-            /*.contextMenu
-            {
-                Button(role: .destructive, action: delete_image)
-                {
-                    Label("Delete", systemImage: "xmark")
-                }
-            }*/
         #endif
     }
-    
-    /*func delete_image()
-    {
-        images.remove(at: images.firstIndex(of: image) ?? 0)
-    }*/
 }
 
 struct SelectImageCard: View
@@ -525,6 +506,71 @@ struct SelectSceneCard: View
     }
 }
 
+struct KinematicCard<Content: View>: View
+{
+    let group: KinematicGroup
+    
+    let link_view: () -> Content
+    
+    public init(group: KinematicGroup, link_view: @escaping () -> Content)
+    {
+        self.group = group
+        
+        self.link_view = link_view
+    }
+    
+    var body: some View
+    {
+        NavigationLink(destination: link_view)
+        {
+            VStack(spacing: 0)
+            {
+                ZStack
+                {
+                    Rectangle()
+                        .foregroundStyle(.thinMaterial)
+                        .overlay(alignment: .center)
+                        {
+                            Image(systemName: "point.3.connected.trianglepath.dotted")
+                                .fontWeight(.bold)
+                                .font(.system(size: 96))
+                            #if os(macOS)
+                                .foregroundColor(Color(NSColor.quaternaryLabelColor).opacity(0.75))
+                            #else
+                                .foregroundColor(Color(UIColor.quaternaryLabel).opacity(0.75))
+                            #endif
+                                .padding()
+                                .offset(x: 40, y: 20)
+                        }
+                        .overlay(alignment: .topLeading)
+                        {
+                            VStack(spacing: 0)
+                            {
+                                Text(group.name)
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.secondary)
+                                    .padding(6)
+                            }
+                        }
+                        .overlay(alignment: .bottomLeading)
+                        {
+                            Text(group.type.rawValue)
+                                .font(.system(size: 16))
+                                .foregroundColor(.secondary.opacity(0.75))
+                                .padding(6)
+                        }
+                }
+                .frame(minWidth: 96, minHeight: 96)
+                //.frame(height: 96)
+                //.frame(width: 96, height: 96)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            }
+            .shadow(radius: 8)
+        }
+        .buttonStyle(.borderless)
+    }
+}
+
 #Preview
 {
     VStack(spacing: 0)
@@ -567,5 +613,15 @@ struct SelectSceneCard: View
         
         SelectSceneCard(scene: SCNScene(), name: "Image", is_selected: .constant(true), is_main: .constant(false), on_main_set: {}, on_main_unset: {})
     }
+    .padding()
+}
+
+#Preview
+{
+    KinematicCard(group: KinematicGroup(name: "Name", type: .portal))
+    {
+        EmptyView()
+    }
+    .frame(width: 96, height: 96)
     .padding()
 }

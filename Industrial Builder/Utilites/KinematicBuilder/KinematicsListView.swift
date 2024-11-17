@@ -15,7 +15,7 @@ struct KinematicsListView: View
     
     @State private var add_kinematic_view_presented = false
     
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 96, maximum: .infinity), spacing: 24)]
     
     var body: some View
     {
@@ -29,7 +29,7 @@ struct KinematicsListView: View
                     {
                         ForEach(base_stc.kinematic_groups.indices, id: \.self)
                         { index in
-                            StandardNavigationCard(name: base_stc.kinematic_groups[index].name, image_name: "gearshape.2.fill", color: .gray)
+                            KinematicCard(group: base_stc.kinematic_groups[index])
                             {
                                 KinematicDesignerView(group: $base_stc.kinematic_groups[index])
                             }
@@ -42,9 +42,11 @@ struct KinematicsListView: View
                                     Label("Delete", systemImage: "xmark")
                                 }
                             }
+                            .aspectRatio(1, contentMode: .fill)
                         }
                     }
                     .padding(20)
+                    //.padding(.vertical)
                 }
             }
             else
@@ -141,7 +143,7 @@ struct AddKinematicView: View
     {
         if new_item_name == ""
         {
-            new_item_name = "None"
+            new_item_name = "Name"
         }
         
         switch kinematic_preset
