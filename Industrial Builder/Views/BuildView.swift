@@ -92,8 +92,19 @@ struct BuildView: View
                             ForEach (base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names.indices, id: \.self)
                             { index in
                                 Text(base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names[index])
+                                    .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_module_name(at: IndexSet(integer: index), names: &base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names) })
+                            .onDelete
+                            { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names)
+                            }
                         }
                     }
                     
@@ -118,8 +129,19 @@ struct BuildView: View
                             ForEach (base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names.indices, id: \.self)
                             { index in
                                 Text(base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names[index])
+                                    .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_module_name(at: IndexSet(integer: index), names: &base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names) })
+                            .onDelete
+                            { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names)
+                            }
                         }
                     }
                     
@@ -144,8 +166,19 @@ struct BuildView: View
                             ForEach (base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names.indices, id: \.self)
                             { index in
                                 Text(base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names[index])
+                                    .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_module_name(at: IndexSet(integer: index), names: &base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names) })
+                            .onDelete
+                            { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names)
+                            }
                         }
                     }
                     
@@ -170,8 +203,19 @@ struct BuildView: View
                             ForEach (base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names.indices, id: \.self)
                             { index in
                                 Text(base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names[index])
+                                    .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_module_name(at: IndexSet(integer: index), names: &base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
-                            .onDelete(perform: { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names) })
+                            .onDelete
+                            { index_set in delete_module_name(at: index_set, names: &base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names)
+                            }
                         }
                     }
                 }
@@ -195,7 +239,7 @@ struct BuildView: View
                     case .success(let urls):
                         if let url = urls.first
                         {
-                            base_stc.build_modules_files(list: selected_list, to: url)
+                            base_stc.build_external_modules(list: selected_list, to: url)
                         }
                     case .failure(let error):
                         print(error.localizedDescription)
@@ -255,6 +299,13 @@ struct BuildView: View
                 selected_name = base_stc.package_info.build_modules_lists_names.first ?? ""
             }
         }
+        .overlay
+        {
+            if base_stc.on_building_modules// || true
+            {
+                BuildProgressView()
+            }
+        }
     }
     
     //MARK: Module lists handling
@@ -311,6 +362,52 @@ struct BuildView: View
     
     //MARK: Export handling
 }
+
+struct BuildProgressView: View
+{
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    
+    var body: some View
+    {
+        ZStack
+        {
+            Rectangle()
+                .fill(Color.black.opacity(0.1))
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack//(spacing: 0)
+            {
+                ProgressView(
+                    value: base_stc.build_progress, total: base_stc.build_total,
+                    label:
+                        {
+                            Text("Building modules...")
+                        },
+                    currentValueLabel:
+                        {
+                            Text(base_stc.build_info)
+                        }
+                )
+                
+                /*HStack(spacing: 0)
+                {
+                    Spacer()
+                    
+                    Button("Cancel")
+                    {
+                        
+                    }
+                }*/
+            }
+            .padding()
+            .background(.bar)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .frame(width: 192)
+        }
+        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+    }
+}
+
 
 struct BuildItemView: View
 {

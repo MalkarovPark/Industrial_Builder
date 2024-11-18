@@ -327,53 +327,67 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
+    //MARK: - UI Info
+    @Published var on_building_modules: Bool = false
+    @Published var build_progress: Float = 0
+    @Published var build_total: Float = 0
+    @Published var build_info: String = String()
+    
+    private func set_building_info(list: BuildModulesList, as_internal: Bool)
+    {
+        build_progress = 0
+        
+        build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count)
+        build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count)
+        build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count)
+        build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)
+        
+        build_total -= 1
+        
+        self.build_info = String()
+        
+        if as_internal
+        {
+            
+        }
+        else
+        {
+            
+        }
+    }
+    
     //MARK: - Building functions
     ///Builds modules in separated files.
-    public func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
+    public func build_external_modules(list: BuildModulesList, to folder_url: URL)
     {
-        guard folder_url.startAccessingSecurityScopedResource() else
-        {
-            return
-        }
+        set_building_info(list: list, as_internal: false)
+        on_building_modules = true
         
-        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
-        for robot_module in filtered_robot_modules
-        {
-            build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
-        }
+        guard folder_url.startAccessingSecurityScopedResource() else { return }
         
-        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
-        for tool_module in filtered_tool_modules
-        {
-            build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
-        }
-        
-        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
-        for part_module in filtered_part_modules
-        {
-            build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
-        }
-        
-        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
-        for changer_module in filtered_changer_modules
-        {
-            build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
-        }
+        build_modules_files(list: list, to: folder_url, as_internal: false)
         
         folder_url.stopAccessingSecurityScopedResource()
+        
+        build_info = "Finished"
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
+        {
+            self.on_building_modules = false
+        }
+        //on_building_modules = false
     }
     
     ///Builds application project to compile with modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
+        set_building_info(list: list, as_internal: true)
+        on_building_modules = true
+        
+        guard folder_url.startAccessingSecurityScopedResource() else { return }
+        
         build_modules_files(list: list, to: folder_url, as_internal: true)
         
         //Make Internal Modules List
-        guard (folder_url.startAccessingSecurityScopedResource()) else
-        {
-            return
-        }
-        
         var list_code = import_text_data(from: "List")
         
         let placeholders = [
@@ -399,6 +413,49 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         do { folder_url.stopAccessingSecurityScopedResource() }
+        
+        build_info = "Finished"
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
+        {
+            self.on_building_modules = false
+        }
+        //on_building_modules = false
+    }
+    
+    ///Builds modules in separated files.
+    private func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
+    {
+        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
+        for robot_module in filtered_robot_modules
+        {
+            build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
+            
+            build_progress += 1
+        }
+        
+        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
+        for tool_module in filtered_tool_modules
+        {
+            build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
+            
+            build_progress += 1
+        }
+        
+        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        for part_module in filtered_part_modules
+        {
+            build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
+            
+            build_progress += 1
+        }
+        
+        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        for changer_module in filtered_changer_modules
+        {
+            build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
+            
+            build_progress += 1
+        }
     }
     
     //MARK: Build module file
