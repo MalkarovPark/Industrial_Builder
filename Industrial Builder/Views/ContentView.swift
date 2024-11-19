@@ -69,6 +69,7 @@ struct Sidebar: View
                                 NavigationLink(destination: ComponentsView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
+                                        .badge(components_count)
                                 }
                             }
                             #else
@@ -79,6 +80,7 @@ struct Sidebar: View
                             header:
                             {
                                 Text(selection.localizedName)
+                                    .badge(components_count)
                             }
                             #endif
                         }
@@ -94,6 +96,7 @@ struct Sidebar: View
                                 NavigationLink(destination: ModulesView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
+                                        .badge(modules_count)
                                 }
                             }
                             #else
@@ -104,6 +107,7 @@ struct Sidebar: View
                             header:
                             {
                                 Text(selection.localizedName)
+                                    .badge(modules_count)
                             }
                             #endif
                         }
@@ -145,6 +149,16 @@ struct Sidebar: View
                     .padding(16)
             }
         }
+    }
+    
+    private var components_count: Int
+    {
+        base_stc.scenes.count + base_stc.package_info.images_data.count + base_stc.listings.count + base_stc.kinematic_groups.count
+    }
+    
+    private var modules_count: Int
+    {
+        base_stc.robot_modules.count + base_stc.tool_modules.count + base_stc.part_modules.count + base_stc.changer_modules.count
     }
 }
 
