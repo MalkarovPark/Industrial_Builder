@@ -232,7 +232,6 @@
 				62AE55292AE7079100554A5B /* Utilites */,
 				627D3EBD2AD3F5EF00D5988D /* Views */,
 				6255B91E2B9BDC34002B575C /* ViewModifiers */,
-				629AABC22BC855F300720386 /* Modules */,
 				629AABC12BC855D200720386 /* STC */,
 				620AA4442CDD5732008C2918 /* CodeTemplates */,
 				6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */,
@@ -299,13 +298,6 @@
 				629AABC32BC8561500720386 /* STCPackageInfo.swift */,
 			);
 			path = STC;
-			sourceTree = "<group>";
-		};
-		629AABC22BC855F300720386 /* Modules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Modules;
 			sourceTree = "<group>";
 		};
 		629B52682AF6887D003F45D2 /* ScenesViewer */ = {
