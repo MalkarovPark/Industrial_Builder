@@ -2,13 +2,13 @@ import Foundation
 import IndustrialKit
 import SceneKit
 
-public let Cup_Module = PartModule(
+public let <#Name#>_Module = PartModule(
     name: "<#Name#>",
     
-    node: Cup_Node
+    node: <#Name#>_Node
 )
 
-public var Cup_Node: SCNNode
+public var <#Name#>_Node: SCNNode
 {
     guard let new_scene = SCNScene(named: "<#Name#>_Resources.scnassets/<#main_scene_name#>")
     else
