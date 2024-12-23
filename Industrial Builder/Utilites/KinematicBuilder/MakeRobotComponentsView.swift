@@ -59,7 +59,7 @@ struct MakeRobotComponentsView: View
                     Divider()
                 }
                 
-                Button("Separated components")
+                Button("Separated Components")
                 {
                     base_stc.make_copmponents_from_kinematic(
                         group: group, node: app_state.kinematic_preview_robot.node ?? SCNNode(),

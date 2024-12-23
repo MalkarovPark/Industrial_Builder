@@ -3,7 +3,7 @@ import IndustrialKit
 import SceneKit
 
 public let <#Name#>_Module = ChangerModule(
-    name: "<#Name#>",
+    name: "<#ModuleName#>",
     
     change_func: <#Name#>_Change
 )

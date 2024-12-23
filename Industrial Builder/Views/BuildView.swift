@@ -312,7 +312,7 @@ struct BuildView: View
     private func add_modules_list(_ name: String)
     {
         base_stc.package_info.build_modules_lists.append(BuildModulesList(name: name))
-        selected_name = base_stc.package_info.build_modules_lists_names.first ?? ""
+        selected_name = base_stc.package_info.build_modules_lists_names.last ?? ""
     }
     
     private func delete_modules_list(_ name: String)
@@ -324,6 +324,8 @@ struct BuildView: View
         }
         
         base_stc.package_info.build_modules_lists.remove(at: index)
+        
+        selected_name = base_stc.package_info.build_modules_lists_names.last ?? ""
     }
     
     private var selected_list_index: Int

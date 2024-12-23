@@ -535,9 +535,9 @@ struct KinematicCard<Content: View>: View
                                 .fontWeight(.bold)
                                 .font(.system(size: 96))
                             #if os(macOS)
-                                .foregroundColor(Color(NSColor.quaternaryLabelColor).opacity(0.75))
+                                .foregroundColor(Color(NSColor.quaternaryLabelColor).opacity(0.25))
                             #else
-                                .foregroundColor(Color(UIColor.quaternaryLabel).opacity(0.75))
+                                .foregroundColor(Color(UIColor.quaternaryLabel).opacity(0.25))
                             #endif
                                 .padding()
                                 .offset(x: 40, y: 20)
@@ -561,8 +561,6 @@ struct KinematicCard<Content: View>: View
                         }
                 }
                 .frame(minWidth: 96, minHeight: 96)
-                //.frame(height: 96)
-                //.frame(width: 96, height: 96)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
             .shadow(radius: 8)

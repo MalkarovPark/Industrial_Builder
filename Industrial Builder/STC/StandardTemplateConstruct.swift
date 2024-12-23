@@ -333,6 +333,7 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var build_total: Float = 0
     @Published var build_info: String = String()
     
+    ///Progressbar startup info
     private func set_building_info(list: BuildModulesList, as_internal: Bool)
     {
         build_progress = 0
@@ -377,49 +378,58 @@ public class StandardTemplateConstruct: ObservableObject
         //on_building_modules = false
     }
     
-    ///Builds application project to compile with modules.
+    ///Builds application project to compile with internal modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
         set_building_info(list: list, as_internal: true)
         on_building_modules = true
         
-        guard folder_url.startAccessingSecurityScopedResource() else { return }
-        
-        build_modules_files(list: list, to: folder_url, as_internal: true)
-        
-        //Make Internal Modules List
-        var list_code = import_text_data(from: "List")
-        
-        let placeholders = [
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
-            ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
-        ]
-        
-        for (placeholder, names) in placeholders
-        {
-            let formatted_names = names.map { "\"\($0)\"" }.joined(separator: ",\n        ")
-            list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
-        }
-        
         do
         {
-            try list_code.write(to: folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
+            //Internal modules folder
+            guard folder_url.startAccessingSecurityScopedResource() else { return }
+            let package_folder_url = try make_folder("Modules", module_url: folder_url)
+            
+            build_modules_files(list: list, to: package_folder_url, as_internal: true)
+            
+            //Make Internal Modules List
+            var list_code = import_text_data(from: "List")
+            
+            let placeholders = [
+                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
+                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
+                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
+                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
+            ]
+            
+            for (placeholder, names) in placeholders
+            {
+                let formatted_names = names.map { "\($0.code_correct_format())_Module" }.joined(separator: ",\n        ")
+                list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
+            }
+            
+            do
+            {
+                try list_code.write(to: package_folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+            
+            do { folder_url.stopAccessingSecurityScopedResource() }
+            
+            build_info = "Finished"
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
+            {
+                self.on_building_modules = false
+            }
+            //on_building_modules = false
         }
         catch
         {
             print(error.localizedDescription)
         }
-        
-        do { folder_url.stopAccessingSecurityScopedResource() }
-        
-        build_info = "Finished"
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
-        {
-            self.on_building_modules = false
-        }
-        //on_building_modules = false
     }
     
     ///Builds modules in separated files.
@@ -476,7 +486,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             //Code folder store
-            let code_url = try make_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
+            let code_url = try make_module_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
             
             if as_internal
             {
@@ -504,7 +514,7 @@ public class StandardTemplateConstruct: ObservableObject
             guard !(module is ChangerModule) else { return } //Changer module has no visual resources...
             
             //Resources folder store
-            let resources_url = try make_folder("Resources.scnassets", module_url: module_url, module_name: module.name, as_internal: as_internal)
+            let resources_url = try make_module_folder("Resources.scnassets", module_url: module_url, module_name: module.name, as_internal: as_internal)
             
             if let resources_names = module.resources_names
             {
@@ -521,7 +531,7 @@ public class StandardTemplateConstruct: ObservableObject
             return
         }
         
-        func make_module_code(url: URL) throws //For internal modules
+        func make_module_code(url: URL) throws //For internal module
         {
             let code_item_url = url.appendingPathComponent("\(module.name)_Module.swift")
             
@@ -544,29 +554,16 @@ public class StandardTemplateConstruct: ObservableObject
             try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
         }
         
-        func make_info_file(url: URL) throws //For external modules
+        func make_info_file(url: URL) throws //For external module
         {
             let info_data = module.json_data()
             let info_url = url.appendingPathComponent("Info")
             try info_data.write(to: info_url)
         }
         
-        func make_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool) throws -> URL
+        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool) throws -> URL
         {
             let folder_url = module_url.appendingPathComponent(as_internal ? "\(module_name)_\(folder_name)" : folder_name)
-            
-            if FileManager.default.fileExists(atPath: folder_url.path)
-            {
-                try FileManager.default.removeItem(at: folder_url)
-            }
-            try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
-            
-            return folder_url
-        }
-        
-        func make_folder(_ folder_name: String, module_url: URL) throws -> URL
-        {
-            let folder_url = module_url.appendingPathComponent(folder_name)
             
             if FileManager.default.fileExists(atPath: folder_url.path)
             {
@@ -592,12 +589,12 @@ public class StandardTemplateConstruct: ObservableObject
             
             if let robot_module = module as? RobotModule
             {
-                nodes_names = robot_module.nodes_names.map { "\($0)" }.joined(separator: ",\n            ")
+                nodes_names = robot_module.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
             }
             
             if let tool_odule = module as? ToolModule
             {
-                nodes_names = tool_odule.nodes_names.map { "\($0)" }.joined(separator: ",\n            ")
+                nodes_names = tool_odule.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
             }
             
             code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
@@ -662,6 +659,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         //Main Nodes
         code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
@@ -679,6 +677,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         //Main scene
         code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
@@ -706,6 +705,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         //Main scene
         code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
@@ -719,8 +719,22 @@ public class StandardTemplateConstruct: ObservableObject
         
         //Naming
         code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         return code
+    }
+    
+    private func make_folder(_ folder_name: String, module_url: URL) throws -> URL
+    {
+        let folder_url = module_url.appendingPathComponent(folder_name)
+        
+        if FileManager.default.fileExists(atPath: folder_url.path)
+        {
+            try FileManager.default.removeItem(at: folder_url)
+        }
+        try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
+        
+        return folder_url
     }
 }
 

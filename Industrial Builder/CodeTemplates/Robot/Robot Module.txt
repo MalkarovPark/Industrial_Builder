@@ -3,7 +3,7 @@ import IndustrialKit
 import SceneKit
 
 public let <#Name#>_Module = RobotModule(
-    name: "<#Name#>",
+    name: "<#ModuleName#>",
     
     node: <#Name#>_Node,
     
@@ -13,7 +13,7 @@ public let <#Name#>_Module = RobotModule(
 
 public var <#Name#>_Node: SCNNode
 {
-    guard let new_scene = SCNScene(named: "<#Name#>_Resources.scnassets/<#main_scene_name#>")
+    guard let new_scene = SCNScene(named: "<#ModuleName#>_Resources.scnassets/<#main_scene_name#>")
     else
     {
         return SCNNode()

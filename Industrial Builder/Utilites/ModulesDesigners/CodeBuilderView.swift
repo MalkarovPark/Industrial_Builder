@@ -26,7 +26,7 @@ struct CodeBuilderView: View
             {
                 if avaliable_templates_names.count > 1
                 {
-                    Menu("Import From Template")
+                    Menu("Import from Template")
                     {
                         ForEach(avaliable_templates_names, id: \.self)
                         { name in
@@ -46,7 +46,7 @@ struct CodeBuilderView: View
                 }
                 else
                 {
-                    Button("Import From Template")
+                    Button("Import from Template")
                     {
                         import_from_template(avaliable_templates_names.first ?? "")
                     }
@@ -59,7 +59,7 @@ struct CodeBuilderView: View
                 }
             }
             
-            Menu("Import From File")
+            Menu("Import from File")
             {
                 ForEach(base_stc.listings_files_names, id: \.self)
                 { name in
