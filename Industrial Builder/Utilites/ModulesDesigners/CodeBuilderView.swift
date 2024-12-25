@@ -81,7 +81,7 @@ struct CodeBuilderView: View
     
     private func import_from_template(_ file_name: String)
     {
-        code = import_text_data(from: file_name).replacingOccurrences(of: "<#Name#>", with: model_name.code_correct_format())
+        code = import_text_data(from: file_name).replacingOccurrences(of: "<#Name#>", with: model_name.code_correct_format)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {

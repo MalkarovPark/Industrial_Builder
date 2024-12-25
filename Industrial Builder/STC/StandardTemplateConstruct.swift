@@ -105,8 +105,6 @@ public class StandardTemplateConstruct: ObservableObject
                 listings_files_names.append(group.name)
             }
             
-            
-            
             listings_update_function()
         }
         
@@ -141,7 +139,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         if make_controller
         {
-            module.code_items["Controller"] = generate_controller_code(group: group, name: module.name)
+            module.code_items["Controller"] = generate_controller_code(group: group, name: module.name.code_correct_format)
             
             module.nodes_names = group.type.nodes_names
             
@@ -205,8 +203,7 @@ public class StandardTemplateConstruct: ObservableObject
             class_name = group.name
         }
         
-        //controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name)
-        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name.code_correct_format())
+        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name)
         
         controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
         
@@ -404,7 +401,7 @@ public class StandardTemplateConstruct: ObservableObject
             
             for (placeholder, names) in placeholders
             {
-                let formatted_names = names.map { "\($0.code_correct_format())_Module" }.joined(separator: ",\n        ")
+                let formatted_names = names.map { "\($0.code_correct_format)_Module" }.joined(separator: ",\n        ")
                 list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
             }
             
@@ -658,11 +655,22 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Robot Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
+        //Components
+        if !(module.code_items["Controller"]?.isEmpty ?? false)
+        {
+            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+        }
+        
+        if !(module.code_items["Connector"]?.isEmpty ?? false)
+        {
+            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+        }
+        
         //Main Nodes
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
         
         //Connected nodes names
         let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
@@ -676,11 +684,22 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Tool Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
+        //Components
+        if !(module.code_items["Controller"]?.isEmpty ?? false)
+        {
+            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+        }
+        
+        if !(module.code_items["Connector"]?.isEmpty ?? false)
+        {
+            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+        }
+        
         //Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
         
         //Operation codes
         code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
@@ -704,11 +723,11 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Part Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         //Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: (module.main_scene_name ?? "\(module.name).scn").code_correct_format())
+        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
         
         return code
     }
@@ -718,7 +737,7 @@ public class StandardTemplateConstruct: ObservableObject
         var code = import_text_data(from: "Changer Module")
         
         //Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format())
+        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         return code
@@ -735,16 +754,6 @@ public class StandardTemplateConstruct: ObservableObject
         try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
         
         return folder_url
-    }
-}
-
-//MARK: - Code correction functions
-extension String
-{
-    func code_correct_format() -> String
-    {
-        let correctedName = self.replacingOccurrences(of: " ", with: "_")
-        return correctedName.prefix(1).rangeOfCharacter(from: .decimalDigits) != nil ? "_\(correctedName)" : correctedName
     }
 }
 

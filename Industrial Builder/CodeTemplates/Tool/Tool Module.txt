@@ -11,8 +11,8 @@ public let <#Name#>_Module = ToolModule(
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/
     ],
     
-    model_controller: <#Name#>_Controller(),
-    connector: <#Name#>_Connector()
+    model_controller: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/,
+    connector: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/
 )
 
 public var <#Name#>_Node: SCNNode

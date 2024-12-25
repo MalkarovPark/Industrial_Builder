@@ -7,8 +7,8 @@ public let <#Name#>_Module = RobotModule(
     
     node: <#Name#>_Node,
     
-    model_controller: <#Name#>_Controller(),
-    connector: <#Name#>_Connector()
+    model_controller: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/,
+    connector: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/
 )
 
 public var <#Name#>_Node: SCNNode
