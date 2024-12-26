@@ -34,6 +34,7 @@ struct CodeEditorView: View
             ))
             .textFieldStyle(.plain)
             .modifier(DoubleModifier(update_toggle: $code_field_update))
+            .font(.custom("Menlo", size: 12))
             
             Divider()
             

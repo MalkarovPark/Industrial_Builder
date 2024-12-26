@@ -487,13 +487,16 @@ public class StandardTemplateConstruct: ObservableObject
             
             if as_internal
             {
-                if module is RobotModule || module is ToolModule //Inject parameters in code items
+                if module is RobotModule || module is ToolModule || module is ChangerModule //Inject parameters in code items
                 {
                     var updated_code_items = module.code_items
                     
-                    inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
-                    
-                    inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
+                    if module is RobotModule || module is ToolModule
+                    {
+                        inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
+                        
+                        inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
+                    }
                     
                     updated_code_items = updated_code_items.reduce(into: [String: String]())
                     { result, entry in
