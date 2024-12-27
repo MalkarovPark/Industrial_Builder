@@ -66,9 +66,9 @@ public enum KinematicGroupType: String, Codable, Equatable, CaseIterable
         switch self 
         {
         case .portal:
-            return import_text_data(from: "Portal_Controller")
+            return import_text_data(from: "Portal Controller")
         case ._6DOF:
-            return import_text_data(from: "6DOF_Controller")
+            return import_text_data(from: "6DOF Controller")
         }
     }
     

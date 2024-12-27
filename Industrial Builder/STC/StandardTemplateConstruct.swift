@@ -511,19 +511,7 @@ public class StandardTemplateConstruct: ObservableObject
                 try code_files_store(code_items: module.code_items, to: code_url) //Store external files without parameters inject
             }
             
-            guard !(module is ChangerModule) else { return } //Changer module has no visual resources...
-            
-            //Resources folder store
-            let resources_url = try make_module_folder("Resources.scnassets", module_url: module_url, module_name: module.name, as_internal: as_internal)
-            
-            if let resources_names = module.resources_names
-            {
-                for resource_name in resources_names
-                {
-                    let resource_url = resources_url.appendingPathComponent(resource_name)
-                    try resource_data(resource_name)?.write(to: resource_url)
-                }
-            }
+            try make_resources_folder(url: module_url) //Resources folder store
         }
         catch
         {
@@ -552,6 +540,22 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+        }
+        
+        func make_resources_folder(url: URL) throws
+        {
+            guard !(module is ChangerModule) else { return } //Changer module has no visual resources...
+            
+            let resources_url = try make_module_folder("Resources.scnassets", module_url: url, module_name: module.name, as_internal: as_internal)
+            
+            if let resources_names = module.resources_names
+            {
+                for resource_name in resources_names
+                {
+                    let resource_url = resources_url.appendingPathComponent(resource_name)
+                    try resource_data(resource_name)?.write(to: resource_url)
+                }
+            }
         }
         
         func make_info_file(url: URL) throws //For external module
