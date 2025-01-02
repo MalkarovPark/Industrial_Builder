@@ -462,40 +462,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "518"
-            endingLineNumber = "518"
-            landmarkName = "build_module_file(module:to:as_internal:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "21E6AF4E-4B08-4B48-A215-919DBF56427F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "503"
-            endingLineNumber = "503"
-            landmarkName = "build_module_file(module:to:as_internal:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F2C6ABAD-BB7E-4553-8143-3C5475496457"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
+            startingLineNumber = "505"
+            endingLineNumber = "505"
             landmarkName = "build_module_file(module:to:as_internal:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -510,8 +478,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "755"
-            endingLineNumber = "755"
+            startingLineNumber = "769"
+            endingLineNumber = "769"
             landmarkName = "make_folder(_:module_url:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -526,8 +494,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "763"
-            endingLineNumber = "763"
+            startingLineNumber = "777"
+            endingLineNumber = "777"
             landmarkName = "make_folder(_:module_url:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,8 +510,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "691"
-            endingLineNumber = "691"
+            startingLineNumber = "705"
+            endingLineNumber = "705"
             landmarkName = "tool_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -552,14 +520,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "CED6BA3E-357E-4095-B45B-9D4E8594D5A5"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "744"
-            endingLineNumber = "744"
+            startingLineNumber = "758"
+            endingLineNumber = "758"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -568,46 +536,16 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "00C7E11F-DC43-4C7D-A4DA-ABC9ABD964B2"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "748"
-            endingLineNumber = "748"
+            startingLineNumber = "762"
+            endingLineNumber = "762"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "00C7E11F-DC43-4C7D-A4DA-ABC9ABD964B2 - 2b72eb1ddd4b7192"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Industrial_Builder.StandardTemplateConstruct.make_folder(_: Swift.String, module_url: Foundation.URL) throws -&gt; Foundation.URL"
-                  moduleName = "Industrial Builder.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/malkarovpark/Documents/Xcode%20Projects/Industrial%20Builder/Industrial%20Builder/STC/StandardTemplateConstruct.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "751"
-                  endingLineNumber = "751">
-               </Location>
-               <Location
-                  uuid = "00C7E11F-DC43-4C7D-A4DA-ABC9ABD964B2 - 91642e073ddc5dd3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Industrial_Builder.StandardTemplateConstruct.changer_module_code(IndustrialKit.ChangerModule) -&gt; Swift.String"
-                  moduleName = "Industrial Builder.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/malkarovpark/Documents/Xcode%20Projects/Industrial%20Builder/Industrial%20Builder/STC/StandardTemplateConstruct.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "748"
-                  endingLineNumber = "748">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -620,8 +558,24 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "749"
-            endingLineNumber = "749"
+            startingLineNumber = "763"
+            endingLineNumber = "763"
+            landmarkName = "changer_module_code(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "02BA469A-25D3-4DB7-8348-6490C79DB21B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "761"
+            endingLineNumber = "761"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>

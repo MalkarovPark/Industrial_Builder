@@ -49,6 +49,19 @@ struct ModulesListView: View
                     List(names, id: \.self, selection: $selected_name)
                     { name in
                         Text(name)
+                            .contextMenu
+                            {
+                                RenameButton()
+                                    .renameAction
+                                {
+                                    new_name_presented = true
+                                }
+                                
+                                Button(role: .destructive, action: delete_module)
+                                {
+                                    Label("Delete", systemImage: "xmark")
+                                }
+                            }
                     }
                     .popover(isPresented: $new_name_presented)
                     {
@@ -65,19 +78,6 @@ struct ModulesListView: View
                         #endif
                     }
                     .listStyle(.plain)
-                    .contextMenu
-                    {
-                        RenameButton()
-                            .renameAction
-                        {
-                            new_name_presented = true
-                        }
-                        
-                        Button(role: .destructive, action: delete_module)
-                        {
-                            Label("Delete", systemImage: "xmark")
-                        }
-                    }
                 }
                 else
                 {

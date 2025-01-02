@@ -487,31 +487,18 @@ public class StandardTemplateConstruct: ObservableObject
             
             if as_internal
             {
-                if module is RobotModule || module is ToolModule || module is ChangerModule //Inject parameters in code items
+                if module is RobotModule || module is ToolModule || module is ChangerModule
                 {
-                    var updated_code_items = module.code_items
-                    
-                    if module is RobotModule || module is ToolModule
-                    {
-                        inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
-                        
-                        inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
-                    }
-                    
-                    updated_code_items = updated_code_items.reduce(into: [String: String]())
-                    { result, entry in
-                        result["\(module.name)_\(entry.key)"] = entry.value
-                    }
-                    
-                    try code_files_store(code_items: updated_code_items, to: code_url)
+                    try code_files_store_internal(code_items: module.code_items, to: code_url)
                 }
             }
             else
             {
-                try code_files_store(code_items: module.code_items, to: code_url) //Store external files without parameters inject
+                try code_files_store_external(code_items: module.code_items, to: code_url)
             }
             
-            try make_resources_folder(url: module_url) //Resources folder store
+            //Resources folder store
+            try make_resources_folder(url: module_url)
         }
         catch
         {
@@ -587,6 +574,26 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
+        //Store internal code items to lisitngs
+        func code_files_store_internal(code_items: [String: String], to code_url: URL) throws
+        {
+            var updated_code_items = module.code_items
+            
+            //Inject parameters in code items
+            if module is RobotModule || module is ToolModule
+            {
+                inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
+                inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
+            }
+            
+            updated_code_items = updated_code_items.reduce(into: [String: String]())
+            { result, entry in
+                result["\(module.name)_\(entry.key)"] = entry.value
+            }
+            
+            try code_files_store(code_items: updated_code_items, to: code_url)
+        }
+        
         func inject_controller_parameters(code: inout String?, module: IndustrialModule) //Inject model controller parameters (nodes names) to internal code file
         {
             var nodes_names = String()
@@ -621,6 +628,13 @@ public class StandardTemplateConstruct: ObservableObject
             code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
         }
         
+        //Store external code items for subsequent compilation
+        func code_files_store_external(code_items: [String: String], to code_url: URL) throws
+        {
+            try code_files_store(code_items: module.code_items, to: code_url)
+        }
+        
+        //Resources store
         func resource_data(_ name: String) -> Data? //Store visual data
         {
             var data: Data? = nil
