@@ -74,11 +74,11 @@ class AppState : ObservableObject
 
 func import_text_data(from file_name: String) -> String
 {
-    if let fileURL = Bundle.main.url(forResource: file_name, withExtension: "txt")
+    if let file_url = Bundle.main.url(forResource: file_name, withExtension: "txt")
     {
         do
         {
-            let content = try String(contentsOf: fileURL, encoding: .utf8)
+            let content = try String(contentsOf: file_url, encoding: .utf8)
             return content
         }
         catch

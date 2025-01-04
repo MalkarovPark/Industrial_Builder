@@ -463,6 +463,15 @@ public class StandardTemplateConstruct: ObservableObject
             
             build_progress += 1
         }
+        
+        if !as_internal //Store building scripts for external modules
+        {
+            compilation_kit_store(to: folder_url)
+            
+            #if os(macOS)
+            perform_external_compilation(in: folder_url)
+            #endif
+        }
     }
     
     //MARK: Build module file
@@ -776,6 +785,37 @@ public class StandardTemplateConstruct: ObservableObject
         
         return folder_url
     }
+    
+    //MARK: Compilation kit handling (for external)
+    private func compilation_kit_store(to folder_url: URL)
+    {
+        let file_names = ["LtPConvert.command", "PBuild.command", "LCompile.command", "MPCompile.command"]
+        
+        for file_name in file_names
+        {
+            guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { return }
+            let destination_url = folder_url.appendingPathComponent(file_name)
+            
+            do
+            {
+                if FileManager.default.fileExists(atPath: file_url.path)
+                {
+                    try FileManager.default.copyItem(at: file_url, to: destination_url)
+                }
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    #if os(macOS)
+    private func perform_external_compilation(in folder_url: URL)
+    {
+        print(perform_code(at: folder_url, with: ["MPCompile.command"]))
+    }
+    #endif
 }
 
 //MARK: - Typealiases

@@ -13,6 +13,10 @@
 		620AA44C2CDF92C9008C2918 /* CodeBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */; };
 		621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A4E9F2BB73DEB006A081A /* ImageView.swift */; };
 		622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225786F2C24A9940023004E /* ResourcesPackageView.swift */; };
+		62277B722D285D19002E9D4D /* PBuild.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B712D285D19002E9D4D /* PBuild.command */; };
+		62277B732D285D19002E9D4D /* LCompile.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B6E2D285D19002E9D4D /* LCompile.command */; };
+		62277B742D285D19002E9D4D /* LtPConvert.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B6F2D285D19002E9D4D /* LtPConvert.command */; };
+		62277B752D285D19002E9D4D /* MPCompile.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B702D285D19002E9D4D /* MPCompile.command */; };
 		622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C88A12BB71C7200A53213 /* ImagesListView.swift */; };
 		623D72482ADAFD8500927DEA /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D72472ADAFD8500927DEA /* SceneView.swift */; };
 		6255B9202B9BDC86002B575C /* Framers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6255B91F2B9BDC86002B575C /* Framers.swift */; };
@@ -65,6 +69,10 @@
 		620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBuilderView.swift; sourceTree = "<group>"; };
 		621A4E9F2BB73DEB006A081A /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		6225786F2C24A9940023004E /* ResourcesPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesPackageView.swift; sourceTree = "<group>"; };
+		62277B6E2D285D19002E9D4D /* LCompile.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = LCompile.command; sourceTree = "<group>"; };
+		62277B6F2D285D19002E9D4D /* LtPConvert.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = LtPConvert.command; sourceTree = "<group>"; };
+		62277B702D285D19002E9D4D /* MPCompile.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = MPCompile.command; sourceTree = "<group>"; };
+		62277B712D285D19002E9D4D /* PBuild.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = PBuild.command; sourceTree = "<group>"; };
 		622C88A12BB71C7200A53213 /* ImagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListView.swift; sourceTree = "<group>"; };
 		623D72472ADAFD8500927DEA /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		6255B91F2B9BDC86002B575C /* Framers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Framers.swift; sourceTree = "<group>"; };
@@ -141,6 +149,17 @@
 				620AA4552CDFAC25008C2918 /* Changer */,
 			);
 			path = CodeTemplates;
+			sourceTree = "<group>";
+		};
+		62277B6D2D285223002E9D4D /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				62277B6E2D285D19002E9D4D /* LCompile.command */,
+				62277B6F2D285D19002E9D4D /* LtPConvert.command */,
+				62277B702D285D19002E9D4D /* MPCompile.command */,
+				62277B712D285D19002E9D4D /* PBuild.command */,
+			);
+			path = Scripts;
 			sourceTree = "<group>";
 		};
 		622C88A32BB73C7300A53213 /* ImagesViewer */ = {
@@ -234,6 +253,7 @@
 				6255B91E2B9BDC34002B575C /* ViewModifiers */,
 				629AABC12BC855D200720386 /* STC */,
 				620AA4442CDD5732008C2918 /* CodeTemplates */,
+				62277B6D2D285223002E9D4D /* Scripts */,
 				6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */,
 				6296D2A92AED6E290094FB19 /* AppState.swift */,
 				6289FCCC2AD0398300BB7F5E /* Assets.xcassets */,
@@ -409,6 +429,10 @@
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
 				62D3118E2CE2905C002A39B8 /* List.txt in Resources */,
+				62277B722D285D19002E9D4D /* PBuild.command in Resources */,
+				62277B732D285D19002E9D4D /* LCompile.command in Resources */,
+				62277B742D285D19002E9D4D /* LtPConvert.command in Resources */,
+				62277B752D285D19002E9D4D /* MPCompile.command in Resources */,
 				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -507,7 +531,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -568,7 +592,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
