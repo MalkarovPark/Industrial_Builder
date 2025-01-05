@@ -342,7 +342,10 @@ public class StandardTemplateConstruct: ObservableObject
         
         build_total -= 1
         
-        self.build_info = String()
+        DispatchQueue.main.async
+        {
+            self.build_info = String()
+        }
         
         if as_internal
         {
@@ -358,74 +361,114 @@ public class StandardTemplateConstruct: ObservableObject
     ///Builds modules in separated files.
     public func build_external_modules(list: BuildModulesList, to folder_url: URL)
     {
-        set_building_info(list: list, as_internal: false)
-        on_building_modules = true
-        
-        guard folder_url.startAccessingSecurityScopedResource() else { return }
-        
-        build_modules_files(list: list, to: folder_url, as_internal: false)
-        
-        folder_url.stopAccessingSecurityScopedResource()
-        
-        build_info = "Finished"
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
+        DispatchQueue.global(qos: .background).async
         {
-            self.on_building_modules = false
+            self.set_building_info(list: list, as_internal: false)
+            
+            DispatchQueue.main.async
+            {
+                self.on_building_modules = true
+            }
+            
+            guard folder_url.startAccessingSecurityScopedResource()
+            else
+            {
+                DispatchQueue.main.async
+                {
+                    self.on_building_modules = false
+                }
+                return
+            }
+            
+            self.build_modules_files(list: list, to: folder_url, as_internal: false)
+            
+            folder_url.stopAccessingSecurityScopedResource()
+            
+            DispatchQueue.main.async
+            {
+                self.build_info = "Finished"
+            }
+            
+            let workItem = DispatchWorkItem
+            {
+                DispatchQueue.main.async
+                {
+                    self.on_building_modules = false
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: workItem)
         }
-        //on_building_modules = false
     }
     
     ///Builds application project to compile with internal modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
-        set_building_info(list: list, as_internal: true)
-        on_building_modules = true
-        
-        do
+        DispatchQueue.global(qos: .background).async
         {
-            //Internal modules folder
-            guard folder_url.startAccessingSecurityScopedResource() else { return }
-            let package_folder_url = try make_folder("Modules", module_url: folder_url)
+            self.set_building_info(list: list, as_internal: true)
             
-            build_modules_files(list: list, to: package_folder_url, as_internal: true)
-            
-            //Make Internal Modules List
-            var list_code = import_text_data(from: "List")
-            
-            let placeholders = [
-                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
-                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
-                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
-                ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
-            ]
-            
-            for (placeholder, names) in placeholders
+            DispatchQueue.main.async
             {
-                let formatted_names = names.map { "\($0.code_correct_format)_Module" }.joined(separator: ",\n        ")
-                list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
+                self.on_building_modules = true
             }
             
-            do
-            {
+            do {
+                //Internal modules folder
+                guard folder_url.startAccessingSecurityScopedResource() else
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.on_building_modules = false
+                    }
+                    return
+                }
+                
+                let package_folder_url = try self.make_folder("Modules", module_url: folder_url)
+                
+                self.build_modules_files(list: list, to: package_folder_url, as_internal: true)
+                
+                //Make Internal Modules List
+                var list_code = import_text_data(from: "List")
+                
+                let placeholders = [
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
+                ]
+                
+                for (placeholder, names) in placeholders
+                {
+                    let formatted_names = names.map { "\($0.code_correct_format)_Module" }.joined(separator: ",\n        ")
+                    list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
+                }
+                
                 try list_code.write(to: package_folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
+                
+                folder_url.stopAccessingSecurityScopedResource()
+                
+                DispatchQueue.main.async
+                {
+                    self.build_info = "Finished"
+                }
+                
+                let workItem = DispatchWorkItem
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.on_building_modules = false
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: workItem)
             }
             catch
             {
                 print(error.localizedDescription)
+                DispatchQueue.main.async
+                {
+                    self.on_building_modules = false
+                }
             }
-            
-            do { folder_url.stopAccessingSecurityScopedResource() }
-            
-            build_info = "Finished"
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
-            {
-                self.on_building_modules = false
-            }
-            //on_building_modules = false
-        }
-        catch
-        {
-            print(error.localizedDescription)
         }
     }
     
@@ -437,34 +480,44 @@ public class StandardTemplateConstruct: ObservableObject
         {
             build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
             
-            build_progress += 1
+            DispatchQueue.main.async
+            {
+                self.build_progress += 1
+            }
         }
         
         let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
             build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
-            
-            build_progress += 1
+            DispatchQueue.main.async
+            {
+                self.build_progress += 1
+            }
         }
         
         let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
             build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
-            
-            build_progress += 1
+            DispatchQueue.main.async
+            {
+                self.build_progress += 1
+            }
         }
         
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        
         for changer_module in filtered_changer_modules
         {
             build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
-            
-            build_progress += 1
+            DispatchQueue.main.async
+            {
+                self.build_progress += 1
+            }
         }
         
-        if !as_internal //Store building scripts for external modules
+        if !as_internal
         {
             compilation_kit_store(to: folder_url)
             
@@ -813,7 +866,7 @@ public class StandardTemplateConstruct: ObservableObject
     #if os(macOS)
     private func perform_external_compilation(in folder_url: URL)
     {
-        print(perform_code(at: folder_url, with: ["MPCompile.command"]))
+        try? perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
     }
     #endif
 }

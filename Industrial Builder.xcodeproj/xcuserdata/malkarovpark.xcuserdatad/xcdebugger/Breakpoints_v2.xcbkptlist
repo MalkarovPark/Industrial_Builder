@@ -462,8 +462,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "514"
-            endingLineNumber = "514"
+            startingLineNumber = "567"
+            endingLineNumber = "567"
             landmarkName = "build_module_file(module:to:as_internal:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -478,8 +478,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "778"
-            endingLineNumber = "778"
+            startingLineNumber = "831"
+            endingLineNumber = "831"
             landmarkName = "make_folder(_:module_url:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -494,8 +494,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "786"
-            endingLineNumber = "786"
+            startingLineNumber = "839"
+            endingLineNumber = "839"
             landmarkName = "make_folder(_:module_url:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -510,8 +510,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "714"
-            endingLineNumber = "714"
+            startingLineNumber = "767"
+            endingLineNumber = "767"
             landmarkName = "tool_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -526,8 +526,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "767"
-            endingLineNumber = "767"
+            startingLineNumber = "820"
+            endingLineNumber = "820"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,8 +542,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "771"
-            endingLineNumber = "771"
+            startingLineNumber = "824"
+            endingLineNumber = "824"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -558,8 +558,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "772"
-            endingLineNumber = "772"
+            startingLineNumber = "825"
+            endingLineNumber = "825"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -574,8 +574,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "770"
-            endingLineNumber = "770"
+            startingLineNumber = "823"
+            endingLineNumber = "823"
             landmarkName = "changer_module_code(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -590,8 +590,8 @@
             filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "792"
-            endingLineNumber = "792"
+            startingLineNumber = "845"
+            endingLineNumber = "845"
             landmarkName = "compilation_kit_store(to:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -599,17 +599,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D7D48AFC-C04A-4DAF-B36F-7ABD549F36EC"
-            shouldBeEnabled = "Yes"
+            uuid = "A1010C13-515C-487E-B8EF-3F02A5246403"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/STC/StandardTemplateConstruct.swift"
+            filePath = "../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-ffkdwxqtyaannfbxcoecaodmyjov/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/Functions.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "817"
-            endingLineNumber = "817"
-            landmarkName = "perform_external_compilation(in:)"
-            landmarkType = "7">
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "perform_terminal_command(_:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "87E7BEB5-3905-4106-9A05-207B177D7B53"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-ffkdwxqtyaannfbxcoecaodmyjov/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/Functions.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "235"
+            endingLineNumber = "235"
+            landmarkName = "perform_terminal_command(_:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
