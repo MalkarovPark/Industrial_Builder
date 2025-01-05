@@ -333,17 +333,17 @@ public class StandardTemplateConstruct: ObservableObject
     ///Progressbar startup info
     private func set_building_info(list: BuildModulesList, as_internal: Bool)
     {
-        build_progress = 0
-        
-        build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count)
-        build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count)
-        build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count)
-        build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)
-        
-        build_total -= 1
-        
         DispatchQueue.main.async
         {
+            self.build_progress = 0
+            
+            self.build_total += Float(self.robot_modules.filter { list.robot_modules_names.contains($0.name) }.count)
+            self.build_total += Float(self.tool_modules.filter { list.tool_modules_names.contains($0.name) }.count)
+            self.build_total += Float(self.part_modules.filter { list.part_modules_names.contains($0.name) }.count)
+            self.build_total += Float(self.changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)
+            
+            self.build_total -= 1
+            
             self.build_info = String()
         }
         
@@ -452,14 +452,14 @@ public class StandardTemplateConstruct: ObservableObject
                     self.build_info = "Finished"
                 }
                 
-                let workItem = DispatchWorkItem
+                let work_item = DispatchWorkItem
                 {
                     DispatchQueue.main.async
                     {
                         self.on_building_modules = false
                     }
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: workItem)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
             }
             catch
             {
@@ -866,7 +866,84 @@ public class StandardTemplateConstruct: ObservableObject
     #if os(macOS)
     private func perform_external_compilation(in folder_url: URL)
     {
-        try? perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
+        do
+        {
+            try perform_terminal_command_output("cd '\(folder_url.path)' && ./MPCompile.command") { output in
+                let lines = output.components(separatedBy: .newlines)
+                
+                //Find the last non-empty line
+                var last_line: String? = nil
+                for line in lines.reversed()
+                {
+                    if !line.isEmpty
+                    {
+                        last_line = line
+                        break
+                    }
+                }
+                
+                if let last_line = last_line
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.build_info = last_line
+                    }
+                }
+                
+            }
+            
+            DispatchQueue.main.async
+            {
+                self.build_info += "\nExternal code compilation finished."
+            }
+        }
+        catch
+        {
+            DispatchQueue.main.async
+            {
+                self.build_info += "\nError during external compilation: \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    public func perform_terminal_command_output(_ command: String,  outputHandler: @escaping (String) -> Void) throws
+    {
+        let task = Process()
+        let pipe = Pipe()
+        
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.arguments = ["-c", command]
+        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        task.standardInput = nil
+        
+        let fileHandle = pipe.fileHandleForReading
+        
+        task.launch()
+        
+        
+        fileHandle.readabilityHandler =
+        { fileHandle in
+            let data = fileHandle.availableData
+            if data.isEmpty
+            {
+                return
+            }
+            if let output = String(data: data, encoding: .utf8)
+            {
+                outputHandler(output)
+            }
+        }
+        
+        task.waitUntilExit()
+        
+        
+        if task.terminationStatus != 0
+        {
+            throw NSError(domain: "TerminalCommandError", code: Int(task.terminationStatus), userInfo: [NSLocalizedDescriptionKey: "Command failed with status \(task.terminationStatus)"])
+        }
+        
+        fileHandle.readabilityHandler = nil
     }
     #endif
 }
