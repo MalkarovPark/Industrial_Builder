@@ -331,39 +331,71 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var build_info: String = String()
     
     ///Progressbar startup info
-    private func set_building_info(list: BuildModulesList, as_internal: Bool)
+    private func set_build_info(list: BuildModulesList, as_internal: Bool)
     {
-        DispatchQueue.main.async
-        {
-            self.build_progress = 0
-            
-            self.build_total += Float(self.robot_modules.filter { list.robot_modules_names.contains($0.name) }.count)
-            self.build_total += Float(self.tool_modules.filter { list.tool_modules_names.contains($0.name) }.count)
-            self.build_total += Float(self.part_modules.filter { list.part_modules_names.contains($0.name) }.count)
-            self.build_total += Float(self.changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)
-            
-            self.build_total -= 1
-            
-            self.build_info = String()
-        }
+        build_progress = 0
+        build_total = 0
+        
+        pkg_export_progrss_info() //Packages export info
         
         if as_internal
         {
-            
+            #if os(macOS)
+            xcode_compilation_progrss_info()
+            #endif
         }
         else
         {
-            
+            #if os(macOS)
+            program_compilation_progrss_info()
+            #endif
         }
+        
+        self.build_info = String()
+        func pkg_export_progrss_info()
+        {
+            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count)
+            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count)
+            build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count)
+            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)
+        }
+        
+        #if os(macOS)
+        func xcode_compilation_progrss_info()
+        {
+            build_total += 5 //Xcode project stages
+        }
+        #endif
+        
+        #if os(macOS)
+        func program_compilation_progrss_info()
+        {
+            let robot_module_code_items_count: Float = 2
+            let tool_module_code_items_count: Float = 2
+            //let part_module_code_items_count: Float = 0
+            //let changer_module_code_items_count: Float = 1
+            
+            //print(build_total)
+            
+            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * robot_module_code_items_count
+            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * tool_module_code_items_count
+            //build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * part_module_code_items_count
+            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)// * changer_module_code_items_count
+            
+            //print(build_total)
+            
+            build_total += 2 //Additive terminal output stages
+        }
+        #endif
     }
     
-    //MARK: - Building functions
+    //MARK: - Modules build functions
     ///Builds modules in separated files.
     public func build_external_modules(list: BuildModulesList, to folder_url: URL)
     {
         DispatchQueue.global(qos: .background).async
         {
-            self.set_building_info(list: list, as_internal: false)
+            self.set_build_info(list: list, as_internal: false)
             
             DispatchQueue.main.async
             {
@@ -380,6 +412,10 @@ public class StandardTemplateConstruct: ObservableObject
                 return
             }
             
+            DispatchQueue.main.async
+            {
+                self.build_info = "Building modules files"
+            }
             self.build_modules_files(list: list, to: folder_url, as_internal: false)
             
             folder_url.stopAccessingSecurityScopedResource()
@@ -405,7 +441,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         DispatchQueue.global(qos: .background).async
         {
-            self.set_building_info(list: list, as_internal: true)
+            self.set_build_info(list: list, as_internal: true)
             
             DispatchQueue.main.async
             {
@@ -479,31 +515,21 @@ public class StandardTemplateConstruct: ObservableObject
         for robot_module in filtered_robot_modules
         {
             build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
-            
-            DispatchQueue.main.async
-            {
-                self.build_progress += 1
-            }
+            self.build_progress += 1
         }
         
         let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
             build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
-            DispatchQueue.main.async
-            {
-                self.build_progress += 1
-            }
+            self.build_progress += 1
         }
         
         let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
             build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
-            DispatchQueue.main.async
-            {
-                self.build_progress += 1
-            }
+            self.build_progress += 1
         }
         
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
@@ -511,11 +537,11 @@ public class StandardTemplateConstruct: ObservableObject
         for changer_module in filtered_changer_modules
         {
             build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
-            DispatchQueue.main.async
-            {
-                self.build_progress += 1
-            }
+            self.build_progress += 1
         }
+        
+        //print(build_total)
+        //print(build_progress)
         
         if !as_internal
         {
@@ -887,6 +913,10 @@ public class StandardTemplateConstruct: ObservableObject
                     DispatchQueue.main.async
                     {
                         self.build_info = last_line
+                        self.build_progress += 1
+                        
+                        //print(last_line)
+                        //print(self.build_progress)
                     }
                 }
                 

@@ -383,7 +383,7 @@ struct BuildProgressView: View
                     value: base_stc.build_progress, total: base_stc.build_total,
                     label:
                         {
-                            Text("Building modules...")
+                            Text("Modules build")
                         },
                     currentValueLabel:
                         {
@@ -404,7 +404,7 @@ struct BuildProgressView: View
             .padding()
             .background(.bar)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .frame(width: 192)
+            .frame(width: 224)
         }
         .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
     }
