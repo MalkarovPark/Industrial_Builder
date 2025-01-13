@@ -199,13 +199,20 @@ class Portal_Controller: DesignerRobotModelController
         
         modified_node = node.childNode(withName: "part_z", recursively: true)!
         saved_material = (modified_node.geometry?.firstMaterial)!
-        modified_node.geometry = SCNBox(width: 60, height: frame_element_length, length: 60, chamferRadius: 10) //Update frame Z geometry
+        modified_node.geometry = SCNBox(width: 60, height: frame_element_length - 10, length: 60, chamferRadius: 10) //Update frame Z geometry
         modified_node.geometry?.firstMaterial = saved_material
         #if os(macOS)
-        modified_node.position.y = (frame_element_length) / 2 //Frame Z reposition
+        modified_node.position.y = (frame_element_length + 10) / 2 //Frame Z reposition
         #else
-        modified_node.position.y = Float(frame_element_length) / 2
+        modified_node.position.y = Float(frame_element_length + 10) / 2
         #endif
+        
+        /*modified_node = node.childNode(withName: "cylinder", recursively: true)!
+        #if os(macOS)
+        modified_node.position.y = (frame_element_length + 5) / 2
+        #else
+        modified_node.position.y = Float(frame_element_length + 5) / 2
+        #endif*/
     }
     
     //MARK: - Statistics

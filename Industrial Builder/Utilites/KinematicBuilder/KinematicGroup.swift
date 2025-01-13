@@ -124,7 +124,7 @@ public func PortalGroupMake(name: String) -> KinematicGroup
     data.append(KinematicElement(name: "limit1_min", value: 80.0))
     data.append(KinematicElement(name: "limit0_min", value: 160.0))
     data.append(KinematicElement(name: "limit2_min", value: 40.0))
-    data.append(KinematicElement(name: "target", value: 30.0))
+    data.append(KinematicElement(name: "target", value: 20.0))
     data.append(KinematicElement(name: "limit0_max", value: 320.0))
     data.append(KinematicElement(name: "limit1_max", value: 320.0))
     data.append(KinematicElement(name: "limit2_max", value: 320.0))
