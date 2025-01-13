@@ -109,8 +109,8 @@ public func _6DOFGroupMake(name: String) -> KinematicGroup
     data.append(KinematicElement(name: "L2", value: 160.0))
     data.append(KinematicElement(name: "L3", value: 80.0))
     data.append(KinematicElement(name: "L4", value: 160.0))
-    data.append(KinematicElement(name: "L5", value: 40.0))
-    data.append(KinematicElement(name: "L6", value: 30.0))
+    data.append(KinematicElement(name: "L5", value: 50.0))
+    data.append(KinematicElement(name: "Target", value: 20.0))
     data.append(KinematicElement(name: "Base", value: 160.0))
     
     return KinematicGroup(name: name, type: ._6DOF, data: data)

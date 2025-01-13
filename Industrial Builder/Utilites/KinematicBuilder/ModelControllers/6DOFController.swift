@@ -16,7 +16,7 @@ class _6DOF_Controller: DesignerRobotModelController
             "d3",
             "d4",
             "d5",
-            "d6"
+            "target"
         ]
     }
     
@@ -222,21 +222,36 @@ class _6DOF_Controller: DesignerRobotModelController
         #else
         nodes[safe: "d4", default: SCNNode()].position.y = Float(lengths[3])
         #endif
-
+        
+        //Part 5
         modified_node = nodes[safe: "d4", default: SCNNode()].childNode(withName: "box", recursively: false) ?? SCNNode()
-        modified_node.geometry = SCNBox(width: 40, height: CGFloat(lengths[4]), length: 40, chamferRadius: 0)
+        modified_node.geometry = SCNBox(width: 40, height: CGFloat(lengths[4] - 10), length: 40, chamferRadius: 0.5)
         modified_node.geometry?.firstMaterial = saved_material
         #if os(macOS)
-        modified_node.position.y = CGFloat(lengths[4] / 2)
+        modified_node.position.y = CGFloat((lengths[4] - 10) / 2)
         #else
-        modified_node.position.y = Float(lengths[4] / 2)
+        modified_node.position.y = Float((lengths[4] - 10) / 2)
+        #endif
+        
+        modified_node = nodes[safe: "d4", default: SCNNode()].childNode(withName: "cylinder", recursively: false) ?? SCNNode()
+        #if os(macOS)
+        modified_node.position.y = CGFloat(lengths[4] - 5)
+        #else
+        modified_node.position.y = Float(lengths[4] - 5)
         #endif
 
-        //Part 5
+        //Tool & Target
+        modified_node = nodes[safe: "d5", default: SCNNode()]
         #if os(macOS)
-        nodes[safe: "d6", default: SCNNode()].position.y = CGFloat(lengths[5])
+        modified_node.position.y = CGFloat(lengths[4])
         #else
-        nodes[safe: "d6", default: SCNNode()].position.y = Float(lengths[5])
+        modified_node.position.y = Float(lengths[4])
+        #endif
+        
+        #if os(macOS)
+        nodes[safe: "target", default: SCNNode()].position.y = CGFloat(lengths[5])
+        #else
+        nodes[safe: "target", default: SCNNode()].position.y = Float(lengths[5])
         #endif
     }
     
