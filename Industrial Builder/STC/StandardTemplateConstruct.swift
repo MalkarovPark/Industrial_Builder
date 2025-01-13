@@ -894,7 +894,8 @@ public class StandardTemplateConstruct: ObservableObject
     {
         do
         {
-            try perform_terminal_command_output("cd '\(folder_url.path)' && ./MPCompile.command") { output in
+            try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
+            { output in
                 let lines = output.components(separatedBy: .newlines)
                 
                 //Find the last non-empty line
@@ -936,45 +937,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    public func perform_terminal_command_output(_ command: String,  outputHandler: @escaping (String) -> Void) throws
-    {
-        let task = Process()
-        let pipe = Pipe()
-        
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", command]
-        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        task.standardInput = nil
-        
-        let fileHandle = pipe.fileHandleForReading
-        
-        task.launch()
-        
-        
-        fileHandle.readabilityHandler =
-        { fileHandle in
-            let data = fileHandle.availableData
-            if data.isEmpty
-            {
-                return
-            }
-            if let output = String(data: data, encoding: .utf8)
-            {
-                outputHandler(output)
-            }
-        }
-        
-        task.waitUntilExit()
-        
-        
-        if task.terminationStatus != 0
-        {
-            throw NSError(domain: "TerminalCommandError", code: Int(task.terminationStatus), userInfo: [NSLocalizedDescriptionKey: "Command failed with status \(task.terminationStatus)"])
-        }
-        
-        fileHandle.readabilityHandler = nil
-    }
+    
     #endif
 }
 
