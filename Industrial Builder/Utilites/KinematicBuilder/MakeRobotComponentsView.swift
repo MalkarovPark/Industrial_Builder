@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import IndustrialKit
 
 struct MakeRobotComponentsView: View
 {

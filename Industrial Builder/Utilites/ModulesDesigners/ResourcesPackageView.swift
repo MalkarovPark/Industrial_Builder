@@ -73,7 +73,9 @@ struct ResourcesPackageView: View
                         is_connect_view_presented.toggle()
                     }
                     .padding(.trailing)
+                    #if os(macOS)
                     .buttonStyle(.link)
+                    #endif
                     .popover(isPresented: $is_connect_view_presented, arrowEdge: .bottom)
                     {
                         ConnectedNodesView(names: $connected_nodes_names, nested_nodes_names: nested_nodes_names, on_update: on_update)

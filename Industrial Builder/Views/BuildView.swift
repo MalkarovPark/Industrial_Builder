@@ -227,7 +227,7 @@ struct BuildView: View
             DynamicStack(content: {
                 Button(action: { external_export_panel_presented = true })
                 {
-                    BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image(systemName: "folder.fill"))
+                    BuildItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))
                 }
                 .padding(!is_compact ? .trailing : .bottom)
                 .fileImporter(isPresented: $external_export_panel_presented,
@@ -249,7 +249,9 @@ struct BuildView: View
                 
                 Button(action: { internal_export_panel_presented = true })
                 {
-                    BuildItemView(title: "App", subtitle: "Make a project with internal modules", image: Image(systemName: "cube.fill"))
+                    BuildItemView(title: "App",
+                                  subtitle: "Make a project with internal modules",
+                                  image: Image("build_to_app_icon"))
                 }
                 .fileImporter(isPresented: $internal_export_panel_presented,
                               allowedContentTypes: [.folder],
@@ -423,13 +425,16 @@ struct BuildItemView: View
         {
             ZStack
             {
-                Rectangle()
-                    .foregroundStyle(Color.accentColor)
+                //Rectangle()
+                    //.foregroundStyle(Color.accentColor)
                 image
+                    .resizable()
+                    //.scaledToFill()
                     .scaledToFit()
                     .foregroundStyle(.white)
             }
-            .frame(width: 32, height: 32)
+            .frame(width: 40, height: 40)
+            //.frame(width: 32, height: 32)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             
             VStack(alignment: .leading)
