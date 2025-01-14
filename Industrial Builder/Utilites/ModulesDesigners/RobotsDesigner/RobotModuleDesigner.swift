@@ -42,7 +42,7 @@ struct RobotModuleDesigner: View
                 {
                     Image(systemName: "link")
                 }
-                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .bottom)
+                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: default_popover_edge)
                 {
                     ConnectionParametersView(connection_parameters: $robot_module.connection_parameters)
                     {
@@ -55,7 +55,7 @@ struct RobotModuleDesigner: View
                 {
                     Image(systemName: "list.triangle")
                 }
-                .popover(isPresented: $linked_components_view_presented, arrowEdge: .bottom)
+                .popover(isPresented: $linked_components_view_presented, arrowEdge: default_popover_edge)
                 {
                     LinkedComponentsView(linked_components: $robot_module.linked_components)
                     {

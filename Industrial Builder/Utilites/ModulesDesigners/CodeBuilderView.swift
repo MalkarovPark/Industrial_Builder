@@ -39,8 +39,6 @@ struct CodeBuilderView: View
                     }
                     #if os(macOS)
                     .menuStyle(.borderedButton)
-                    #else
-                    .modifier(PickerBorderer())
                     #endif
                     //.disabled(base_stc.listings_files_names.isEmpty)
                     .padding(.bottom)
@@ -53,8 +51,6 @@ struct CodeBuilderView: View
                     }
                     #if os(macOS)
                     .buttonStyle(.bordered)
-                    #else
-                    .modifier(PickerBorderer())
                     #endif
                     .padding(.bottom)
                 }
@@ -72,8 +68,6 @@ struct CodeBuilderView: View
             }
             #if os(macOS)
             .menuStyle(.borderedButton)
-            #else
-            .modifier(PickerBorderer())
             #endif
             .disabled(base_stc.listings_files_names.isEmpty)
         }

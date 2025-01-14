@@ -19,94 +19,125 @@ struct InfoView: View
     
     var body: some View
     {
-        HStack(spacing: 0)
+        ZStack(alignment: .trailing)
         {
-            VStack(spacing: 0)
+            HStack(spacing: 0)
             {
-                TextField("Name", text: $base_stc.package_info.title)
-                    .textFieldStyle(.plain)
-                    .font(.title2)
-                    .padding()
-                    .onChange(of: base_stc.package_info.title)
-                    { _, new_value in
-                        document.package_info.title = new_value
-                    }
-                
-                Divider()
-                
-                TextEditor(text: $base_stc.package_info.description)
-                    .textEditorStyle(.plain)
-                    .font(.title3)
-                    .padding()
-                    .frame(maxHeight: .infinity)
-                    .onChange(of: base_stc.package_info.description)
-                    { _, new_value in
-                        document.package_info.description = new_value
-                    }
-            }
-            .frame(maxWidth: .infinity)
-            
-            Divider()
-            
-            ScrollView(.vertical)
-            {
-                VStack(spacing: 0)
+                ZStack
                 {
-                    ForEach(0..<document.package_info.gallery.count, id: \.self)
-                    { index in
-                        SimpleImageCard(image: document.package_info.gallery[index]) //(images: $document.package_info.gallery, image: document.package_info.gallery[index])
-                        { is_presented in
-                            SimpleImageView(image: document.package_info.gallery[index])
-                                .frame(maxWidth: 320)
+                    Rectangle()
+                        .foregroundColor(.clear)
+                }
+                .frame(maxWidth: .infinity)
+                
+                //Divider()
+                
+                ScrollView(.vertical)
+                {
+                    VStack(spacing: 0)
+                    {
+                        ForEach(0..<document.package_info.gallery.count, id: \.self)
+                        { index in
+                            SimpleImageCard(image: document.package_info.gallery[index]) //(images: $document.package_info.gallery, image: document.package_info.gallery[index])
+                            { is_presented in
+                                SimpleImageView(image: document.package_info.gallery[index])
+                                    .frame(maxWidth: 320)
+                            }
                         }
                     }
                 }
-            }
-            .frame(width: 192)
-            .overlay(alignment: .bottomLeading)
-            {
-                Button(action: {
-                    document.package_info.clear_gallery()
-                })
+                .frame(width: 192)
+                .overlay(alignment: .bottom)
                 {
-                    Image(systemName: "eraser")
-                    #if os(iOS)
-                        .frame(width: 48, height: 48)
-                    #else
-                        .frame(maxHeight: 24)
-                    #endif
+                    VStack(spacing: 0)
+                    {
+                        Divider()
+                        HStack
+                        {
+                            Button(action: {
+                                document.package_info.clear_gallery()
+                            })
+                            {
+                                Image(systemName: "eraser")
+                                #if os(iOS)
+                                    .frame(width: 24, height: 24)
+                                #else
+                                    .frame(maxHeight: 24)
+                                #endif
+                            }
+                            .controlSize(.extraLarge)
+                            .buttonStyle(.plain)
+                            .padding()
+                            
+                            Spacer()
+                            
+                            Button(action: { load_panel_presented.toggle() })
+                            {
+                                Image(systemName: "square.and.arrow.down")
+                                #if os(iOS)
+                                    .frame(width: 24, height: 24)
+                                #else
+                                    .frame(maxHeight: 24)
+                                #endif
+                            }
+                            .controlSize(.extraLarge)
+                            .buttonStyle(.plain)
+                            .padding()
+                            .fileImporter(isPresented: $load_panel_presented,
+                                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .background(.white)
+                    }
                 }
-                .buttonBorderShape(.roundedRectangle)
-                #if os(iOS)
-                .modifier(ButtonBorderer())
-                #endif
-                .controlSize(.extraLarge)
-                .padding()
             }
-            .overlay(alignment: .bottomTrailing)
+            
+            HStack(spacing: 0)
             {
-                Button(action: { load_panel_presented.toggle() })
+                ZStack
                 {
-                    Image(systemName: "square.and.arrow.down")
-                    #if os(iOS)
-                        .frame(width: 48, height: 48)
-                    #else
-                        .frame(maxHeight: 24)
-                    #endif
+                    Rectangle()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .shadow(radius: 4)
+                    
+                    VStack(spacing: 0)
+                    {
+                        TextField("Name", text: $base_stc.package_info.title)
+                            .textFieldStyle(.plain)
+                            .font(.title2)
+                            .padding()
+                            .onChange(of: base_stc.package_info.title)
+                        { _, new_value in
+                            document.package_info.title = new_value
+                        }
+                        
+                        Divider()
+                        
+                        TextEditor(text: $base_stc.package_info.description)
+                            .textEditorStyle(.plain)
+                            .font(.title3)
+                            .padding()
+                            .frame(maxHeight: .infinity)
+                            .onChange(of: base_stc.package_info.description)
+                        { _, new_value in
+                            document.package_info.description = new_value
+                        }
+                    }
                 }
-                .buttonBorderShape(.roundedRectangle)
-                #if os(iOS)
-                .modifier(ButtonBorderer())
-                #endif
-                .controlSize(.extraLarge)
-                .padding()
-                .fileImporter(isPresented: $load_panel_presented,
-                                      allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+                .frame(maxWidth: .infinity)
+                
+                //Divider()
+                
+                VStack
+                {
+                    
+                }
+                .frame(width: 192)
             }
+            .ignoresSafeArea(.container, edges: .bottom)
         }
-        .modifier(ListBorderer())
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
     }
     
     func import_images(_ res: Result<[URL], Error>)

@@ -45,9 +45,10 @@ struct BuildView: View
                 .frame(maxWidth: .infinity)
                 .disabled(base_stc.package_info.build_modules_lists.count == 0)
                 #if os(iOS)
-                .modifier(ButtonBorderer())
+                .modifier(PickerBorderer())
                 #endif
                 
+                #if os(macOS)
                 Button("-")
                 {
                     delete_modules_list(selected_name)
@@ -57,13 +58,33 @@ struct BuildView: View
                 {
                     new_panel_presented = true
                 }
-                .popover(isPresented: $new_panel_presented, arrowEdge: .top)
+                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
                 {
                     AddNewView(is_presented: $new_panel_presented, names: base_stc.package_info.build_modules_lists_names)
                     { new_name in
                         add_modules_list(new_name)
                     }
                 }
+                #else
+                Button(action: {delete_modules_list(selected_name)})
+                {
+                    Image(systemName: "minus")
+                }
+                .frame(width: 32, height: 32)
+                
+                Button(action:{new_panel_presented = true})
+                {
+                    Image(systemName: "plus")
+                }
+                .frame(width: 32, height: 32)
+                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
+                {
+                    AddNewView(is_presented: $new_panel_presented, names: base_stc.package_info.build_modules_lists_names)
+                    { new_name in
+                        add_modules_list(new_name)
+                    }
+                }
+                #endif
             }
             .padding(.bottom)
             
@@ -220,7 +241,8 @@ struct BuildView: View
                     }
                 }
             }
-            .modifier(ViewBorderer())
+            .listStyle(.plain)
+            .modifier(ListBorderer())
             //.frame(maxWidth: .infinity)
             .padding(.bottom)
             
@@ -433,7 +455,11 @@ struct BuildItemView: View
                     .scaledToFit()
                     .foregroundStyle(.white)
             }
+            #if os(macOS)
             .frame(width: 40, height: 40)
+            #else
+            .frame(width: 48, height: 48)
+            #endif
             //.frame(width: 32, height: 32)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             

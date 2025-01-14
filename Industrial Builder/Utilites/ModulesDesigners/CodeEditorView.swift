@@ -47,7 +47,11 @@ struct CodeEditorView: View
                         Text(name)
                     }
                 }
+                #if os(macOS)
                 .buttonStyle(.bordered)
+                #else
+                .modifier(PickerBorderer())
+                #endif
                 .frame(maxWidth: .infinity)
                 .padding(.trailing)
                 .disabled(code_items.count == 1)
@@ -59,9 +63,9 @@ struct CodeEditorView: View
                 #if os(macOS)
                 .menuStyle(.borderedButton)
                 #else
-                .modifier(PickerBorderer())
+                .modifier(ButtonBorderer())
                 #endif
-                .popover(isPresented: $code_builder_presented, arrowEdge: .top)
+                .popover(isPresented: $code_builder_presented, arrowEdge: default_popover_edge)
                 {
                     CodeBuilderView(code: code_item_binding(from: $code_items, key: code_item_name), avaliable_templates_names: avaliable_templates_names[code_item_name] ?? [String](), model_name: model_name)
                     {

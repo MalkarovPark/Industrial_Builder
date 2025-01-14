@@ -79,7 +79,7 @@ struct ListingsListView: View
             {
                 Image(systemName: "plus")
             }
-            .popover(isPresented: $new_panel_presented, arrowEdge: .bottom)
+            .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
             {
                 AddNewView(is_presented: $new_panel_presented, names: base_stc.listings_files_names)
                 { new_name in

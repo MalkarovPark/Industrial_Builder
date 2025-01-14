@@ -63,7 +63,7 @@ struct ModulesListView: View
                                 }
                             }
                     }
-                    .popover(isPresented: $new_name_presented)
+                    .popover(isPresented: $new_name_presented, arrowEdge: default_popover_edge)
                     {
                         #if os(macOS)
                         NewNameView(is_presented: $new_name_presented, name: selected_name, names: names)
@@ -77,7 +77,8 @@ struct ModulesListView: View
                             }
                         #endif
                     }
-                    .listStyle(.plain)
+                    .modifier(ListBorderer())
+                    //.listStyle(.plain)
                 }
                 else
                 {
@@ -92,7 +93,7 @@ struct ModulesListView: View
                 {
                     Label("Add", systemImage: "plus")
                 }
-                .popover(isPresented: $new_panel_presented, arrowEdge: .top)
+                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
                 {
                     AddNewView(is_presented: $new_panel_presented, names: names)
                     { new_name in

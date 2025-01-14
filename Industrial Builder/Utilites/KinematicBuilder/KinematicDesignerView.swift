@@ -61,7 +61,7 @@ struct KinematicDesignerView: View
                 #if os(iOS)
                 .foregroundColor(.black)
                 #endif
-                .popover(isPresented: $origin_rotate_view_presented)
+                .popover(isPresented: $origin_rotate_view_presented, arrowEdge: default_popover_edge)
                 {
                     OriginRotateView(origin_rotate_view_presented: $origin_rotate_view_presented, origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
                 }
@@ -81,7 +81,7 @@ struct KinematicDesignerView: View
                 #if os(iOS)
                 .foregroundColor(.black)
                 #endif
-                .popover(isPresented: $origin_move_view_presented)
+                .popover(isPresented: $origin_move_view_presented, arrowEdge: default_popover_edge)
                 {
                     OriginMoveView(origin_move_view_presented: $origin_move_view_presented, origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
                 }
@@ -100,7 +100,7 @@ struct KinematicDesignerView: View
                 #if os(iOS)
                 .foregroundColor(.black)
                 #endif
-                .popover(isPresented: $space_scale_view_presented)
+                .popover(isPresented: $space_scale_view_presented, arrowEdge: default_popover_edge)
                 {
                     SpaceScaleView(space_scale_view_presented: $space_scale_view_presented, space_scale: $app_state.kinematic_preview_robot.space_scale)
                 }
@@ -127,7 +127,7 @@ struct KinematicDesignerView: View
                 //Image(systemName: "hexagon")
                 Label("Make Module", systemImage: "arrow.up.document")
             }
-            .popover(isPresented: $make_components_view_presented, arrowEdge: .bottom)
+            .popover(isPresented: $make_components_view_presented, arrowEdge: default_popover_edge)
             {
                 MakeRobotComponentsView(group: $group)
             }

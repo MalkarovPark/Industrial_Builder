@@ -24,17 +24,21 @@ struct PackageView: View
         {
             InfoView(document: $document)
                 .modifier(WindowFramer())
+            #if !os(visionOS)
+                .background(.white)
+            #endif
+                //.ignoresSafeArea(.container, edges: .bottom)
         }
         .modifier(WindowFramer())
         .sheet(isPresented: $build_view_presented)
         {
             BuildView(document: $document)
                 .modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
-                .fitted()
             #if os(macOS)
                 .frame(minWidth: 320, maxWidth: 600, minHeight: 480, maxHeight: 640)
             #endif
         }
+        .fitted()
         .toolbar
         {
             Button(action: { build_view_presented = true })
@@ -42,6 +46,10 @@ struct PackageView: View
                 Image(systemName: "square.and.arrow.up.on.square")
             }
         }
+        #if !os(macOS)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        #endif
     }
 }
 

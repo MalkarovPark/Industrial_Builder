@@ -108,7 +108,7 @@ struct ToolOperationCard: View
             Image(systemName: "\(item.symbol)")
                 .frame(width: 48, height: 48)
                 .background(.white)
-                .popover(isPresented: $is_presented)
+                .popover(isPresented: $is_presented, arrowEdge: default_popover_edge)
                 {
                     TextField("Symbol", text: $item.symbol)
                         .frame(minWidth: 200)
