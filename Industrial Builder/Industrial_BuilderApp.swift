@@ -83,6 +83,12 @@ let default_popover_edge: Edge = .top
 let default_popover_edge: Edge = .bottom
 #endif
 
+#if os(macOS)
+let default_popover_edge_inverted: Edge = .bottom
+#else
+let default_popover_edge_inverted: Edge = .top
+#endif
+
 //MARK: - Color by hex
 extension Color
 {

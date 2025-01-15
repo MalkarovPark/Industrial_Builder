@@ -75,6 +75,7 @@ struct ResourcesPackageView: View
                     .padding(.trailing)
                     #if os(macOS)
                     .buttonStyle(.link)
+                    .foregroundColor(.accentColor)
                     #endif
                     .popover(isPresented: $is_connect_view_presented, arrowEdge: default_popover_edge)
                     {

@@ -13,65 +13,130 @@ struct PartModulesView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @State private var selected_name = String()
+    @State private var new_module_view_presented: Bool = false
+    @State private var selection: PartModule.ID?
+    @State private var rename_item: PartModule.ID?
+    @State private var new_name = ""
     
     var body: some View
     {
-        VStack(spacing: 0)
+        HStack(spacing: 0)
         {
-            HStack(spacing: 0)
+            // MARK: - List View
+            List(selection: $selection)
             {
-                ModulesListView(names: $base_stc.part_modules_names, selected_name: $selected_name)
-                { name in
-                    base_stc.part_modules.append(PartModule(new_name: name))
-                }
-                rename_module:
-                { new_name in
-                    base_stc.part_modules[selected_module_index].name = new_name
-                    document_handler.document_update_parts()
-                }
-                delete_module:
-                {
-                    base_stc.part_modules.remove(at: selected_module_index)
-                }
-                
-                VStack(spacing: 0)
-                {
-                    if selected_module_index != -1
+                ForEach($base_stc.part_modules)
+                { $item in
+                    HStack
                     {
-                        PartModuleDesigner(part_module: $base_stc.part_modules[selected_module_index])
-                            .modifier(ViewBorderer())
-                    }
-                    else
-                    {
-                        GroupBox
+                        if rename_item == item.id
                         {
-                            ContentUnavailableView
+                            TextField("Input New Name", text: $new_name)
+                                .onSubmit
                             {
-                                Label("No module selected", systemImage: "shippingbox")
+                                item.name = new_name
+                                rename_item = nil
+                                new_name = ""
                             }
-                            description:
+                        }
+                        else
+                        {
+                            Text(item.name)
+                        }
+                        Spacer()
+                    }
+                    .listRowSeparator(.hidden)
+                    .contentShape(Rectangle())
+                    .contextMenu
+                    {
+                        Button
+                        {
+                            rename_item = item.id
+                            new_name = item.name
+                        }
+                        label:
+                        {
+                            Label("Rename", systemImage: "pencil")
+                        }
+                        Button(role: .destructive)
+                        {
+                            if let index = base_stc.part_modules.firstIndex(where: { $0.id == item.id })
                             {
-                                Text("Select an existing part module to edit.")
+                                base_stc.part_modules.remove(at: index)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                        label:
+                        {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .swipeActions
+                    {
+                        Button(role: .destructive)
+                        {
+                            if let index = base_stc.part_modules.firstIndex(where: { $0.id == item.id })
+                            {
+                                base_stc.part_modules.remove(at: index)
+                            }
+                        }
+                        label:
+                        {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding()
+            #if os(macOS)
+            .frame(maxWidth: 128)
+            #else
+            .frame(maxWidth: 192)
+            #endif
+            .listStyle(.plain)
+            
+            Divider()
+            
+            // MARK: - Detail View
+            if let selected_item_id = selection, let selected_module_index = base_stc.part_modules.firstIndex(where: { $0.id == selected_item_id })
+            {
+                PartModuleDesigner(part_module: $base_stc.part_modules[selected_module_index])
+            }
+            else
+            {
+                ContentUnavailableView
+                {
+                    Label("No module selected", systemImage: "shippingbox")
+                }
+                description:
+                {
+                    Text("Select an existing part module to edit.")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                #if !os(visionOS)
+                .background(.white)
+                #endif
+            }
         }
-        .modifier(WindowFramer())
-        .onChange(of: base_stc.part_modules)
+        .toolbar
         {
-            document_handler.document_update_parts()
+            ToolbarItem
+            {
+                Button(action: { new_module_view_presented = true })
+                {
+                    Image(systemName: "plus")
+                }
+                .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
+                {
+                    AddNewView(is_presented: $new_module_view_presented, names: base_stc.part_modules_names)
+                    { new_name in
+                        base_stc.part_modules.append(PartModule(new_name: new_name))
+                    }
+                }
+            }
         }
-    }
-    
-    private var selected_module_index: Int
-    {
-        return base_stc.part_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
+        #if !os(macOS)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        #endif
     }
 }
 

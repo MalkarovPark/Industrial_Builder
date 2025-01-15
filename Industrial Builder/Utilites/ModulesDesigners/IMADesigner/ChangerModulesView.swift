@@ -13,72 +13,133 @@ struct ChangerModulesView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @State private var selected_name = String()
-    
-    @State private var smi = -1
+    @State private var new_module_view_presented: Bool = false
+    @State private var selection: ChangerModule.ID?
+    @State private var rename_item: ChangerModule.ID?
+    @State private var new_name = ""
     
     var body: some View
     {
-        VStack(spacing: 0)
+        HStack(spacing: 0)
         {
-            HStack(spacing: 0)
+            // MARK: - List View
+            List(selection: $selection)
             {
-                ModulesListView(names: $base_stc.changer_modules_names, selected_name: $selected_name)
-                { name in
-                    base_stc.changer_modules.append(ChangerModule(new_name: name))
-                }
-                rename_module:
-                { new_name in
-                    base_stc.changer_modules[selected_module_index].name = new_name
-                    document_handler.document_update_ima()
-                }
-                delete_module:
-                {
-                    base_stc.changer_modules.remove(at: selected_module_index)
-                }
-                
-                VStack(spacing: 0)
-                {
-                    if smi != -1
+                ForEach($base_stc.changer_modules)
+                { $item in
+                    HStack
                     {
-                        ChangerModuleDesigner(changer_module: $base_stc.changer_modules[smi])
-                            .modifier(ViewBorderer())
-                    }
-                    else
-                    {
-                        GroupBox
+                        if rename_item == item.id
                         {
-                            ContentUnavailableView
+                            TextField("Input New Name", text: $new_name)
+                                .onSubmit
                             {
-                                Label("No module selected", systemImage: "wand.and.rays")
+                                item.name = new_name
+                                rename_item = nil
+                                new_name = ""
                             }
-                            description:
+                        }
+                        else
+                        {
+                            Text(item.name)
+                        }
+                        Spacer()
+                    }
+                    .listRowSeparator(.hidden)
+                    .contentShape(Rectangle())
+                    .contextMenu
+                    {
+                        Button
+                        {
+                            rename_item = item.id
+                            new_name = item.name
+                        }
+                        label:
+                        {
+                            Label("Rename", systemImage: "pencil")
+                        }
+                        Button(role: .destructive)
+                        {
+                            if let index = base_stc.changer_modules.firstIndex(where: { $0.id == item.id })
                             {
-                                Text("Select an existing changer module to edit.")
+                                base_stc.changer_modules.remove(at: index)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                        label:
+                        {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .swipeActions
+                    {
+                        Button(role: .destructive)
+                        {
+                            if let index = base_stc.changer_modules.firstIndex(where: { $0.id == item.id })
+                            {
+                                base_stc.changer_modules.remove(at: index)
+                            }
+                        }
+                        label:
+                        {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding()
+            #if os(macOS)
+            .frame(maxWidth: 128)
+            #else
+            .frame(maxWidth: 192)
+            #endif
+            .listStyle(.plain)
+            
+            Divider()
+            
+            // MARK: - Detail View
+            if let selected_item_id = selection, let selected_module_index = base_stc.changer_modules.firstIndex(where: { $0.id == selected_item_id })
+            {
+                ChangerModuleDesigner(changer_module: $base_stc.changer_modules[selected_module_index])
+            }
+            else
+            {
+                ContentUnavailableView
+                {
+                    Label("No module selected", systemImage: "wand.and.rays")
+                }
+                description:
+                {
+                    Text("Select an existing changer module to edit.")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                #if !os(visionOS)
+                .background(.white)
+                #endif
+            }
         }
-        .modifier(WindowFramer())
-        .onChange(of: base_stc.changer_modules)
+        .toolbar
         {
-            document_handler.document_update_ima()
+            ToolbarItem
+            {
+                Button(action: { new_module_view_presented = true })
+                {
+                    Image(systemName: "plus")
+                }
+                .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
+                {
+                    AddNewView(is_presented: $new_module_view_presented, names: base_stc.changer_modules_names)
+                    { new_name in
+                        base_stc.changer_modules.append(ChangerModule(new_name: new_name))
+                    }
+                }
+            }
         }
-        .onChange(of: selected_name)
-        {
-            smi = selected_module_index
-        }
+        #if !os(macOS)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.visible, for: .navigationBar)
+        #endif
     }
     
-    private var selected_module_index: Int
-    {
-        return base_stc.changer_modules.firstIndex(where: { $0.name == selected_name }) ?? -1
-    }
+    
 }
 
 #Preview

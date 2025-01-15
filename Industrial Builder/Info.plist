@@ -40,6 +40,8 @@
 				<array>
 					<string>stc</string>
 				</array>
+				<key>public.mime-type</key>
+				<array/>
 			</dict>
 		</dict>
 	</array>
