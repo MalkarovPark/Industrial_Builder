@@ -63,7 +63,7 @@ struct KinematicsListView: View
             {
                 Label("Add Kinematic", systemImage: "plus")
             }
-            .popover(isPresented: $add_kinematic_view_presented, arrowEdge: default_popover_edge)
+            .popover(isPresented: $add_kinematic_view_presented, arrowEdge: .bottom)
             {
                 AddKinematicView(is_presented: $add_kinematic_view_presented, items: $base_stc.kinematic_groups)
             }
