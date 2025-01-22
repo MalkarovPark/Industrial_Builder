@@ -16,8 +16,15 @@ struct OperationCodesEditor: View
     
     @State private var new_code_value = 0
     @State private var new_code_name = ""
+    @State private var new_code_symbol = "questionmark"
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 192, maximum: .infinity), spacing: 24)]
+    
+    public init(tool_operations: Binding<[OperationCodeInfo]>, update_document_func: @escaping () -> ())
+    {
+        _tool_operations = tool_operations
+        self.update_document_func = update_document_func
+    }
     
     var body: some View
     {
@@ -29,12 +36,12 @@ struct OperationCodesEditor: View
                 {
                     ForEach(tool_operations.indices, id: \.self)
                     { index in
-                        ToolOperationCard(item: $tool_operations[index])
+                        ToolOperationCard(item: $tool_operations[index], on_change: update_document_func)
                             .contextMenu
                             {
                                 Button("Delete", systemImage: "trash", role: .destructive)
                                 {
-                                    tool_operations.remove(at: index)
+                                    delete_opcode(index: index)
                                 }
                             }
                     }
@@ -62,10 +69,33 @@ struct OperationCodesEditor: View
                     .textFieldStyle(.roundedBorder)
                     .padding(.leading)
                 
-                Button("Add")
+                TextField("Image", text: $new_code_symbol)
+                    .textFieldStyle(.roundedBorder)
+                    //.frame(width: 96)
+                    .padding(.leading)
+                
+                Button
                 {
-                    tool_operations.append(OperationCodeInfo(value: new_code_value, name: new_code_name, symbol: "questionmark"))
-                    new_code_value += 1
+                    add_code()
+                }
+                label:
+                {
+                    HStack
+                    {
+                        Text("Add")
+                        
+                        //Divider()
+                        
+                        //Image(systemName: new_code_symbol)
+                        if is_valid_symbol(new_code_symbol)
+                        {
+                            #if os(macOS)
+                            Image(nsImage: NSImage(systemSymbolName: new_code_symbol, accessibilityDescription: nil) ?? NSImage())
+                            #else
+                            Image(systemName: new_code_symbol)
+                            #endif
+                        }
+                    }
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(tool_operations.contains(where: { $0.value == new_code_value }))
@@ -74,16 +104,60 @@ struct OperationCodesEditor: View
         }
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: tool_operations)
-        { _, _ in
-            update_document_func()
+        .onAppear
+        {
+            set_minimal_opcode_value()
         }
+    }
+    
+    private func set_minimal_opcode_value()
+    {
+        var new_code_value = 0
+        
+        while tool_operations.contains(where: { $0.value == new_code_value })
+        {
+            new_code_value += 1
+        }
+        
+        self.new_code_value = new_code_value
+    }
+    
+    private func add_code()
+    {
+        tool_operations.append(OperationCodeInfo(value: new_code_value, name: new_code_name, symbol: new_code_symbol))
+        
+        //new_code_value += 1
+        set_minimal_opcode_value()
+        
+        update_document_func()
+    }
+    
+    private func delete_opcode(index: Int)
+    {
+        withAnimation
+        {
+            tool_operations.remove(at: index)
+        }
+        
+        set_minimal_opcode_value()
+        
+        update_document_func()
+    }
+    
+    private func is_valid_symbol(_ symbol: String) -> Bool {
+        #if os(iOS)
+        return UIImage(systemName: symbol) != nil
+        #elseif os(macOS)
+        return NSImage(systemSymbolName: symbol, accessibilityDescription: nil) != nil
+        #endif
     }
 }
 
 struct ToolOperationCard: View
 {
     @Binding var item: OperationCodeInfo
+    
+    public var on_change: (() -> Void) = {}
     
     @State private var is_presented = false
     
@@ -122,6 +196,10 @@ struct ToolOperationCard: View
         .frame(height: 48)
         .background(.white)
         .modifier(ViewBorderer())
+        .onChange(of: item)
+        { _, _ in
+            on_change()
+        }
     }
 }
 

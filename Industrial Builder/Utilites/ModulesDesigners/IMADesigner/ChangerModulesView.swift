@@ -92,6 +92,10 @@ struct ChangerModulesView: View
             .frame(maxWidth: 192)
             #endif
             .listStyle(.plain)
+            .onChange(of: base_stc.changer_modules)
+            { _, _ in
+                document_handler.document_update_ima()
+            }
             
             Divider()
             
