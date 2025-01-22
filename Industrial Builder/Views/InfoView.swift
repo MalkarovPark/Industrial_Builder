@@ -15,7 +15,6 @@ struct InfoView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     @State private var gallery: [Image] = []
-    @State private var load_panel_presented = false
     
     var body: some View
     {
@@ -30,66 +29,7 @@ struct InfoView: View
                 }
                 .frame(maxWidth: .infinity)
                 
-                //Divider()
-                
-                ScrollView(.vertical)
-                {
-                    VStack(spacing: 0)
-                    {
-                        ForEach(0..<document.package_info.gallery.count, id: \.self)
-                        { index in
-                            SimpleImageCard(image: document.package_info.gallery[index]) //(images: $document.package_info.gallery, image: document.package_info.gallery[index])
-                            { is_presented in
-                                SimpleImageView(image: document.package_info.gallery[index])
-                                    .frame(maxWidth: 320)
-                            }
-                        }
-                    }
-                }
-                .frame(width: 192)
-                .overlay(alignment: .bottom)
-                {
-                    VStack(spacing: 0)
-                    {
-                        Divider()
-                        HStack
-                        {
-                            Button(action: {
-                                document.package_info.clear_gallery()
-                            })
-                            {
-                                Image(systemName: "eraser")
-                                #if os(iOS)
-                                    .frame(width: 24, height: 24)
-                                #else
-                                    .frame(maxHeight: 24)
-                                #endif
-                            }
-                            .controlSize(.extraLarge)
-                            .buttonStyle(.plain)
-                            .padding()
-                            
-                            Spacer()
-                            
-                            Button(action: { load_panel_presented.toggle() })
-                            {
-                                Image(systemName: "square.and.arrow.down")
-                                #if os(iOS)
-                                    .frame(width: 24, height: 24)
-                                #else
-                                    .frame(maxHeight: 24)
-                                #endif
-                            }
-                            .controlSize(.extraLarge)
-                            .buttonStyle(.plain)
-                            .padding()
-                            .fileImporter(isPresented: $load_panel_presented,
-                                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .background(.white)
-                    }
-                }
+                InfoGalleryView(document: $document)
             }
             
             HStack(spacing: 0)
@@ -127,8 +67,6 @@ struct InfoView: View
                 }
                 .frame(maxWidth: .infinity)
                 
-                //Divider()
-                
                 VStack
                 {
                     
@@ -138,6 +76,138 @@ struct InfoView: View
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct InfoGalleryView: View
+{
+    @Binding var document: STCDocument
+    
+    @State private var is_targeted = false
+    @State private var load_panel_presented = false
+    
+    @State private var update_toggle = false
+    
+    var body: some View
+    {
+        ScrollView(.vertical)
+        {
+            VStack(spacing: 0)
+            {
+                ForEach(0..<document.package_info.gallery.count, id: \.self)
+                { index in
+                    SimpleImageCard(image: document.package_info.gallery[index])
+                    { is_presented in
+                        SimpleImageView(image: document.package_info.gallery[index])
+                            .frame(maxWidth: 320)
+                    }
+                    .contextMenu
+                    {
+                        Button(role: .destructive)
+                        {
+                            delete_image(index: index)
+                        }
+                        label:
+                        {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .transition(.opacity) // Добавляем переход для анимации исчезновения
+                }
+            }
+            .animation(.easeInOut, value: document.package_info.gallery)
+            .modifier(DoubleModifier(update_toggle: $update_toggle))
+        }
+        .frame(width: 192)
+        .overlay(alignment: .bottom)
+        {
+            VStack(spacing: 0)
+            {
+                Divider()
+                HStack
+                {
+                    Button(action: {
+                        document.package_info.clear_gallery()
+                    })
+                    {
+                        Image(systemName: "trash")
+                            #if os(iOS)
+                            .frame(width: 24, height: 24)
+                            #else
+                            .frame(maxHeight: 24)
+                            #endif
+                    }
+                    .controlSize(.extraLarge)
+                    .buttonStyle(.plain)
+                    .padding()
+                    
+                    Spacer()
+                    
+                    Button(action: { load_panel_presented.toggle() })
+                    {
+                        Image(systemName: "square.and.arrow.down")
+                            #if os(iOS)
+                            .frame(width: 24, height: 24)
+                            #else
+                            .frame(maxHeight: 24)
+                            #endif
+                    }
+                    .controlSize(.extraLarge)
+                    .buttonStyle(.plain)
+                    .padding()
+                    .fileImporter(isPresented: $load_panel_presented,
+                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+                }
+                .frame(maxWidth: .infinity)
+                .background(.ultraThinMaterial)
+            }
+        }
+        .overlay
+        {
+            if is_targeted
+            {
+                VStack
+                {
+                    Text("Drop images here")
+                        .foregroundColor(.secondary)
+                        .padding()
+                }
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+            }
+        }
+        .onDrop(of: [.image], isTargeted: $is_targeted)
+        { providers in
+            perform_drop(providers: providers)
+        }
+    }
+    
+    func perform_drop(providers: [NSItemProvider]) -> Bool
+    {
+        for provider in providers
+        {
+            DispatchQueue.main.async
+            {
+                provider.loadItem(forTypeIdentifier: "public.image", options: nil)
+                { (item, error) in
+                    if let url = item as? URL
+                    {
+                        if let image_data = try? Data(contentsOf: url)
+                        {
+                            guard let image = UIImage(data: image_data)
+                            else
+                            {
+                                return
+                            }
+                            document.package_info.gallery.append(image)
+                        }
+                    }
+                }
+            }
+        }
+        return true
     }
     
     func import_images(_ res: Result<[URL], Error>)
@@ -165,7 +235,17 @@ struct InfoView: View
             }
         }
     }
+    
+    func delete_image(index: Int)
+    {
+        withAnimation
+        {
+            document.package_info.gallery.remove(at: index)
+        }
+        update_toggle.toggle()
+    }
 }
+
 
 #Preview
 {
