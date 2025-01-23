@@ -84,7 +84,9 @@ struct OperationCodesEditor: View
                     {
                         Text("Add")
                         
-                        //Divider()
+                        #if !os(visionOS)
+                        Divider()
+                        #endif
                         
                         //Image(systemName: new_code_symbol)
                         if is_valid_symbol(new_code_symbol)
@@ -144,11 +146,12 @@ struct OperationCodesEditor: View
         update_document_func()
     }
     
-    private func is_valid_symbol(_ symbol: String) -> Bool {
-        #if os(iOS)
-        return UIImage(systemName: symbol) != nil
-        #elseif os(macOS)
+    private func is_valid_symbol(_ symbol: String) -> Bool
+    {
+        #if os(macOS)
         return NSImage(systemSymbolName: symbol, accessibilityDescription: nil) != nil
+        #else
+        return UIImage(systemName: symbol) != nil
         #endif
     }
 }
@@ -176,17 +179,27 @@ struct ToolOperationCard: View
                 .padding()
                 .textFieldStyle(.plain)
                 .frame(minWidth: 128)
+                .onSubmit
+                {
+                    on_change()
+                }
             
             Divider()
             
             Image(systemName: "\(item.symbol)")
                 .frame(width: 48, height: 48)
+            #if !os(visionOS)
                 .background(.white)
+            #endif
                 .popover(isPresented: $is_presented, arrowEdge: default_popover_edge)
                 {
                     TextField("Symbol", text: $item.symbol)
                         .frame(minWidth: 200)
                         .padding()
+                        .onSubmit
+                        {
+                            on_change()
+                        }
                 }
                 .onTapGesture
                 {
@@ -194,12 +207,12 @@ struct ToolOperationCard: View
                 }
         }
         .frame(height: 48)
+        #if !os(visionOS)
         .background(.white)
+        #else
+        .glassBackgroundEffect()
+        #endif
         .modifier(ViewBorderer())
-        .onChange(of: item)
-        { _, _ in
-            on_change()
-        }
     }
 }
 
@@ -222,7 +235,9 @@ struct ToolOperationView: View
                 ZStack
                 {
                     Rectangle()
+                    #if !os(visionOS)
                         .foregroundColor(.white)
+                    #endif
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .shadow(radius: 1)
                     

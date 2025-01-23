@@ -63,12 +63,14 @@ struct KinematicsListView: View
             {
                 Label("Add Kinematic", systemImage: "plus")
             }
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
             .popover(isPresented: $add_kinematic_view_presented, arrowEdge: .bottom)
             {
                 AddKinematicView(is_presented: $add_kinematic_view_presented, items: $base_stc.kinematic_groups)
             }
         }
-        .modifier(WindowFramer())
     }
     
     private func delete_kinematic(_ id: UUID)

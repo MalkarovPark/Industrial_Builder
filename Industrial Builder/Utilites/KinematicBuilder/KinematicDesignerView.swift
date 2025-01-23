@@ -47,6 +47,7 @@ struct KinematicDesignerView: View
             .ignoresSafeArea(.container, edges: .bottom)
             #endif
         }
+        #if !os(visionOS)
         .overlay(alignment: .bottomLeading)
         {
             VStack(spacing: 0)
@@ -120,6 +121,79 @@ struct KinematicDesignerView: View
             .fixedSize(horizontal: true, vertical: false)
             .padding()
         }
+        #else
+        .ornament(attachmentAnchor: .scene(.bottom))
+        {
+            HStack(spacing: 0)
+            {
+                Button(action: { origin_rotate_view_presented.toggle() })
+                {
+                    Image(systemName: "rotate.3d")
+                        .imageScale(.large)
+                        .padding()
+                }
+                .buttonStyle(.borderless)
+                .buttonBorderShape(.circle)
+                .popover(isPresented: $origin_rotate_view_presented, arrowEdge: default_popover_edge)
+                {
+                    OriginRotateView(origin_rotate_view_presented: $origin_rotate_view_presented, origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
+                }
+                .onDisappear
+                {
+                    origin_rotate_view_presented.toggle()
+                }
+                
+                Button(action: { origin_move_view_presented.toggle() })
+                {
+                    Image(systemName: "move.3d")
+                        .imageScale(.large)
+                        .padding()
+                }
+                .buttonStyle(.borderless)
+                .buttonBorderShape(.circle)
+                .popover(isPresented: $origin_move_view_presented, arrowEdge: default_popover_edge)
+                {
+                    OriginMoveView(origin_move_view_presented: $origin_move_view_presented, origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
+                }
+                .onDisappear
+                {
+                    origin_move_view_presented.toggle()
+                }
+                .onDisappear
+                {
+                    origin_move_view_presented.toggle()
+                }
+                
+                Button(action: { space_scale_view_presented.toggle() })
+                {
+                    Image(systemName: "scale.3d")
+                        .imageScale(.large)
+                        .padding()
+                }
+                .buttonBorderShape(.circle)
+                .popover(isPresented: $space_scale_view_presented, arrowEdge: default_popover_edge)
+                {
+                    SpaceScaleView(space_scale_view_presented: $space_scale_view_presented, space_scale: $app_state.kinematic_preview_robot.space_scale)
+                }
+                .onChange(of: app_state.kinematic_preview_robot.space_scale)
+                { _, _ in
+                    app_state.kinematic_preview_robot.update_space_scale()
+                }
+                .onDisappear
+                {
+                    space_scale_view_presented.toggle()
+                }
+                .onDisappear
+                {
+                    space_scale_view_presented.toggle()
+                }
+                .buttonStyle(.borderless)
+            }
+            .padding()
+            .labelStyle(.iconOnly)
+            .glassBackgroundEffect()
+        }
+        #endif
         .toolbar
         {
             Button (action: { make_components_view_presented.toggle() })
@@ -127,6 +201,9 @@ struct KinematicDesignerView: View
                 //Image(systemName: "hexagon")
                 Label("Make Module", systemImage: "arrow.up.document")
             }
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
             .popover(isPresented: $make_components_view_presented, arrowEdge: default_popover_edge)
             {
                 MakeRobotComponentsView(group: $group)
@@ -137,6 +214,9 @@ struct KinematicDesignerView: View
                 //Image(systemName: "sidebar.trailing")
                 Label("Kinematic Inspector", systemImage: "sidebar.trailing")
             }
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
         }
         .inspector(isPresented: $show_inspector)
         {

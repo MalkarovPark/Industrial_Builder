@@ -43,7 +43,11 @@ struct ConnectionParametersView: View
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                #if !os(visionOS)
                 .modifier(ViewBorderer())
+                #else
+                .listStyle(.plain)
+                #endif
                 .overlay(alignment: .center)
                 {
                     if !(connection_parameters.count > 0)

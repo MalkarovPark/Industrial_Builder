@@ -88,8 +88,11 @@ struct ToolModulesView: View
             }
             #if os(macOS)
             .frame(maxWidth: 128)
-            #else
+            #elseif os(iOS)
             .frame(maxWidth: 192)
+            #else
+            .frame(maxWidth: 256)
+            .background(.thinMaterial)
             #endif
             .listStyle(.plain)
             .onChange(of: base_stc.tool_modules)
@@ -97,7 +100,9 @@ struct ToolModulesView: View
                 document_handler.document_update_tools()
             }
             
+            #if !os(visionOS)
             Divider()
+            #endif
             
             // MARK: - Detail View
             if let selected_item_id = selection, let selected_module_index = base_stc.tool_modules.firstIndex(where: { $0.id == selected_item_id })
@@ -108,7 +113,7 @@ struct ToolModulesView: View
             {
                 ContentUnavailableView
                 {
-                    Label("No module selected", systemImage: "r.hammer")
+                    Label("No module selected", systemImage: "hammer")
                 }
                 description:
                 {
@@ -128,6 +133,9 @@ struct ToolModulesView: View
                 {
                     Image(systemName: "plus")
                 }
+                #if os(visionOS)
+                .buttonBorderShape(.circle)
+                #endif
                 .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
                 {
                     AddNewView(is_presented: $new_module_view_presented, names: base_stc.tool_modules_names)

@@ -71,7 +71,6 @@ struct ImagesListView: View
             perform_drop(providers: providers)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .modifier(WindowFramer())
         .toolbar
         {
             /*Button(action: { clear_message_presented.toggle() })
@@ -92,6 +91,9 @@ struct ImagesListView: View
             {
                 Image(systemName: "square.and.arrow.down")
             }
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
             .fileImporter(isPresented: $load_panel_presented,
                                   allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
         }

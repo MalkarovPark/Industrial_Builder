@@ -71,6 +71,9 @@ struct BuildView: View
                     Image(systemName: "minus")
                 }
                 .frame(width: 32, height: 32)
+                #if os(visionOS)
+                .padding(.trailing)
+                #endif
                 
                 Button(action:{new_panel_presented = true})
                 {

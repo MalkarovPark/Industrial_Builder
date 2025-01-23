@@ -23,7 +23,6 @@ struct PackageView: View
         VStack(spacing: 0)
         {
             InfoView(document: $document)
-                .modifier(WindowFramer())
             #if !os(visionOS)
                 .background(.white)
             #endif
@@ -45,6 +44,9 @@ struct PackageView: View
             {
                 Image(systemName: "square.and.arrow.up.on.square")
             }
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
         }
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)

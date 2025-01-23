@@ -48,7 +48,6 @@ struct ModulesView: View
                 }
             }
         }
-        .modifier(WindowFramer())
     }
 }
 

@@ -37,9 +37,16 @@ struct InfoView: View
                 ZStack
                 {
                     Rectangle()
+                    #if !os(visionOS)
                         .foregroundColor(.white)
+                    #else
+                        .foregroundStyle(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    #endif
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    #if !os(visionOS)
                         .shadow(radius: 4)
+                    #endif
                     
                     VStack(spacing: 0)
                     {
@@ -66,6 +73,9 @@ struct InfoView: View
                     }
                 }
                 .frame(maxWidth: .infinity)
+                #if os(visionOS)
+                .padding()
+                #endif
                 
                 VStack
                 {
@@ -121,6 +131,7 @@ struct InfoGalleryView: View
         .frame(width: 192)
         .overlay(alignment: .bottom)
         {
+            #if !os(visionOS)
             VStack(spacing: 0)
             {
                 Divider()
@@ -161,6 +172,34 @@ struct InfoGalleryView: View
                 .frame(maxWidth: .infinity)
                 .background(.ultraThinMaterial)
             }
+            #else
+            HStack
+            {
+                Button(action: {
+                    document.package_info.clear_gallery()
+                })
+                {
+                    Image(systemName: "trash")
+                        .padding()
+                }
+                .buttonStyle(.plain)
+                .buttonBorderShape(.circle)
+                
+                Button(action: { load_panel_presented.toggle() })
+                {
+                    Image(systemName: "square.and.arrow.down")
+                        .padding()
+                }
+                .buttonStyle(.plain)
+                .buttonBorderShape(.circle)
+                .fileImporter(isPresented: $load_panel_presented,
+                              allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+            }
+            .controlSize(.large)
+            .padding()
+            .glassBackgroundEffect()
+            .padding(.bottom)
+            #endif
         }
         .overlay
         {

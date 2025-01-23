@@ -448,7 +448,8 @@ public class StandardTemplateConstruct: ObservableObject
                 self.on_building_modules = true
             }
             
-            do {
+            do
+            {
                 //Internal modules folder
                 guard folder_url.startAccessingSecurityScopedResource() else
                 {
@@ -920,7 +921,6 @@ public class StandardTemplateConstruct: ObservableObject
                         //print(self.build_progress)
                     }
                 }
-                
             }
             
             DispatchQueue.main.async
@@ -936,8 +936,6 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
     }
-    
-    
     #endif
 }
 

@@ -44,7 +44,9 @@ struct PartModuleDesigner: View
                 }
             }
         }
+        #if !os(visionOS)
         .background(.white)
+        #endif
     }
 }
 

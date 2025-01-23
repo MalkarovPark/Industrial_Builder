@@ -343,7 +343,11 @@ struct ListingCard<Content: View>: View
         ZStack
         {
             Rectangle()
+            #if !os(visionOS)
                 .foregroundStyle(.white)
+            #else
+                .foregroundStyle(.bar)
+            #endif
                 .shadow(radius: 8)
                 .overlay(alignment: .topLeading)
                 {
@@ -407,8 +411,12 @@ struct SceneCard<Content: View>: View
         .background(.regularMaterial)
         .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
         .frame(height: 192)
+        #if !os(visionOS)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .shadow(radius: 8)
+        #else
+        .glassBackgroundEffect()
+        #endif
         .overlay(alignment: .bottomTrailing)
         {
             Text(URL(fileURLWithPath: name).deletingPathExtension().lastPathComponent)

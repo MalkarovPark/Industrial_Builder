@@ -10,7 +10,7 @@ import IndustrialKit
 
 struct CodeBuilderView: View
 {
-    @EnvironmentObject var base_stc: StandardTemplateConstruct        
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     @Binding var code: String
     

@@ -44,10 +44,15 @@ struct KinematicInspectorView: View
             .listStyle(.plain)
             #endif
             .modifier(ViewBorderer())
+            #if !os(visionOS)
             .padding([.horizontal, .top])
+            #endif
             
             PositionControl(location: $app_state.kinematic_preview_robot.pointer_location, rotation: $app_state.kinematic_preview_robot.pointer_rotation, scale: $app_state.kinematic_preview_robot.space_scale)
         }
+        #if os(visionOS)
+        .frame(width: 400)
+        #endif
         .onAppear
         {
             app_state.update_robot_kinematic(elements)

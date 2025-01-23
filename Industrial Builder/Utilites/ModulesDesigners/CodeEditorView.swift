@@ -49,7 +49,7 @@ struct CodeEditorView: View
                 }
                 #if os(macOS)
                 .buttonStyle(.bordered)
-                #else
+                #elseif os(iOS)
                 .modifier(PickerBorderer())
                 #endif
                 .frame(maxWidth: .infinity)
@@ -62,7 +62,7 @@ struct CodeEditorView: View
                 }
                 #if os(macOS)
                 .menuStyle(.borderedButton)
-                #else
+                #elseif os(iOS)
                 .modifier(ButtonBorderer())
                 #endif
                 .popover(isPresented: $code_builder_presented, arrowEdge: default_popover_edge)

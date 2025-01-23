@@ -48,7 +48,6 @@ struct ComponentsView: View
                 }
             }
         }
-        .modifier(WindowFramer())
     }
 }
 

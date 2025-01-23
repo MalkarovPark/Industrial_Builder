@@ -33,7 +33,7 @@ struct ListingView: View
             }
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: label))
-        #if os(macOS)
+        #if os(macOS) || os(visionOS)
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
         .frame(maxWidth: .infinity, maxHeight: .infinity)

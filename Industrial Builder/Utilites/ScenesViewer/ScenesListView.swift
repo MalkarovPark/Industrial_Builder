@@ -73,7 +73,6 @@ struct ScenesListView: View
             perform_drop(providers: providers)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .modifier(WindowFramer())
         .toolbar
         {
             /*Button(action: { clear_message_presented.toggle() })
@@ -94,6 +93,9 @@ struct ScenesListView: View
             {
                 Image(systemName: "square.and.arrow.down")
             }
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
             .fileImporter(isPresented: $load_panel_presented,
                                   allowedContentTypes: [.sceneKitScene], allowsMultipleSelection: true, onCompletion: import_scenes)
         }

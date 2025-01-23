@@ -46,7 +46,9 @@ struct ChangerModuleDesigner: View
                 }
             }
         }
+        #if !os(visionOS)
         .background(.white)
+        #endif
     }
 }
 

@@ -72,7 +72,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ComponentsView())
+                                NavigationLink(destination: ComponentsView().modifier(WindowFramer()))
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                         .badge(components_count)
@@ -99,7 +99,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ModulesView())
+                                NavigationLink(destination: ModulesView().modifier(WindowFramer()))
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                         .badge(modules_count)
@@ -125,8 +125,10 @@ struct Sidebar: View
                                 {
                                 case .PackageView:
                                     PackageView(document: $document)
+                                        .modifier(WindowFramer())
                                 default:
                                     EmptyView()
+                                        .modifier(WindowFramer())
                                 }
                             }
                             label:
@@ -149,11 +151,17 @@ struct Sidebar: View
                             {
                                 Label("Dismiss", systemImage: "folder")
                             }
+                            #if os(visionOS)
+                            .buttonBorderShape(.circle)
+                            #endif
                             
                             /*Button (action: { app_state.settings_view_presented = true })
                             {
                                 Label("Settings", systemImage: "gear")
-                            }*/
+                            }
+                            #if os(visionOS)
+                            .buttonBorderShape(.circle)
+                            #endif*/
                         }
                     }
                 }
