@@ -425,14 +425,14 @@ public class StandardTemplateConstruct: ObservableObject
                 self.build_info = "Finished"
             }
             
-            let workItem = DispatchWorkItem
+            let work_item = DispatchWorkItem
             {
                 DispatchQueue.main.async
                 {
                     self.on_building_modules = false
                 }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: workItem)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
         }
     }
     
