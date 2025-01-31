@@ -31,7 +31,12 @@
 			<key>UTTypeDescription</key>
 			<string>Standard template construct</string>
 			<key>UTTypeIcons</key>
-			<dict/>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>stc_icon</string>
+				<key>UTTypeIconText</key>
+				<string>STC</string>
+			</dict>
 			<key>UTTypeIdentifier</key>
 			<string>celadon.IndustrialBuilder.stc</string>
 			<key>UTTypeTagSpecification</key>
