@@ -204,7 +204,7 @@ struct KinematicDesignerView: View
             #if os(visionOS)
             .buttonBorderShape(.circle)
             #endif
-            .popover(isPresented: $make_components_view_presented, arrowEdge: default_popover_edge)
+            .popover(isPresented: $make_components_view_presented, arrowEdge: .bottom)
             {
                 MakeRobotComponentsView(group: $group)
             }
