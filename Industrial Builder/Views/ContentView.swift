@@ -200,7 +200,7 @@ struct Sidebar: View
     
     private var components_count: Int
     {
-        base_stc.scenes.count + base_stc.package_info.images_data.count + base_stc.listings.count + base_stc.kinematic_groups.count
+        base_stc.scenes.count + base_stc.images.count + base_stc.listings.count + base_stc.kinematic_groups.count
     }
     
     private var modules_count: Int

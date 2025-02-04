@@ -13,6 +13,7 @@ struct InfoView: View
     @Binding var document: STCDocument
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var gallery: [Image] = []
     
@@ -57,6 +58,7 @@ struct InfoView: View
                             .onChange(of: base_stc.package_info.title)
                         { _, new_value in
                             document.package_info.title = new_value
+                            document_handler.document_update_info()
                         }
                         
                         Divider()
@@ -69,6 +71,7 @@ struct InfoView: View
                             .onChange(of: base_stc.package_info.description)
                         { _, new_value in
                             document.package_info.description = new_value
+                            document_handler.document_update_info()
                         }
                     }
                 }
@@ -91,6 +94,8 @@ struct InfoView: View
 
 struct InfoGalleryView: View
 {
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
     @Binding var document: STCDocument
     
     @State private var is_targeted = false
@@ -240,7 +245,9 @@ struct InfoGalleryView: View
                             {
                                 return
                             }
+                            
                             document.package_info.gallery.append(image)
+                            document_handler.document_update_info()
                         }
                     }
                 }
@@ -264,6 +271,7 @@ struct InfoGalleryView: View
                     if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData)
                     {
                         document.package_info.gallery.append(image)
+                        document_handler.document_update_info()
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
@@ -280,6 +288,7 @@ struct InfoGalleryView: View
         withAnimation
         {
             document.package_info.gallery.remove(at: index)
+            document_handler.document_update_info()
         }
         update_toggle.toggle()
     }

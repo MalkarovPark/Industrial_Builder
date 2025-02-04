@@ -12,6 +12,8 @@ import IndustrialKit
 class DocumentUpdateHandler: ObservableObject
 {
     //MARK: Update notifies
+    @Published var update_info_document_notify = true
+    
     @Published var update_scenes_document_notify = true
     @Published var update_images_document_notify = true
     @Published var update_listings_document_notify = true
@@ -28,6 +30,8 @@ class DocumentUpdateHandler: ObservableObject
     @Published var drop_update_listings_document_notify = 0
     
     //MARK: Update functions
+    public func document_update_info() { update_info_document_notify.toggle() }
+    
     public func document_update_scenes() { update_scenes_document_notify.toggle() }
     public func document_update_images() { update_images_document_notify.toggle() }
     public func document_update_listings() { update_listings_document_notify.toggle() }
@@ -54,6 +58,12 @@ struct DocumentUpdateModifier: ViewModifier
     public func body(content: Content) -> some View
     {
         content
+            .onChange(of: document_handler.update_info_document_notify)
+            { _, _ in
+                update_deferred_import()
+            }
+            
+            //Resources
             .onChange(of: document_handler.update_scenes_document_notify)
             { _, _ in
                 update_deferred_import()
@@ -76,6 +86,7 @@ struct DocumentUpdateModifier: ViewModifier
                 update_deferred_import()
             }
             
+            //Modules
             .onChange(of: document_handler.update_robots_document_notify)
             { _, _ in
                 document.robot_modules = base_stc.robot_modules
@@ -117,7 +128,6 @@ struct DocumentUpdateModifier: ViewModifier
                 
                 update_deferred_import()
             }
-        
     }
     
     private func update_deferred_import()
