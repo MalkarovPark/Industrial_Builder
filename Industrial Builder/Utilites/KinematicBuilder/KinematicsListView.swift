@@ -39,7 +39,7 @@ struct KinematicsListView: View
                                     delete_kinematic(base_stc.kinematic_groups[index].id)
                                 })
                                 {
-                                    Label("Delete", systemImage: "xmark")
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
                             .aspectRatio(1, contentMode: .fill)

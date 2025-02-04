@@ -13,12 +13,12 @@
 			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>celadon.IndustrialBuilder.stc</string>
+				<string>celadon.stc</string>
 			</array>
 			<key>LSTypelsPackage</key>
 			<true/>
-			<key>NSUbiquitousDocumentUserActivityType</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER).example-document</string>
+			<key>NSDocumentClass</key>
+			<string></string>
 		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
@@ -38,12 +38,12 @@
 				<string>STC</string>
 			</dict>
 			<key>UTTypeIdentifier</key>
-			<string>celadon.IndustrialBuilder.stc</string>
+			<string>celadon.stc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>stc</string>
+					<string>stcpkg</string>
 				</array>
 				<key>public.mime-type</key>
 				<array/>
@@ -62,13 +62,15 @@
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
-			<string>celadon.IndustrialBuilder.stc</string>
+			<string>celadon.stc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>stc</string>
+					<string>stcpkg</string>
 				</array>
+				<key>public.mime-type</key>
+				<array/>
 			</dict>
 		</dict>
 	</array>

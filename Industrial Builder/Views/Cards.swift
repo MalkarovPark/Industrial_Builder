@@ -434,7 +434,7 @@ struct SceneCard<Content: View>: View
         {
             Button(role: .destructive, action: delete_scene)
             {
-                Label("Delete", systemImage: "xmark")
+                Label("Delete", systemImage: "trash")
             }
         }
     }

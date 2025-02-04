@@ -13,7 +13,7 @@ import SceneKit
 
 extension UTType
 {
-    static let stc_document = UTType(exportedAs: "celadon.IndustrialBuilder.stc")
+    static let stc_document = UTType(exportedAs: "celadon.stc")
 }
 
 struct STCDocument: FileDocument
