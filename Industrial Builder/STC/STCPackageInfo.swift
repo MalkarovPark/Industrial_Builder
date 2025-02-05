@@ -13,7 +13,6 @@ import UIKit
 public struct STCPackageInfo: Codable
 {
     var id: UUID
-    var title: String
     var description: String
     var images_data: [Data?] = [Data]()
     
@@ -22,7 +21,6 @@ public struct STCPackageInfo: Codable
     init(id: UUID = .init(), title: String = .init(), description: String = .init(), images_data: [Data?] = [Data](), build_modules_lists: [BuildModulesList] = [BuildModulesList]())
     {
         self.id = id
-        self.title = title
         self.description = description
         self.images_data = images_data
     }

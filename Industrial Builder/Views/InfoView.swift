@@ -51,18 +51,6 @@ struct InfoView: View
                     
                     VStack(spacing: 0)
                     {
-                        TextField("Name", text: $base_stc.package_info.title)
-                            .textFieldStyle(.plain)
-                            .font(.title2)
-                            .padding()
-                            .onChange(of: base_stc.package_info.title)
-                        { _, new_value in
-                            document.package_info.title = new_value
-                            document_handler.document_update_info()
-                        }
-                        
-                        Divider()
-                        
                         TextEditor(text: $base_stc.package_info.description)
                             .textEditorStyle(.plain)
                             .font(.title3)

@@ -139,7 +139,7 @@ struct Sidebar: View
                     }
                 }
                 #if !os(macOS)
-                .navigationTitle("Preset")
+                .navigationTitle("STC")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar
                 {
