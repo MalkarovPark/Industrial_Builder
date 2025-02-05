@@ -1,4 +1,5 @@
-![RCWorkspace](https://github.com/MalkarovPark/Robotic_Complex_Workspace/assets/62340924/0597a5a0-a6ae-40c5-9fcf-54a17d0dbb37)
+![ib_caption](https://github.com/user-attachments/assets/55e23273-9772-4467-859b-af6cdf7a3d52)
+
 
 # Industrial Builder
 
@@ -66,10 +67,10 @@ The description of the STC and its purposes is contained in the Info file, a spe
 
 The creation of production begins with the preparation of all the necessary information, presented in the form of components.
 
-Resources can be added (Fig. #) by simply dragging them into the appropriate Resources sections or selected via the "↓" button on the toolbar. Empty listings can also be created using the "+" button and edited. Editing scenes and images, in turn, is not supported.
+Resources can be added by simply dragging them into the appropriate Resources sections or selected via the "<img width="12" src="https://github.com/user-attachments/assets/36c66c44-f149-4691-aea2-bba0e9bcdf7a" />" button on the toolbar. Empty listings can also be created using the "<img width="12" src="https://github.com/user-attachments/assets/0be8f024-daa6-4cd0-bc0a-0183e4e3b892" />" button and edited. Editing scenes and images, in turn, is not supported.
 
 <p align="center">
-  <img width="743" src="https://github.com/MalkarovPark/Robotic_Complex_Workspace/assets/62340924/7bb0bebc-15b7-40a9-8312-c9eeeac17522">
+  <img width="808" src="https://github.com/user-attachments/assets/2089acaf-8360-4978-90d0-e9209ac397a2" />
 </p>
 
 A separate, specific type of resource is a kinematic group. It is a named list of kinematic elements with a parameter indicating the kinematics type. The kinematic element itself is a named and identifiable Float value.
@@ -84,7 +85,11 @@ The digital essence of a production facility is implemented by the program code 
 
 Thus, the module providing the program code of the digital and the components of the model must be assembled from the corresponding resources. The program code is described in text listing files, while the model is assembled from a set of scenes (SceneKit Scene file with the .scn extension) and textures (various raster graphics formats).
 
-The current version of Industrial Builder allows you to create and edit modules of four types - for production facilities (Robot, Tool, Part) and Changer elements.
+The current version of Industrial Builder allows you to create and edit modules of four types – for production facilities (Robot, Tool, Part) and Changer elements.
+
+<p align="center">
+  <img width="808" src="https://github.com/user-attachments/assets/f1788f32-7c69-4659-ac20-aa24288fc323" />
+</p>
 
 Editing of all module components is performed in Module Designer. The set of components available for editing varies depending on the module type. Model editing is available for robots, tools and parts.
 
@@ -121,10 +126,10 @@ The STC package enables production deployments and can be used in a variety of w
 
 The set of modules to be composed is specified in the assembly sheet implemented by the BuildModulesList class and consists of four lists corresponding to four types of modules – Robot, Tool, Part, Changer. STC can contain many such sheets.
 
-In Industrial Builder, editing assembly sheets and assembling modules is performed using the Build assembly tool, accessible via the "" button in the Package section.
+In Industrial Builder, editing assembly sheets and assembling modules is performed using the Build assembly tool, accessible via the "<img width="12" src="https://github.com/user-attachments/assets/de10176a-2dbc-41a2-815f-3bb7817a2d35" />" button in the Package section.
 
 <p align="center">
-  <img width="743" src="https://github.com/MalkarovPark/Robotic_Complex_Workspace/assets/62340924/7bb0bebc-15b7-40a9-8312-c9eeeac17522">
+  <img width="808" src="https://github.com/user-attachments/assets/525aba5d-8d94-402d-932c-d68cc75d5c07" />
 </p>
 
 There are two types of assembly available – Files for exporting modules as a set of external plug-in packages and App for exporting as packages embedded in the application project and compiled together with it.
@@ -135,7 +140,7 @@ When assembling internal modules, a Modules folder is created with a set of modu
 
 Then a function is executed that creates a set of listings in accordance with the name and content of each element in the code_items of the module being processed. For robots and tools, a list of scene nodes is also injected into the ModelController code and connection parameters for WorkspaceObjectConnector. All listing files of one module are placed in the Code folder and receive a prefix of the form <module name>_, which is necessary to ensure correct compilation during further assembly as part of the application project. Then the updated code files are saved using the code_files_store function.
 
-Then the resources are saved to the Resources.scnassets folder, similar to when creating an external module package.
+Then the resources are saved to the **Resources.scnassets** folder, similar to when creating an external module package.
 
 The finished Modules folder can be simply placed in the RCWorkspace application project and compiled. -->
 
@@ -143,7 +148,7 @@ Assembling external modules involves saving module data in the Info header file.
 
 Next, as with internal modules, code elements are saved in the corresponding Code folders of the module package file. However, no parameters are injected into the listing code, since the corresponding data (the previously mentioned list of model nodes, connection parameters) are saved in the header file.
 
-The final stage of exporting a module is saving its resources in the Resources.scnassets folder of its package <!-- using the make_resources_folder function -->.
+The final stage of exporting a module is saving its resources in the **Resources.scnassets** folder of its package <!-- using the make_resources_folder function -->.
 
 After all external modules have been compiled and placed in the export folder, Industrial Builder additionally places a set of scripts in the folder for compiling listings of software components of module components into Unix executable files. In the iOS, iPadOS and visionOS versions, the export of external modules is completed at this stage, since they do not have a terminal. In turn, on macOS, it is possible to launch the compilation directly from Industrial Builder.
 
@@ -151,7 +156,7 @@ After all external modules have been compiled and placed in the export folder, I
 LtPConvert – converts the specified Swift listing file into a terminal application project package. The Unix executable file compiled by such a project gets the same name as the original listing. The package name consists of the listing name and the _Project postfix. The latest version of the IndustrialKit library is also connected to the project.
 PBuild – compiles the project package into an executable file, which is located in the same directory as the project.
 LCompile – Converts the listing into an executable Unix file. In fact, this script sequentially executes the LtPConvert and PBuild scripts. When called with the -c parameter, after execution it also deletes the original listing and the project package file of the executable file based on it.
-MPCompile – compiles software components of all modules (have extensions .robot, .tool, .part, .changer), located in the same folder as the running script itself. To do this, it finds all swift files and executes the LCompile script for them with the -c parameter.
+MPCompile – compiles software components of all modules (have extensions .robot, .tool, .part, .changer), located in the same folder as the running script itself. To do this, it finds all swift files and executes the LCompile script for them with the *-c* parameter.
 
 The compilation kit allows you to develop program files of external modules and compile them independently of IndustrialBuilder. For example, a developer can modify the executable file project by adding separate listing files and connecting additional libraries. Also, deferred compilation is necessary when exporting external modules on platforms that do not support the terminal. -->
 
