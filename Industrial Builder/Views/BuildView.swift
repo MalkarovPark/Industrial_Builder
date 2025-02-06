@@ -58,7 +58,7 @@ struct BuildView: View
                 {
                     new_panel_presented = true
                 }
-                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
+                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge_inverted)
                 {
                     AddNewView(is_presented: $new_panel_presented, names: base_stc.package_info.build_modules_lists_names)
                     { new_name in
@@ -80,7 +80,7 @@ struct BuildView: View
                     Image(systemName: "plus")
                 }
                 .frame(width: 32, height: 32)
-                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
+                .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge_inverted)
                 {
                     AddNewView(is_presented: $new_panel_presented, names: base_stc.package_info.build_modules_lists_names)
                     { new_name in
@@ -436,7 +436,6 @@ struct BuildProgressView: View
         .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
     }
 }
-
 
 struct BuildItemView: View
 {

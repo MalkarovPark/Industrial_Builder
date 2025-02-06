@@ -962,18 +962,20 @@ extension ConnectionParameter
 {
     public var code_text: String
     {
-        let valueString: String
+        let value_string: String
         switch value
         {
-        case let stringValue as String:
-            valueString = "\"\(stringValue)\""
-        case let boolValue as Bool:
-            valueString = "\(boolValue)"
-        case let numberValue as NSNumber:
-            valueString = "\(numberValue)"
+        case let string_value as String:
+            value_string = "\"\(string_value)\""
+        case let bool_value as Bool:
+            value_string = "\(bool_value)"
+        case let int_value as Int:
+            value_string = "\(int_value)"
+        case let float_value as Float:
+            value_string = "Float(\(float_value))"
         default:
-            valueString = "nil"
+            value_string = "nil"
         }
-        return ".init(name: \"\(name)\", value: \(valueString))"
+        return ".init(name: \"\(name)\", value: \(value_string))"
     }
 }
