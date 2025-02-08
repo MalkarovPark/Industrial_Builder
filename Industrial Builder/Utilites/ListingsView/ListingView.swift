@@ -15,10 +15,15 @@ struct ListingView: View
     
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
+    #endif
+    
     let label: String
     
     var body: some View
     {
+        #if os(macOS) || os(visionOS)
         VStack(spacing: 0)
         {
             ScrollView(.vertical)
@@ -33,10 +38,44 @@ struct ListingView: View
             }
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: label))
-        #if os(macOS) || os(visionOS)
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        if horizontal_size_class != .compact
+        {
+            VStack(spacing: 0)
+            {
+                ScrollView(.vertical)
+                {
+                    Spacer()
+                    TextEditor(text: $code)
+                        .font(.custom("Menlo", size: 12))
+                        .onChange(of: code)
+                        { _, _ in
+                            document_handler.document_update_listings()
+                        }
+                }
+            }
+            .modifier(SheetCaption(is_presented: $is_presented, label: label))
+            .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
+        }
+        else
+        {
+            VStack(spacing: 0)
+            {
+                ScrollView(.vertical)
+                {
+                    Spacer()
+                    TextEditor(text: $code)
+                        .font(.custom("Menlo", size: 12))
+                        .onChange(of: code)
+                        { _, _ in
+                            document_handler.document_update_listings()
+                        }
+                }
+            }
+            .modifier(SheetCaption(is_presented: $is_presented, label: label))
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
         #endif
     }
 }

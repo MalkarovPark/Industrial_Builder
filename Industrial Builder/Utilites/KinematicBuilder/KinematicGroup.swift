@@ -27,12 +27,41 @@ public struct KinematicGroup: Identifiable, Equatable, Codable, Hashable
     var data = [KinematicElement]()
 }
 
-public struct KinematicElement: Identifiable, Equatable, Codable
+public class KinematicElement: Identifiable, ObservableObject, Equatable, Codable
 {
-    public var id = UUID()
-    
-    var name = String()
-    var value = Float()
+    @Published var name = String()
+    @Published var value = Float()
+
+    init(name: String = "", value: Float = 0.0)
+    {
+        self.name = name
+        self.value = value
+    }
+
+    public static func == (lhs: KinematicElement, rhs: KinematicElement) -> Bool
+    {
+        return lhs.id == rhs.id && lhs.name == rhs.name && lhs.value == rhs.value
+    }
+
+    enum CodingKeys: String, CodingKey
+    {
+        case name
+        case value
+    }
+
+    required public init(from decoder: Decoder) throws
+    {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        value = try container.decode(Float.self, forKey: .value)
+    }
+
+    public func encode(to encoder: Encoder) throws
+    {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(value, forKey: .value)
+    }
 }
 
 public enum KinematicGroupType: String, Codable, Equatable, CaseIterable
