@@ -250,11 +250,6 @@ public class StandardTemplateConstruct: ObservableObject
             
             return names
         }
-        
-        set
-        {
-            print(newValue)
-        }
     }
     
     //MARK: Tool modules
@@ -271,11 +266,6 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             return names
-        }
-        
-        set
-        {
-            print(newValue)
         }
     }
     
@@ -294,11 +284,6 @@ public class StandardTemplateConstruct: ObservableObject
             
             return names
         }
-        
-        set
-        {
-            print(newValue)
-        }
     }
     
     
@@ -316,11 +301,6 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             return names
-        }
-        
-        set
-        {
-            print(newValue)
         }
     }
     
@@ -375,14 +355,10 @@ public class StandardTemplateConstruct: ObservableObject
             //let part_module_code_items_count: Float = 0
             //let changer_module_code_items_count: Float = 1
             
-            //print(build_total)
-            
             build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * robot_module_code_items_count
             build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * tool_module_code_items_count
             //build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * part_module_code_items_count
             build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)// * changer_module_code_items_count
-            
-            //print(build_total)
             
             build_total += 2 //Additive terminal output stages
         }
@@ -540,9 +516,6 @@ public class StandardTemplateConstruct: ObservableObject
             build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
             self.build_progress += 1
         }
-        
-        //print(build_total)
-        //print(build_progress)
         
         if !as_internal
         {
@@ -916,9 +889,6 @@ public class StandardTemplateConstruct: ObservableObject
                     {
                         self.build_info = last_line
                         self.build_progress += 1
-                        
-                        //print(last_line)
-                        //print(self.build_progress)
                     }
                 }
             }

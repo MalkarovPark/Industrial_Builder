@@ -15,10 +15,11 @@ struct SceneView: View
     
     var body: some View
     {
-        ObjectSceneView(node: node, on_tap: tapper(gesture_recognizer:scn_view:))
+        ObjectSceneView(node: node)
+        //ObjectSceneView(node: node, on_tap: tapper(gesture_recognizer:scn_view:))
     }
     
-    func tapper(gesture_recognizer: UITapGestureRecognizer, scn_view: SCNView)
+    /*func tapper(gesture_recognizer: UITapGestureRecognizer, scn_view: SCNView)
     {
         let tap_location = gesture_recognizer.location(in: scn_view)
         let hit_results = scn_view.hitTest(tap_location, options: [:])
@@ -31,7 +32,7 @@ struct SceneView: View
             print(result.localCoordinates)
             print("🍮 tapped – \(result.node.name ?? "None")")
         }
-    }
+    }*/
 }
 
 //MARK: - Scene Views typealilases

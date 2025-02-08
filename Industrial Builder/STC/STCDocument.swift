@@ -86,7 +86,7 @@ struct STCDocument: FileDocument
                 }
                 catch
                 {
-                    print("Error decoding JSON: \(error)")
+                    print(error.localizedDescription)
                 }
                 
                 return data

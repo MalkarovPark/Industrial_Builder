@@ -2,7 +2,7 @@
 //  RobotModuleDesigner.swift
 //  Industrial Builder
 //
-//  Created by Artem Malkarov on 26.06.2024.
+//  Created by Artem on 26.06.2024.
 //
 
 import SwiftUI

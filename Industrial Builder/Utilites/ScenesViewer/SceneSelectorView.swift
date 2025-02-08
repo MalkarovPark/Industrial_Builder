@@ -31,7 +31,6 @@ struct SceneSelectorView: View
                     NoElementItemView()
                         .onTapGesture
                         {
-                            print("No")
                             is_presented = false
                         }
                     

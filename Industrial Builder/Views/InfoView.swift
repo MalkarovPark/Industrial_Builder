@@ -2,7 +2,7 @@
 //  InfoView.swift
 //  Industrial Builder
 //
-//  Created by Artem Malkarov on 10.05.2024.
+//  Created by Artem on 10.05.2024.
 //
 
 import SwiftUI
