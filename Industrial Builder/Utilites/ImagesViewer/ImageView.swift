@@ -2,7 +2,7 @@
 //  ImageView.swift
 //  Industrial Builder
 //
-//  Created by Artiom on 29.03.2024.
+//  Created by Artem on 29.03.2024.
 //
 
 import SwiftUI
