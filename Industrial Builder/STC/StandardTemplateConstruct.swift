@@ -702,7 +702,6 @@ public class StandardTemplateConstruct: ObservableObject
             var data: Data? = nil
             
             let file_extension = (name as NSString).pathExtension.lowercased()
-            // let file_name = (name as NSString).deletingPathExtension
             
             if file_extension == "scn"
             {
@@ -713,7 +712,6 @@ public class StandardTemplateConstruct: ObservableObject
             }
             else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
             {
-                print(images_files_names)
                 if let image_index = images_files_names.firstIndex(of: name)
                 {
                     guard let image_data = images[image_index].pngData() else

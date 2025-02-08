@@ -11,6 +11,7 @@ import IndustrialKit
 struct CodeEditorView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @Binding var code_items: [String: String]
     
@@ -35,6 +36,10 @@ struct CodeEditorView: View
             .textFieldStyle(.plain)
             .modifier(DoubleModifier(update_toggle: $code_field_update))
             .font(.custom("Menlo", size: 12))
+            .onChange(of: code_items)
+            { _, _ in
+                document_handler.document_update_info()
+            }
             
             Divider()
             
