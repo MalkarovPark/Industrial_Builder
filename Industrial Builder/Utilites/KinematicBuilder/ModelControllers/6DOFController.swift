@@ -4,7 +4,7 @@ import IndustrialKit
 
 class _6DOF_Controller: DesignerRobotModelController
 {
-    //MARK: - Nodes names
+    // MARK: - Nodes names
     override var nodes_names: [String]
     {
         [
@@ -20,7 +20,7 @@ class _6DOF_Controller: DesignerRobotModelController
         ]
     }
     
-    //MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
+    // MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
     override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
     {
         if lengths.count == description_lengths_count
@@ -68,10 +68,10 @@ class _6DOF_Controller: DesignerRobotModelController
             
             C3 = (pow(p5x, 2) + pow(p5y, 2) + pow(p5z - lengths[0], 2) - pow(lengths[1], 2) - pow(lengths[2] + lengths[3], 2)) / (2 * lengths[1] * (lengths[2] + lengths[3]))
             
-            //Joint 1
+            // Joint 1
             theta[0] = Float(atan2(p5y, p5x))
             
-            //Joints 3, 2
+            // Joints 3, 2
             theta[2] = Float(atan2(pow(abs(1 - pow(C3, 2)), 0.5), C3))
             
             M = lengths[1] + (lengths[2] + lengths[3]) * C3
@@ -80,7 +80,7 @@ class _6DOF_Controller: DesignerRobotModelController
             B = p5z - lengths[0]
             theta[1] = Float(atan2(M * A - N * B, N * A + M * B))
             
-            //Jionts 4, 5, 6
+            // Jionts 4, 5, 6
             C1 = cos(Float(theta[0]))
             C23 = cos(Float(theta[1]) + Float(theta[2]))
             S1 = sin(Float(theta[0]))
@@ -128,7 +128,7 @@ class _6DOF_Controller: DesignerRobotModelController
         
         if get_statistics
         {
-            chart_ik_values = values //Store new parts angles array for chart
+            chart_ik_values = values // Store new parts angles array for chart
         }
     }
     
@@ -139,7 +139,7 @@ class _6DOF_Controller: DesignerRobotModelController
         var modified_node = SCNNode()
         var saved_material = SCNMaterial()
         
-        //Change height of base
+        // Change height of base
         modified_node = nodes[safe: "base", default: SCNNode()]
         
         #if os(macOS)
@@ -148,7 +148,7 @@ class _6DOF_Controller: DesignerRobotModelController
         modified_node.position.y = lengths[6]
         #endif
         
-        //Change height of column
+        // Change height of column
         modified_node = nodes[safe: "column", default: SCNNode()]
         saved_material = (modified_node.geometry?.firstMaterial)!
         
@@ -163,12 +163,12 @@ class _6DOF_Controller: DesignerRobotModelController
         
         saved_material = (nodes[safe: "d0", default: SCNNode()].childNode(withName: "box", recursively: false)!.geometry?.firstMaterial) ?? SCNMaterial()
 
-        //Part 0
+        // Part 0
         modified_node = nodes[safe: "d0", default: SCNNode()].childNode(withName: "box", recursively: false) ?? SCNNode()
         modified_node.geometry = SCNBox(width: 60, height: CGFloat(lengths[0]), length: 60, chamferRadius: 10)
         modified_node.geometry?.firstMaterial = saved_material
 
-        //Part 1
+        // Part 1
         #if os(macOS)
         nodes[safe: "d1", default: SCNNode()].position.y = CGFloat(lengths[0])
         #else
@@ -184,7 +184,7 @@ class _6DOF_Controller: DesignerRobotModelController
         modified_node.position.y = Float(lengths[1] / 2)
         #endif
 
-        //Part 2
+        // Part 2
         #if os(macOS)
         nodes[safe: "d2", default: SCNNode()].position.y = CGFloat(lengths[1])
         #else
@@ -200,7 +200,7 @@ class _6DOF_Controller: DesignerRobotModelController
         modified_node.position.y = Float(lengths[2] / 2)
         #endif
 
-        //Part 3
+        // Part 3
         #if os(macOS)
         nodes[safe: "d3", default: SCNNode()].position.y = CGFloat(lengths[2])
         #else
@@ -216,14 +216,14 @@ class _6DOF_Controller: DesignerRobotModelController
         modified_node.position.y = Float(lengths[3] / 2)
         #endif
 
-        //Part 4
+        // Part 4
         #if os(macOS)
         nodes[safe: "d4", default: SCNNode()].position.y = CGFloat(lengths[3])
         #else
         nodes[safe: "d4", default: SCNNode()].position.y = Float(lengths[3])
         #endif
         
-        //Part 5
+        // Part 5
         modified_node = nodes[safe: "d4", default: SCNNode()].childNode(withName: "box", recursively: false) ?? SCNNode()
         modified_node.geometry = SCNBox(width: 40, height: CGFloat(lengths[4] - 10), length: 40, chamferRadius: 0.5)
         modified_node.geometry?.firstMaterial = saved_material
@@ -240,7 +240,7 @@ class _6DOF_Controller: DesignerRobotModelController
         modified_node.position.y = Float(lengths[4] - 5)
         #endif
 
-        //Tool & Target
+        // Tool & Target
         modified_node = nodes[safe: "d5", default: SCNNode()]
         #if os(macOS)
         modified_node.position.y = CGFloat(lengths[4])
@@ -255,7 +255,7 @@ class _6DOF_Controller: DesignerRobotModelController
         #endif
     }
     
-    //MARK: - Statistics
+    // MARK: - Statistics
     private var charts = [WorkspaceObjectChart]()
     private var chart_ik_values = [Float](repeating: 0, count: 6)
     private var domain_index: Float = 0
@@ -269,13 +269,13 @@ class _6DOF_Controller: DesignerRobotModelController
             charts.append(WorkspaceObjectChart(name: "Tool Rotation", style: .line))
         }
         
-        //Update parts angles rotation chart
+        // Update parts angles rotation chart
         for i in 0...chart_ik_values.count - 1
         {
             charts[0].data.append(ChartDataItem(name: "J\(i + 1)", domain: ["": domain_index], codomain: chart_ik_values[i]))
         }
         
-        //Update tool location chart
+        // Update tool location chart
         let tool_node = pointer_node
         
         var axis_names = ["X", "Y", "Z"]
@@ -285,7 +285,7 @@ class _6DOF_Controller: DesignerRobotModelController
             charts[1].data.append(ChartDataItem(name: axis_names[i], domain: ["": domain_index], codomain: Float(components[i] ?? 0)))
         }
         
-        //Update tool rotation chart
+        // Update tool rotation chart
         axis_names = ["R", "P", "W"]
         components = [tool_node?.eulerAngles.z, tool_node?.eulerAngles.x, tool_node?.eulerAngles.y]
         for i in 0...axis_names.count - 1

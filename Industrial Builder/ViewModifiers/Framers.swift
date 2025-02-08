@@ -14,7 +14,7 @@ struct WindowFramer: ViewModifier
     {
         content
         #if os(macOS)
-            .frame(minWidth: 680, idealWidth: 800, minHeight: 480, idealHeight: 600) //Window sizes for macOS
+            .frame(minWidth: 680, idealWidth: 800, minHeight: 480, idealHeight: 600) // Window sizes for macOS
         #else
             .navigationBarTitleDisplayMode(.inline)
         #endif

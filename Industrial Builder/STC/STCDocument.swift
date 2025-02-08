@@ -36,7 +36,7 @@ struct STCDocument: FileDocument
         self.package_info = STCPackageInfo()
     }
     
-    //MARK: - Import functions
+    // MARK: - Import functions
     init(configuration: ReadConfiguration) throws
     {
         let wrappers = configuration.file.fileWrappers?.values
@@ -45,7 +45,7 @@ struct STCDocument: FileDocument
             file_process(wrapper: wrapper)
         }
         
-        func file_process(wrapper: FileWrapper) //Top level files & folders
+        func file_process(wrapper: FileWrapper) // Top level files & folders
         {
             switch wrapper.filename
             {
@@ -59,7 +59,7 @@ struct STCDocument: FileDocument
                 break
             }
             
-            //MARK: Package header process
+            // MARK: Package header process
             func package_process(_ wrapper: FileWrapper)
             {
                 guard let data = wrapper.regularFileContents
@@ -92,7 +92,7 @@ struct STCDocument: FileDocument
                 return data
             }
             
-            //MARK: App modules process
+            // MARK: App modules process
             func app_process(_ wrapper: FileWrapper)
             {
                 if let file_wrappers = wrapper.fileWrappers
@@ -142,7 +142,7 @@ struct STCDocument: FileDocument
                 }
             }
             
-            //MARK: Components process
+            // MARK: Components process
             func components_process(_ wrapper: FileWrapper)
             {
                 if let file_wrappers = wrapper.fileWrappers
@@ -185,7 +185,7 @@ struct STCDocument: FileDocument
                         {
                             if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
                             {
-                                //scenes_process(file_wrapper)
+                                // scenes_process(file_wrapper)
                                 scene_wrapper = wrapper
                                 scene_folder_adress = "Components/Resources/"
                             }
@@ -195,7 +195,7 @@ struct STCDocument: FileDocument
                                 let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp"]
                                 if image_extensions.contains(where: filename.lowercased().hasSuffix)
                                 {
-                                    //images_process(file_wrapper)
+                                    // images_process(file_wrapper)
                                     images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
                                     
                                     images_files_names.append(URL(fileURLWithPath: filename).lastPathComponent)
@@ -292,7 +292,7 @@ struct STCDocument: FileDocument
         let scene = SCNScene()
         do
         {
-            //File access
+            // File access
             var is_stale = false
             let url = try URL(resolvingBookmarkData: folder_bookmark, bookmarkDataIsStale: &is_stale)
             
@@ -315,22 +315,22 @@ struct STCDocument: FileDocument
         }
     }
     
-    //MARK: - Export functions
+    // MARK: - Export functions
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
     {
         do
         {
-            //Store package info data
+            // Store package info data
             let data = try build_document_data()
             let json_file_wrapper = FileWrapper(regularFileWithContents: data)
             let package_filename = "PkgInfo"
             json_file_wrapper.filename = package_filename
             
-            //Store modules data
+            // Store modules data
             var app_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
             app_file_wrapper = try build_modules_file_wrapper()
             
-            //Store components data
+            // Store components data
             var components_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
             components_file_wrapper = try build_components_file_wrapper()
             
@@ -348,7 +348,7 @@ struct STCDocument: FileDocument
         }
     }
     
-    //MARK: Document header store
+    // MARK: Document header store
     private func build_document_data() throws -> Data
     {
         let encoder = JSONEncoder()
@@ -364,21 +364,21 @@ struct STCDocument: FileDocument
         }
     }
     
-    //MARK: App modules store
+    // MARK: App modules store
     func build_modules_file_wrapper() throws -> FileWrapper
     {
         var file_wrappers = [String: FileWrapper]()
         
-        //Robot Modules
+        // Robot Modules
         file_wrappers["Robot"] = prepare_robot_modules_wrapper()
         
-        //Tool Modules
+        // Tool Modules
         file_wrappers["Tool"] = prepare_tool_modules_wrapper()
         
-        //Part Modules
+        // Part Modules
         file_wrappers["Part"] = prepare_part_modules_wrapper()
         
-        //Changer Modules
+        // Changer Modules
         file_wrappers["Changer"] = prepare_changer_modules_wrapper()
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
@@ -460,7 +460,7 @@ struct STCDocument: FileDocument
                     break
                 }
                 
-                let file_name = "\(changer_module.name)" //.json"
+                let file_name = "\(changer_module.name)" // .json"
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
@@ -472,8 +472,8 @@ struct STCDocument: FileDocument
         }
     }
     
-    //MARK: Components store
-    //New files names
+    // MARK: Components store
+    // New files names
     static var new_scenes_names = [String]()
     static var new_images_names = [String]()
     
@@ -481,12 +481,12 @@ struct STCDocument: FileDocument
     {
         var file_wrappers = [String: FileWrapper]()
         
-        //Resources
+        // Resources
         file_wrappers["Resources"] = prepare_resources_wrappers()
         
         func prepare_resources_wrappers() -> FileWrapper
         {
-            //Scenes
+            // Scenes
             var file_wrappers = [String: FileWrapper]()
             
             var index = 0
@@ -505,7 +505,7 @@ struct STCDocument: FileDocument
                 index += 1
             }
             
-            //Images
+            // Images
             index = 0
             for image in images
             {
@@ -527,7 +527,7 @@ struct STCDocument: FileDocument
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
         
-        //Listings
+        // Listings
         file_wrappers["Code"] = prepare_listings_wrappers()
         
         func prepare_listings_wrappers() -> FileWrapper
@@ -554,7 +554,7 @@ struct STCDocument: FileDocument
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
         
-        //Kinematic groups
+        // Kinematic groups
         file_wrappers["KinematicGroups"] = prepare_kinematics_wrappers()
         
         func prepare_kinematics_wrappers() -> FileWrapper

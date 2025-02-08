@@ -198,7 +198,7 @@ struct KinematicDesignerView: View
         {
             Button (action: { make_components_view_presented.toggle() })
             {
-                //Image(systemName: "hexagon")
+                // Image(systemName: "hexagon")
                 Label("Make Module", systemImage: "arrow.up.document")
             }
             #if os(visionOS)
@@ -211,7 +211,7 @@ struct KinematicDesignerView: View
             
             Button (action: { show_inspector.toggle() })
             {
-                //Image(systemName: "sidebar.trailing")
+                // Image(systemName: "sidebar.trailing")
                 Label("Kinematic Inspector", systemImage: "sidebar.trailing")
             }
             #if os(visionOS)

@@ -16,7 +16,7 @@ struct SceneView: View
     var body: some View
     {
         ObjectSceneView(node: node)
-        //ObjectSceneView(node: node, on_tap: tapper(gesture_recognizer:scn_view:))
+        // ObjectSceneView(node: node, on_tap: tapper(gesture_recognizer:scn_view:))
     }
     
     /*func tapper(gesture_recognizer: UITapGestureRecognizer, scn_view: SCNView)

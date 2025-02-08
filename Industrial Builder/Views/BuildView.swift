@@ -23,7 +23,7 @@ struct BuildView: View
     @State private var internal_export_panel_presented = false
     
     #if os(iOS)
-    //MARK: Horizontal window size handler
+    // MARK: Horizontal window size handler
     @Environment(\.horizontalSizeClass) private var horizontal_size_class
     #endif
     
@@ -246,7 +246,7 @@ struct BuildView: View
             }
             .listStyle(.plain)
             .modifier(ListBorderer())
-            //.frame(maxWidth: .infinity)
+            // .frame(maxWidth: .infinity)
             .padding(.bottom)
             
             DynamicStack(content: {
@@ -335,7 +335,7 @@ struct BuildView: View
         }
     }
     
-    //MARK: Module lists handling
+    // MARK: Module lists handling
     private func add_modules_list(_ name: String)
     {
         base_stc.package_info.build_modules_lists.append(BuildModulesList(name: name))
@@ -370,7 +370,7 @@ struct BuildView: View
         return base_stc.package_info.build_modules_lists[index]
     }
     
-    //MARK: Module names handling
+    // MARK: Module names handling
     private func add_module_name(_ name: String, names: inout [String])
     {
         guard let _ = names.firstIndex(where: { $0 == name })
@@ -389,7 +389,7 @@ struct BuildView: View
         }
     }
     
-    //MARK: Export handling
+    // MARK: Export handling
 }
 
 struct BuildProgressView: View
@@ -449,11 +449,11 @@ struct BuildItemView: View
         {
             ZStack
             {
-                //Rectangle()
-                    //.foregroundStyle(Color.accentColor)
+                // Rectangle()
+                    // .foregroundStyle(Color.accentColor)
                 image
                     .resizable()
-                    //.scaledToFill()
+                    // .scaledToFill()
                     .scaledToFit()
                     .foregroundStyle(.white)
             }
@@ -462,7 +462,7 @@ struct BuildItemView: View
             #else
             .frame(width: 48, height: 48)
             #endif
-            //.frame(width: 32, height: 32)
+            // .frame(width: 32, height: 32)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             
             VStack(alignment: .leading)

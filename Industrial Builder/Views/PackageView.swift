@@ -26,7 +26,7 @@ struct PackageView: View
             #if !os(visionOS)
                 .background(.white)
             #endif
-                //.ignoresSafeArea(.container, edges: .bottom)
+                // .ignoresSafeArea(.container, edges: .bottom)
         }
         .modifier(WindowFramer())
         .sheet(isPresented: $build_view_presented)

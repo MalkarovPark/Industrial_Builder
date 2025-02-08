@@ -8,7 +8,7 @@ import IndustrialKit
 
 class <#Name#>_Controller: RobotModelController
 {
-    //MARK: - Parameters
+    // MARK: - Parameters
     override var nodes_names: [String]
     {
         [
@@ -16,13 +16,13 @@ class <#Name#>_Controller: RobotModelController
         ]
     }
     
-    //MARK: - Performing
+    // MARK: - Performing
     override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
     }
     
-    //MARK: - Statistics
+    // MARK: - Statistics
     override func updated_charts_data() -> [WorkspaceObjectChart]?
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/

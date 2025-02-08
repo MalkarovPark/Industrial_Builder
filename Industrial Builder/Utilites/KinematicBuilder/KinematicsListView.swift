@@ -46,7 +46,7 @@ struct KinematicsListView: View
                         }
                     }
                     .padding(20)
-                    //.padding(.vertical)
+                    // .padding(.vertical)
                 }
             }
             else
@@ -75,7 +75,7 @@ struct KinematicsListView: View
     
     private func delete_kinematic(_ id: UUID)
     {
-        //base_stc.kinematic_groups.remove(at: index)
+        // base_stc.kinematic_groups.remove(at: index)
         base_stc.kinematic_groups.removeAll { $0.id == id }
         document_handler.document_update_kinematics()
     }

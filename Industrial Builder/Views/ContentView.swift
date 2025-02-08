@@ -13,7 +13,7 @@ struct ContentView: View
     let document_url: URL?
     
     @State var first_loaded = true
-    @State var sidebar_selection: navigation_item? = .PackageView //Selected sidebar item
+    @State var sidebar_selection: navigation_item? = .PackageView // Selected sidebar item
     
     @StateObject private var base_stc = StandardTemplateConstruct()
     @StateObject private var document_handler = DocumentUpdateHandler()
@@ -46,9 +46,9 @@ struct Sidebar: View
     @State private var components_section_expanded = true
     @State private var objects_section_expanded = true
     
-    //@State var settings_view_presented = false
+    // @State var settings_view_presented = false
     
-    @Environment(\.horizontalSizeClass) private var horizontal_size_class //Horizontal window size handler
+    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
     
     @Environment(\.dismiss) private var dismiss
     #endif
@@ -272,10 +272,10 @@ struct ModulesSidebarGroup: View
 
 enum navigation_item: Int, Hashable, CaseIterable, Identifiable
 {
-    case PackageView, ComponentsView, ModulesView //Sidebar items
+    case PackageView, ComponentsView, ModulesView // Sidebar items
     
     var id: Int { rawValue }
-    var localizedName: LocalizedStringKey //Names of sidebar items
+    var localizedName: LocalizedStringKey // Names of sidebar items
     {
         switch self
         {
@@ -288,7 +288,7 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
         }
     }
     
-    var image_name: String //Names of sidebar items symbols
+    var image_name: String // Names of sidebar items symbols
     {
         switch self
         {

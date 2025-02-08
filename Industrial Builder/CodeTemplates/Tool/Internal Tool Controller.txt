@@ -8,7 +8,7 @@ import IndustrialKit
 
 class <#Name#>_Controller: ToolModelController
 {
-    //MARK: - Parameters
+    // MARK: - Parameters
     override var nodes_names: [String]
     {
         [
@@ -16,7 +16,7 @@ class <#Name#>_Controller: ToolModelController
         ]
     }
     
-    //MARK: - Performing
+    // MARK: - Performing
     override func nodes_perform(code: Int, completion: @escaping () -> Void)
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=completion()@*/completion()/*@END_MENU_TOKEN@*/
@@ -27,7 +27,7 @@ class <#Name#>_Controller: ToolModelController
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
     }
     
-    //MARK: - Statistics
+    // MARK: - Statistics
     override func updated_charts_data() -> [WorkspaceObjectChart]?
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/

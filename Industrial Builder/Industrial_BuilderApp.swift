@@ -25,7 +25,7 @@ struct Industrial_BuilderApp: App
         //.environmentObject(app_state)
         .commands
         {
-            /*CommandGroup(after: CommandGroupPlacement.sidebar) //View commands for view menu item
+            /*CommandGroup(after: CommandGroupPlacement.sidebar) // View commands for view menu item
             {
                 Divider()
                 Button("Reset Camera")
@@ -36,7 +36,7 @@ struct Industrial_BuilderApp: App
                 Divider()
             }*/
             
-            SidebarCommands() //Sidebar control items for view menu item
+            SidebarCommands() // Sidebar control items for view menu item
             
             /*CommandMenu("Open")
             {

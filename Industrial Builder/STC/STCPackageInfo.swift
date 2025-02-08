@@ -25,7 +25,7 @@ public struct STCPackageInfo: Codable
         self.images_data = images_data
     }
     
-    ///Workspace object preview image.
+    // /Workspace object preview image.
     var gallery: [UIImage]
     {
         get
@@ -48,13 +48,13 @@ public struct STCPackageInfo: Codable
         }
     }
     
-    ///Removes all images from gallery.
+    // /Removes all images from gallery.
     mutating func clear_gallery()
     {
         images_data.removeAll()
     }
     
-    ///Build modules lists names.
+    // /Build modules lists names.
     public var build_modules_lists_names: [String]
     {
         var names = [String]()

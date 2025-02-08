@@ -10,7 +10,7 @@ import IndustrialKit
 
 class DesignerRobotModelController: RobotModelController
 {
-    ///Model nodes lengths.
+    // /Model nodes lengths.
     public var lengths = [Float]()
     
     /**
@@ -20,16 +20,16 @@ class DesignerRobotModelController: RobotModelController
      */
     open var description_lengths_count: Int { 0 }
     
-    ///Sets new values for connected nodes geometries.
+    // /Sets new values for connected nodes geometries.
     open func update_nodes_lengths()
     {
         
     }
     
-    ///Updates connected model nodes scales by instance lengths.
+    // /Updates connected model nodes scales by instance lengths.
     public final func nodes_transform()
     {
-        guard lengths.count == description_lengths_count //Return if current lengths count is not equal required one
+        guard lengths.count == description_lengths_count // Return if current lengths count is not equal required one
         else
         {
             return

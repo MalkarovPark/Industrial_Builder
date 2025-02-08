@@ -41,7 +41,7 @@ struct ListingsListView: View
                     }
                     .padding(20)
                 }
-                //.modifier(DoubleModifier(update_toggle: $document_handler.update_listings_document_notify))
+                // .modifier(DoubleModifier(update_toggle: $document_handler.update_listings_document_notify))
             }
             else
             {

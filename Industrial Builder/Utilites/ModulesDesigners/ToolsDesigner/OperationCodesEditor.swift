@@ -71,7 +71,7 @@ struct OperationCodesEditor: View
                 
                 TextField("Image", text: $new_code_symbol)
                     .textFieldStyle(.roundedBorder)
-                    //.frame(width: 96)
+                    // .frame(width: 96)
                     .padding(.leading)
                 
                 Button
@@ -88,7 +88,7 @@ struct OperationCodesEditor: View
                         Divider()
                         #endif
                         
-                        //Image(systemName: new_code_symbol)
+                        // Image(systemName: new_code_symbol)
                         if is_valid_symbol(new_code_symbol)
                         {
                             #if os(macOS)
@@ -128,7 +128,7 @@ struct OperationCodesEditor: View
     {
         tool_operations.append(OperationCodeInfo(value: new_code_value, name: new_code_name, symbol: new_code_symbol))
         
-        //new_code_value += 1
+        // new_code_value += 1
         set_minimal_opcode_value()
         
         update_document_func()

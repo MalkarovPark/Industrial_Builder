@@ -14,7 +14,7 @@ let data = input.dropFirst()
 
 var output = String()
 
-switch input.first //Function Name
+switch input.first // Function Name
 {
 case "connect":
     output = connect(parameters: Array(input.dropFirst()))

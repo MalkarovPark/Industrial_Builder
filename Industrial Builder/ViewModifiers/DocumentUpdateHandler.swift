@@ -11,7 +11,7 @@ import IndustrialKit
 
 class DocumentUpdateHandler: ObservableObject
 {
-    //MARK: Update notifies
+    // MARK: Update notifies
     @Published var update_info_document_notify = true
     
     @Published var update_scenes_document_notify = true
@@ -24,12 +24,12 @@ class DocumentUpdateHandler: ObservableObject
     @Published var update_parts_document_notify = true
     @Published var update_ima_document_notify = true
     
-    //For drop
+    // For drop
     @Published var drop_update_scenes_document_notify = 0
     @Published var drop_update_images_document_notify = 0
     @Published var drop_update_listings_document_notify = 0
     
-    //MARK: Update functions
+    // MARK: Update functions
     public func document_update_info() { update_info_document_notify.toggle() }
     
     public func document_update_scenes() { update_scenes_document_notify.toggle() }
@@ -42,7 +42,7 @@ class DocumentUpdateHandler: ObservableObject
     public func document_update_parts() { update_parts_document_notify.toggle() }
     public func document_update_ima() { update_ima_document_notify.toggle() }
     
-    //For drop
+    // For drop
     public func drop_document_update_scenes() { drop_update_scenes_document_notify = (drop_update_scenes_document_notify + 1) % 5 }
     public func drop_document_update_images() { drop_update_images_document_notify = (drop_update_images_document_notify + 1) % 5 }
     public func drop_document_update_listings() { drop_update_listings_document_notify = (drop_update_listings_document_notify + 1) % 5 }
@@ -63,7 +63,7 @@ struct DocumentUpdateModifier: ViewModifier
                 update_deferred_import()
             }
             
-            //Resources
+            // Resources
             .onChange(of: document_handler.update_scenes_document_notify)
             { _, _ in
                 update_deferred_import()
@@ -86,7 +86,7 @@ struct DocumentUpdateModifier: ViewModifier
                 update_deferred_import()
             }
             
-            //Modules
+            // Modules
             .onChange(of: document_handler.update_robots_document_notify)
             { _, _ in
                 document.robot_modules = base_stc.robot_modules
@@ -112,7 +112,7 @@ struct DocumentUpdateModifier: ViewModifier
                 update_deferred_import()
             }
             
-            //Drop
+            // Drop
             .onChange(of: document_handler.drop_update_scenes_document_notify)
             { _, _ in
                 update_deferred_import()
@@ -132,19 +132,19 @@ struct DocumentUpdateModifier: ViewModifier
     
     private func update_deferred_import()
     {
-        //update_scenes()
-        //update_scripts()
+        // update_scenes()
+        // update_scripts()
         
         STCDocument.new_images_names = base_stc.images_files_names
         document.images = base_stc.images
         
-        STCDocument.new_scenes_names = base_stc.scenes_files_names //If that data was deferred imported
+        STCDocument.new_scenes_names = base_stc.scenes_files_names // If that data was deferred imported
         document.scenes = base_stc.scenes
     }
     
     /*private func update_scenes()
     {
-        STCDocument.new_scenes_names = base_stc.scenes_files_names //If that data was deferred imported
+        STCDocument.new_scenes_names = base_stc.scenes_files_names // If that data was deferred imported
         document.scenes = base_stc.scenes
     }*/
 }

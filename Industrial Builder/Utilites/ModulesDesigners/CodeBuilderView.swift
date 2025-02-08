@@ -40,7 +40,7 @@ struct CodeBuilderView: View
                     #if os(macOS)
                     .menuStyle(.borderedButton)
                     #endif
-                    //.disabled(base_stc.listings_files_names.isEmpty)
+                    // .disabled(base_stc.listings_files_names.isEmpty)
                     .padding(.bottom)
                 }
                 else
@@ -80,7 +80,7 @@ struct CodeBuilderView: View
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
-            //code_field_update.toggle()
+            // code_field_update.toggle()
             update_document_func()
         }
     }
@@ -95,7 +95,7 @@ struct CodeBuilderView: View
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
-            //code_field_update.toggle()
+            // code_field_update.toggle()
             update_document_func()
         }
     }
