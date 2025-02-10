@@ -27,7 +27,7 @@ struct KinematicInspectorView: View
                 {
                     ForEach(elements.indices, id: \.self)
                     { index in
-                        KinematicElementRow(element: $elements[index])
+                        KinematicElementView(element: $elements[index])
                         {
                             app_state.update_robot_kinematic(elements)
                             document_handler.document_update_kinematics()
@@ -53,10 +53,11 @@ struct KinematicInspectorView: View
     }
 }
 
-struct KinematicElementRow: View
+struct KinematicElementView: View
 {
     @Binding var element: KinematicElement
-    var onCommit: () -> Void
+    
+    var on_update: () -> Void
     
     var body: some View
     {
@@ -64,19 +65,15 @@ struct KinematicElementRow: View
         {
             Text(element.name)
             TextField("0", value: $element.value, formatter: NumberFormatter())
-                .onSubmit
-            {
-                onCommit()
-            }
             #if os(macOS)
             .textFieldStyle(.squareBorder)
             #endif
             Stepper("", value: $element.value)
                 .labelsHidden()
-                .onSubmit
-            {
-                onCommit()
-            }
+        }
+        .onChange(of: element.value)
+        { _, _ in
+            on_update()
         }
     }
 }
