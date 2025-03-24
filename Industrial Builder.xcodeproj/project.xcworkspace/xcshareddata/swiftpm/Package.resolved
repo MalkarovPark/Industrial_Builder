@@ -1,13 +1,31 @@
 {
-  "originHash" : "571c3737038228e513d9e46678d3a98f29e81c8f798956dc813717f52bb04a39",
+  "originHash" : "ffd4fbabbac4af47f5e0f7f6725109ce4700623345b44593abb95f34f17e2cbd",
   "pins" : [
+    {
+      "identity" : "codeeditorview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mchakravarty/CodeEditorView",
+      "state" : {
+        "revision" : "2b532411ae79520b973f1647e7ed51a6678d1188",
+        "version" : "0.15.3"
+      }
+    },
     {
       "identity" : "industrialkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MalkarovPark/IndustrialKit",
       "state" : {
         "branch" : "main",
-        "revision" : "6b692e48fa69c88fbe3fbb9f98b236580aa45d97"
+        "revision" : "5c45e98341f207114ad980275500faa9c1253e82"
+      }
+    },
+    {
+      "identity" : "rearrange",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChimeHQ/Rearrange.git",
+      "state" : {
+        "revision" : "5ff7f3363f7a08f77e0d761e38e6add31c2136e1",
+        "version" : "1.8.1"
       }
     }
   ],

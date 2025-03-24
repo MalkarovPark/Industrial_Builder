@@ -121,7 +121,7 @@ public class StandardTemplateConstruct: ObservableObject
             else
             {
                 scenes.append(scene)
-                scenes_files_names.append(group.name)
+                scenes_files_names.append("\(group.name).scn")
             }
             
             scenes_update_function()

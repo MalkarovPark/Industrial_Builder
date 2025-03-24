@@ -26,16 +26,11 @@ struct ListingView: View
         #if os(macOS) || os(visionOS)
         VStack(spacing: 0)
         {
-            ScrollView(.vertical)
-            {
-                Spacer()
-                TextEditor(text: $code)
-                    .font(.custom("Menlo", size: 12))
-                    .onChange(of: code)
-                    { _, _ in
-                        document_handler.document_update_listings()
-                    }
-            }
+            CodeView(text: $code)
+                .onChange(of: code)
+                { _, _ in
+                    document_handler.document_update_listings()
+                }
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: label))
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
@@ -44,16 +39,11 @@ struct ListingView: View
         {
             VStack(spacing: 0)
             {
-                ScrollView(.vertical)
-                {
-                    Spacer()
-                    TextEditor(text: $code)
-                        .font(.custom("Menlo", size: 12))
-                        .onChange(of: code)
-                        { _, _ in
-                            document_handler.document_update_listings()
-                        }
-                }
+                CodeView(text: $code)
+                    .onChange(of: code)
+                    { _, _ in
+                        document_handler.document_update_listings()
+                    }
             }
             .modifier(SheetCaption(is_presented: $is_presented, label: label))
             .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
@@ -62,16 +52,11 @@ struct ListingView: View
         {
             VStack(spacing: 0)
             {
-                ScrollView(.vertical)
-                {
-                    Spacer()
-                    TextEditor(text: $code)
-                        .font(.custom("Menlo", size: 12))
-                        .onChange(of: code)
-                        { _, _ in
-                            document_handler.document_update_listings()
-                        }
-                }
+                CodeView(text: $code)
+                    .onChange(of: code)
+                    { _, _ in
+                        document_handler.document_update_listings()
+                    }
             }
             .modifier(SheetCaption(is_presented: $is_presented, label: label))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
