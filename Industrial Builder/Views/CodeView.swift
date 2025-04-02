@@ -21,12 +21,31 @@ struct CodeView: View
     
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
     
+    //@AppStorage("CodePlainTextRepresentation") private var code_plain_text_representation: Bool = false
+    
     var body: some View
     {
         CodeEditor(text: $text, position: $position, messages: $messages, language: .swift())
             .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
             .environment(\.codeEditorLayoutConfiguration,
                           CodeEditor.LayoutConfiguration(showMinimap: show_minimap, wrapText: wrap_text))
+        
+        /*if !code_plain_text_representation
+        {
+            CodeEditor(text: $text, position: $position, messages: $messages, language: .swift())
+                .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
+                .environment(\.codeEditorLayoutConfiguration,
+                              CodeEditor.LayoutConfiguration(showMinimap: show_minimap, wrapText: wrap_text))
+        }
+        else
+        {
+            VStack
+            {
+                TextEditor(text: $text)
+                .textFieldStyle(.plain)
+                .font(.custom("Menlo", size: 12))
+            }
+        }*/
     }
 }
 

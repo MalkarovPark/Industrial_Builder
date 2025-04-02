@@ -167,6 +167,7 @@ class _6DOF_Controller: DesignerRobotModelController
         modified_node = nodes[safe: "d0", default: SCNNode()].childNode(withName: "box", recursively: false) ?? SCNNode()
         modified_node.geometry = SCNBox(width: 60, height: CGFloat(lengths[0]), length: 60, chamferRadius: 10)
         modified_node.geometry?.firstMaterial = saved_material
+        modified_node.position.y = CGFloat(lengths[0] / 2)
 
         // Part 1
         #if os(macOS)
