@@ -1,3 +1,7 @@
+#
+# Compile all program components in modules to unix executable files
+#
+
 #!/bin/bash
 
 echo "External code compilation started"

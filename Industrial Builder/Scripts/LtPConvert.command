@@ -4,21 +4,23 @@
 
 #!/bin/bash
 
-# Get the directory where the script is located
-SCRIPT_DIR="$(dirname "$0")"
-
-# Check if a swift file argument is provided
-if [ -z "$1" ]; then
-  echo "Usage: $0 <file.swift>"
-  exit 1
+# Determine the package directory based on the input argument
+if [ -n "$1" ]; then
+    SWIFT_FILE="$1"
+else
+    echo "Enter swift file name: "
+    read SWIFT_FILE
 fi
 
-SWIFT_FILE="$1"
+# Validate the file
+if [[ ! -f "$SWIFT_FILE" ]]; then
+    echo "Error: File does not exist: $SWIFT_FILE"
+    exit 1
+fi
 
-# Check if the file exists and is a .swift file
-if [ ! -f "$SWIFT_FILE" ] || [[ "$SWIFT_FILE" != *.swift ]]; then
-  echo "Error: Invalid or missing swift file: $SWIFT_FILE"
-  exit 1
+if [[ "$SWIFT_FILE" != *.swift ]]; then
+    echo "Error: File is not a .swift file: $SWIFT_FILE"
+    exit 1
 fi
 
 
@@ -83,4 +85,4 @@ mkdir Sources/"$PACKAGE_NAME"
 # Copy content from given swift file into main.swift
 cp "$ABSOLUTE_SWIFT_FILE" Sources/"$PACKAGE_NAME"/main.swift
 
-echo "Package '$PACKAGE_NAME_WITH_POSTFIX' created with IndustrialKit dependency and full references."
+echo "Package '$PACKAGE_NAME_WITH_POSTFIX' created with IndustrialKit dependency and full references"

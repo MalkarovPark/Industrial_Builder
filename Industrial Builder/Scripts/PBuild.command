@@ -15,7 +15,7 @@ if [ -n "$1" ]; then
         PACKAGE_DIR="$INPUT"
         PACKAGE_NAME=$(basename "$PACKAGE_DIR")
         # Remove "_project" suffix if present
-        PACKAGE_NAME_BASE="${PACKAGE_NAME/_Project}" 
+        PACKAGE_NAME_BASE="${PACKAGE_NAME/_Project}"
     # If the input is a file, get its parent directory
     elif [ -f "$INPUT" ]; then
         PACKAGE_DIR=$(dirname "$INPUT")
@@ -24,10 +24,10 @@ if [ -n "$1" ]; then
         PACKAGE_NAME_BASE="${PACKAGE_NAME/_Project}"
     else
         echo "Error: The provided argument '$INPUT' is neither a directory nor a file."
-        exit 1
+        exit 12
     fi
 else
-    echo -n "Enter package name: "
+    echo "Enter package name: "
     read PACKAGE_NAME
     PACKAGE_DIR="$SCRIPT_DIR/$PACKAGE_NAME"
     # Remove "_project" suffix if present
