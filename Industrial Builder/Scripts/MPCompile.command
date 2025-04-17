@@ -4,7 +4,7 @@
 
 #!/bin/bash
 
-echo "External code compilation started"
+echo "Initiating compilation of external modules..."
 
 # Find directories ending with .robot, .tool, .part, or .changer
 find . -maxdepth 1 -type d \( -name "*.robot" -o -name "*.tool" -o -name "*.part" -o -name "*.changer" \) -print0 | while IFS= read -r -d $'\0' dir; do
@@ -27,11 +27,11 @@ find . -maxdepth 1 -type d \( -name "*.robot" -o -name "*.tool" -o -name "*.part
     command="./LCompile.command \"$file\" -c"
 
     # Output the custom message with the filename and module name
-    echo "Compile $filename of external ${dir_ext} module - ${module_name}"
+    echo "Compiling $filename for the external ${dir_ext} module - ${module_name}"
 
     # Execute the command, redirecting output and error streams to /dev/null
     eval "$command" >/dev/null 2>&1
   done
 done
 
-echo "External code compilation finished"
+echo "Compilation of external modules completed"
