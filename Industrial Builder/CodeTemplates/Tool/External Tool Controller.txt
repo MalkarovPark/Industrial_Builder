@@ -6,64 +6,69 @@ import Darwin
 import SceneKit
 import IndustrialKit
 
-//MARK: - Main
-guard CommandLine.arguments.count > 0 else { exit(1) }
-
-let input: [String] = CommandLine.arguments.dropFirst().compactMap { String($0) }
-let data = input.dropFirst()
-
-var output = String()
-
-switch input.first
+@MainActor
+struct ToolModelController
 {
-case "nodes_perform":
-    output = nodes_perform(code: Int(input[1]) ?? 0)
-case "reset_model":
-    output = reset_nodes()
+    static func main()
+    {
+        guard CommandLine.arguments.count > 0 else { exit(1) }
 
-case "updated_charts_data":
-    output = updated_charts_data().json_string()
-case "updated_states_data":
-    output = updated_states_data().json_string()
-case "initial_charts_data":
-    output = initial_charts_data().json_string()
-case "initial_states_data":
-    output = updated_states_data().json_string()
+        let input: [String] = CommandLine.arguments.dropFirst().compactMap { String($0) }
 
-default:
-    break
-}
+        var output = String()
 
-print(output, terminator: "")
+        switch input.first
+        {
+        case "nodes_perform":
+            output = nodes_perform(code: Int(input[1]) ?? 0)
+        case "reset_model":
+            output = reset_nodes()
 
-//MARK: - Performing
-@MainActor func nodes_perform(code: Int) -> String
-{
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-}
+        case "updated_charts_data":
+            output = updated_charts_data().json_string()
+        case "updated_states_data":
+            output = updated_states_data().json_string()
+        case "initial_charts_data":
+            output = initial_charts_data().json_string()
+        case "initial_states_data":
+            output = updated_states_data().json_string()
 
-//MARK: - Statistics
-@MainActor func reset_nodes() -> String
-{
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-}
+        default:
+            break
+        }
+        
+        print(output, terminator: "")
+    }
+    
+    //MARK: - Performing
+    static func nodes_perform(code: Int) -> String
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+    }
 
-@MainActor func initial_charts_data() -> [WorkspaceObjectChart]?
-{
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
-}
+    //MARK: - Statistics
+    static func reset_nodes() -> String
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+    }
 
-@MainActor func updated_charts_data() -> [WorkspaceObjectChart]?
-{
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
-}
+    static func initial_charts_data() -> [WorkspaceObjectChart]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
 
-@MainActor func initial_states_data() -> [StateItem]?
-{
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
-}
+    static func updated_charts_data() -> [WorkspaceObjectChart]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+    }
 
-@MainActor func updated_states_data() -> [StateItem]?
-{
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    static func initial_states_data() -> [StateItem]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    }
+
+    static func updated_states_data() -> [StateItem]?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+    }
 }
