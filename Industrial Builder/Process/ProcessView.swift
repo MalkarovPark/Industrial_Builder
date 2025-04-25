@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ProcessView: View
 {
-    #if os(macOS)
+#if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
-    #else
+#else
     private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 16)]
-    #endif
+#endif
     
     @Binding var document: STCDocument
     @Binding var is_presented: Bool
@@ -32,33 +32,34 @@ struct ProcessView: View
                             .navigationTitle("Files"), label: {
                                 ProcessItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))
                             })
+                        .navigationTitle("Process")
                         
                         NavigationLink(destination: ExternalModulesBuildView(document: $document)
                             .navigationTitle("App"), label: {
                                 ProcessItemView(title: "App",
-                                              subtitle: "Make a project with internal modules",
-                                              image: Image("build_to_app_icon"))
+                                                subtitle: "Make a project with internal modules",
+                                                image: Image("build_to_app_icon"))
                             })
                         
                         /*Button(action: {  })
-                        {
-                            ProcessItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))
-                        }
-                        
-                        Button(action: {  })
-                        {
-                            ProcessItemView(title: "App",
-                                          subtitle: "Make a project with internal modules",
-                                          image: Image("build_to_app_icon"))
-                        }*/
+                         {
+                         ProcessItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))
+                         }
+                         
+                         Button(action: {  })
+                         {
+                         ProcessItemView(title: "App",
+                         subtitle: "Make a project with internal modules",
+                         image: Image("build_to_app_icon"))
+                         }*/
                     }
                     .padding(16)
                 }
             }
         }
-        .navigationTitle("Process")
         #if os(macOS)
-        .toolbar {
+        .toolbar
+        {
             ToolbarItem(placement: .cancellationAction)
             {
                 Button("Cancel")
@@ -67,10 +68,6 @@ struct ProcessView: View
                 }
             }
         }
-        /*#else
-        .navigationBarItems(trailing: Button("Cancel") {
-            is_presented = false
-        })*/
         #endif
     }
 }
@@ -88,18 +85,18 @@ struct ProcessItemView: View
             ZStack
             {
                 // Rectangle()
-                    // .foregroundStyle(Color.accentColor)
+                // .foregroundStyle(Color.accentColor)
                 image
                     .resizable()
-                    // .scaledToFill()
+                // .scaledToFill()
                     .scaledToFit()
                     .foregroundStyle(.white)
             }
-            #if os(macOS)
+#if os(macOS)
             .frame(width: 40, height: 40)
-            #else
+#else
             .frame(width: 48, height: 48)
-            #endif
+#endif
             // .frame(width: 32, height: 32)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             
@@ -116,11 +113,11 @@ struct ProcessItemView: View
             Image(systemName: "chevron.right")
                 .padding(.trailing, 8)
         }
-        #if os(iOS)
+#if os(iOS)
         .padding(10)
-        #else
+#else
         .padding(.vertical, 8)
-        #endif
+#endif
         .frame(maxWidth: .infinity)
     }
 }

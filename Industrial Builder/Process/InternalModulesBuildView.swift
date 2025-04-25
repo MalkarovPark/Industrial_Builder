@@ -33,30 +33,35 @@ struct InternalModulesBuildView: View
         {
             BuildListView(selected_name: $selected_name)
                 .padding(.bottom)
-            
-            Button("Build")
+        }
+        .padding()
+        .toolbar
+        {
+            ToolbarItem(placement: .confirmationAction)
             {
-                internal_export_panel_presented = true
-            }
-            .buttonStyle(.borderedProminent)
-            .fileImporter(isPresented: $internal_export_panel_presented,
-                          allowedContentTypes: [.folder],
-                          allowsMultipleSelection: false)
-            { result in
-                switch result
+                Button("Build")
                 {
-                case .success(let urls):
-                    if let url = urls.first
+                    internal_export_panel_presented = true
+                }
+                .buttonStyle(.borderedProminent)
+                .fileImporter(isPresented: $internal_export_panel_presented,
+                              allowedContentTypes: [.folder],
+                              allowsMultipleSelection: false)
+                { result in
+                    switch result
                     {
-                        base_stc.build_application_project(list: selected_list, to: url)
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            base_stc.build_application_project(list: selected_list, to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
                     }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    break
                 }
             }
         }
-        .padding()
         .onChange(of: base_stc.package_info.build_modules_lists)
         { _, new_value in
             document.package_info.build_modules_lists = new_value
