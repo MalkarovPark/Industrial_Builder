@@ -31,13 +31,17 @@ struct PackageView: View
         .modifier(WindowFramer())
         .sheet(isPresented: $build_view_presented)
         {
-            BuildView(document: $document)
-                .modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
+            //BuildView(document: $document)
+                //.modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
+            ProcessView(document: $document, is_presented: $build_view_presented)
+            #if os(macOS) || os(visionOS)
+                .fitted()
+            #endif
             #if os(macOS)
-                .frame(minWidth: 320, maxWidth: 600, minHeight: 480, maxHeight: 640)
+                .frame(minWidth: 320, maxWidth: 600, minHeight: 400, maxHeight: 640)
             #endif
         }
-        .fitted()
+        //.fitted()
         .toolbar
         {
             Button(action: { build_view_presented = true })
