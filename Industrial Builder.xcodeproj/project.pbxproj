@@ -25,6 +25,7 @@
 		6268723F2BC18D21005F8B3C /* ModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268723E2BC18D20005F8B3C /* ModulesView.swift */; };
 		626872422BC1A3D2005F8B3C /* ListingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872412BC1A3D2005F8B3C /* ListingsListView.swift */; };
 		626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872432BC1A3E5005F8B3C /* ListingView.swift */; };
+		626A6BE42DBC06CC000395F6 /* IndustrialAppPackageMake.command in Resources */ = {isa = PBXBuildFile; fileRef = 626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */; };
 		627D3EBF2AD3F61400D5988D /* PackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627D3EBE2AD3F61400D5988D /* PackageView.swift */; };
 		627DA0702BEEDB7B00FD957F /* ToolModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */; };
 		6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */; };
@@ -83,6 +84,7 @@
 		6268723E2BC18D20005F8B3C /* ModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulesView.swift; sourceTree = "<group>"; };
 		626872412BC1A3D2005F8B3C /* ListingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsListView.swift; sourceTree = "<group>"; };
 		626872432BC1A3E5005F8B3C /* ListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingView.swift; sourceTree = "<group>"; };
+		626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndustrialAppPackageMake.command; sourceTree = "<group>"; };
 		627D3EBE2AD3F61400D5988D /* PackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageView.swift; sourceTree = "<group>"; };
 		627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModuleDesigner.swift; sourceTree = "<group>"; };
 		6289FCC32AD0398100BB7F5E /* Industrial Builder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Industrial Builder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +160,7 @@
 		62277B6D2D285223002E9D4D /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */,
 				62277B6E2D285D19002E9D4D /* LCompile.command */,
 				62277B6F2D285D19002E9D4D /* LtPConvert.command */,
 				62277B702D285D19002E9D4D /* MPCompile.command */,
@@ -433,6 +436,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				626A6BE42DBC06CC000395F6 /* IndustrialAppPackageMake.command in Resources */,
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
 				62D3118E2CE2905C002A39B8 /* List.txt in Resources */,
