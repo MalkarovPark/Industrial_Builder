@@ -366,7 +366,15 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // MARK: - Modules build functions
-    // /Builds modules in separated files.
+    #if os(macOS)
+    @Published var compile_program_elements = true
+    #else
+    @Published var compile_program_elements = false
+    #endif
+    
+    @Published var internal_export_type: InternalExportType = .files_only
+    
+    // Builds modules in separated files.
     public func build_external_modules(list: BuildModulesList, to folder_url: URL)
     {
         DispatchQueue.global(qos: .background).async
@@ -521,9 +529,14 @@ public class StandardTemplateConstruct: ObservableObject
         {
             compilation_kit_store(to: folder_url)
             
-            #if os(macOS)
+            /*#if os(macOS)
             perform_external_compilation(in: folder_url)
-            #endif
+            #endif*/
+            
+            if compile_program_elements
+            {
+                perform_external_compilation(in: folder_url)
+            }
         }
     }
     
@@ -905,6 +918,14 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     #endif
+}
+
+//MARK: - Enums
+public enum InternalExportType: String, Equatable, CaseIterable
+{
+    case files_only = "Files Only"
+    case swift_playground = "Swift Playground"
+    case xcode_project = "Xcode Project"
 }
 
 //MARK: - Typealiases

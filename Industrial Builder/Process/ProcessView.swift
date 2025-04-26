@@ -32,9 +32,9 @@ struct ProcessView: View
                             .navigationTitle("Files"), label: {
                                 ProcessItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))
                             })
-                        .navigationTitle("Process")
+                            .navigationTitle("Process")
                         
-                        NavigationLink(destination: ExternalModulesBuildView(document: $document)
+                        NavigationLink(destination: InternalModulesBuildView(document: $document)
                             .navigationTitle("App"), label: {
                                 ProcessItemView(title: "App",
                                                 subtitle: "Make a project with internal modules",

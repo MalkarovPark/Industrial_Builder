@@ -33,6 +33,14 @@ struct ExternalModulesBuildView: View
         {
             BuildListView(selected_name: $selected_name)
                 .padding(.bottom)
+            
+            Toggle(isOn: $base_stc.compile_program_elements)
+            {
+                Text("Compile program elements")
+            }
+            #if !os(macOS)
+            .disabled(true)
+            #endif
         }
         .padding()
         .toolbar

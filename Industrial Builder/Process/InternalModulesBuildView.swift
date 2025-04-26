@@ -33,6 +33,21 @@ struct InternalModulesBuildView: View
         {
             BuildListView(selected_name: $selected_name)
                 .padding(.bottom)
+            
+            Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
+            {
+                ForEach(InternalExportType.allCases, id: \.self)
+                { export_type in
+                    Text(export_type.rawValue).tag(export_type)
+                    /*if export_type != .xcode_project
+                    {
+                        Text(export_type.rawValue).tag(export_type)
+                    }*/
+                }
+            }
+            #if !os(macOS)
+            .modifier(ButtonBorderer())
+            #endif
         }
         .padding()
         .toolbar
