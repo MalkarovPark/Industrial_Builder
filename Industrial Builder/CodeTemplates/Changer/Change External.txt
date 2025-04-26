@@ -4,23 +4,17 @@
 
 import Darwin
 
-@MainActor
-struct Changer
+//MARK: - Main
+guard CommandLine.arguments.count > 0 else { exit(1) }
+
+var registers: [Float] = CommandLine.arguments.dropFirst().compactMap { Float($0) }
+
+change(registers: &registers)
+
+print(registers.map { String($0) }.joined(separator: " "), terminator: "")
+
+//MARK: - Function
+func change(registers: inout [Float])
 {
-    static func main()
-    {
-        guard CommandLine.arguments.count > 0 else { exit(1) }
-
-        var registers: [Float] = CommandLine.arguments.dropFirst().compactMap { Float($0) }
-
-        change(registers: &registers)
-
-        print(registers.map { String($0) }.joined(separator: " "), terminator: "")
-    }
-    
-    //MARK: - Function
-    static func change(registers: inout [Float])
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
-    }
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
 }

@@ -6,94 +6,88 @@ import Darwin
 import SceneKit
 import IndustrialKit
 
-@MainActor
-struct ToolConnector
+//MARK: - Main
+guard CommandLine.arguments.count > 0 else { exit(1) }
+
+let input: [String] = CommandLine.arguments.dropFirst().compactMap { String($0) }
+
+var output = String()
+
+switch input.first // Function Name
 {
-    static func main()
-    {
-        guard CommandLine.arguments.count > 0 else { exit(1) }
+case "connect":
+    output = connect(parameters: Array(input.dropFirst()))
+case "disconnect":
+    output = disconnect()
 
-        let input: [String] = CommandLine.arguments.dropFirst().compactMap { String($0) }
+case "move_to":
+    output = perform(code: Int(input[1]) ?? 0)
+case "reset_device":
+    output = reset_device()
+    
+case "updated_charts_data":
+    output = updated_charts_data().json_string()
+case "updated_states_data":
+    output = updated_states_data().json_string()
+case "initial_charts_data":
+    output = initial_charts_data().json_string()
+case "initial_states_data":
+    output = updated_states_data().json_string()
 
-        var output = String()
+case "sync_model":
+    output = sync_model()
 
-        switch input.first // Function Name
-        {
-        case "connect":
-            output = connect(parameters: Array(input.dropFirst()))
-        case "disconnect":
-            output = disconnect()
+default:
+    break
+}
 
-        case "perform":
-            output = perform(code: Int(input[1]) ?? 0)
-        case "reset_device":
-            output = reset_device()
-            
-        case "updated_charts_data":
-            output = updated_charts_data().json_string()
-        case "updated_states_data":
-            output = updated_states_data().json_string()
-        case "initial_charts_data":
-            output = initial_charts_data().json_string()
-        case "initial_states_data":
-            output = updated_states_data().json_string()
+print(output, terminator: "")
 
-        case "sync_model":
-            output = sync_model()
+//MARK: - Connection
+func connect(parameters: [String]) -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
 
-        default:
-            break
-        }
+func disconnect() -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
 
-        print(output, terminator: "")
-    }
+//MARK: - Performing
+func perform(code: Int) -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
 
-    //MARK: - Connection
-    static func connect(parameters: [String]) -> String
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-    }
+func reset_device() -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
 
-    static func disconnect() -> String
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-    }
+//MARK: - Statistics
+func initial_charts_data() -> [WorkspaceObjectChart]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+}
 
-    //MARK: - Performing
-    static func perform(code: Int) -> String
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-    }
+func updated_charts_data() -> [WorkspaceObjectChart]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+}
 
-    static func reset_device() -> String
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-    }
+func initial_states_data() -> [StateItem]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+}
 
-    //MARK: - Statistics
-    static func initial_charts_data() -> [WorkspaceObjectChart]?
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
-    }
+func updated_states_data() -> [StateItem]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+}
 
-    static func updated_charts_data() -> [WorkspaceObjectChart]?
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
-    }
-
-    static func initial_states_data() -> [StateItem]?
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
-    }
-
-    static func updated_states_data() -> [StateItem]?
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
-    }
-
-    //MARK: - Modeling
-    static func sync_model() -> String
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
-    }
+//MARK: - Modeling
+func sync_model() -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
