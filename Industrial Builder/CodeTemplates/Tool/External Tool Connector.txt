@@ -25,6 +25,9 @@ case "move_to":
 case "reset_device":
     output = reset_device()
     
+case "info_output":
+    output = info_output()
+    
 case "updated_charts_data":
     output = updated_charts_data().json_string()
 case "updated_states_data":
@@ -50,6 +53,12 @@ func connect(parameters: [String]) -> String
 }
 
 func disconnect() -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
+
+//MARK: - Info
+func info_output() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }

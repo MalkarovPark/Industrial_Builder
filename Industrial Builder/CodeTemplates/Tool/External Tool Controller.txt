@@ -19,6 +19,9 @@ case "nodes_perform":
     output = nodes_perform(code: Int(input[1]) ?? 0)
 case "reset_model":
     output = reset_nodes()
+    
+case "info_output":
+    output = info_output()
 
 case "updated_charts_data":
     output = updated_charts_data().json_string()
@@ -37,6 +40,12 @@ print(output, terminator: "")
 
 //MARK: - Performing
 func nodes_perform(code: Int) -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
+
+//MARK: - Info
+func info_output() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }

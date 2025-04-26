@@ -41,6 +41,13 @@ struct ProcessView: View
                                                 image: Image("build_to_app_icon"))
                             })
                         
+                        NavigationLink(destination: PrepareForDevView()
+                            .navigationTitle("Development"), label: {
+                                ProcessItemView(title: "Development",
+                                                subtitle: "Prepare industrial project",
+                                                image: Image("prepare_for_dev_icon"))
+                            })
+                        
                         /*Button(action: {  })
                          {
                          ProcessItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))

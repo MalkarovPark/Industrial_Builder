@@ -46,7 +46,7 @@ struct InternalModulesBuildView: View
                 }
             }
             #if !os(macOS)
-            .modifier(ButtonBorderer())
+            .modifier(PickerBorderer())
             #endif
         }
         .padding()
@@ -58,7 +58,6 @@ struct InternalModulesBuildView: View
                 {
                     internal_export_panel_presented = true
                 }
-                .buttonStyle(.borderedProminent)
                 .fileImporter(isPresented: $internal_export_panel_presented,
                               allowedContentTypes: [.folder],
                               allowsMultipleSelection: false)
