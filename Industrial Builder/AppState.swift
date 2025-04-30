@@ -10,7 +10,7 @@ import SceneKit
 import SwiftUI
 import IndustrialKit
 
-//MARK: - Class for work with various application data
+// MARK: - Class for work with various application data
 class AppState : ObservableObject
 {
     #if os(iOS) || os(visionOS)
@@ -72,6 +72,7 @@ class AppState : ObservableObject
     @Published var make_controller_from_kinematic = true
 }
 
+// MARK: - Service Functions
 func import_text_data(from file_name: String) -> String
 {
     if let file_url = Bundle.main.url(forResource: file_name, withExtension: "txt")

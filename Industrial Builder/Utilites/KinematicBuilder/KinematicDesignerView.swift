@@ -226,7 +226,7 @@ struct KinematicDesignerView: View
     }
 }
 
-//MARK: Scale elements
+// MARK: Scale elements
 struct SpaceScaleView: View
 {
     @Binding var space_scale_view_presented: Bool
@@ -288,7 +288,7 @@ struct SpaceScaleView: View
     }
 }
 
-//MARK: Move elements
+// MARK: Move elements
 struct OriginMoveView: View
 {
     @Binding var origin_move_view_presented: Bool
@@ -350,7 +350,7 @@ struct OriginMoveView: View
     }
 }
 
-//MARK: Rotate elements
+// MARK: Rotate elements
 struct OriginRotateView: View
 {
     @Binding var origin_rotate_view_presented: Bool
@@ -422,7 +422,7 @@ let label_width = 26.0
 
 
 
-//MARK: - View element propeties
+// MARK: - View element propeties
 #if os(macOS)
 let placement_trailing: ToolbarItemPlacement = .automatic
 let quaternary_label_color: Color = Color(NSColor.quaternaryLabelColor)

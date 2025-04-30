@@ -76,7 +76,7 @@ struct Industrial_BuilderApp: App
     }
 }
 
-//MARK: - Arrow edge positions
+// MARK: - Arrow edge positions
 #if os(macOS)
 let default_popover_edge: Edge = .top
 #else
@@ -89,7 +89,7 @@ let default_popover_edge_inverted: Edge = .bottom
 let default_popover_edge_inverted: Edge = .top
 #endif
 
-//MARK: - Color by hex
+// MARK: - Color by hex
 extension Color
 {
     /**

@@ -6,7 +6,7 @@ import Darwin
 import SceneKit
 import IndustrialKit
 
-//MARK: - Main
+// MARK: - Main
 guard CommandLine.arguments.count > 0 else { exit(1) }
 
 let input: [String] = CommandLine.arguments.dropFirst().compactMap { String($0) }
@@ -46,7 +46,7 @@ default:
 
 print(output, terminator: "")
 
-//MARK: - Connection
+// MARK: - Connection
 func connect(parameters: [String]) -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
@@ -57,13 +57,13 @@ func disconnect() -> String
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-//MARK: - Info
+// MARK: - Info
 func info_output() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-//MARK: - Performing
+// MARK: - Performing
 func perform(code: Int) -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
@@ -74,7 +74,7 @@ func reset_device() -> String
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-//MARK: - Statistics
+// MARK: - Statistics
 func initial_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
@@ -95,7 +95,7 @@ func updated_states_data() -> [StateItem]?
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }
 
-//MARK: - Modeling
+// MARK: - Modeling
 func sync_model() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/

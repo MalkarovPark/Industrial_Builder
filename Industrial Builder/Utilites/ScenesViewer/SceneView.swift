@@ -35,7 +35,7 @@ struct SceneView: View
     }*/
 }
 
-//MARK: - Scene Views typealilases
+// MARK: - Scene Views typealilases
 #if os(macOS)
 typealias UIViewRepresentable = NSViewRepresentable
 typealias UITapGestureRecognizer = NSClickGestureRecognizer

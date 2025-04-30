@@ -365,6 +365,18 @@ public class StandardTemplateConstruct: ObservableObject
         #endif
     }
     
+    // MARK: - Code generation functions
+    public func misc_code_process(type: MiscCodeGenerationFunction, input: String = String()) -> String
+    {
+        switch type
+        {
+        case .blank:
+            return ""
+        case .unknown:
+            return "UwU"
+        }
+    }
+    
     // MARK: - Process preferences
     #if os(macOS)
     @Published var compile_program_elements = true
@@ -423,7 +435,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // /Builds application project to compile with internal modules.
+    // Builds application project to compile with internal modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
         DispatchQueue.global(qos: .background).async
@@ -925,7 +937,7 @@ public class StandardTemplateConstruct: ObservableObject
     #endif
 }
 
-//MARK: - Enums
+// MARK: - Enums
 public enum InternalExportType: String, Equatable, CaseIterable
 {
     case files_only = "Files Only"
@@ -940,11 +952,28 @@ public enum PrepareForDevType: String, Equatable, CaseIterable
     case mbk_only = "Module Building Kit only"
 }
 
-//MARK: - Typealiases
+public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
+{
+    case blank = "Blank"
+    case unknown = "Unknown"
+    
+    var image_name: String
+    {
+        switch self
+        {
+        case .blank:
+            return "rays"
+        case .unknown:
+            return "questionmark"
+        }
+    }
+}
+
+// MARK: - Typealiases
 #if os(macOS)
 typealias UIImage = NSImage
 
-//MARK: - Extensions
+// MARK: - Extensions
 extension UIImage
 {
     func pngData() -> Data?

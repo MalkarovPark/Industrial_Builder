@@ -96,17 +96,14 @@ struct CodeTemplatesView: View
                     
                     LazyVGrid(columns: columns, spacing: 8)
                     {
-                        CodeTileView(
-                            name: "Blank",
-                            image_name: "rays",
-                            is_selected: is_template_selected(name: "Blank", type: .misc)
-                        )
-                        
-                        CodeTileView(
-                            name: "Unknown",
-                            image_name: "questionmark",
-                            is_selected: is_template_selected(name: "Unknown", type: .misc)
-                        )
+                        ForEach(MiscCodeGenerationFunction.allCases, id: \.self)
+                        { function in
+                            CodeTileView(
+                                name: function.rawValue,
+                                image_name: function.image_name,
+                                is_selected: is_template_selected(name: function.rawValue, type: .misc)
+                            )
+                        }
                     }
                 }
                 .padding(8)
@@ -175,15 +172,16 @@ struct CodeTemplatesView: View
         case .template:
             return import_text_data(from: selected_template_name ?? "")
         case .listing:
-            guard let index = base_stc.listings_files_names.firstIndex(of: selected_template_name ?? "")
+            if let index = base_stc.listings_files_names.firstIndex(of: selected_template_name ?? "")
+            {
+                return base_stc.listings[index]
+            }
             else
             {
                 return nil
             }
-            
-            return base_stc.listings[index]
         case .misc:
-            return nil
+            return base_stc.misc_code_process(type: MiscCodeGenerationFunction(rawValue: selected_template_name ?? "") ?? .blank)
         }
     }
 }
