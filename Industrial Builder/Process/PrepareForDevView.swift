@@ -44,7 +44,7 @@ struct PrepareForDevView: View
                 }
                 .sheet(isPresented: $template_view_presented)
                 {
-                    CodeTemplatesView(is_presented: $template_view_presented, avaliable_templates_names: [
+                    CodeBuilderView(is_presented: $template_view_presented, avaliable_templates_names: [
                         "Internal Robot Controller",
                         "External Robot Controller"
                     ])

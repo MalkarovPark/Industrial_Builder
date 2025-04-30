@@ -18,7 +18,7 @@ struct CodeEditorView: View
     @State private var code_item_name = String()
     @State private var code_field_update = false
     
-    @State private var code_builder_presented = false
+    @State private var code_import_presented = false
     
     public var avaliable_templates_names: [String: [String]] = [:]
     public var model_name: String
@@ -71,21 +71,27 @@ struct CodeEditorView: View
                 .padding(.trailing)
                 .disabled(code_items.count == 1)
                 
-                Button("Build")
+                Button("Import")
                 {
-                    code_builder_presented.toggle()
+                    code_import_presented.toggle()
                 }
                 #if os(macOS)
                 .menuStyle(.borderedButton)
                 #elseif os(iOS)
                 .modifier(ButtonBorderer())
                 #endif
-                .popover(isPresented: $code_builder_presented, arrowEdge: default_popover_edge)
+                .sheet(isPresented: $code_import_presented)
                 {
-                    CodeBuilderView(code: code_item_binding(from: $code_items, key: code_item_name), avaliable_templates_names: avaliable_templates_names[code_item_name] ?? [String](), model_name: model_name)
-                    {
-                        code_field_update.toggle()
-                        update_document_func()
+                    CodeBuilderView(is_presented: $code_import_presented, avaliable_templates_names: avaliable_templates_names[code_item_name] ?? [String]())
+                    { code in
+                        code_items[code_item_name] = code.replacingOccurrences(of: "<#Name#>", with: model_name.code_correct_format)
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+                        {
+                            // code_field_update.toggle()
+                            update_document_func()
+                        }
+                        //update_document_func()
                     }
                 }
             }

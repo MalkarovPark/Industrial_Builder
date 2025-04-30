@@ -28,7 +28,6 @@
 		626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872432BC1A3E5005F8B3C /* ListingView.swift */; };
 		626A6BE42DBC06CC000395F6 /* IndustrialAppPackageMake.command in Resources */ = {isa = PBXBuildFile; fileRef = 626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */; };
 		626A6C092DBC0FF0000395F6 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C082DBC0FF0000395F6 /* ProcessView.swift */; };
-		626A6C0B2DBC1009000395F6 /* CodeTemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C0A2DBC1009000395F6 /* CodeTemplatesView.swift */; };
 		626A6C0E2DBC1702000395F6 /* InternalModulesBuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C0D2DBC1702000395F6 /* InternalModulesBuildView.swift */; };
 		626A6C102DBC170E000395F6 /* ExternalModulesBuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C0F2DBC170E000395F6 /* ExternalModulesBuildView.swift */; };
 		626A6C122DBC17E3000395F6 /* BuildProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C112DBC17E3000395F6 /* BuildProgressView.swift */; };
@@ -93,7 +92,6 @@
 		626872432BC1A3E5005F8B3C /* ListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingView.swift; sourceTree = "<group>"; };
 		626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndustrialAppPackageMake.command; sourceTree = "<group>"; };
 		626A6C082DBC0FF0000395F6 /* ProcessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessView.swift; sourceTree = "<group>"; };
-		626A6C0A2DBC1009000395F6 /* CodeTemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTemplatesView.swift; sourceTree = "<group>"; };
 		626A6C0D2DBC1702000395F6 /* InternalModulesBuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalModulesBuildView.swift; sourceTree = "<group>"; };
 		626A6C0F2DBC170E000395F6 /* ExternalModulesBuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalModulesBuildView.swift; sourceTree = "<group>"; };
 		626A6C112DBC17E3000395F6 /* BuildProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildProgressView.swift; sourceTree = "<group>"; };
@@ -212,7 +210,6 @@
 			isa = PBXGroup;
 			children = (
 				6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */,
-				620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */,
 				6225786F2C24A9940023004E /* ResourcesPackageView.swift */,
 				62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */,
 				628E72122CCC15FA00E71E7F /* LinkedComponentsView.swift */,
@@ -222,6 +219,14 @@
 				6255B9212B9D242F002B575C /* IMADesigner */,
 			);
 			path = ModulesDesigners;
+			sourceTree = "<group>";
+		};
+		626450B92DC289A7001101A5 /* CodeBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */,
+			);
+			path = CodeBuilder;
 			sourceTree = "<group>";
 		};
 		626872402BC1A3A6005F8B3C /* ListingsView */ = {
@@ -256,7 +261,6 @@
 				62B0057E2D8ECA9F00544A76 /* CodeView.swift */,
 				62AE552F2AE962CA00554A5B /* ComponentsView.swift */,
 				6296D2892AEC55580094FB19 /* Cards.swift */,
-				626A6C0A2DBC1009000395F6 /* CodeTemplatesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -371,6 +375,7 @@
 				626872402BC1A3A6005F8B3C /* ListingsView */,
 				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
 				6255B9222B9D26AA002B575C /* ModulesDesigners */,
+				626450B92DC289A7001101A5 /* CodeBuilder */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -503,7 +508,6 @@
 				628E72132CCC15FB00E71E7F /* LinkedComponentsView.swift in Sources */,
 				62AE55302AE962CA00554A5B /* ComponentsView.swift in Sources */,
 				629AABC42BC8561500720386 /* STCPackageInfo.swift in Sources */,
-				626A6C0B2DBC1009000395F6 /* CodeTemplatesView.swift in Sources */,
 				628E3A7E2BED86B10005A929 /* InfoView.swift in Sources */,
 				6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */,
 				6255B9202B9BDC86002B575C /* Framers.swift in Sources */,

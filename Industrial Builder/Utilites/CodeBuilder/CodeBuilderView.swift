@@ -1,13 +1,13 @@
 //
-//  CodeTemplatesView.swift
+//  CodeBuilderView.swift
 //  Industrial Builder
 //
-//  Created by Artem on 25.04.2025.
+//  Created by Artem on 09.11.2024.
 //
 
 import SwiftUI
 
-struct CodeTemplatesView: View
+struct CodeBuilderView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
@@ -262,7 +262,7 @@ private enum TemplateType: Equatable, CaseIterable
 
 #Preview
 {
-    CodeTemplatesView(is_presented: .constant(true))
+    CodeBuilderView(is_presented: .constant(true))
     { _ in
         
     }
