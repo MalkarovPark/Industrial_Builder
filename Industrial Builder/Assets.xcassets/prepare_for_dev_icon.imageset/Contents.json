@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "prepare_for_dev_icon.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

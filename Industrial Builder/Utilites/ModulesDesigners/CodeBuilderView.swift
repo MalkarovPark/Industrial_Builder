@@ -87,7 +87,9 @@ struct CodeBuilderView: View
     
     private func import_from_listing(_ file_name: String)
     {
-        guard let index = base_stc.listings_files_names.firstIndex(of: file_name) else {
+        guard let index = base_stc.listings_files_names.firstIndex(of: file_name)
+        else
+        {
             return
         }
         

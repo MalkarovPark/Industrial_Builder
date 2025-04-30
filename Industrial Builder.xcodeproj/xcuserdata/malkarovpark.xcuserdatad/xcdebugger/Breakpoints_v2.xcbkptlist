@@ -416,7 +416,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "585"
             endingLineNumber = "585"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
+            landmarkName = "build_module_file(module:to:as_internal:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -704,7 +704,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "908"
             endingLineNumber = "908"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
+            landmarkName = "perform_external_compilation(in:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -800,7 +800,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "883"
             endingLineNumber = "883"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
+            landmarkName = "perform_external_compilation(in:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -816,7 +816,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "884"
             endingLineNumber = "884"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
+            landmarkName = "perform_external_compilation(in:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -832,8 +832,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "882"
             endingLineNumber = "882"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
-            landmarkType = "7">
+            landmarkName = "StandardTemplateConstruct"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1120,7 +1120,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "887"
             endingLineNumber = "887"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
+            landmarkName = "perform_external_compilation(in:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1136,7 +1136,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "885"
             endingLineNumber = "885"
-            landmarkName = "build_modules_files(list:to:as_internal:)"
+            landmarkName = "perform_external_compilation(in:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -44,7 +44,7 @@ struct ProcessView: View
                         NavigationLink(destination: PrepareForDevView()
                             .navigationTitle("Development"), label: {
                                 ProcessItemView(title: "Development",
-                                                subtitle: "Prepare industrial project",
+                                                subtitle: "Prepare industrial application project",
                                                 image: Image("prepare_for_dev_icon"))
                             })
                         

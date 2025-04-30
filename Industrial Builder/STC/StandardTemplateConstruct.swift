@@ -935,9 +935,9 @@ public enum InternalExportType: String, Equatable, CaseIterable
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
 {
-    case empty_project = "Empty Project"
-    case from_listing = "From Listing"
-    case mbk_only = "Module Building Kit Only"
+    case empty_project = "Empty project"
+    case from_listing = "From selected listing"
+    case mbk_only = "Module Building Kit only"
 }
 
 //MARK: - Typealiases

@@ -103,6 +103,7 @@ struct InternalModulesBuildView: View
         {
             return BuildModulesList(name: "")
         }
+        
         return base_stc.package_info.build_modules_lists[index]
     }
 }

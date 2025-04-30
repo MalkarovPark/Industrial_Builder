@@ -11,6 +11,8 @@ struct PrepareForDevView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
+    @State private var template_view_presented = false
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -37,7 +39,18 @@ struct PrepareForDevView: View
             {
                 Button("Export")
                 {
+                    template_view_presented = true
                     //external_export_panel_presented = true
+                }
+                .sheet(isPresented: $template_view_presented)
+                {
+                    CodeTemplatesView(is_presented: $template_view_presented, avaliable_templates_names: [
+                        "Internal Robot Controller",
+                        "External Robot Controller"
+                    ])
+                    { output in
+                        print(output)
+                    }
                 }
                 /*.fileImporter(isPresented: $external_export_panel_presented,
                               allowedContentTypes: [.folder],
