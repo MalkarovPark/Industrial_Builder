@@ -310,7 +310,7 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var build_total: Float = 0
     @Published var build_info: String = String()
     
-    // /Progressbar startup info
+    // Progressbar startup info
     private func set_build_info(list: BuildModulesList, as_internal: Bool)
     {
         build_progress = 0
@@ -365,6 +365,17 @@ public class StandardTemplateConstruct: ObservableObject
         #endif
     }
     
+    // MARK: - Process preferences
+    #if os(macOS)
+    @Published var compile_program_elements = true
+    #else
+    @Published var compile_program_elements = false
+    #endif
+    
+    @Published var internal_export_type: InternalExportType = .files_only
+    
+    @Published var prepare_for_dev_type: PrepareForDevType = .blank_project
+    
     // MARK: - Code generation functions
     public func misc_code_process(type: MiscCodeGenerationFunction, input: String = String()) -> String
     {
@@ -377,16 +388,154 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: - Process preferences
-    #if os(macOS)
-    @Published var compile_program_elements = true
-    #else
-    @Published var compile_program_elements = false
-    #endif
+    // MARK: - Prepare for Dev functions
+    // Makes a Swift package project with IndustrialKit framework import (blank project)
+    public func make_industrial_app_project(name: String, to url: URL, remove_tmp_from: URL?)
+    {
+        internal_files_store(["IndustrialAppPackageMake.command", "PBuild.command"], to: url)
+        
+        do
+        {
+            try perform_terminal_command("cd '\(url.path)' && ./IndustrialAppPackageMake.command '\(name)'")
+            /*{ output in
+                let lines = output.components(separatedBy: .newlines)
+                
+                // Find the last non-empty line
+                var last_line: String? = nil
+                for line in lines.reversed()
+                {
+                    if !line.isEmpty
+                    {
+                        last_line = line
+                        break
+                    }
+                }
+                
+                if let last_line = last_line
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.build_info = last_line
+                        self.build_progress += 1
+                    }
+                }
+            }
+            
+            DispatchQueue.main.async
+            {
+                self.build_info += "\nProject creation finished."
+            }*/
+            
+            // Remove unused template blank file
+            if let remove_tmp_from = remove_tmp_from
+            {
+                do
+                {
+                    if FileManager.default.fileExists(atPath: remove_tmp_from.path)
+                    {
+                        try FileManager.default.removeItem(at: remove_tmp_from)
+                    }
+                }
+                catch
+                {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        catch
+        {
+            /*DispatchQueue.main.async
+            {
+                self.build_info += "\nError during external compilation: \(error.localizedDescription)"
+            }*/
+        }
+    }
     
-    @Published var internal_export_type: InternalExportType = .files_only
+    // Makes a Swift package project with IndustrialKit framework import (from file)
+    public func make_industrial_app_project(from file_name: String, to url: URL)
+    {
+        internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command"], to: url)
+        
+        do
+        {
+            try perform_terminal_command("cd '\(url.path)' && ./LtPConvert.command '\(file_name)'")
+        }
+        catch
+        {
+            
+        }
+    }
     
-    @Published var prepare_for_dev_type: PrepareForDevType = .empty_project
+    // Store the Modules Building Kit
+    public func store_mbk(to url: URL)
+    {
+        internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command", "LCompile.command"], to: url)
+    }
+    
+    // Store text files from the app itself to external files
+    private func internal_files_store(_ file_names: [String], to folder_url: URL)
+    {
+        for file_name in file_names
+        {
+            guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { return }
+            let destination_url = folder_url.appendingPathComponent(file_name)
+            
+            do
+            {
+                if FileManager.default.fileExists(atPath: file_url.path)
+                {
+                    try FileManager.default.copyItem(at: file_url, to: destination_url)
+                }
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func perform_external_project_creation(in folder_url: URL)
+    {
+        do
+        {
+            try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
+            { output in
+                let lines = output.components(separatedBy: .newlines)
+                
+                // Find the last non-empty line
+                var last_line: String? = nil
+                for line in lines.reversed()
+                {
+                    if !line.isEmpty
+                    {
+                        last_line = line
+                        break
+                    }
+                }
+                
+                if let last_line = last_line
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.build_info = last_line
+                        self.build_progress += 1
+                    }
+                }
+            }
+            
+            DispatchQueue.main.async
+            {
+                self.build_info += "\nExternal code compilation finished."
+            }
+        }
+        catch
+        {
+            DispatchQueue.main.async
+            {
+                self.build_info += "\nError during external compilation: \(error.localizedDescription)"
+            }
+        }
+    }
     
     // MARK: - Modules build functions
     // Builds modules in separated files.
@@ -508,7 +657,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // /Builds modules in separated files.
+    // Builds modules in separated files.
     private func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
     {
         let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
@@ -868,27 +1017,9 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // MARK: Compilation kit handling (for external)
-    private func compilation_kit_store(to folder_url: URL)
+    private func compilation_kit_store(to url: URL)
     {
-        let file_names = ["LtPConvert.command", "PBuild.command", "LCompile.command", "MPCompile.command"]
-        
-        for file_name in file_names
-        {
-            guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { return }
-            let destination_url = folder_url.appendingPathComponent(file_name)
-            
-            do
-            {
-                if FileManager.default.fileExists(atPath: file_url.path)
-                {
-                    try FileManager.default.copyItem(at: file_url, to: destination_url)
-                }
-            }
-            catch
-            {
-                print(error.localizedDescription)
-            }
-        }
+        internal_files_store(["LtPConvert.command", "PBuild.command", "LCompile.command", "MPCompile.command"], to: url)
     }
     
     #if os(macOS)
@@ -947,7 +1078,7 @@ public enum InternalExportType: String, Equatable, CaseIterable
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
 {
-    case empty_project = "Empty project"
+    case blank_project = "Blank project"
     case from_listing = "From selected listing"
     case mbk_only = "Module Building Kit only"
 }

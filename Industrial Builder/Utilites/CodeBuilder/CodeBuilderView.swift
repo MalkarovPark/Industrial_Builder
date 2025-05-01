@@ -133,6 +133,7 @@ struct CodeBuilderView: View
                         process_template(confirmed_template)
                     }
                 }
+                .disabled(selected_template_name == nil)
             }
         }
     }
