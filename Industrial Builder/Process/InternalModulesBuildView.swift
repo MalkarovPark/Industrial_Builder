@@ -13,7 +13,7 @@ struct InternalModulesBuildView: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @State private var selected_name = String()
+    @State private var selected_name = "internal_modules" //String()
     
     @Binding var document: STCDocument
         
@@ -32,7 +32,6 @@ struct InternalModulesBuildView: View
         VStack(spacing: 0)
         {
             BuildListView(selected_name: $selected_name)
-                .padding(.bottom)
             
             Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
             {
@@ -48,8 +47,8 @@ struct InternalModulesBuildView: View
             #if !os(macOS)
             .modifier(PickerBorderer())
             #endif
+            .padding()
         }
-        .padding()
         .toolbar
         {
             ToolbarItem(placement: .confirmationAction)
@@ -80,13 +79,13 @@ struct InternalModulesBuildView: View
         { _, new_value in
             document.package_info.build_modules_lists = new_value
         }
-        .onAppear
+        /*.onAppear
         {
             if base_stc.package_info.build_modules_lists.count > 0
             {
                 selected_name = base_stc.package_info.build_modules_lists_names.first ?? ""
             }
-        }
+        }*/
         .overlay
         {
             if base_stc.on_building_modules// || true

@@ -34,6 +34,8 @@ struct STCDocument: FileDocument
     init()
     {
         self.package_info = STCPackageInfo()
+        
+        self.package_info.build_modules_lists = [BuildModulesList(name: "internal_modules"), BuildModulesList(name: "external_modules")]
     }
     
     // MARK: - Import functions

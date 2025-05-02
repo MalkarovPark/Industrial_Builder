@@ -87,6 +87,7 @@
 		6255B9232B9E0DD4002B575C /* DocumentUpdateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUpdateHandler.swift; sourceTree = "<group>"; };
 		6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorView.swift; sourceTree = "<group>"; };
 		626450B72DBD4F60001101A5 /* PrepareForDevView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepareForDevView.swift; sourceTree = "<group>"; };
+		626450BA2DC515E8001101A5 /* BuildListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildListsView.swift; sourceTree = "<group>"; };
 		6268723E2BC18D20005F8B3C /* ModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulesView.swift; sourceTree = "<group>"; };
 		626872412BC1A3D2005F8B3C /* ListingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsListView.swift; sourceTree = "<group>"; };
 		626872432BC1A3E5005F8B3C /* ListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingView.swift; sourceTree = "<group>"; };
@@ -247,6 +248,7 @@
 				626A6C0F2DBC170E000395F6 /* ExternalModulesBuildView.swift */,
 				626A6C0D2DBC1702000395F6 /* InternalModulesBuildView.swift */,
 				626450B72DBD4F60001101A5 /* PrepareForDevView.swift */,
+				626450BA2DC515E8001101A5 /* BuildListsView.swift */,
 			);
 			path = Process;
 			sourceTree = "<group>";
