@@ -1,5 +1,5 @@
 {
-  "originHash" : "ffd4fbabbac4af47f5e0f7f6725109ce4700623345b44593abb95f34f17e2cbd",
+  "originHash" : "50992a2c077b53c0dba6008ee2777db8c684a5034f7efa3245d37826406e85fe",
   "pins" : [
     {
       "identity" : "codeeditorview",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/MalkarovPark/IndustrialKit",
       "state" : {
         "branch" : "main",
-        "revision" : "5c45e98341f207114ad980275500faa9c1253e82"
+        "revision" : "48d5abab4fb7a70a80f7ad889bf3b17e18ef7e3a"
       }
     },
     {
