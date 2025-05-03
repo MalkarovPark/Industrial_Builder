@@ -43,7 +43,7 @@ struct CodeBuilderView: View
     {
         ScrollView(.vertical)
         {
-            if view_templates
+            if avaliable_templates_names.count > 0 && view_templates
             {
                 VStack(alignment: .leading, spacing: 8)
                 {
@@ -65,7 +65,7 @@ struct CodeBuilderView: View
                 .padding(8)
             }
             
-            if view_listings
+            if base_stc.listings_files_names.count > 0 && view_listings
             {
                 VStack(alignment: .leading, spacing: 8)
                 {
@@ -87,7 +87,7 @@ struct CodeBuilderView: View
                 .padding(8)
             }
             
-            if view_misc
+            if MiscCodeGenerationFunction.allCases.count > 0 && view_misc
             {
                 VStack(alignment: .leading, spacing: 8)
                 {

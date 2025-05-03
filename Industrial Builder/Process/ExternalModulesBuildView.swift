@@ -31,16 +31,26 @@ struct ExternalModulesBuildView: View
     {
         VStack(spacing: 0)
         {
-            BuildListView(selected_name: $selected_name)
-            
-            Toggle(isOn: $base_stc.compile_program_elements)
+            if base_stc.robot_modules.isEmpty && base_stc.tool_modules.isEmpty && base_stc.part_modules.isEmpty && base_stc.changer_modules.isEmpty
             {
-                Text("Compile program elements")
+                Text("No modules for export")
+                    .font(.title2)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding()
-            #if !os(macOS)
-            .disabled(true)
-            #endif
+            else
+            {
+                BuildListView(selected_name: $selected_name)
+                
+                Toggle(isOn: $base_stc.compile_program_elements)
+                {
+                    Text("Compile program elements")
+                }
+                .padding()
+                #if !os(macOS)
+                .disabled(true)
+                #endif
+            }
         }
         .toolbar
         {
@@ -50,6 +60,7 @@ struct ExternalModulesBuildView: View
                 {
                     external_export_panel_presented = true
                 }
+                .disabled(base_stc.robot_modules.isEmpty && base_stc.tool_modules.isEmpty && base_stc.part_modules.isEmpty && base_stc.changer_modules.isEmpty)
                 .fileImporter(isPresented: $external_export_panel_presented,
                               allowedContentTypes: [.folder],
                               allowsMultipleSelection: false)

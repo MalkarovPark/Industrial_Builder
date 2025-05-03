@@ -15,7 +15,10 @@ struct ListingsListView: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var is_targeted = false
+    
     @State private var new_panel_presented = false
+    @State private var new_listing_name = ""
+    
     @State private var load_panel_presented = false
     @State private var clear_message_presented = false
     
@@ -81,30 +84,32 @@ struct ListingsListView: View
             #if os(visionOS)
             .buttonBorderShape(.circle)
             #endif
-            .popover(isPresented: $new_panel_presented, arrowEdge: default_popover_edge)
+            .sheet(isPresented: $new_panel_presented)
             {
-                AddNewView(is_presented: $new_panel_presented, names: base_stc.listings_files_names)
-                { new_name in
-                    base_stc.listings.append("")
-                    base_stc.listings_files_names.append(new_name)
+                CodeBuilderView(is_presented: $new_panel_presented, avaliable_templates_names: all_code_templates)
+                { output in
+                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listings_files_names)
+                    
+                    base_stc.listings.append(output)
+                    base_stc.listings_files_names.append(new_listing_name)
+                    new_listing_name = ""
                     
                     document_handler.document_update_listings()
                 }
-            }
-            
-            /*Button(action: { clear_message_presented.toggle() })
-            {
-                Image(systemName: "eraser")
-            }
-            .confirmationDialog(Text("Remove all listings?"), isPresented: $clear_message_presented)
-            {
-                Button("Remove", role: .destructive)
+                .toolbar
                 {
-                    base_stc.listings.removeAll()
-                    base_stc.listings_files_names.removeAll()
-                    document_handler.document_update_listings()
+                    ToolbarItem(placement: .automatic)
+                    {
+                        TextField("Name", text: $new_listing_name)
+                            .padding(.trailing)
+                            .frame(minWidth: 128, maxWidth: 256)
+                        #if os(iOS) || os(visionOS)
+                            .frame(idealWidth: 256)
+                            .textFieldStyle(.roundedBorder)
+                        #endif
+                    }
                 }
-            }*/
+            }
             
             Button(action: { load_panel_presented = true })
             {

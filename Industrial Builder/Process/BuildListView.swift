@@ -319,6 +319,34 @@ private enum ModuleType: String, Equatable, CaseIterable
     }
 }
 
+public var all_code_templates: [String] = [
+    "List",
+    "6DOF Controller",
+    "Portal Controller",
+    "External Robot Connector",
+    "External Robot Controller",
+    "Internal Robot Connector",
+    "Internal Robot Controller",
+    "Robot Module",
+    "External Tool Connector",
+    "External Tool Controller",
+    "Internal Tool Connector",
+    "Internal Tool Controller",
+    "Tool Module",
+    "Part Module",
+    "Change External",
+    "Change Internal",
+    "Changer Module"
+]
+
+public var external_app_code_templates: [String] = [
+    "External Robot Connector",
+    "External Robot Controller",
+    "External Tool Connector",
+    "External Tool Controller",
+    "Change External"
+]
+
 #Preview
 {
     BuildListView(selected_name: .constant("UwU"))

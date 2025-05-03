@@ -57,6 +57,7 @@ struct KinematicsListView: View
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar
         {
             Button (action: { add_kinematic_view_presented = true })

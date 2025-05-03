@@ -31,23 +31,33 @@ struct InternalModulesBuildView: View
     {
         VStack(spacing: 0)
         {
-            BuildListView(selected_name: $selected_name)
-            
-            Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
+            if base_stc.robot_modules.isEmpty && base_stc.tool_modules.isEmpty && base_stc.part_modules.isEmpty && base_stc.changer_modules.isEmpty
             {
-                ForEach(InternalExportType.allCases, id: \.self)
-                { export_type in
-                    Text(export_type.rawValue).tag(export_type)
-                    /*if export_type != .xcode_project
-                    {
-                        Text(export_type.rawValue).tag(export_type)
-                    }*/
-                }
+                Text("No modules for export")
+                    .font(.title2)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            #if !os(macOS)
-            .modifier(PickerBorderer())
-            #endif
-            .padding()
+            else
+            {
+                BuildListView(selected_name: $selected_name)
+                
+                Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
+                {
+                    ForEach(InternalExportType.allCases, id: \.self)
+                    { export_type in
+                        Text(export_type.rawValue).tag(export_type)
+                        /*if export_type != .xcode_project
+                        {
+                            Text(export_type.rawValue).tag(export_type)
+                        }*/
+                    }
+                }
+                #if !os(macOS)
+                .modifier(PickerBorderer())
+                #endif
+                .padding()
+            }
         }
         .toolbar
         {
@@ -57,6 +67,7 @@ struct InternalModulesBuildView: View
                 {
                     internal_export_panel_presented = true
                 }
+                .disabled(base_stc.robot_modules.isEmpty && base_stc.tool_modules.isEmpty && base_stc.part_modules.isEmpty && base_stc.changer_modules.isEmpty)
                 .fileImporter(isPresented: $internal_export_panel_presented,
                               allowedContentTypes: [.folder],
                               allowsMultipleSelection: false)

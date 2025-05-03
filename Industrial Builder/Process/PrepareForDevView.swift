@@ -114,10 +114,7 @@ struct PrepareForDevView: View
                 }
                 .sheet(isPresented: $template_view_presented)
                 {
-                    CodeBuilderView(is_presented: $template_view_presented, avaliable_templates_names: [
-                        "Internal Robot Controller",
-                        "External Robot Controller"
-                    ])
+                    CodeBuilderView(is_presented: $template_view_presented, avaliable_templates_names: external_app_code_templates)
                     { output in
                         passed_listing_text = output
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
