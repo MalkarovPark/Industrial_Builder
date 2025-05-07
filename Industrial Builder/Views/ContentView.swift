@@ -28,7 +28,6 @@ struct ContentView: View
             .onAppear
             {
                 base_stc.document_view(document, document_url)
-                
                 base_stc.images_files_names = document.images_files_names
             }
             .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
@@ -72,7 +71,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ComponentsView().modifier(WindowFramer()))
+                                NavigationLink(destination: ComponentsView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                         .badge(components_count)
@@ -99,7 +98,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ModulesView().modifier(WindowFramer()))
+                                NavigationLink(destination: ModulesView())
                                 {
                                     Label(selection.localizedName, systemImage: selection.image_name)
                                         .badge(modules_count)

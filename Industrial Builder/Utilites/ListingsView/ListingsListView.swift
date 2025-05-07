@@ -88,6 +88,11 @@ struct ListingsListView: View
             {
                 CodeBuilderView(is_presented: $new_panel_presented, avaliable_templates_names: all_code_templates)
                 { output in
+                    if new_listing_name.isEmpty
+                    {
+                        new_listing_name = "Name"
+                    }
+                    
                     new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listings_files_names)
                     
                     base_stc.listings.append(output)

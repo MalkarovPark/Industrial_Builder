@@ -20,7 +20,7 @@ case "connect":
 case "disconnect":
     output = disconnect()
 
-case "move_to":
+case "perform":
     output = perform(code: Int(input[1]) ?? 0)
 case "reset_device":
     output = reset_device()

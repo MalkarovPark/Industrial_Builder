@@ -25,6 +25,14 @@ struct ResourcesPackageView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     
+    #if os(macOS)
+    let column_count: Int = 4
+    let grid_spacing: CGFloat = 10
+    #else
+    let column_count: Int = 6
+    let grid_spacing: CGFloat = 16
+    #endif
+    
     public init(resources_names: Binding<[String]?>, main_scene_name: Binding<String?>, nodes_names: Binding<[String]>, on_update: @escaping () -> Void)
     {
         self._resources_names = resources_names

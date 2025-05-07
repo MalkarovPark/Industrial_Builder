@@ -39,80 +39,86 @@ struct CodeBuilderView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 8)]
     
+    let column_count: Int = 6
+    let grid_spacing: CGFloat = 10
+    
     var body: some View
     {
         ScrollView(.vertical)
         {
-            if avaliable_templates_names.count > 0 && view_templates
+            VStack(spacing: 0)
             {
-                VStack(alignment: .leading, spacing: 8)
+                if avaliable_templates_names.count > 0 && view_templates
                 {
-                    Text("Templates")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
+                    VStack(alignment: .leading, spacing: 8)
                     {
-                        ForEach(avaliable_templates_names, id: \.self)
-                        { name in
-                            CodeTileView(
-                                name: name,
-                                image_name: "curlybraces",
-                                is_selected: is_template_selected(name: name, type: .template)
-                            )
+                        Text("Templates")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach(avaliable_templates_names, id: \.self)
+                            { name in
+                                CodeTileView(
+                                    name: name,
+                                    image_name: "curlybraces",
+                                    is_selected: is_template_selected(name: name, type: .template)
+                                )
+                            }
                         }
                     }
+                    .padding(.bottom, 16)
                 }
-                .padding(8)
-            }
-            
-            if base_stc.listings_files_names.count > 0 && view_listings
-            {
-                VStack(alignment: .leading, spacing: 8)
+                
+                if base_stc.listings_files_names.count > 0 && view_listings
                 {
-                    Text("Listings")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
+                    VStack(alignment: .leading, spacing: 8)
                     {
-                        ForEach(base_stc.listings_files_names, id: \.self)
-                        { name in
-                            CodeTileView(
-                                name: name,
-                                image_name: "text.justify.left",
-                                is_selected: is_template_selected(name: name, type: .listing)
-                            )
+                        Text("Listings")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach(base_stc.listings_files_names, id: \.self)
+                            { name in
+                                CodeTileView(
+                                    name: name,
+                                    image_name: "text.justify.left",
+                                    is_selected: is_template_selected(name: name, type: .listing)
+                                )
+                            }
+                            .aspectRatio(1, contentMode: .fit)
                         }
                     }
+                    .padding(.bottom, 16)
                 }
-                .padding(8)
-            }
-            
-            if MiscCodeGenerationFunction.allCases.count > 0 && view_misc
-            {
-                VStack(alignment: .leading, spacing: 8)
+                
+                if MiscCodeGenerationFunction.allCases.count > 0 && view_misc
                 {
-                    Text("Other")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
+                    VStack(alignment: .leading, spacing: 8)
                     {
-                        ForEach(MiscCodeGenerationFunction.allCases, id: \.self)
-                        { function in
-                            CodeTileView(
-                                name: function.rawValue,
-                                image_name: function.image_name,
-                                is_selected: is_template_selected(name: function.rawValue, type: .misc)
-                            )
+                        Text("Other")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach(MiscCodeGenerationFunction.allCases, id: \.self)
+                            { function in
+                                CodeTileView(
+                                    name: function.rawValue,
+                                    image_name: function.image_name,
+                                    is_selected: is_template_selected(name: function.rawValue, type: .misc)
+                                )
+                            }
+                            .aspectRatio(1, contentMode: .fit)
                         }
                     }
+                    //.padding(.bottom, 16)
                 }
-                .padding(8)
             }
+            .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        /*#if os(macOS) || os(visionOS)
-        .fitted()
-        #endif*/
         .toolbar
         {
             ToolbarItem(placement: .cancellationAction)
@@ -206,13 +212,16 @@ struct CodeTileView: View
         ZStack
         {
             Rectangle()
-                .frame(width: 60, height: 60)
                 .foregroundStyle(.ultraThinMaterial)
                 .shadow(radius: is_selected ? 4 : 0)
                 .overlay(alignment: .bottomTrailing)
                 {
                     Text(name)
+                    #if os(macOS)
                         .font(.system(size: 8))
+                    #else
+                        .font(.system(size: 10))
+                    #endif
                         .padding(2)
                         .background
                         {
@@ -225,6 +234,7 @@ struct CodeTileView: View
                 .resizable()
                 .foregroundStyle(.tertiary)
                 .aspectRatio(contentMode: .fit)
+                .fontWeight(.light)
                 .padding()
         }
         .overlay
@@ -238,8 +248,13 @@ struct CodeTileView: View
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
                         .foregroundStyle(.primary)
+                        .fontWeight(.light)
                 }
+                #if os(macOS)
                 .frame(width: 40, height: 40)
+                #else
+                .frame(width: 48, height: 48)
+                #endif
                 .background(.ultraThinMaterial)
             }
         }
@@ -249,9 +264,19 @@ struct CodeTileView: View
             is_selected.toggle()
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .frame(width: 64, height: 64)
+        .aspectRatio(1, contentMode: .fit)
     }
 }
+
+#if !os(macOS)
+struct ToolSubbar: ViewModifier
+{
+    public func body(content: Content) -> some View
+    {
+        content
+    }
+}
+#endif
 
 private enum TemplateType: Equatable, CaseIterable
 {

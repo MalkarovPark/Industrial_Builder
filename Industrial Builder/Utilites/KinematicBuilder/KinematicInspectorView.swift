@@ -39,8 +39,10 @@ struct KinematicInspectorView: View
             .modifier(ListBorderer())
             #if !os(visionOS)
             .padding([.horizontal, .top])
+            #else
+            .padding([.horizontal])
             #endif
-
+            
             PositionControl(location: $app_state.kinematic_preview_robot.pointer_location, rotation: $app_state.kinematic_preview_robot.pointer_rotation, scale: $app_state.kinematic_preview_robot.space_scale)
         }
         #if os(visionOS)

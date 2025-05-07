@@ -53,7 +53,7 @@ struct InternalModulesBuildView: View
                         }*/
                     }
                 }
-                #if !os(macOS)
+                #if os(iOS)
                 .modifier(PickerBorderer())
                 #endif
                 .padding()

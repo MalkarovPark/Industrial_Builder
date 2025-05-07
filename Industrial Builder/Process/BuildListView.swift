@@ -18,99 +18,113 @@ struct BuildListView: View
     @State private var targets_palette_view_presented = false
     @State private var new_panel_presented = false
     
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 8)]
+    //private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 8)]
+    
+    #if os(macOS)
+    let column_count: Int = 4
+    let grid_spacing: CGFloat = 10
+    #else
+    let column_count: Int = 6
+    let grid_spacing: CGFloat = 16
+    #endif
     
     var body: some View
     {
         ScrollView(.vertical)
         {
-            if base_stc.robot_modules.count > 0
+            VStack(spacing: 0)
             {
-                VStack(alignment: .leading, spacing: 8)
+                if base_stc.robot_modules.count > 0
                 {
-                    Text("Robot")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
+                    VStack(alignment: .leading, spacing: 8)
                     {
-                        ForEach (base_stc.robot_modules_names, id: \.self)
-                        { name in
-                            ModuleTileView(
-                                name: name,
-                                image_name: "r.square", color: .green,
-                                is_selected: is_module_selected(name: name, type: .robot)
-                            )
+                        Text("Robot")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach (base_stc.robot_modules_names, id: \.self)
+                            { name in
+                                ModuleTileView(
+                                    name: name,
+                                    image_name: "r.square", color: .green,
+                                    is_selected: is_module_selected(name: name, type: .robot)
+                                )
+                            }
+                        }
+                    }
+                    .padding(.bottom, 16)
+                }
+                
+                if base_stc.tool_modules.count > 0
+                {
+                    VStack(alignment: .leading, spacing: 8)
+                    {
+                        Text("Tool")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach (base_stc.tool_modules_names, id: \.self)
+                            { name in
+                                ModuleTileView(
+                                    name: name,
+                                    image_name: "hammer", color: .teal,
+                                    is_selected: is_module_selected(name: name, type: .tool)
+                                )
+                            }
+                            .aspectRatio(1, contentMode: .fit)
+                        }
+                    }
+                    .padding(.bottom, 16)
+                }
+                
+                if base_stc.part_modules.count > 0
+                {
+                    VStack(alignment: .leading, spacing: 8)
+                    {
+                        Text("Part")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach (base_stc.part_modules_names, id: \.self)
+                            { name in
+                                ModuleTileView(
+                                    name: name,
+                                    image_name: "shippingbox", color: .indigo,
+                                    is_selected: is_module_selected(name: name, type: .part)
+                                )
+                            }
+                            .aspectRatio(1, contentMode: .fit)
+                        }
+                    }
+                    .padding(.bottom, 16)
+                }
+                
+                if base_stc.changer_modules.count > 0
+                {
+                    VStack(alignment: .leading, spacing: 8)
+                    {
+                        Text("Changer")
+                            .font(.title3)
+                        
+                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        {
+                            ForEach (base_stc.changer_modules_names, id: \.self)
+                            { name in
+                                ModuleTileView(
+                                    name: name,
+                                    image_name: "wand.and.rays", color: .pink,
+                                    is_selected: is_module_selected(name: name, type: .changer)
+                                )
+                            }
+                            .aspectRatio(1, contentMode: .fit)
                         }
                     }
                 }
-                .padding(8)
             }
-            
-            if base_stc.tool_modules.count > 0
-            {
-                VStack(alignment: .leading, spacing: 8)
-                {
-                    Text("Tool")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
-                    {
-                        ForEach (base_stc.tool_modules_names, id: \.self)
-                        { name in
-                            ModuleTileView(
-                                name: name,
-                                image_name: "hammer", color: .teal,
-                                is_selected: is_module_selected(name: name, type: .tool)
-                            )
-                        }
-                    }
-                }
-                .padding(8)
-            }
-            
-            if base_stc.part_modules.count > 0
-            {
-                VStack(alignment: .leading, spacing: 8)
-                {
-                    Text("Part")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
-                    {
-                        ForEach (base_stc.part_modules_names, id: \.self)
-                        { name in
-                            ModuleTileView(
-                                name: name,
-                                image_name: "shippingbox", color: .indigo,
-                                is_selected: is_module_selected(name: name, type: .part)
-                            )
-                        }
-                    }
-                }
-                .padding(8)
-            }
-            
-            if base_stc.changer_modules.count > 0
-            {
-                VStack(alignment: .leading, spacing: 8)
-                {
-                    Text("Changer")
-                        .font(.title3)
-                    
-                    LazyVGrid(columns: columns, spacing: 8)
-                    {
-                        ForEach (base_stc.changer_modules_names, id: \.self)
-                        { name in
-                            ModuleTileView(
-                                name: name,
-                                image_name: "wand.and.rays", color: .pink,
-                                is_selected: is_module_selected(name: name, type: .changer)
-                            )
-                        }
-                    }
-                }
-                .padding(8)
-            }
+            .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onChange(of: base_stc.package_info.build_modules_lists)
@@ -241,7 +255,6 @@ struct ModuleTileView: View
         ZStack
         {
             Rectangle()
-                .frame(width: 60, height: 60)
                 .foregroundStyle(color)
                 .overlay(alignment: .trailing)
                 {
@@ -254,14 +267,22 @@ struct ModuleTileView: View
                         .foregroundColor(Color(UIColor.quaternaryLabel))
                     #endif
                         .padding()
+                    #if os(macOS)
                         .offset(x: 30, y: 20)
+                    #else
+                        .offset(x: 35, y: 25)
+                    #endif
                 }
                 .overlay(alignment: .topLeading)
                 {
                     VStack(spacing: 0)
                     {
                         Text(name)
-                            .font(.system(size: 10))
+                        #if os(macOS)
+                            .font(.system(size: 12))
+                        #else
+                            .font(.system(size: 16))
+                        #endif
                             .foregroundColor(.white)
                             .padding(4)
                     }
@@ -281,7 +302,11 @@ struct ModuleTileView: View
                         .frame(width: 16, height: 16)
                         .foregroundStyle(.primary)
                 }
+                #if os(macOS)
                 .frame(width: 40, height: 40)
+                #else
+                .frame(width: 48, height: 48)
+                #endif
                 .background(.ultraThinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
             }
@@ -292,7 +317,7 @@ struct ModuleTileView: View
             is_selected.toggle()
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .frame(width: 64, height: 64)
+        .aspectRatio(1, contentMode: .fit)
     }
 }
 

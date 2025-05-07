@@ -99,12 +99,11 @@ struct ProcessItemView: View
                     .scaledToFit()
                     .foregroundStyle(.white)
             }
-#if os(macOS)
+            #if os(macOS)
             .frame(width: 40, height: 40)
-#else
+            #else
             .frame(width: 48, height: 48)
-#endif
-            // .frame(width: 32, height: 32)
+            #endif
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             
             VStack(alignment: .leading)
@@ -120,11 +119,11 @@ struct ProcessItemView: View
             Image(systemName: "chevron.right")
                 .padding(.trailing, 8)
         }
-#if os(iOS)
+        #if os(iOS)
         .padding(10)
-#else
+        #else
         .padding(.vertical, 8)
-#endif
+        #endif
         .frame(maxWidth: .infinity)
     }
 }

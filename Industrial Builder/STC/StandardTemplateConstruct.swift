@@ -396,6 +396,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         do
         {
+            #if os(macOS)
             try perform_terminal_command("cd '\(url.path)' && ./IndustrialAppPackageMake.command '\(name)'")
             /*{ output in
                 let lines = output.components(separatedBy: .newlines)
@@ -425,6 +426,7 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 self.build_info += "\nProject creation finished."
             }*/
+            #endif
             
             // Remove unused template blank file
             if let remove_tmp_from = remove_tmp_from
@@ -456,6 +458,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command"], to: url)
         
+        #if os(macOS)
         do
         {
             try perform_terminal_command("cd '\(url.path)' && ./LtPConvert.command '\(file_name)'")
@@ -464,6 +467,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             
         }
+        #endif
     }
     
     // Store the Modules Building Kit
@@ -496,6 +500,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     private func perform_external_project_creation(in folder_url: URL)
     {
+        #if os(macOS)
         do
         {
             try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
@@ -535,6 +540,7 @@ public class StandardTemplateConstruct: ObservableObject
                 self.build_info += "\nError during external compilation: \(error.localizedDescription)"
             }
         }
+        #endif
     }
     
     // MARK: - Modules build functions

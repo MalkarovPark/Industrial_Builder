@@ -34,7 +34,7 @@ struct PackageView: View
             //BuildView(document: $document)
                 //.modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
             ProcessView(document: $document, is_presented: $build_view_presented)
-            #if os(macOS) || os(visionOS)
+            #if os(macOS)// || os(visionOS)
                 .fitted()
             #endif
             #if os(macOS)

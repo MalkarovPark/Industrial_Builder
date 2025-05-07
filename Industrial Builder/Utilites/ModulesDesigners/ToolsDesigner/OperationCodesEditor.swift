@@ -84,7 +84,7 @@ struct OperationCodesEditor: View
                     {
                         Text("Add")
                         
-                        #if !os(visionOS)
+                        #if os(macOS)
                         Divider()
                         #endif
                         
