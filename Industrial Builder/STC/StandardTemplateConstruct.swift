@@ -818,6 +818,9 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
                 try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
+                
+                //let updated_code_item = code_item.value.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                //try updated_code_item.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
         }
         

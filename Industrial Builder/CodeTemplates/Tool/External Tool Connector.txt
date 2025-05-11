@@ -2,49 +2,124 @@
 // Tool Connector
 //
 
-import Darwin
 import SceneKit
 import IndustrialKit
 
-// MARK: - Main
-guard CommandLine.arguments.count > 0 else { exit(1) }
+let socket_path = "/tmp/<#Name#>_tool_connector_socket"
 
-let input: [String] = CommandLine.arguments.dropFirst().compactMap { String($0) }
+var performed = true
 
-var output = String()
+// Remove old socket if exists
+unlink(socket_path)
 
-switch input.first // Function Name
+// Create socket
+let server_socket = socket(AF_UNIX, SOCK_STREAM, 0)
+guard server_socket >= 0 else
 {
-case "connect":
-    output = connect(parameters: Array(input.dropFirst()))
-case "disconnect":
-    output = disconnect()
-
-case "perform":
-    output = perform(code: Int(input[1]) ?? 0)
-case "reset_device":
-    output = reset_device()
-    
-case "info_output":
-    output = info_output()
-    
-case "updated_charts_data":
-    output = updated_charts_data().json_string()
-case "updated_states_data":
-    output = updated_states_data().json_string()
-case "initial_charts_data":
-    output = initial_charts_data().json_string()
-case "initial_states_data":
-    output = updated_states_data().json_string()
-
-case "sync_model":
-    output = sync_model()
-
-default:
-    break
+    fatalError("Failed to create socket")
 }
 
-print(output, terminator: "")
+// Setup socket address
+var addr = sockaddr_un()
+addr.sun_family = sa_family_t(AF_UNIX)
+
+let path_cstring = socket_path.utf8CString
+withUnsafeMutableBytes(of: &addr.sun_path)
+{ buffer in
+    for (i, c) in path_cstring.enumerated()
+    {
+        buffer[i] = UInt8(bitPattern: c)
+    }
+}
+
+let addr_size = socklen_t(MemoryLayout.size(ofValue: addr))
+
+withUnsafePointer(to: &addr)
+{
+    $0.withMemoryRebound(to: sockaddr.self, capacity: 1)
+    { ptr in
+        if bind(server_socket, ptr, addr_size) != 0
+        {
+            fatalError("Failed to bind socket")
+        }
+    }
+}
+
+if listen(server_socket, 5) != 0
+{
+    fatalError("Failed to listen on socket")
+}
+
+print("Tool connector server started on \(socket_path)")
+
+// MARK: - Accept Loop
+while performed
+{
+    var client_addr = sockaddr()
+    var client_addr_len = socklen_t(MemoryLayout<sockaddr>.size)
+    let client_socket = accept(server_socket, &client_addr, &client_addr_len)
+    
+    guard client_socket >= 0 else
+    {
+        print("Failed to accept connection")
+        continue
+    }
+    
+    var buffer = [UInt8](repeating: 0, count: 2048)
+    let bytes_read = read(client_socket, &buffer, buffer.count)
+    
+    if bytes_read > 0
+    {
+        if let command = String(bytes: buffer.prefix(bytes_read), encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        {
+            let parts = command.split(separator: " ").map(String.init)
+            let input = parts.dropFirst()
+            var output = ""
+            
+            switch parts.first
+            {
+            case "connect":
+                output = connect(parameters: Array(input.dropFirst()))
+            case "disconnect":
+                output = disconnect()
+
+            case "perform":
+                output = perform(code: Int(input[1]) ?? 0)
+            case "reset_device":
+                output = reset_device()
+                
+            case "info_output":
+                output = info_output()
+                
+            case "updated_charts_data":
+                output = updated_charts_data().json_string()
+            case "updated_states_data":
+                output = updated_states_data().json_string()
+            case "initial_charts_data":
+                output = initial_charts_data().json_string()
+            case "initial_states_data":
+                output = updated_states_data().json_string()
+
+            case "sync_model":
+                output = sync_model()
+                
+            case "stop":
+                output = "Component stopped"
+                performed = false
+            default:
+                output = "Unknown command"
+            }
+            
+            let result = output + "\n"
+            _ = result.utf8.withContiguousStorageIfAvailable {
+                write(client_socket, $0.baseAddress!, $0.count)
+            }
+        }
+    }
+    
+    close(client_socket)
+}
 
 // MARK: - Connection
 func connect(parameters: [String]) -> String

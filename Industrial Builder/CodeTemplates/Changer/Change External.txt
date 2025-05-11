@@ -2,16 +2,107 @@
 // Change Func
 //
 
-import Darwin
+import SceneKit
+import IndustrialKit
 
-// MARK: - Main
-guard CommandLine.arguments.count > 0 else { exit(1) }
+let socket_path = "/tmp/<#Name#>_change_socket"
 
-var registers: [Float] = CommandLine.arguments.dropFirst().compactMap { Float($0) }
+var performed = true
 
-change(registers: &registers)
+// Remove old socket if exists
+unlink(socket_path)
 
-print(registers.map { String($0) }.joined(separator: " "), terminator: "")
+// Create socket
+let server_socket = socket(AF_UNIX, SOCK_STREAM, 0)
+guard server_socket >= 0 else
+{
+    fatalError("Failed to create socket")
+}
+
+// Setup socket address
+var addr = sockaddr_un()
+addr.sun_family = sa_family_t(AF_UNIX)
+
+let path_cstring = socket_path.utf8CString
+withUnsafeMutableBytes(of: &addr.sun_path)
+{ buffer in
+    for (i, c) in path_cstring.enumerated()
+    {
+        buffer[i] = UInt8(bitPattern: c)
+    }
+}
+
+let addr_size = socklen_t(MemoryLayout.size(ofValue: addr))
+
+withUnsafePointer(to: &addr)
+{
+    $0.withMemoryRebound(to: sockaddr.self, capacity: 1)
+    { ptr in
+        if bind(server_socket, ptr, addr_size) != 0
+        {
+            fatalError("Failed to bind socket")
+        }
+    }
+}
+
+if listen(server_socket, 5) != 0
+{
+    fatalError("Failed to listen on socket")
+}
+
+print("Changer func server started on \(socket_path)")
+
+// MARK: - Accept Loop
+while performed
+{
+    var client_addr = sockaddr()
+    var client_addr_len = socklen_t(MemoryLayout<sockaddr>.size)
+    let client_socket = accept(server_socket, &client_addr, &client_addr_len)
+    
+    guard client_socket >= 0 else
+    {
+        print("Failed to accept connection")
+        continue
+    }
+    
+    var buffer = [UInt8](repeating: 0, count: 2048)
+    let bytes_read = read(client_socket, &buffer, buffer.count)
+    
+    if bytes_read > 0
+    {
+        if let command = String(bytes: buffer.prefix(bytes_read), encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        {
+            let parts = command.split(separator: " ").map(String.init)
+            let input = parts.dropFirst()
+            var output = ""
+            
+            print(parts.first)
+            print(parts)
+            
+            switch parts.first
+            {
+            case "change":
+                var registers: [Float] = input.compactMap { Float($0) }
+                change(registers: &registers)
+                output = registers.map { String($0) }.joined(separator: " ")
+                
+            case "stop":
+                output = "Component stopped"
+                performed = false
+            default:
+                output = "Unknown command"
+            }
+            
+            let result = output + "\n"
+            _ = result.utf8.withContiguousStorageIfAvailable {
+                write(client_socket, $0.baseAddress!, $0.count)
+            }
+        }
+    }
+    
+    close(client_socket)
+}
 
 // MARK: - Function
 func change(registers: inout [Float])
