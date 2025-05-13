@@ -41,12 +41,10 @@ struct Sidebar: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    #if !os(macOS)
     @State private var components_section_expanded = true
     @State private var objects_section_expanded = true
     
-    // @State var settings_view_presented = false
-    
+    #if !os(macOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
     
     @Environment(\.dismiss) private var dismiss
@@ -65,7 +63,7 @@ struct Sidebar: View
                         if selection == .ComponentsView
                         {
                             #if os(macOS)
-                            DisclosureGroup
+                            DisclosureGroup(isExpanded: $components_section_expanded)
                             {
                                 ComponentsSidebarGroup()
                             }
@@ -73,8 +71,15 @@ struct Sidebar: View
                             {
                                 NavigationLink(destination: ComponentsView())
                                 {
-                                    Label(selection.localizedName, systemImage: selection.image_name)
-                                        .badge(components_count)
+                                    if !components_section_expanded
+                                    {
+                                        Label(selection.localizedName, systemImage: selection.image_name)
+                                            .badge(components_count)
+                                    }
+                                    else
+                                    {
+                                        Label(selection.localizedName, systemImage: selection.image_name)
+                                    }
                                 }
                             }
                             #else
@@ -92,7 +97,7 @@ struct Sidebar: View
                         else if selection == .ModulesView
                         {
                             #if os(macOS)
-                            DisclosureGroup
+                            DisclosureGroup(isExpanded: $objects_section_expanded)
                             {
                                 ModulesSidebarGroup()
                             }
@@ -100,8 +105,15 @@ struct Sidebar: View
                             {
                                 NavigationLink(destination: ModulesView())
                                 {
-                                    Label(selection.localizedName, systemImage: selection.image_name)
-                                        .badge(modules_count)
+                                    if !objects_section_expanded
+                                    {
+                                        Label(selection.localizedName, systemImage: selection.image_name)
+                                            .badge(modules_count)
+                                    }
+                                    else
+                                    {
+                                        Label(selection.localizedName, systemImage: selection.image_name)
+                                    }
                                 }
                             }
                             #else
@@ -142,7 +154,7 @@ struct Sidebar: View
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar
                 {
-                    ToolbarItem
+                    /*ToolbarItem
                     {
                         HStack(alignment: .center)
                         {
@@ -162,7 +174,7 @@ struct Sidebar: View
                             .buttonBorderShape(.circle)
                             #endif*/
                         }
-                    }
+                    }*/
                 }
                 /*.sheet(isPresented: $app_state.settings_view_presented)
                 {
@@ -179,7 +191,7 @@ struct Sidebar: View
                 #endif
                 .listStyle(.sidebar)
                 #if os(macOS)
-                .navigationSplitViewColumnWidth(min: 150, ideal: 150)
+                .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
                 #endif
             }
             detail:

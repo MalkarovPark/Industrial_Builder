@@ -18,86 +18,92 @@ struct PartModulesView: View
     @State private var rename_item: PartModule.ID?
     @State private var new_name = ""
     
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
+    
+    @State private var picker_in_rename: Bool = false
+    #endif
+    
     var body: some View
     {
         HStack(spacing: 0)
         {
-            // MARK: - List View
-            List(selection: $selection)
+            if sidebar_enabled
             {
-                ForEach($base_stc.part_modules)
-                { $item in
-                    HStack
-                    {
-                        if rename_item == item.id
+                // MARK: - List View
+                List(selection: $selection)
+                {
+                    ForEach($base_stc.part_modules)
+                    { $item in
+                        HStack
                         {
-                            TextField("Input New Name", text: $new_name)
-                                .onSubmit
+                            if rename_item == item.id
                             {
-                                item.name = new_name
-                                rename_item = nil
-                                new_name = ""
+                                TextField("Input new Name", text: $new_name)
+                                    .onSubmit
+                                {
+                                    item.name = new_name
+                                    document_handler.document_update_parts()
+                                    rename_item = nil
+                                    new_name = ""
+                                }
+                            }
+                            else
+                            {
+                                Text(item.name)
+                            }
+                            Spacer()
+                        }
+                        .listRowSeparator(.hidden)
+                        .contentShape(Rectangle())
+                        .contextMenu
+                        {
+                            Button
+                            {
+                                rename_item = item.id
+                                new_name = item.name
+                            }
+                            label:
+                            {
+                                Label("Rename", systemImage: "pencil")
+                            }
+                            Button(role: .destructive)
+                            {
+                                if let index = base_stc.part_modules.firstIndex(where: { $0.id == item.id })
+                                {
+                                    base_stc.part_modules.remove(at: index)
+                                }
+                            }
+                            label:
+                            {
+                                Label("Delete", systemImage: "trash")
                             }
                         }
-                        else
+                        .swipeActions
                         {
-                            Text(item.name)
-                        }
-                        Spacer()
-                    }
-                    .listRowSeparator(.hidden)
-                    .contentShape(Rectangle())
-                    .contextMenu
-                    {
-                        Button
-                        {
-                            rename_item = item.id
-                            new_name = item.name
-                        }
-                        label:
-                        {
-                            Label("Rename", systemImage: "pencil")
-                        }
-                        Button(role: .destructive)
-                        {
-                            if let index = base_stc.part_modules.firstIndex(where: { $0.id == item.id })
+                            Button(role: .destructive)
                             {
-                                base_stc.part_modules.remove(at: index)
+                                if let index = base_stc.part_modules.firstIndex(where: { $0.id == item.id })
+                                {
+                                    base_stc.part_modules.remove(at: index)
+                                }
                             }
-                        }
-                        label:
-                        {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    }
-                    .swipeActions
-                    {
-                        Button(role: .destructive)
-                        {
-                            if let index = base_stc.part_modules.firstIndex(where: { $0.id == item.id })
+                            label:
                             {
-                                base_stc.part_modules.remove(at: index)
+                                Label("Delete", systemImage: "trash")
                             }
-                        }
-                        label:
-                        {
-                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
-            }
-            #if os(macOS)
-            .frame(maxWidth: 128)
-            #elseif os(iOS)
-            .frame(maxWidth: 192)
-            #else
-            .frame(maxWidth: 256)
-            .background(.thinMaterial)
-            #endif
-            .listStyle(.plain)
-            .onChange(of: base_stc.part_modules)
-            { _, _ in
-                document_handler.document_update_parts()
+                #if os(macOS)
+                .frame(maxWidth: 128)
+                #elseif os(iOS)
+                .frame(maxWidth: 192)
+                #elseif os(visionOS)
+                .frame(maxWidth: 256)
+                .background(.thinMaterial)
+                #endif
+                .listStyle(.plain)
             }
             
             #if !os(visionOS)
@@ -125,6 +131,31 @@ struct PartModulesView: View
                 #endif
             }
         }
+        .onChange(of: base_stc.part_modules)
+        { _, _ in
+            document_handler.document_update_parts()
+        }
+        #if os(iOS)
+        .onAppear
+        {
+            if horizontal_size_class == .compact && base_stc.part_modules.count > 0
+            {
+                selection = base_stc.part_modules.first?.id
+            }
+        }
+        .onChange(of: horizontal_size_class)
+        { _, new_value in
+            if new_value == .compact && base_stc.part_modules.count > 0 && selection == nil
+            {
+                selection = base_stc.part_modules.first?.id
+            }
+            
+            if new_value != .compact
+            {
+                picker_in_rename = false
+            }
+        }
+        #endif
         .toolbar
         {
             ToolbarItem
@@ -141,13 +172,95 @@ struct PartModulesView: View
                     AddNewView(is_presented: $new_module_view_presented, names: base_stc.part_modules_names)
                     { new_name in
                         base_stc.part_modules.append(PartModule(new_name: new_name))
+                        selection = base_stc.part_modules.last?.id
                     }
                 }
             }
+            
+            #if os(iOS)
+            if horizontal_size_class == .compact && base_stc.part_modules.count > 0
+            {
+                ToolbarItem(placement: .bottomBar)
+                {
+                    HStack
+                    {
+                        if picker_in_rename
+                        {
+                            TextField("Input new name", text: $new_name)
+                                .onSubmit
+                            {
+                                if let selected_module_index = base_stc.part_modules.firstIndex(where: { $0.id == selection })
+                                {
+                                    base_stc.part_modules[selected_module_index].name = new_name
+                                }
+                                
+                                document_handler.document_update_parts()
+                                picker_in_rename = false
+                                new_name = ""
+                            }
+                        }
+                        else
+                        {
+                            Picker(selection: $selection, label: Text("Picker"))
+                            {
+                                ForEach($base_stc.part_modules)
+                                { $item in
+                                    Text(item.name)
+                                        .tag(item.id)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .labelsHidden()
+                        }
+                        
+                        Button
+                        {
+                            picker_in_rename = true
+                            if let selected_module_index = base_stc.part_modules.firstIndex(where: { $0.id == selection })
+                            {
+                                new_name = base_stc.part_modules[selected_module_index].name
+                            }
+                        }
+                        label:
+                        {
+                            Label("Rename", systemImage: "pencil")
+                        }
+                        
+                        Button(role: .destructive)
+                        {
+                            if let index = base_stc.part_modules.firstIndex(where: { $0.id == selection })
+                            {
+                                base_stc.part_modules.remove(at: index)
+                                
+                                if base_stc.part_modules.count > 0
+                                {
+                                    selection = base_stc.part_modules.first?.id
+                                }
+                            }
+                        }
+                        label:
+                        {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .disabled(picker_in_rename)
+                    }
+                    .padding()
+                }
+            }
+            #endif
         }
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)
+        #endif
+    }
+    
+    private var sidebar_enabled: Bool
+    {
+        #if !os(iOS)
+        return true
+        #else
+        return horizontal_size_class != .compact
         #endif
     }
 }

@@ -695,22 +695,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "78A2C3DD-2FCC-417D-BD29-C3B2119F6C8F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/Utilites/ModulesDesigners/IMADesigner/ChangerModulesView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
-            landmarkName = "ChangerModulesView"
-            landmarkType = "14">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "9CED5739-6BD9-4395-A032-14D175789E28"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -718,8 +702,8 @@
             filePath = "Industrial Builder/Utilites/ModulesDesigners/ToolsDesigner/ToolModuleDesigner.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
             landmarkName = "ToolModuleDesigner"
             landmarkType = "14">
          </BreakpointContent>
@@ -750,8 +734,8 @@
             filePath = "Industrial Builder/Utilites/ModulesDesigners/ToolsDesigner/OperationCodesEditor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
             landmarkName = "add_code()"
             landmarkType = "7">
          </BreakpointContent>
@@ -766,8 +750,8 @@
             filePath = "Industrial Builder/Utilites/ModulesDesigners/ToolsDesigner/OperationCodesEditor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "delete_opcode(index:)"
             landmarkType = "7">
          </BreakpointContent>

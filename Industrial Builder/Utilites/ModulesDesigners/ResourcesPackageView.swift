@@ -23,14 +23,10 @@ struct ResourcesPackageView: View
     
     let on_update: () -> ()
     
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
-    
     #if os(macOS)
-    let column_count: Int = 4
-    let grid_spacing: CGFloat = 10
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     #else
-    let column_count: Int = 6
-    let grid_spacing: CGFloat = 16
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 80, maximum: .infinity), spacing: 16)]
     #endif
     
     public init(resources_names: Binding<[String]?>, main_scene_name: Binding<String?>, nodes_names: Binding<[String]>, on_update: @escaping () -> Void)
@@ -60,7 +56,7 @@ struct ResourcesPackageView: View
         {
             Spacer(minLength: 10)
             
-            LazyVGrid(columns: columns, spacing: 24)
+            LazyVGrid(columns: columns, spacing: 16)
             {
                 ForEach(base_stc.scenes.indices, id: \.self)
                 { index in
@@ -94,7 +90,7 @@ struct ResourcesPackageView: View
             
             Divider()
             
-            LazyVGrid(columns: columns, spacing: 24)
+            LazyVGrid(columns: columns, spacing: 16)
             {
                 ForEach(base_stc.images.indices, id: \.self)
                 { index in

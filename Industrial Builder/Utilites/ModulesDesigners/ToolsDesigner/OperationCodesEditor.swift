@@ -84,24 +84,23 @@ struct OperationCodesEditor: View
                     {
                         Text("Add")
                         
-                        #if os(macOS)
-                        Divider()
-                        #endif
-                        
-                        // Image(systemName: new_code_symbol)
                         if is_valid_symbol(new_code_symbol)
                         {
-                            #if os(macOS)
-                            Image(nsImage: NSImage(systemSymbolName: new_code_symbol, accessibilityDescription: nil) ?? NSImage())
-                            #else
-                            Image(systemName: new_code_symbol)
+                            Divider()
+                            #if !os(macOS)
+                                .frame(height: 16)
                             #endif
+                            
+                            Image(systemName: new_code_symbol)
                         }
                     }
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(tool_operations.contains(where: { $0.value == new_code_value }))
                 .padding()
+                #if os(iOS)
+                .buttonStyle(.borderedProminent)
+                #endif
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))

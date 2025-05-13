@@ -37,10 +37,11 @@ struct CodeBuilderView: View
         self.process_template = process_template
     }
     
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 8)]
-    
-    let column_count: Int = 6
-    let grid_spacing: CGFloat = 10
+    #if os(macOS)
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
+    #else
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 16)]
+    #endif
     
     var body: some View
     {
@@ -55,7 +56,7 @@ struct CodeBuilderView: View
                         Text("Templates")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
                             ForEach(avaliable_templates_names, id: \.self)
                             { name in
@@ -77,7 +78,7 @@ struct CodeBuilderView: View
                         Text("Listings")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
                             ForEach(base_stc.listings_files_names, id: \.self)
                             { name in
@@ -100,7 +101,7 @@ struct CodeBuilderView: View
                         Text("Other")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
                             ForEach(MiscCodeGenerationFunction.allCases, id: \.self)
                             { function in

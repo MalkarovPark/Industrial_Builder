@@ -22,12 +22,17 @@ struct ToolModuleDesigner: View
     @State private var connection_parameters_view_presented: Bool = false
     @State private var linked_components_view_presented: Bool = false
     
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
+    #endif
+    
     var body: some View
     {
         VStack(spacing: 0)
         {
             HStack(spacing: 0)
             {
+                #if !os(iOS)
                 Picker(selection: $editor_selection, label: Text("Picker"))
                 {
                     Text("Description").tag(0)
@@ -38,11 +43,44 @@ struct ToolModuleDesigner: View
                 .pickerStyle(.segmented)
                 .labelsHidden()
                 .padding(.trailing)
+                #else
+                if horizontal_size_class != .compact
+                {
+                    Picker(selection: $editor_selection, label: Text("Picker"))
+                    {
+                        Text("Description").tag(0)
+                        Text("Operations").tag(1)
+                        Text("Code").tag(2)
+                        Text("Resources").tag(3)
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .padding(.trailing)
+                }
+                else
+                {
+                    Picker(selection: $editor_selection, label: Text("Picker"))
+                    {
+                        Text("Description").tag(0)
+                        Text("Operations").tag(1)
+                        Text("Code").tag(2)
+                        Text("Resources").tag(3)
+                    }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .modifier(PickerBorderer())
+                    .padding(.trailing)
+                }
+                #endif
                 
                 Button(action: { connection_parameters_view_presented.toggle() })
                 {
                     Image(systemName: "link")
                 }
+                #if os(iOS)
+                .frame(width: 32, height: 32)
+                .modifier(ButtonBorderer())
+                #endif
                 .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .top)
                 {
                     ConnectionParametersView(connection_parameters: $tool_module.connection_parameters)
@@ -56,6 +94,10 @@ struct ToolModuleDesigner: View
                 {
                     Image(systemName: "list.triangle")
                 }
+                #if os(iOS)
+                .frame(width: 32, height: 32)
+                .modifier(ButtonBorderer())
+                #endif
                 .popover(isPresented: $linked_components_view_presented, arrowEdge: default_popover_edge_inverted)
                 {
                     LinkedComponentsView(linked_components: $tool_module.linked_components)
