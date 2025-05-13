@@ -86,6 +86,7 @@ struct ListingsListView: View
             #endif
             .sheet(isPresented: $new_panel_presented)
             {
+                #if os(macOS)
                 CodeBuilderView(is_presented: $new_panel_presented, avaliable_templates_names: all_code_templates)
                 { output in
                     if new_listing_name.isEmpty
@@ -114,6 +115,31 @@ struct ListingsListView: View
                         #endif
                     }
                 }
+                #else
+                CodeBuilderView(is_presented: $new_panel_presented,
+                                avaliable_templates_names: all_code_templates,
+                                bottom_view:
+                                    TextField("Name", text: $new_listing_name)
+                                        .padding(.trailing)
+                                        .frame(minWidth: 128, maxWidth: 256)
+                                        .frame(idealWidth: 256)
+                                        .textFieldStyle(.roundedBorder)
+                )
+                { output in
+                    if new_listing_name.isEmpty
+                    {
+                        new_listing_name = "Name"
+                    }
+                    
+                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listings_files_names)
+                    
+                    base_stc.listings.append(output)
+                    base_stc.listings_files_names.append(new_listing_name)
+                    new_listing_name = ""
+                    
+                    document_handler.document_update_listings()
+                }
+                #endif
             }
             
             Button(action: { load_panel_presented = true })

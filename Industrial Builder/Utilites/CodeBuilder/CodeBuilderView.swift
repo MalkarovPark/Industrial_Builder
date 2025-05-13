@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+#if os(iOS)
+import IndustrialKit
+#endif
 
 struct CodeBuilderView: View
 {
@@ -24,6 +27,11 @@ struct CodeBuilderView: View
     @State private var selected_template_name: String?
     @State private var selected_template_type: TemplateType = .none
     
+    #if !os(macOS)
+    private var bottom_view: AnyView = AnyView(EmptyView())
+    #endif
+    
+    #if os(macOS)
     public init(is_presented: Binding<Bool>, avaliable_templates_names: [String] = [], process_template: @escaping (String) -> Void)
     {
         self._is_presented = is_presented
@@ -36,6 +44,22 @@ struct CodeBuilderView: View
         
         self.process_template = process_template
     }
+    #else
+    public init<V: View>(is_presented: Binding<Bool>, avaliable_templates_names: [String] = [], bottom_view: V = AnyView(EmptyView()), process_template: @escaping (String) -> Void)
+    {
+        self._is_presented = is_presented
+        
+        self.avaliable_templates_names = avaliable_templates_names
+        if avaliable_templates_names.count > 0
+        {
+            view_templates = true
+        }
+        
+        self.process_template = process_template
+        
+        self.bottom_view = AnyView(bottom_view)
+    }
+    #endif
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
@@ -120,6 +144,7 @@ struct CodeBuilderView: View
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        #if os(macOS)
         .toolbar
         {
             ToolbarItem(placement: .cancellationAction)
@@ -143,6 +168,39 @@ struct CodeBuilderView: View
                 .disabled(selected_template_name == nil)
             }
         }
+        #endif
+        #if !os(macOS)
+        .modifier(BottomToolbarModifier(bottom_view:
+                                            HStack(spacing: 0)
+                                        {
+            bottom_view
+            
+            Spacer()
+            
+            Button("Cancel")
+            {
+                is_presented = false
+            }
+            #if os(iOS)
+            .modifier(ButtonBorderer())
+            #endif
+            .padding(.trailing)
+            
+            Button("Confirm")
+            {
+                is_presented = false
+                if let confirmed_template = template
+                {
+                    process_template(confirmed_template)
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .keyboardShortcut(.defaultAction)
+            .disabled(selected_template_name == nil)
+        }
+            .padding()
+                                       ))
+        #endif
     }
     
     private func is_template_selected(name: String, type: TemplateType) -> Binding<Bool>
@@ -285,6 +343,28 @@ private enum TemplateType: Equatable, CaseIterable
     case template
     case listing
     case misc
+}
+
+struct BottomToolbarModifier: ViewModifier
+{
+    var bottom_view: AnyView = AnyView(EmptyView())
+    
+    public init<V: View>(bottom_view: V = AnyView(EmptyView()))
+    {
+        self.bottom_view = AnyView(bottom_view)
+    }
+    
+    public func body(content: Content) -> some View
+    {
+        VStack(spacing: 0)
+        {
+            content
+            
+            Divider()
+            
+            bottom_view
+        }
+    }
 }
 
 #Preview
