@@ -69,7 +69,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ComponentsView())
+                                NavigationLink(destination: ComponentsView().modifier(WindowFramer()))
                                 {
                                     if !components_section_expanded
                                     {
@@ -103,7 +103,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ModulesView())
+                                NavigationLink(destination: ModulesView().modifier(WindowFramer()))
                                 {
                                     if !objects_section_expanded
                                     {
@@ -188,11 +188,10 @@ struct Sidebar: View
                     .frame(width: 512, height: 512)
                     #endif
                 }*/
-                #endif
-                .listStyle(.sidebar)
-                #if os(macOS)
+                #else
                 .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
                 #endif
+                .listStyle(.sidebar)
             }
             detail:
             {
@@ -226,25 +225,25 @@ struct ComponentsSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: ScenesListView())
+        NavigationLink(destination: ScenesListView().modifier(WindowFramer()))
         {
             Label("Scenes", systemImage: "cube")
                 .badge(base_stc.scenes.count)
         }
         
-        NavigationLink(destination: ImagesListView())
+        NavigationLink(destination: ImagesListView().modifier(WindowFramer()))
         {
             Label("Images", systemImage: "photo")
                 .badge(base_stc.images.count)
         }
         
-        NavigationLink(destination: ListingsListView())
+        NavigationLink(destination: ListingsListView().modifier(WindowFramer()))
         {
             Label("Listings", systemImage: "scroll")
                 .badge(base_stc.listings.count)
         }
         
-        NavigationLink(destination: KinematicsListView())
+        NavigationLink(destination: KinematicsListView().modifier(WindowFramer()))
         {
             Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
                 .badge(base_stc.kinematic_groups.count)
@@ -258,22 +257,22 @@ struct ModulesSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: RobotModulesView())
+        NavigationLink(destination: RobotModulesView().modifier(WindowFramer()))
         {
             Label("Robot", systemImage: "r.square")
                 .badge(base_stc.robot_modules.count)
         }
-        NavigationLink(destination: ToolModulesView())
+        NavigationLink(destination: ToolModulesView().modifier(WindowFramer()))
         {
             Label("Tool", systemImage: "hammer")
                 .badge(base_stc.tool_modules.count)
         }
-        NavigationLink(destination: PartModulesView())
+        NavigationLink(destination: PartModulesView().modifier(WindowFramer()))
         {
             Label("Part", systemImage: "shippingbox")
                 .badge(base_stc.part_modules.count)
         }
-        NavigationLink(destination: ChangerModulesView())
+        NavigationLink(destination: ChangerModulesView().modifier(WindowFramer()))
         {
             Label("Changer", systemImage: "wand.and.rays")
                 .badge(base_stc.changer_modules.count)

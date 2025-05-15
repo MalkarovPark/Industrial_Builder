@@ -90,14 +90,25 @@ public enum KinematicGroupType: String, Codable, Equatable, CaseIterable
         }
     }
     
-    var listing_template: String
+    var internal_listing_template: String
     {
         switch self 
         {
         case .portal:
-            return import_text_data(from: "Portal Controller")
+            return import_text_data(from: "Internal Portal Controller")
         case ._6DOF:
-            return import_text_data(from: "6DOF Controller")
+            return import_text_data(from: "Internal 6DOF Controller")
+        }
+    }
+    
+    var external_listing_template: String
+    {
+        switch self
+        {
+        case .portal:
+            return import_text_data(from: "External Portal Controller")
+        case ._6DOF:
+            return import_text_data(from: "External 6DOF Controller")
         }
     }
     

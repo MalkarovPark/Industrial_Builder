@@ -1,0 +1,252 @@
+//
+// Robot Model Controller
+//
+
+import SceneKit
+import IndustrialKit
+
+let socket_path = "/tmp/<#Name#>_robot_controller_socket"
+
+var performed = true
+
+// Remove old socket if exists
+unlink(socket_path)
+
+// Create socket
+let server_socket = socket(AF_UNIX, SOCK_STREAM, 0)
+guard server_socket >= 0 else
+{
+    fatalError("Failed to create socket")
+}
+
+// Setup socket address
+var addr = sockaddr_un()
+addr.sun_family = sa_family_t(AF_UNIX)
+
+let path_cstring = socket_path.utf8CString
+withUnsafeMutableBytes(of: &addr.sun_path)
+{ buffer in
+    for (i, c) in path_cstring.enumerated()
+    {
+        buffer[i] = UInt8(bitPattern: c)
+    }
+}
+
+let addr_size = socklen_t(MemoryLayout.size(ofValue: addr))
+
+withUnsafePointer(to: &addr)
+{
+    $0.withMemoryRebound(to: sockaddr.self, capacity: 1)
+    { ptr in
+        if bind(server_socket, ptr, addr_size) != 0
+        {
+            fatalError("Failed to bind socket")
+        }
+    }
+}
+
+if listen(server_socket, 5) != 0
+{
+    fatalError("Failed to listen on socket")
+}
+
+print("Robot controller server started on \(socket_path)")
+
+// MARK: - Accept Loop
+while performed
+{
+    var client_addr = sockaddr()
+    var client_addr_len = socklen_t(MemoryLayout<sockaddr>.size)
+    let client_socket = accept(server_socket, &client_addr, &client_addr_len)
+    
+    guard client_socket >= 0 else
+    {
+        print("Failed to accept connection")
+        continue
+    }
+    
+    var buffer = [UInt8](repeating: 0, count: 2048)
+    let bytes_read = read(client_socket, &buffer, buffer.count)
+    
+    if bytes_read > 0
+    {
+        if let command = String(bytes: buffer.prefix(bytes_read), encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        {
+            let parts = command.split(separator: " ").map(String.init)
+            let input = parts.dropFirst()
+            var output = ""
+            
+            switch parts.first
+            {
+            case "update_nodes_positions":
+                output = update_nodes_positions(
+                    pointer_location: [Float(input[1]) ?? 0,
+                                       Float(input[2]) ?? 0,
+                                       Float(input[3]) ?? 0],
+                    pointer_rotation: [Float(input[4]) ?? 0,
+                                       Float(input[5]) ?? 0,
+                                       Float(input[6]) ?? 0],
+                    origin_location:  [Float(input[7]) ?? 0,
+                                       Float(input[8]) ?? 0,
+                                       Float(input[9]) ?? 0],
+                    origin_rotation:  [Float(input[10]) ?? 0,
+                                       Float(input[11]) ?? 0,
+                                       Float(input[12]) ?? 0])
+            case "reset_model":
+                output = reset_nodes()
+                
+            case "initial_charts_data":
+                output = initial_charts_data().json_string()
+            case "updated_charts_data":
+                output = updated_charts_data().json_string()
+            case "initial_states_data":
+                output = initial_states_data().json_string()
+            case "updated_states_data":
+                output = updated_states_data().json_string()
+                
+            case "stop":
+                output = "Component stopped"
+                performed = false
+            default:
+                output = "Unknown command"
+            }
+            
+            let result = output + "\n"
+            _ = result.utf8.withContiguousStorageIfAvailable {
+                write(client_socket, $0.baseAddress!, $0.count)
+            }
+        }
+    }
+    
+    close(client_socket)
+}
+
+// MARK: - Performing
+func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> String
+{
+    var output_string = ""
+    
+    let values = inverse_kinematic_calculation(pointer_location: pointer_location, pointer_rotation: pointer_rotation, origin_location:  origin_location, origin_rotation:  origin_rotation)
+    
+    output_string += "d0 setRotation(0, \(values[0]), 0)\n"
+    output_string += "d1 setRotation(0, 0, \(values[1]))\n"
+    output_string += "d2 setRotation(0, 0, \(values[2]))\n"
+    output_string += "d3 setRotation(0, \(values[3]), 0)\n"
+    output_string += "d4 setRotation(0, 0, \(values[4]))\n"
+    output_string += "d5 setRotation(0, \(values[5]), 0)\n"
+    
+    return output_string
+}
+
+func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
+{
+    let lengths: [Float] = [
+        <#lengths#>
+    ]
+    
+    var angles = [Float]()
+    var theta = [Float](repeating: 0, count: 6)
+    var C3 = Float()
+    
+    do
+    {
+        var px, py, pz: Float
+        var rx, ry, rz: Float
+        var ax, ay, az, bx, by, bz: Float
+        var asx, asy, asz, bsx, bsy, bsz: Float
+        var p5x, p5y, p5z: Float
+        var C1, C23, S1, S23: Float
+        var M, N, A, B: Float
+        
+        px = -(pointer_location[0] + origin_location[0])
+        py =   pointer_location[1] + origin_location[1]
+        pz =   pointer_location[2] + origin_location[2]
+        
+        rx = -(pointer_rotation[0].to_rad + origin_rotation[0].to_rad)
+        ry = -(pointer_rotation[1].to_rad + origin_rotation[1].to_rad) + .pi
+        rz = -(pointer_rotation[2].to_rad + origin_rotation[2].to_rad)
+        
+        bx = cos(rx) * sin(ry) * cos(rz) - sin(rx) * sin(rz)
+        by = cos(rx) * sin(ry) * sin(rz) - sin(rx) * cos(rz)
+        bz = cos(rx) * cos(ry)
+        
+        ax = cos(rz) * cos(ry)
+        ay = sin(rz) * cos(ry)
+        az = -sin(ry)
+        
+        p5x = px - (lengths[4] + lengths[5]) * ax
+        p5y = py - (lengths[4] + lengths[5]) * ay
+        p5z = pz - (lengths[4] + lengths[5]) * az
+        
+        C3 = (pow(p5x, 2) + pow(p5y, 2) + pow(p5z - lengths[0], 2)
+              - pow(lengths[1], 2) - pow(lengths[2] + lengths[3], 2)) /
+        (2 * lengths[1] * (lengths[2] + lengths[3]))
+        
+        // Joint 1
+        theta[0] = atan2(p5y, p5x)
+        
+        // Joints 2 and 3
+        theta[2] = atan2(sqrt(abs(1 - C3 * C3)), C3)
+        
+        M = lengths[1] + (lengths[2] + lengths[3]) * C3
+        N = (lengths[2] + lengths[3]) * sin(theta[2])
+        A = sqrt(p5x * p5x + p5y * p5y)
+        B = p5z - lengths[0]
+        
+        theta[1] = atan2(M * A - N * B, N * A + M * B)
+        
+        // Joints 4, 5, 6
+        C1  = cos(theta[0])
+        S1  = sin(theta[0])
+        C23 = cos(theta[1] + theta[2])
+        S23 = sin(theta[1] + theta[2])
+        
+        asx = C23 * (C1 * ax + S1 * ay) - S23 * az
+        asy = -S1 * ax + C1 * ay
+        asz = S23 * (C1 * ax + S1 * ay) + C23 * az
+        
+        bsx = C23 * (C1 * bx + S1 * by) - S23 * bz
+        bsy = -S1 * bx + C1 * by
+        bsz = S23 * (C1 * bx + S1 * by) + C23 * bz
+        
+        theta[3] = atan2(asy, asx)
+        theta[4] = atan2(cos(theta[3]) * asx + sin(theta[3]) * asy, asz)
+        theta[5] = atan2(cos(theta[3]) * bsy - sin(theta[3]) * bsx, -bsz / sin(theta[4]))
+        
+        angles.append(-(theta[0] + .pi))
+        angles.append(-theta[1])
+        angles.append(-theta[2])
+        angles.append(-(theta[3] + .pi))
+        angles.append(theta[4])
+        angles.append(-theta[5])
+    }
+    
+    return angles
+}
+
+// MARK: - Statistics
+func reset_nodes() -> String
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+}
+
+func initial_charts_data() -> [WorkspaceObjectChart]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+}
+
+func updated_charts_data() -> [WorkspaceObjectChart]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+}
+
+func initial_states_data() -> [StateItem]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+}
+
+func updated_states_data() -> [StateItem]?
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+}

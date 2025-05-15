@@ -89,19 +89,19 @@ public class StandardTemplateConstruct: ObservableObject
     public var listings_files_names = [String]()
     
     // MARK: Kinematic groups functions
-    // Build virtual robot components by kinematic group
-    public func make_copmponents_from_kinematic(group: KinematicGroup, node: SCNNode, make_controller: Bool, make_model: Bool, listings_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
+    // Build separated components by kinematic group
+    public func make_copmponents_from_kinematic(group: KinematicGroup, node: SCNNode, make_controller: Bool, make_model: Bool, is_internal: Bool, listings_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
     {
         if make_controller
         {
             if let existing_index = listings_files_names.firstIndex(of: group.name)
             {
-                listings[existing_index] = generate_controller_code(group: group)
+                listings[existing_index] = generate_controller_code(from: group, is_internal: is_internal)
                 listings_files_names[existing_index] = group.name
             }
             else
             {
-                listings.append(generate_controller_code(group: group))
+                listings.append(generate_controller_code(from: group, is_internal: is_internal))
                 listings_files_names.append(group.name)
             }
             
@@ -129,7 +129,7 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // Build virtual robot components by kinematic group to robot model
-    public func make_copmponents_from_kinematic(group: KinematicGroup, to module_name: String, node: SCNNode, make_controller: Bool, make_model: Bool, robots_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
+    public func make_copmponents_from_kinematic(group: KinematicGroup, to module_name: String, node: SCNNode, make_controller: Bool, make_model: Bool, is_internal: Bool, robots_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
     {
         guard let module = robot_modules.first(where: { $0.name == module_name })
         else
@@ -139,7 +139,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         if make_controller
         {
-            module.code_items["Controller"] = generate_controller_code(group: group, name: module.name.code_correct_format)
+            module.code_items["Controller"] = generate_controller_code(from: group, name: module.name.code_correct_format, is_internal: is_internal)
             
             module.nodes_names = group.type.nodes_names
             
@@ -188,9 +188,9 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    private func generate_controller_code(group: KinematicGroup, name: String = String()) -> String
+    private func generate_controller_code(from group: KinematicGroup, name: String = String(), is_internal: Bool) -> String
     {
-        var controller_code = group.type.listing_template
+        var controller_code = is_internal ? group.type.internal_listing_template : group.type.external_listing_template
         
         var class_name = String()
         

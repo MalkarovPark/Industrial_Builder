@@ -70,6 +70,7 @@ class AppState : ObservableObject
     
     @Published var make_model_from_kinematic = true
     @Published var make_controller_from_kinematic = true
+    @Published var kinematic_module_type_selection = 0
 }
 
 // MARK: - Service Functions

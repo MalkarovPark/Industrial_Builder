@@ -17,6 +17,8 @@ struct MakeRobotComponentsView: View
     
     @Binding var group: KinematicGroup
     
+    //@State private var kinematic_module_type_selection = 0
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -25,7 +27,7 @@ struct MakeRobotComponentsView: View
             {
                 Toggle(isOn: $app_state.make_model_from_kinematic)
                 {
-                    Text("Visual Model")
+                    Text("Visual model")
                 }
                 .toggleStyle(.switch)
                 .padding(.bottom)
@@ -37,6 +39,16 @@ struct MakeRobotComponentsView: View
                 .toggleStyle(.switch)
                 .padding(.bottom)
             }
+            
+            Picker(selection: $app_state.kinematic_module_type_selection, label: Text("Type"))
+            {
+                Text("Internal").tag(0)
+                Text("External").tag(1)
+            }
+            .labelsHidden()
+            .pickerStyle(.segmented)
+            .frame(maxWidth: .infinity)
+            .padding(.bottom)
             
             Menu("Export to...")
             {
@@ -50,7 +62,7 @@ struct MakeRobotComponentsView: View
                                 group: group,
                                 to: name,
                                 node: app_state.kinematic_preview_robot.node ?? SCNNode(),
-                                make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic,
+                                make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic, is_internal: app_state.kinematic_module_type_selection == 0,
                                 robots_update_function: { document_handler.document_update_robots() },
                                 scenes_update_function: { document_handler.document_update_scenes() }
                             )
@@ -60,11 +72,11 @@ struct MakeRobotComponentsView: View
                     Divider()
                 }
                 
-                Button("Separated Components")
+                Button("Separated components")
                 {
                     base_stc.make_copmponents_from_kinematic(
                         group: group, node: app_state.kinematic_preview_robot.node ?? SCNNode(),
-                        make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic,
+                        make_controller: app_state.make_controller_from_kinematic, make_model: app_state.make_model_from_kinematic, is_internal: app_state.kinematic_module_type_selection == 0,
                         listings_update_function: { document_handler.document_update_listings() },
                         scenes_update_function: { document_handler.document_update_scenes() }
                     )

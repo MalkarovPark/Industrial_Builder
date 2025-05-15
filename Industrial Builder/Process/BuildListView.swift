@@ -346,8 +346,8 @@ private enum ModuleType: String, Equatable, CaseIterable
 
 public var all_code_templates: [String] = [
     "List",
-    "6DOF Controller",
-    "Portal Controller",
+    "Internal 6DOF Controller",
+    "Internal Portal Controller",
     "External Robot Connector",
     "External Robot Controller",
     "Internal Robot Connector",

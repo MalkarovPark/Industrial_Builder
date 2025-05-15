@@ -89,6 +89,8 @@ struct OperationCodesEditor: View
                             Divider()
                             #if !os(macOS)
                                 .frame(height: 16)
+                            #else
+                                .frame(height: 12)
                             #endif
                             
                             Image(systemName: new_code_symbol)

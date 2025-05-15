@@ -384,7 +384,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "182"
             endingLineNumber = "182"
-            landmarkName = "make_copmponents_from_kinematic(group:to:node:make_controller:make_model:robots_update_function:scenes_update_function:)"
+            landmarkName = "make_copmponents_from_kinematic(group:to:node:make_controller:make_model:is_internal:robots_update_function:scenes_update_function:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -734,8 +734,8 @@
             filePath = "Industrial Builder/Utilites/ModulesDesigners/ToolsDesigner/OperationCodesEditor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "add_code()"
             landmarkType = "7">
          </BreakpointContent>
@@ -750,8 +750,8 @@
             filePath = "Industrial Builder/Utilites/ModulesDesigners/ToolsDesigner/OperationCodesEditor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "delete_opcode(index:)"
             landmarkType = "7">
          </BreakpointContent>

@@ -28,7 +28,6 @@ struct PackageView: View
             #endif
                 // .ignoresSafeArea(.container, edges: .bottom)
         }
-        .modifier(WindowFramer())
         .sheet(isPresented: $build_view_presented)
         {
             //BuildView(document: $document)
