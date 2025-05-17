@@ -65,7 +65,9 @@ while performed
         continue
     }
     
-    var buffer = [UInt8](repeating: 0, count: 2048)
+    var no_sig_pipe: Int32 = 1
+    setsockopt(client_socket, SOL_SOCKET, SO_NOSIGPIPE, &no_sig_pipe, socklen_t(MemoryLayout.size(ofValue: no_sig_pipe)))
+    var buffer = [UInt8](repeating: 0, count: 1024 * 1024)
     let bytes_read = read(client_socket, &buffer, buffer.count)
     
     if bytes_read > 0
@@ -113,8 +115,20 @@ while performed
             }
             
             let result = output + "\n"
-            _ = result.utf8.withContiguousStorageIfAvailable {
-                write(client_socket, $0.baseAddress!, $0.count)
+            let data = result.data(using: .utf8)!
+
+            data.withUnsafeBytes
+            { buffer in
+                var total_sent = 0
+                while total_sent < buffer.count
+                {
+                    let sent = write(client_socket, buffer.baseAddress!.advanced(by: total_sent), buffer.count - total_sent)
+                    if sent <= 0
+                    {
+                        break
+                    }
+                    total_sent += sent
+                }
             }
         }
     }
