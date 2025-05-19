@@ -101,7 +101,7 @@ while performed
             case "initial_charts_data":
                 output = initial_charts_data().json_string()
             case "initial_states_data":
-                output = updated_states_data().json_string()
+                output = initial_states_data().json_string()
 
             case "sync_model":
                 output = sync_model()
