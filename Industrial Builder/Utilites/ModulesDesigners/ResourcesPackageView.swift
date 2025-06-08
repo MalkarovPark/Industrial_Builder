@@ -302,42 +302,54 @@ struct ConnectedNodesView: View
         }
         .overlay(alignment: .bottomTrailing)
         {
-            Menu
+            VStack(spacing: 8)
             {
-                Button("Without name")
+                Button(action: remove_all_items)
                 {
-                    names.append("")
-                    on_update()
+                    Image(systemName: "text.badge.xmark")
+                        .padding(4)
                 }
+                .buttonStyle(.plain)
+                .background(Color.secondary.opacity(0.2))
+                .clipShape(Circle())
                 
-                Divider()
-                
-                if nested_nodes_names.count > 0
+                Menu
                 {
-                    Button("All")
+                    Button("Nameless")
                     {
-                        names.append(contentsOf: nested_nodes_names)
+                        names.append("")
                         on_update()
                     }
-                }
-                
-                ForEach(nested_nodes_names, id: \.self)
-                { name in
-                    Button(name)
+                    
+                    if nested_nodes_names.count > 0
                     {
-                        names.append(name)
-                        on_update()
+                        Button("All")
+                        {
+                            names.append(contentsOf: nested_nodes_names)
+                            on_update()
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    ForEach(nested_nodes_names, id: \.self)
+                    { name in
+                        Button(name)
+                        {
+                            names.append(name)
+                            on_update()
+                        }
                     }
                 }
+                label:
+                {
+                    Image(systemName: "plus")
+                        .padding(4)
+                }
+                .buttonStyle(.plain)
+                .background(Color.secondary.opacity(0.2))
+                .clipShape(Circle())
             }
-            label:
-            {
-                Image(systemName: "plus")
-                    .padding(4)
-            }
-            .buttonStyle(.plain)
-            .background(Color.secondary.opacity(0.2))
-            .clipShape(Circle())
             .padding(8)
         }
     }
@@ -345,6 +357,12 @@ struct ConnectedNodesView: View
     private func delete_items(at offsets: IndexSet)
     {
         names.remove(atOffsets: offsets)
+        on_update()
+    }
+    
+    private func remove_all_items()
+    {
+        names.removeAll()
         on_update()
     }
 }

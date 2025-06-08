@@ -103,11 +103,12 @@ while performed
             case "initial_states_data":
                 output = initial_states_data().json_string()
 
-            case "sync_model":
-                output = sync_model()
+            case "sync_device":
+                output = tool_connector_state_string(sync_device())
                 
             case "stop":
                 output = "Component stopped"
+                disconnect()
                 performed = false
             default:
                 output = "Unknown command"
@@ -185,7 +186,7 @@ func updated_states_data() -> [StateItem]?
 }
 
 // MARK: - Modeling
-func sync_model() -> String
+func sync_device() -> (completed: Bool, nodes_actions: [String]?)
 {
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return (completed: Bool(), nodes_actions: nil)@*/return (completed: Bool(), nodes_actions: nil)/*@END_MENU_TOKEN@*/
 }
