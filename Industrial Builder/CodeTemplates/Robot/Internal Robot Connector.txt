@@ -20,7 +20,7 @@ class <#Name#>_Connector: RobotConnector
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return false@*/return false/*@END_MENU_TOKEN@*/
     }
     
-    override func disconnection_process() async
+    override func disconnection_process()
     {
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
     }
