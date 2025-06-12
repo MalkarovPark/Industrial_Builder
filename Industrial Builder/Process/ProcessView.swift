@@ -69,7 +69,7 @@ struct ProcessView: View
         {
             ToolbarItem(placement: .cancellationAction)
             {
-                Button("Cancel")
+                Button("Dismiss")
                 {
                     is_presented = false
                 }

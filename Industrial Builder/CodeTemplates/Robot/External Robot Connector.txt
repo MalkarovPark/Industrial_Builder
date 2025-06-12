@@ -216,5 +216,5 @@ func sync_device() -> (completed: Bool, pointer_position: (x: Float, y: Float, z
     //positions_list = update_nodes_positions(pointer_location: (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z), pointer_rotation: (r: pointer_position.r, p: pointer_position.p, w: pointer_position.w), origin_location: (x: 0, y: 0, z: 0), origin_rotation: (r: 0, p: 0, w: 0))
     return (completed: completed, pointer_position: (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z, r: pointer_position.r, p: pointer_position.p, w: pointer_position.w), nodes_positions: positions_list)*/
     
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return (completed: Bool(), pointer_position: nil, nodes_positions: nil)@*/return (completed: Bool(), pointer_position: nil, nodes_positions: nil)/*@END_MENU_TOKEN@*/
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return (completed: true, pointer_position: nil, nodes_positions: nil)@*/return (completed: true, pointer_position: nil, nodes_positions: nil)/*@END_MENU_TOKEN@*/
 }
