@@ -88,6 +88,8 @@ while performed
 
             case "perform":
                 output = perform(code: Int(input[0]) ?? 0)
+            case "performing_state":
+                output = performing_state().rawValue
             case "reset_device":
                 output = reset_device()
                 
@@ -103,8 +105,8 @@ while performed
             case "initial_states_data":
                 output = initial_states_data().json_string()
 
-            case "sync_device":
-                output = tool_connector_state_string(sync_device())
+            case "sync_model":
+                output = sync_model()?.joined(separator: "\n") ?? ""
                 
             case "stop":
                 output = "Component stopped"
@@ -159,6 +161,11 @@ func perform(code: Int) -> String
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
+func performing_state() -> PerformingState
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return .completed@*/return .completed/*@END_MENU_TOKEN@*/
+}
+
 func reset_device() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
@@ -186,7 +193,7 @@ func updated_states_data() -> [StateItem]?
 }
 
 // MARK: - Modeling
-func sync_device() -> (completed: Bool, nodes_actions: [String]?)
+func sync_model() -> [String]?
 {
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return (completed: true, nodes_actions: nil)@*/return (completed: true, nodes_actions: nil)/*@END_MENU_TOKEN@*/
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return nil@*/return nil/*@END_MENU_TOKEN@*/
 }

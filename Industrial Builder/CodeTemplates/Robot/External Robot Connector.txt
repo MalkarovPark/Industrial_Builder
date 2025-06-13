@@ -53,8 +53,7 @@ if listen(server_socket, 5) != 0
 print("Robot connector server started on \(socket_path)")
 
 //var pointer_position = (x: Float(0), y: Float(0), z: Float(0), r: Float(0), p: Float(0), w: Float(0))
-//var completed = true
-//var canceled = false
+//var state: PerformingState = .completed
 
 // MARK: - Accept Loop
 private var moving_task = Task {}
@@ -99,6 +98,8 @@ while performed
                                      origin_location: (Float(input[2]) ?? 0, Float(input[3]) ?? 0, Float(input[4]) ?? 0),
                                      origin_rotation: (Float(input[5]) ?? 0, Float(input[6]) ?? 0, Float(input[7]) ?? 0))
                 }
+            case "performing_state":
+                output = performing_state().rawValue
             case "reset_device":
                 output = reset_device()
                 
@@ -111,9 +112,10 @@ while performed
             case "initial_states_data":
                 output = initial_states_data().json_string()
 
-            case "sync_device":
-                output = robot_connector_state_string(sync_device())
-                
+            case "sync_model":
+                output = sync_model()?.joined(separator: "\n") ?? ""
+            case "sync_pointer":
+                output = sync_pointer().map { "\($0.x) \($0.y) \($0.z) \($0.r) \($0.p) \($0.w)" } ?? ""
             case "stop":
                 output = "Component stopped"
                 disconnect()
@@ -182,9 +184,13 @@ func move_to(point: PositionPoint, origin_location: (x: Float, y: Float, z: Floa
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
+func performing_state() -> PerformingState
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return .completed@*/return .completed/*@END_MENU_TOKEN@*/
+}
+
 func reset_device() -> String
 {
-    canceled = true
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
@@ -210,11 +216,17 @@ func updated_states_data() -> [StateItem]?
 }
 
 // MARK: - Modeling
-func sync_device() -> (completed: Bool, pointer_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)?, nodes_positions: [String]?)
+func sync_model() -> [String]?
 {
     /*var positions_list: [String]? = nil
     //positions_list = update_nodes_positions(pointer_location: (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z), pointer_rotation: (r: pointer_position.r, p: pointer_position.p, w: pointer_position.w), origin_location: (x: 0, y: 0, z: 0), origin_rotation: (r: 0, p: 0, w: 0))
-    return (completed: completed, pointer_position: (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z, r: pointer_position.r, p: pointer_position.p, w: pointer_position.w), nodes_positions: positions_list)*/
     
-    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return (completed: true, pointer_position: nil, nodes_positions: nil)@*/return (completed: true, pointer_position: nil, nodes_positions: nil)/*@END_MENU_TOKEN@*/
+    return positions_list*/
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return nil@*/return nil/*@END_MENU_TOKEN@*/
+}
+
+func sync_pointer() -> (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)?
+{
+    //return (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z, r: pointer_position.r, p: pointer_position.p, w: pointer_position.w)
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return nil@*/return nil/*@END_MENU_TOKEN@*/
 }
