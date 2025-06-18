@@ -305,7 +305,7 @@ struct STCDocument: FileDocument
             
             do
             {
-                print(url.absoluteString + "/" + scene_address)
+                //print(url.absoluteString + "/" + scene_address)
                 let scene = try SCNScene(url: url.appendingPathComponent(scene_address))
                 return scene
             }

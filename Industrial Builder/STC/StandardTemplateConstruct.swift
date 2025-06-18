@@ -549,10 +549,11 @@ public class StandardTemplateConstruct: ObservableObject
     {
         DispatchQueue.global(qos: .background).async
         {
-            self.set_build_info(list: list, as_internal: false)
+            //self.set_build_info(list: list, as_internal: false)
             
             DispatchQueue.main.async
             {
+                self.set_build_info(list: list, as_internal: false)
                 self.on_building_modules = true
             }
             
@@ -595,10 +596,9 @@ public class StandardTemplateConstruct: ObservableObject
     {
         DispatchQueue.global(qos: .background).async
         {
-            self.set_build_info(list: list, as_internal: true)
-            
             DispatchQueue.main.async
             {
+                self.set_build_info(list: list, as_internal: true)
                 self.on_building_modules = true
             }
             
