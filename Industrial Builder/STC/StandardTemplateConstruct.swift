@@ -1081,8 +1081,8 @@ public class StandardTemplateConstruct: ObservableObject
 public enum InternalExportType: String, Equatable, CaseIterable
 {
     case files_only = "Files Only"
-    case swift_playground = "Swift Playground"
-    case xcode_project = "Xcode Project"
+    //case swift_playground = "Swift Playground"
+    //case xcode_project = "Xcode Project"
 }
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
