@@ -154,7 +154,8 @@ struct Sidebar: View
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar
                 {
-                    /*ToolbarItem
+                    #if os(visionOS)
+                    ToolbarItem
                     {
                         HStack(alignment: .center)
                         {
@@ -174,7 +175,8 @@ struct Sidebar: View
                             .buttonBorderShape(.circle)
                             #endif*/
                         }
-                    }*/
+                    }
+                    #endif
                 }
                 /*.sheet(isPresented: $app_state.settings_view_presented)
                 {

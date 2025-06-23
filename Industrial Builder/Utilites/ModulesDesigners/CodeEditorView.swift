@@ -29,27 +29,28 @@ struct CodeEditorView: View
     {
         VStack(spacing: 0)
         {
-            /*TextEditor(text: Binding(
+            #if !os(visionOS)
+            CodeView(text: Binding(
+                get: { code_items[code_item_name] ?? "" },
+                set: { code_items[code_item_name] = $0 }
+            ))
+            .onChange(of: code_items)
+            { _, _ in
+                document_handler.document_update_info()
+            }
+            #else
+            TextEditor(text: Binding(
                 get: { code_items[code_item_name] ?? "" },
                 set: { code_items[code_item_name] = $0 }
             ))
             .textFieldStyle(.plain)
             .modifier(DoubleModifier(update_toggle: $code_field_update))
-            .font(.custom("Menlo", size: 12))
-            .onChange(of: code_items)
-            { _, _ in
-                document_handler.document_update_info()
-            }*/
-            
-            CodeView(text: Binding(
-                get: { code_items[code_item_name] ?? "" },
-                set: { code_items[code_item_name] = $0 }
-            ))
-            //.modifier(DoubleModifier(update_toggle: $code_field_update))
+            .font(.custom("Menlo", size: 16))
             .onChange(of: code_items)
             { _, _ in
                 document_handler.document_update_info()
             }
+            #endif
             
             Divider()
             

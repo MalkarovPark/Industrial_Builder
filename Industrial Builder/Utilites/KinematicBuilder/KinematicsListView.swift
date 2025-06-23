@@ -118,7 +118,7 @@ struct AddKinematicView: View
             }
             .padding(.bottom)
             
-            HStack
+            HStack(spacing: 0)
             {
                 Picker("Type", selection: $kinematic_preset)
                 {
@@ -129,14 +129,20 @@ struct AddKinematicView: View
                 }
                 .pickerStyle(.menu)
                 .frame(maxWidth: .infinity)
+                #if os(macOS)
                 .buttonStyle(.bordered)
+                #elseif os(iOS)
+                .modifier(PickerBorderer())
+                #endif
                 #if os(macOS)
                 .frame(width: 128)
                 #endif
+                .padding(.trailing)
                 
                 Button("Add", action: add_kinematic_group)
                     .fixedSize()
                     .keyboardShortcut(.defaultAction)
+                    .buttonStyle(.borderedProminent)
             }
         }
         .padding()

@@ -25,10 +25,16 @@ struct CodeView: View
     
     var body: some View
     {
+        #if !os(visionOS)
         CodeEditor(text: $text, position: $position, messages: $messages, language: .swift())
             .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
             .environment(\.codeEditorLayoutConfiguration,
                           CodeEditor.LayoutConfiguration(showMinimap: show_minimap, wrapText: wrap_text))
+        #else
+        TextEditor(text: $text)
+        .textFieldStyle(.plain)
+        .font(.custom("Menlo", size: 16))
+        #endif
         
         /*if !code_plain_text_representation
         {
