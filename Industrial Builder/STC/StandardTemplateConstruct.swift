@@ -911,7 +911,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             else
             {
-                print("Uncompatible file format: \(file_extension)")
+                print("Uncompatible file format – \(file_extension)")
             }
 
             return data

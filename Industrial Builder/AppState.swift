@@ -47,6 +47,9 @@ class AppState : ObservableObject
         kinematic_preview_robot.origin_location = [100, 100, 100]
         
         update_robot_kinematic(kinematic.data)
+        
+        kinematic_preview_robot.pointer_location = [0, 0, 0]
+        kinematic_preview_robot.pointer_location = [0, 0, 0]
     }
     
     public func update_robot_kinematic(_ elements: [KinematicElement])
