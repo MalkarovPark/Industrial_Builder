@@ -61,6 +61,7 @@
 		62B0057B2D8EA9F400544A76 /* CodeEditorView in Frameworks */ = {isa = PBXBuildFile; productRef = 62B0057A2D8EA9F400544A76 /* CodeEditorView */; };
 		62B0057D2D8EA9F400544A76 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 62B0057C2D8EA9F400544A76 /* LanguageSupport */; };
 		62B0057F2D8ECAA000544A76 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B0057E2D8ECA9F00544A76 /* CodeView.swift */; };
+		62BA0F9D2E26FD5500DF0FCC /* IndustrialKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 62BA0F9C2E26FD5500DF0FCC /* IndustrialKitUI */; };
 		62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleDesigner.swift */; };
 		62BAE7782BD71D89000972EA /* ChangerModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */; };
 		62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */; };
@@ -147,6 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62BA0F9D2E26FD5500DF0FCC /* IndustrialKitUI in Frameworks */,
 				628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */,
 				62B0057D2D8EA9F400544A76 /* LanguageSupport in Frameworks */,
 				62B0057B2D8EA9F400544A76 /* CodeEditorView in Frameworks */,
@@ -271,6 +273,7 @@
 			isa = PBXGroup;
 			children = (
 				6289FCC52AD0398100BB7F5E /* Industrial Builder */,
+				62BA0F9B2E26FD5500DF0FCC /* Frameworks */,
 				6289FCC42AD0398100BB7F5E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -396,6 +399,13 @@
 			path = KinematicBuilder;
 			sourceTree = "<group>";
 		};
+		62BA0F9B2E26FD5500DF0FCC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -422,6 +432,7 @@
 				628E14512AD73C0400BC8FD9 /* IndustrialKit */,
 				62B0057A2D8EA9F400544A76 /* CodeEditorView */,
 				62B0057C2D8EA9F400544A76 /* LanguageSupport */,
+				62BA0F9C2E26FD5500DF0FCC /* IndustrialKitUI */,
 			);
 			productName = "Industrial Builder";
 			productReference = 6289FCC32AD0398100BB7F5E /* Industrial Builder.app */;
@@ -685,11 +696,11 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphonesimulator*]" = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = celadon.IndustrialBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -698,6 +709,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
@@ -729,11 +741,11 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphonesimulator*]" = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = celadon.IndustrialBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -742,6 +754,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};
@@ -773,9 +786,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MalkarovPark/IndustrialKit";
 			requirement = {
-				kind = versionRange;
-				maximumVersion = 5.0.0;
-				minimumVersion = 4.0.0;
+				branch = development;
+				kind = branch;
 			};
 		};
 		62B005792D8EA9F400544A76 /* XCRemoteSwiftPackageReference "CodeEditorView" */ = {
@@ -803,6 +815,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 62B005792D8EA9F400544A76 /* XCRemoteSwiftPackageReference "CodeEditorView" */;
 			productName = LanguageSupport;
+		};
+		62BA0F9C2E26FD5500DF0FCC /* IndustrialKitUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 628E14502AD73C0400BC8FD9 /* XCRemoteSwiftPackageReference "IndustrialKit" */;
+			productName = IndustrialKitUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

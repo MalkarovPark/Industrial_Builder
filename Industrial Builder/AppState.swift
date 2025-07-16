@@ -44,12 +44,11 @@ class AppState : ObservableObject
         
         // Connect workcell box and pointer
         kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: false)
-        kinematic_preview_robot.origin_location = [100, 100, 100]
+        kinematic_preview_robot.origin_position = (x: 100, y: 100, z: 100, r: 0, p: 0, w: 0)
         
         update_robot_kinematic(kinematic.data)
         
-        kinematic_preview_robot.pointer_location = [0, 0, 0]
-        kinematic_preview_robot.pointer_location = [0, 0, 0]
+        kinematic_preview_robot.position = (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0)
     }
     
     public func update_robot_kinematic(_ elements: [KinematicElement])

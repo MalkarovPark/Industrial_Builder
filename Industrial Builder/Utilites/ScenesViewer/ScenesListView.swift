@@ -8,6 +8,7 @@
 import SwiftUI
 import IndustrialKit
 import SceneKit
+import IndustrialKitUI
 
 struct ScenesListView: View
 {

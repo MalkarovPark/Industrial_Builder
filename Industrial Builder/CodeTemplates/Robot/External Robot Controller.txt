@@ -83,18 +83,19 @@ while performed
             {
             case "update_nodes_positions":
                 output = update_nodes_positions(
-                    pointer_location: [Float(input[1]) ?? 0,
-                                       Float(input[2]) ?? 0,
-                                       Float(input[3]) ?? 0],
-                    pointer_rotation: [Float(input[4]) ?? 0,
-                                       Float(input[5]) ?? 0,
-                                       Float(input[6]) ?? 0],
-                    origin_location:  [Float(input[7]) ?? 0,
-                                       Float(input[8]) ?? 0,
-                                       Float(input[9]) ?? 0],
-                    origin_rotation:  [Float(input[10]) ?? 0,
-                                       Float(input[11]) ?? 0,
-                                       Float(input[12]) ?? 0])
+                    pointer_position: (x: Float(input[1]) ?? 0,
+                                       y: Float(input[2]) ?? 0,
+                                       z: Float(input[3]) ?? 0,
+                                       r: Float(input[4]) ?? 0,
+                                       p: Float(input[5]) ?? 0,
+                                       w: Float(input[6]) ?? 0),
+                    origin_position: (x: Float(input[7]) ?? 0,
+                                      y: Float(input[8]) ?? 0,
+                                      z: Float(input[9]) ?? 0,
+                                      r: Float(input[10]) ?? 0,
+                                      p: Float(input[11]) ?? 0,
+                                      w: Float(input[12]) ?? 0)
+                )
             case "reset_model":
                 output = reset_nodes()
                 
@@ -137,7 +138,8 @@ while performed
 }
 
 // MARK: - Performing
-func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> String
+func update_nodes_positions(pointer_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float),
+                            origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)) -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }

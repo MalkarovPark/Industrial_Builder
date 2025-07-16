@@ -18,6 +18,8 @@ struct BuildListView: View
     @State private var targets_palette_view_presented = false
     @State private var new_panel_presented = false
     
+    private var with_spacer = false
+    
     //private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 8)]
     
     #if os(macOS)
@@ -27,6 +29,17 @@ struct BuildListView: View
     let column_count: Int = 6
     let grid_spacing: CGFloat = 16
     #endif
+    
+    public init(selected_name: Binding<String>)
+    {
+        self._selected_name = selected_name
+    }
+    
+    public init(selected_name: Binding<String>, with_spacer: Bool = false)
+    {
+        self._selected_name = selected_name
+        self.with_spacer = with_spacer
+    }
     
     var body: some View
     {
@@ -122,6 +135,11 @@ struct BuildListView: View
                             .aspectRatio(1, contentMode: .fit)
                         }
                     }
+                }
+                
+                if with_spacer
+                {
+                    Spacer(minLength: 32)
                 }
             }
             .padding()

@@ -2,7 +2,7 @@ import Foundation
 import SceneKit
 import IndustrialKit
 
-class _6DOF_Controller: DesignerRobotModelController
+class _6DOF_Controller: DesignerRobotModelController, @unchecked Sendable
 {
     // MARK: - Nodes names
     override var nodes_names: [String]
@@ -21,10 +21,17 @@ class _6DOF_Controller: DesignerRobotModelController
     }
     
     // MARK: - Inverse kinematic parts calculation for roataion angles of 6DOF
-    override open func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float])
+    override open func update_nodes_positions(pointer_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float),
+                                              origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float))
     {
         if lengths.count == description_lengths_count
         {
+            let pointer_location = [pointer_position.x, pointer_position.y, pointer_position.z]
+            let pointer_rotation = [pointer_position.r, pointer_position.p, pointer_position.w]
+            
+            let origin_location = [origin_position.x, origin_position.y, origin_position.z]
+            let origin_rotation = [origin_position.r, origin_position.p, origin_position.w]
+            
             apply_nodes_positions(values: inverse_kinematic_calculation(pointer_location: pointer_location, pointer_rotation: pointer_rotation, origin_location: origin_location, origin_rotation: origin_rotation))
         }
     }

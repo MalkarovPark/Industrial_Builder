@@ -40,16 +40,23 @@ struct ExternalModulesBuildView: View
             }
             else
             {
-                BuildListView(selected_name: $selected_name)
-                
-                Toggle(isOn: $base_stc.compile_program_elements)
-                {
-                    Text("Compile program elements")
-                }
-                .padding()
-                #if !os(macOS)
-                .disabled(true)
-                #endif
+                BuildListView(selected_name: $selected_name, with_spacer: true)
+                    .overlay(alignment: .bottom)
+                    {
+                        HStack
+                        {
+                            Toggle(isOn: $base_stc.compile_program_elements)
+                            {
+                                Text("Compile program elements")
+                            }
+                            .padding()
+                            #if !os(macOS)
+                            .disabled(true)
+                            #endif
+                        }
+                        .frame(maxWidth: .infinity)
+                        .background(.bar)
+                    }
             }
         }
         .toolbar

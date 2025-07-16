@@ -7,7 +7,8 @@
 
 import SwiftUI
 import SceneKit
-import IndustrialKit
+//import IndustrialKit
+import IndustrialKitUI
 
 struct KinematicDesignerView: View
 {
@@ -47,153 +48,27 @@ struct KinematicDesignerView: View
             .ignoresSafeArea(.container, edges: .bottom)
             #endif
         }
-        #if !os(visionOS)
         .overlay(alignment: .bottomLeading)
         {
-            VStack(spacing: 0)
+            Button(action: { origin_rotate_view_presented = true })
             {
-                Button(action: { origin_rotate_view_presented.toggle() })
-                {
-                    Image(systemName: "rotate.3d")
-                        .imageScale(.large)
-                        .padding()
-                }
-                .buttonStyle(.borderless)
-                #if os(iOS)
-                .foregroundColor(.black)
-                #endif
-                .popover(isPresented: $origin_rotate_view_presented, arrowEdge: default_popover_edge)
-                {
-                    OriginRotateView(origin_rotate_view_presented: $origin_rotate_view_presented, origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
-                }
-                .onDisappear
-                {
-                    origin_rotate_view_presented.toggle()
-                }
-                Divider()
-                
-                Button(action: { origin_move_view_presented.toggle() })
-                {
-                    Image(systemName: "move.3d")
-                        .imageScale(.large)
-                        .padding()
-                }
-                .buttonStyle(.borderless)
-                #if os(iOS)
-                .foregroundColor(.black)
-                #endif
-                .popover(isPresented: $origin_move_view_presented, arrowEdge: default_popover_edge)
-                {
-                    OriginMoveView(origin_move_view_presented: $origin_move_view_presented, origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
-                }
-                .onDisappear
-                {
-                    origin_move_view_presented.toggle()
-                }
-                Divider()
-                
-                Button(action: { space_scale_view_presented.toggle() })
-                {
-                    Image(systemName: "scale.3d")
-                        .imageScale(.large)
-                        .padding()
-                }
-                #if os(iOS)
-                .foregroundColor(.black)
-                #endif
-                .popover(isPresented: $space_scale_view_presented, arrowEdge: default_popover_edge)
-                {
-                    SpaceScaleView(space_scale_view_presented: $space_scale_view_presented, space_scale: $app_state.kinematic_preview_robot.space_scale)
-                }
-                .onChange(of: app_state.kinematic_preview_robot.space_scale)
-                { _, _ in
-                    app_state.kinematic_preview_robot.update_space_scale()
-                }
-                .onDisappear
-                {
-                    space_scale_view_presented.toggle()
-                }
-                .buttonStyle(.borderless)
+                Image(systemName: "cube")
+                    .imageScale(.large)
+                    #if os(macOS)
+                    .frame(width: 16, height: 16)
+                    #else
+                    .frame(width: 24, height: 24)
+                    #endif
+                    .padding(8)
             }
-            .background(.thinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .shadow(radius: 8)
-            .fixedSize(horizontal: true, vertical: false)
-            .padding()
-        }
-        #else
-        .ornament(attachmentAnchor: .scene(.bottom))
-        {
-            HStack(spacing: 0)
+            .buttonBorderShape(.circle)
+            .buttonStyle(.glass)
+            .popover(isPresented: $origin_rotate_view_presented)
             {
-                Button(action: { origin_rotate_view_presented.toggle() })
-                {
-                    Image(systemName: "rotate.3d")
-                        .imageScale(.large)
-                        .padding()
-                }
-                .buttonStyle(.borderless)
-                .buttonBorderShape(.circle)
-                .popover(isPresented: $origin_rotate_view_presented, arrowEdge: default_popover_edge)
-                {
-                    OriginRotateView(origin_rotate_view_presented: $origin_rotate_view_presented, origin_view_pos_rotation: $app_state.kinematic_preview_robot.origin_rotation)
-                }
-                .onDisappear
-                {
-                    origin_rotate_view_presented.toggle()
-                }
-                
-                Button(action: { origin_move_view_presented.toggle() })
-                {
-                    Image(systemName: "move.3d")
-                        .imageScale(.large)
-                        .padding()
-                }
-                .buttonStyle(.borderless)
-                .buttonBorderShape(.circle)
-                .popover(isPresented: $origin_move_view_presented, arrowEdge: default_popover_edge)
-                {
-                    OriginMoveView(origin_move_view_presented: $origin_move_view_presented, origin_view_pos_location: $app_state.kinematic_preview_robot.origin_location)
-                }
-                .onDisappear
-                {
-                    origin_move_view_presented.toggle()
-                }
-                .onDisappear
-                {
-                    origin_move_view_presented.toggle()
-                }
-                
-                Button(action: { space_scale_view_presented.toggle() })
-                {
-                    Image(systemName: "scale.3d")
-                        .imageScale(.large)
-                        .padding()
-                }
-                .buttonBorderShape(.circle)
-                .popover(isPresented: $space_scale_view_presented, arrowEdge: default_popover_edge)
-                {
-                    SpaceScaleView(space_scale_view_presented: $space_scale_view_presented, space_scale: $app_state.kinematic_preview_robot.space_scale)
-                }
-                .onChange(of: app_state.kinematic_preview_robot.space_scale)
-                { _, _ in
-                    app_state.kinematic_preview_robot.update_space_scale()
-                }
-                .onDisappear
-                {
-                    space_scale_view_presented.toggle()
-                }
-                .onDisappear
-                {
-                    space_scale_view_presented.toggle()
-                }
-                .buttonStyle(.borderless)
+                SpaceOriginView(robot: $app_state.kinematic_preview_robot)
             }
             .padding()
-            .labelStyle(.iconOnly)
-            .glassBackgroundEffect()
         }
-        #endif
         .toolbar
         {
             Button (action: { make_components_view_presented.toggle() })

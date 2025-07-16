@@ -27,7 +27,7 @@ struct MakeRobotComponentsView: View
             {
                 Toggle(isOn: $app_state.make_model_from_kinematic)
                 {
-                    Text("Visual model")
+                    Text("Scene")
                 }
                 .toggleStyle(.switch)
                 .padding(.bottom)

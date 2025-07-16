@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IndustrialKit
+import IndustrialKitUI
 
 struct KinematicInspectorView: View
 {
@@ -43,7 +44,7 @@ struct KinematicInspectorView: View
             .padding([.horizontal])
             #endif
             
-            PositionControl(location: $app_state.kinematic_preview_robot.pointer_location, rotation: $app_state.kinematic_preview_robot.pointer_rotation, scale: $app_state.kinematic_preview_robot.space_scale)
+            PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
         }
         #if os(visionOS)
         .frame(width: 400)

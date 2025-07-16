@@ -7,7 +7,8 @@
 
 import SwiftUI
 import SceneKit
-import IndustrialKit
+//import IndustrialKit
+import IndustrialKitUI
 
 struct StandardCard: View
 {
