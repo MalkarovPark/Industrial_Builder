@@ -62,6 +62,7 @@
 		62B0057D2D8EA9F400544A76 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 62B0057C2D8EA9F400544A76 /* LanguageSupport */; };
 		62B0057F2D8ECAA000544A76 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B0057E2D8ECA9F00544A76 /* CodeView.swift */; };
 		62BA0F9D2E26FD5500DF0FCC /* IndustrialKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 62BA0F9C2E26FD5500DF0FCC /* IndustrialKitUI */; };
+		62BA0F9F2E28418600DF0FCC /* IndustrialBuilder.icon in Resources */ = {isa = PBXBuildFile; fileRef = 62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */; };
 		62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleDesigner.swift */; };
 		62BAE7782BD71D89000972EA /* ChangerModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E14532AD7E44C00BC8FD9 /* ChangerModuleDesigner.swift */; };
 		62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */; };
@@ -128,6 +129,7 @@
 		62AE55312AE96B3D00554A5B /* KinematicsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinematicsListView.swift; sourceTree = "<group>"; };
 		62AE55332AE99FE300554A5B /* KinematicComponents.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = KinematicComponents.scnassets; sourceTree = "<group>"; };
 		62B0057E2D8ECA9F00544A76 /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
+		62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = IndustrialBuilder.icon; sourceTree = "<group>"; };
 		62BAE7762BD71846000972EA /* PartModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleDesigner.swift; sourceTree = "<group>"; };
 		62D3118D2CE2905C002A39B8 /* List.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = List.txt; sourceTree = "<group>"; };
 		62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionParametersView.swift; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				62277B6D2D285223002E9D4D /* Scripts */,
 				6289FCC62AD0398100BB7F5E /* Industrial_BuilderApp.swift */,
 				6296D2A92AED6E290094FB19 /* AppState.swift */,
+				62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */,
 				6289FCCC2AD0398300BB7F5E /* Assets.xcassets */,
 				6289FCCE2AD0398300BB7F5E /* Info.plist */,
 				6289FCCF2AD0398300BB7F5E /* Industrial_Builder.entitlements */,
@@ -488,6 +491,7 @@
 				62277B732D285D19002E9D4D /* LCompile.command in Resources */,
 				62277B742D285D19002E9D4D /* LtPConvert.command in Resources */,
 				62277B752D285D19002E9D4D /* MPCompile.command in Resources */,
+				62BA0F9F2E28418600DF0FCC /* IndustrialBuilder.icon in Resources */,
 				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -671,7 +675,7 @@
 		6289FCD62AD0398300BB7F5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = IndustrialBuilder;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Industrial Builder/Industrial_Builder.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
@@ -716,7 +720,7 @@
 		6289FCD72AD0398300BB7F5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = IndustrialBuilder;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Industrial Builder/Industrial_Builder.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";

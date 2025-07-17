@@ -25,43 +25,6 @@ struct PartModuleDesigner: View
     {
         VStack(spacing: 0)
         {
-            #if !os(iOS)
-            Picker(selection: $editor_selection, label: Text("Picker"))
-            {
-                Text("Description").tag(0)
-                Text("Resources").tag(1)
-            }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .padding()
-            #else
-            if horizontal_size_class != .compact
-            {
-                Picker(selection: $editor_selection, label: Text("Picker"))
-                {
-                    Text("Description").tag(0)
-                    Text("Resources").tag(1)
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .padding()
-            }
-            else
-            {
-                Picker(selection: $editor_selection, label: Text("Picker"))
-                {
-                    Text("Description").tag(0)
-                    Text("Resources").tag(1)
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .modifier(PickerBorderer())
-                .padding()
-            }
-            #endif
-            
-            Divider()
-            
             switch editor_selection
             {
             case 0:
@@ -72,6 +35,21 @@ struct PartModuleDesigner: View
                 {
                     document_handler.document_update_parts()
                 }
+            }
+        }
+        .toolbar
+        {
+            ToolbarSpacer()
+            
+            ToolbarItem
+            {
+                Picker(selection: $editor_selection, label: Text("Picker"))
+                {
+                    Text("Description").tag(0)
+                    Text("Resources").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
             }
         }
         #if !os(visionOS)

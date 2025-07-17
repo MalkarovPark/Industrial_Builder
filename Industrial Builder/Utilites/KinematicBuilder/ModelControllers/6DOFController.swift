@@ -38,6 +38,11 @@ class _6DOF_Controller: DesignerRobotModelController, @unchecked Sendable
     
     public func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
     {
+        if lengths.count < 6
+        {
+            lengths = [Float](repeating: 0, count: 6)
+        }
+        
         var angles = [Float]()
         var C3 = Float()
         var theta = [Float](repeating: 0, count: 6)

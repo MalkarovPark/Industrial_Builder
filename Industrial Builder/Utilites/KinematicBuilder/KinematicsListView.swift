@@ -19,7 +19,7 @@ struct KinematicsListView: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        NavigationStack
         {
             if base_stc.kinematic_groups.count > 0
             {
@@ -46,7 +46,6 @@ struct KinematicsListView: View
                         }
                     }
                     .padding(20)
-                    // .padding(.vertical)
                 }
             }
             else

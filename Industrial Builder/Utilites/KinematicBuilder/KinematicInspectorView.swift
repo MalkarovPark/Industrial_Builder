@@ -39,12 +39,26 @@ struct KinematicInspectorView: View
             .listStyle(.plain)
             .modifier(ListBorderer())
             #if !os(visionOS)
-            .padding([.horizontal, .top])
+            .padding([.horizontal, .top, .bottom])
             #else
             .padding([.horizontal])
             #endif
             
-            PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
+            List
+            {
+                Section("Origin Shift")
+                {
+                    OriginShiftView(shift: $app_state.kinematic_preview_robot.origin_shift)
+                }
+            }
+            .listStyle(.plain)
+            .modifier(ListBorderer())
+            #if !os(visionOS)
+            .padding([.horizontal, .bottom])
+            #else
+            .padding([.horizontal])
+            #endif
+            .frame(height: 160)
         }
         #if os(visionOS)
         .frame(width: 400)
@@ -78,6 +92,84 @@ struct KinematicElementView: View
         { _, _ in
             on_update()
         }
+    }
+}
+
+public struct OriginShiftView: View
+{
+    @Binding var shift: (x: Float, y: Float, z: Float)
+    
+    let on_update: () -> ()
+    
+    @State private var editor_selection = 0
+    
+    public init(shift: Binding<(x: Float, y: Float, z: Float)>, on_update: @escaping () -> () = {})
+    {
+        self._shift = shift
+        self.on_update = on_update
+    }
+    
+    public var body: some View
+    {
+        HStack(spacing: 12)
+        {
+            Text("X")
+            TextField("0", value: $shift.x, format: .number)
+                .textFieldStyle(.roundedBorder)
+            #if os(macOS)
+            .textFieldStyle(.squareBorder)
+            #endif
+            Stepper("Enter", value: $shift.x, in: -20000...20000)
+                .labelsHidden()
+        }
+        .onChange(of: ShiftSnapshot(shift))
+        { _, _ in
+            on_update()
+        }
+        
+        HStack(spacing: 12)
+        {
+            Text("Y")
+            TextField("0", value: $shift.y, format: .number)
+                .textFieldStyle(.roundedBorder)
+            #if os(macOS)
+            .textFieldStyle(.squareBorder)
+            #endif
+            Stepper("Enter", value: $shift.y, in: -20000...20000)
+                .labelsHidden()
+        }
+        .onChange(of: ShiftSnapshot(shift))
+        { _, _ in
+            on_update()
+        }
+        
+        HStack(spacing: 12)
+        {
+            Text("Z")
+            TextField("0", value: $shift.z, format: .number)
+                .textFieldStyle(.roundedBorder)
+            #if os(macOS)
+            .textFieldStyle(.squareBorder)
+            #endif
+            Stepper("Enter", value: $shift.z, in: -20000...20000)
+                .labelsHidden()
+        }
+        .onChange(of: ShiftSnapshot(shift))
+        { _, _ in
+            on_update()
+        }
+    }
+}
+
+public struct ShiftSnapshot: Equatable
+{
+    let x: Float, y: Float, z: Float
+    
+    public init(_ tuple: (x: Float, y: Float, z: Float))
+    {
+        self.x = tuple.x
+        self.y = tuple.y
+        self.z = tuple.z
     }
 }
 

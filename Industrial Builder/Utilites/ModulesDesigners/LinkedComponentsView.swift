@@ -56,6 +56,7 @@ struct LinkedComponentsView: View
                 .padding(.bottom)
             }
         }
+        .controlSize(.regular)
         .padding([.horizontal, .top])
         .onChange(of: linked_components)
         { _, _ in

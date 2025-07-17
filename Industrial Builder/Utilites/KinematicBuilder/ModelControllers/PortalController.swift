@@ -32,6 +32,11 @@ class Portal_Controller: DesignerRobotModelController, @unchecked Sendable
     
     public func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
     {
+        if lengths.count < 8
+        {
+            lengths = [Float](repeating: 0, count: 8)
+        }
+        
         var px, py, pz: Float
         
         px = pointer_location[0] + origin_location[0] - lengths[1]

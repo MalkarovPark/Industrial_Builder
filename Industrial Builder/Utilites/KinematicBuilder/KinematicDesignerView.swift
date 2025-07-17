@@ -21,7 +21,8 @@ struct KinematicDesignerView: View
     @State private var show_inspector = true
     
     @State private var origin_move_view_presented = false
-    @State private var origin_rotate_view_presented = false
+    @State private var origin_position_view_presented = false
+    @State private var position_view_presented = false
     @State private var space_scale_view_presented = false
     @State private var make_components_view_presented = false
     
@@ -50,22 +51,47 @@ struct KinematicDesignerView: View
         }
         .overlay(alignment: .bottomLeading)
         {
-            Button(action: { origin_rotate_view_presented = true })
+            GlassEffectContainer
             {
-                Image(systemName: "cube")
-                    .imageScale(.large)
-                    #if os(macOS)
-                    .frame(width: 16, height: 16)
-                    #else
-                    .frame(width: 24, height: 24)
-                    #endif
-                    .padding(8)
-            }
-            .buttonBorderShape(.circle)
-            .buttonStyle(.glass)
-            .popover(isPresented: $origin_rotate_view_presented)
-            {
-                SpaceOriginView(robot: $app_state.kinematic_preview_robot)
+                VStack(spacing: 0)
+                {
+                    Button(action: { position_view_presented = true })
+                    {
+                        Image(systemName: "move.3d")
+                            .imageScale(.large)
+                            #if os(macOS)
+                            .frame(width: 16, height: 16)
+                            #else
+                            .frame(width: 24, height: 24)
+                            #endif
+                            .padding(8)
+                    }
+                    .buttonBorderShape(.circle)
+                    .buttonStyle(.glass)
+                    .popover(isPresented: $position_view_presented)
+                    {
+                        PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
+                    }
+                    .padding(.bottom)
+                    
+                    Button(action: { origin_position_view_presented = true })
+                    {
+                        Image(systemName: "cube")
+                            .imageScale(.large)
+                            #if os(macOS)
+                            .frame(width: 16, height: 16)
+                            #else
+                            .frame(width: 24, height: 24)
+                            #endif
+                            .padding(8)
+                    }
+                    .buttonBorderShape(.circle)
+                    .buttonStyle(.glass)
+                    .popover(isPresented: $origin_position_view_presented)
+                    {
+                        SpaceOriginView(robot: $app_state.kinematic_preview_robot)
+                    }
+                }
             }
             .padding()
         }

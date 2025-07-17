@@ -19,6 +19,7 @@ struct RobotModuleDesigner: View
     
     @State private var resources_names_update = false
     
+    @State private var origin_shift_view_presented: Bool = false
     @State private var connection_parameters_view_presented: Bool = false
     @State private var linked_components_view_presented: Bool = false
     
@@ -30,83 +31,6 @@ struct RobotModuleDesigner: View
     {
         VStack(spacing: 0)
         {
-            HStack(spacing: 0)
-            {
-                #if !os(iOS)
-                Picker(selection: $editor_selection, label: Text("Picker"))
-                {
-                    Text("Description").tag(0)
-                    Text("Code").tag(1)
-                    Text("Resources").tag(2)
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .padding(.trailing)
-                #else
-                if horizontal_size_class != .compact
-                {
-                    Picker(selection: $editor_selection, label: Text("Picker"))
-                    {
-                        Text("Description").tag(0)
-                        Text("Code").tag(1)
-                        Text("Resources").tag(2)
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .padding(.trailing)
-                }
-                else
-                {
-                    Picker(selection: $editor_selection, label: Text("Picker"))
-                    {
-                        Text("Description").tag(0)
-                        Text("Code").tag(1)
-                        Text("Resources").tag(2)
-                    }
-                    .pickerStyle(.menu)
-                    .labelsHidden()
-                    .modifier(PickerBorderer())
-                    .padding(.trailing)
-                }
-                #endif
-                
-                Button(action: { connection_parameters_view_presented.toggle() })
-                {
-                    Image(systemName: "link")
-                }
-                #if os(iOS)
-                .frame(width: 32, height: 32)
-                .modifier(ButtonBorderer())
-                #endif
-                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .top)
-                {
-                    ConnectionParametersView(connection_parameters: $robot_module.connection_parameters)
-                    {
-                        document_handler.document_update_robots()
-                    }
-                }
-                .padding(.trailing)
-                
-                Button(action: { linked_components_view_presented.toggle() })
-                {
-                    Image(systemName: "list.triangle")
-                }
-                #if os(iOS)
-                .frame(width: 32, height: 32)
-                .modifier(ButtonBorderer())
-                #endif
-                .popover(isPresented: $linked_components_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    LinkedComponentsView(linked_components: $robot_module.linked_components)
-                    {
-                        document_handler.document_update_robots()
-                    }
-                }
-            }
-            .padding()
-            
-            Divider()
-            
             switch editor_selection
             {
             case 0:
@@ -132,6 +56,75 @@ struct RobotModuleDesigner: View
         #if !os(visionOS)
         .background(.white)
         #endif
+        .toolbar
+        {
+            ToolbarSpacer()
+            
+            ToolbarItem
+            {
+                Picker(selection: $editor_selection, label: Text("Picker"))
+                {
+                    Text("Description").tag(0)
+                    Text("Code").tag(1)
+                    Text("Resources").tag(2)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+            }
+            
+            ToolbarSpacer()
+            
+            ToolbarItem
+            {
+                Button(action: { connection_parameters_view_presented.toggle() })
+                {
+                    Label("Link Parameters", systemImage: "link")
+                }
+                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .top)
+                {
+                    ConnectionParametersView(connection_parameters: $robot_module.connection_parameters)
+                    {
+                        document_handler.document_update_robots()
+                    }
+                }
+            }
+            
+            ToolbarItem
+            {
+                Button(action: { origin_shift_view_presented.toggle() })
+                {
+                    Label("Origin Shift", systemImage: "scale.3d")
+                }
+                .popover(isPresented: $origin_shift_view_presented, arrowEdge: default_popover_edge_inverted)
+                {
+                    VStack(spacing: 12)
+                    {
+                        OriginShiftView(shift: $robot_module.origin_shift)
+                        {
+                            document_handler.document_update_robots()
+                        }
+                    }
+                    .controlSize(.regular)
+                    .frame(minWidth: 160)
+                    .padding()
+                }
+            }
+            
+            ToolbarItem
+            {
+                Button(action: { linked_components_view_presented.toggle() })
+                {
+                    Label("Internal Components", systemImage: "list.triangle")
+                }
+                .popover(isPresented: $linked_components_view_presented, arrowEdge: default_popover_edge_inverted)
+                {
+                    LinkedComponentsView(linked_components: $robot_module.linked_components)
+                    {
+                        document_handler.document_update_robots()
+                    }
+                }
+            }
+        }
     }
 }
 
