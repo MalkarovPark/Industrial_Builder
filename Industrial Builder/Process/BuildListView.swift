@@ -54,7 +54,7 @@ struct BuildListView: View
                         Text("Robot")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
                             ForEach (base_stc.robot_modules_names, id: \.self)
                             { name in
@@ -76,7 +76,7 @@ struct BuildListView: View
                         Text("Tool")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
                             ForEach (base_stc.tool_modules_names, id: \.self)
                             { name in
@@ -99,7 +99,7 @@ struct BuildListView: View
                         Text("Part")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
                             ForEach (base_stc.part_modules_names, id: \.self)
                             { name in
@@ -122,7 +122,7 @@ struct BuildListView: View
                         Text("Changer")
                             .font(.title3)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
                             ForEach (base_stc.changer_modules_names, id: \.self)
                             { name in
@@ -396,4 +396,136 @@ public var external_app_code_templates: [String] = [
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(DocumentUpdateHandler())
         .padding()
+}
+
+// MARK: - Temporary replacement due to unknown crash on regular LazyVGrid.
+struct LazyVGridU: Layout
+{
+    let columns: [GridItem]
+    let spacing: CGFloat
+
+    init(columns: [GridItem], spacing: CGFloat = 8)
+    {
+        self.columns = columns
+        self.spacing = spacing
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize
+    {
+        guard !columns.isEmpty else { return .zero }
+
+        let columnCount = columns.count
+
+        let totalWidth = proposal.width ?? 300
+
+        var columnWidths = [CGFloat]()
+        var flexibleColumnsCount = 0
+        var fixedWidthSum: CGFloat = 0
+
+        for column in columns
+        {
+            switch column.size
+            {
+            case .fixed(let width):
+                columnWidths.append(width)
+                fixedWidthSum += width
+            case .flexible(let min, let max):
+                flexibleColumnsCount += 1
+                columnWidths.append(0)
+            case .adaptive(let min, let max):
+                flexibleColumnsCount += 1
+                columnWidths.append(0)
+            }
+        }
+
+        // Reposition remain width between columns
+        let totalSpacing = CGFloat(columnCount - 1) * spacing
+        let remainingWidth = max(0, totalWidth - fixedWidthSum - totalSpacing)
+        let flexibleWidth = flexibleColumnsCount > 0 ? remainingWidth / CGFloat(flexibleColumnsCount) : 0
+
+        for i in 0..<columnWidths.count
+        {
+            if columnWidths[i] == 0
+            {
+                // Adaptive width
+                columnWidths[i] = flexibleWidth
+            }
+        }
+
+        // Columns height
+        var columnHeights = Array(repeating: CGFloat(0), count: columnCount)
+
+        // Order cumns by index
+        for (index, subview) in subviews.enumerated()
+        {
+            let col = index % columnCount
+            // Column width
+            let proposedSize = ProposedViewSize(width: columnWidths[col], height: nil)
+            let size = subview.sizeThatFits(proposedSize)
+            columnHeights[col] += size.height + spacing
+        }
+
+        let height = (columnHeights.max() ?? 0) - spacing // subtraction spacing
+
+        return CGSize(width: totalWidth, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ())
+    {
+        guard !columns.isEmpty else { return }
+
+        let columnCount = columns.count
+        let totalSpacing = CGFloat(columnCount - 1) * spacing
+        let totalWidth = bounds.width
+
+        // Like sizeThatFits — columns width calculation
+        var columnWidths = [CGFloat]()
+        var flexibleColumnsCount = 0
+        var fixedWidthSum: CGFloat = 0
+
+        for column in columns
+        {
+            switch column.size
+            {
+            case .fixed(let width):
+                columnWidths.append(width)
+                fixedWidthSum += width
+            case .flexible(let min, let max):
+                flexibleColumnsCount += 1
+                columnWidths.append(0)
+            case .adaptive(let min, let max):
+                flexibleColumnsCount += 1
+                columnWidths.append(0)
+            }
+        }
+
+        let remainingWidth = max(0, totalWidth - fixedWidthSum - totalSpacing)
+        let flexibleWidth = flexibleColumnsCount > 0 ? remainingWidth / CGFloat(flexibleColumnsCount) : 0
+
+        for i in 0..<columnWidths.count
+        {
+            if columnWidths[i] == 0
+            {
+                columnWidths[i] = flexibleWidth
+            }
+        }
+
+        // Columns Y
+        var columnY = Array(repeating: bounds.minY, count: columnCount)
+
+        // Place
+        for (index, subview) in subviews.enumerated()
+        {
+            let col = index % columnCount
+            let x = bounds.minX + columnWidths[..<col].reduce(0, +) + CGFloat(col) * spacing
+            let y = columnY[col]
+
+            let proposedSize = ProposedViewSize(width: columnWidths[col], height: nil)
+            let size = subview.sizeThatFits(proposedSize)
+
+            subview.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(width: columnWidths[col], height: size.height))
+
+            columnY[col] += size.height + spacing
+        }
+    }
 }

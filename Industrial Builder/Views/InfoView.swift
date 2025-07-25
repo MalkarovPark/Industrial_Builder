@@ -19,63 +19,25 @@ struct InfoView: View
     
     var body: some View
     {
-        ZStack(alignment: .trailing)
+        HStack(spacing: 0)
         {
-            HStack(spacing: 0)
-            {
-                ZStack
-                {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                }
-                .frame(maxWidth: .infinity)
-                
-                InfoGalleryView(document: $document)
-            }
-            
-            HStack(spacing: 0)
-            {
-                ZStack
-                {
-                    Rectangle()
-                    #if !os(visionOS)
-                        .foregroundColor(.white)
-                    #else
-                        .foregroundStyle(.thinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    #endif
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    #if !os(visionOS)
-                        .shadow(radius: 4)
-                    #endif
-                    
-                    VStack(spacing: 0)
-                    {
-                        TextEditor(text: $base_stc.package_info.description)
-                            .textEditorStyle(.plain)
-                            .font(.title3)
-                            .padding()
-                            .frame(maxHeight: .infinity)
-                            .onChange(of: base_stc.package_info.description)
-                        { _, new_value in
-                            document.package_info.description = new_value
-                            document_handler.document_update_info()
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                #if os(visionOS)
+            TextEditor(text: $base_stc.package_info.description)
+                .textEditorStyle(.plain)
+                .font(.title3)
                 .padding()
-                #endif
-                
-                VStack
-                {
-                    
-                }
-                .frame(width: 192)
+                .frame(maxHeight: .infinity)
+                .onChange(of: base_stc.package_info.description)
+            { _, new_value in
+                document.package_info.description = new_value
+                document_handler.document_update_info()
             }
-            .ignoresSafeArea(.container, edges: .bottom)
+            .frame(maxWidth: .infinity)
+            
+            Divider()
+            
+            InfoGalleryView(document: $document)
         }
+        .ignoresSafeArea(.container, edges: .bottom)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -115,84 +77,56 @@ struct InfoGalleryView: View
                             Label("Delete", systemImage: "trash")
                         }
                     }
-                    .transition(.opacity) // Добавляем переход для анимации исчезновения
+                    .transition(.opacity)
                 }
             }
             .animation(.easeInOut, value: document.package_info.gallery)
             .modifier(DoubleModifier(update_toggle: $update_toggle))
         }
         .frame(width: 192)
-        .overlay(alignment: .bottom)
+        .overlay(alignment: .bottomTrailing)
         {
-            #if !os(visionOS)
-            VStack(spacing: 0)
+            GlassEffectContainer
             {
-                Divider()
-                HStack
+                HStack(spacing: 0)
                 {
                     Button(action: {
                         document.package_info.clear_gallery()
                     })
                     {
                         Image(systemName: "trash")
-                            #if os(iOS)
+                            .imageScale(.large)
+                        #if os(macOS)
+                            .frame(width: 16, height: 16)
+                        #else
                             .frame(width: 24, height: 24)
-                            #else
-                            .frame(maxHeight: 24)
-                            #endif
+                        #endif
+                            .padding(8)
                     }
-                    .controlSize(.extraLarge)
+                    .buttonBorderShape(.circle)
                     .buttonStyle(.plain)
-                    .padding()
-                    
-                    Spacer()
+                    .padding(8)
                     
                     Button(action: { load_panel_presented.toggle() })
                     {
                         Image(systemName: "square.and.arrow.down")
-                            #if os(iOS)
+                            .imageScale(.large)
+                        #if os(macOS)
+                            .frame(width: 16, height: 16)
+                        #else
                             .frame(width: 24, height: 24)
-                            #else
-                            .frame(maxHeight: 24)
-                            #endif
+                        #endif
+                            .padding(8)
                     }
-                    .controlSize(.extraLarge)
+                    .buttonBorderShape(.circle)
                     .buttonStyle(.plain)
-                    .padding()
+                    .padding(8)
                     .fileImporter(isPresented: $load_panel_presented,
                                   allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
                 }
-                .frame(maxWidth: .infinity)
-                .background(.ultraThinMaterial)
+                .glassEffect(.regular.interactive())
+                .padding()
             }
-            #else
-            HStack
-            {
-                Button(action: {
-                    document.package_info.clear_gallery()
-                })
-                {
-                    Image(systemName: "trash")
-                        .padding()
-                }
-                .buttonStyle(.plain)
-                .buttonBorderShape(.circle)
-                
-                Button(action: { load_panel_presented.toggle() })
-                {
-                    Image(systemName: "square.and.arrow.down")
-                        .padding()
-                }
-                .buttonStyle(.plain)
-                .buttonBorderShape(.circle)
-                .fileImporter(isPresented: $load_panel_presented,
-                              allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
-            }
-            .controlSize(.large)
-            .padding()
-            .glassBackgroundEffect()
-            .padding(.bottom)
-            #endif
         }
         .overlay
         {

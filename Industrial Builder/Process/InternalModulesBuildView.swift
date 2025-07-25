@@ -40,23 +40,27 @@ struct InternalModulesBuildView: View
             }
             else
             {
-                BuildListView(selected_name: $selected_name)
-                
-                Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
-                {
-                    ForEach(InternalExportType.allCases, id: \.self)
-                    { export_type in
-                        Text(export_type.rawValue).tag(export_type)
-                        /*if export_type != .xcode_project
+                BuildListView(selected_name: $selected_name, with_spacer: true)
+                    .overlay(alignment: .bottom)
+                    {
+                        HStack
                         {
-                            Text(export_type.rawValue).tag(export_type)
-                        }*/
+                            Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
+                            {
+                                ForEach(InternalExportType.allCases, id: \.self)
+                                { export_type in
+                                    Text(export_type.rawValue).tag(export_type)
+                                    /*if export_type != .xcode_project
+                                    {
+                                        Text(export_type.rawValue).tag(export_type)
+                                    }*/
+                                }
+                            }
+                            .padding(8)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .background(.bar)
                     }
-                }
-                #if os(iOS)
-                .modifier(PickerBorderer())
-                #endif
-                .padding()
             }
         }
         .toolbar

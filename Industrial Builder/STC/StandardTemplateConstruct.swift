@@ -383,9 +383,18 @@ public class StandardTemplateConstruct: ObservableObject
         {
         case .blank:
             return ""
-        case .unknown:
-            return "UwU"
+        case .clipboard:
+            return get_clipboard_string()
         }
+    }
+    
+    private func get_clipboard_string() -> String
+    {
+        #if os(macOS)
+        return NSPasteboard.general.string(forType: .string) ?? ""
+        #else
+        return UIPasteboard.general.string
+        #endif
     }
     
     // MARK: - Prepare for Dev functions
@@ -927,6 +936,9 @@ public class StandardTemplateConstruct: ObservableObject
         code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
+        // Origin Shift
+        code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
+        
         // Components
         if !(module.code_items["Controller"]?.isEmpty ?? false)
         {
@@ -1095,7 +1107,7 @@ public enum PrepareForDevType: String, Equatable, CaseIterable
 public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
 {
     case blank = "Blank"
-    case unknown = "Unknown"
+    case clipboard = "Clipboard"
     
     var image_name: String
     {
@@ -1103,8 +1115,8 @@ public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
         {
         case .blank:
             return "rays"
-        case .unknown:
-            return "questionmark"
+        case .clipboard:
+            return "document.on.clipboard"
         }
     }
 }

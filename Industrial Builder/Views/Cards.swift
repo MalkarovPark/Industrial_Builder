@@ -214,7 +214,7 @@ struct ImageCard<Content: View>: View
         {
             Button(role: .destructive, action: delete_image)
             {
-                Label("Delete", systemImage: "xmark")
+                Label("Delete", systemImage: "trash")
             }
         }
     }
@@ -248,7 +248,7 @@ struct SimpleImageCard<Content: View>: View
             {
                 is_presented.toggle()
             }
-            .popover(isPresented: $is_presented, arrowEdge: .trailing, content: { content($is_presented) })
+            .sheet(isPresented: $is_presented, content: { content($is_presented).modifier(ViewCloseButton(is_presented: $is_presented)) })
         #else
         Image(uiImage: image)
             .resizable()
@@ -257,7 +257,7 @@ struct SimpleImageCard<Content: View>: View
             {
                 is_presented.toggle()
             }
-            .popover(isPresented: $is_presented, arrowEdge: .trailing, content: { content($is_presented) })
+            .sheet(isPresented: $is_presented, content: { content($is_presented).modifier(ViewCloseButton(is_presented: $is_presented)) })
         #endif
     }
 }
@@ -379,7 +379,7 @@ struct ListingCard<Content: View>: View
         {
             Button(role: .destructive, action: delete_listing)
             {
-                Label("Delete", systemImage: "xmark")
+                Label("Delete", systemImage: "trash")
             }
         }
     }
