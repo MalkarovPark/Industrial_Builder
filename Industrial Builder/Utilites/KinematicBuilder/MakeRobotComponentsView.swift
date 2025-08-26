@@ -84,8 +84,6 @@ struct MakeRobotComponentsView: View
             }
             #if os(macOS)
             .menuStyle(.borderedButton)
-            #elseif os(iOS)
-            .modifier(ButtonBorderer())
             #endif
             .disabled((base_stc.robot_modules.isEmpty) && (!app_state.make_model_from_kinematic && !app_state.make_controller_from_kinematic))
         }

@@ -181,9 +181,6 @@ struct CodeBuilderView: View
             {
                 is_presented = false
             }
-            #if os(iOS)
-            .modifier(ButtonBorderer())
-            #endif
             .padding(.trailing)
             
             Button("Confirm")

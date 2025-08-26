@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IndustrialKit
+import IndustrialKitUI
 
 struct KinematicsListView: View
 {
@@ -15,7 +16,7 @@ struct KinematicsListView: View
     
     @State private var add_kinematic_view_presented = false
     
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 96, maximum: .infinity), spacing: 24)]
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 256, maximum: .infinity), spacing: 24)]
     
     var body: some View
     {
@@ -29,10 +30,12 @@ struct KinematicsListView: View
                     {
                         ForEach(base_stc.kinematic_groups.indices, id: \.self)
                         { index in
-                            KinematicCard(group: base_stc.kinematic_groups[index])
+                            NavigationLink(destination: KinematicDesignerView(group: $base_stc.kinematic_groups[index]))
                             {
-                                KinematicDesignerView(group: $base_stc.kinematic_groups[index])
+                                BoxCard(title: base_stc.kinematic_groups[index].name, subtitle: base_stc.kinematic_groups[index].type.rawValue, color: .gray, image_name: "point.3.connected.trianglepath.dotted")
                             }
+                            .buttonStyle(.borderless)
+                            .frame(height: 128)
                             .contextMenu
                             {
                                 Button(role: .destructive, action: {
@@ -128,11 +131,7 @@ struct AddKinematicView: View
                 }
                 .pickerStyle(.menu)
                 .frame(maxWidth: .infinity)
-                #if os(macOS)
                 .buttonStyle(.bordered)
-                #elseif os(iOS)
-                .modifier(PickerBorderer())
-                #endif
                 #if os(macOS)
                 .frame(width: 128)
                 #endif

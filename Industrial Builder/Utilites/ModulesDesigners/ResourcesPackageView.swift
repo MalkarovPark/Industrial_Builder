@@ -81,7 +81,7 @@ struct ResourcesPackageView: View
                     .buttonStyle(.link)
                     .foregroundColor(.accentColor)
                     #endif
-                    .popover(isPresented: $is_connect_view_presented, arrowEdge: default_popover_edge)
+                    .popover(isPresented: $is_connect_view_presented, arrowEdge: .leading)
                     {
                         ConnectedNodesView(names: $connected_nodes_names, nested_nodes_names: nested_nodes_names, on_update: on_update)
                     }

@@ -70,7 +70,10 @@ struct ToolModuleDesigner: View
                     Text("Code").tag(2)
                     Text("Resources").tag(3)
                 }
+                #if os(macOS)
                 .pickerStyle(.segmented)
+                #endif
+                .labelsHidden()
             }
             
             ToolbarSpacer()

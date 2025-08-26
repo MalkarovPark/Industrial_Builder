@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IndustrialKitUI
 
 struct ComponentsView: View
 {
@@ -24,31 +25,44 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Scenes", count_number: base_stc.scenes.count, image_name: "cube", color: .green)
+                        NavigationLink(destination: ScenesListView())
                         {
-                            ScenesListView()
+                            BoxCard(title: "Scenes", subtitle: numeral_endings(base_stc.scenes.count, word: "item"), color: .green, image_name: "cube", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                         
-                        StandardNavigationCard(name: "Images", count_number: base_stc.images.count, image_name: "photo", color: .teal)
+                        NavigationLink(destination: ImagesListView())
                         {
-                            ImagesListView()
+                            BoxCard(title: "Images", subtitle: numeral_endings(base_stc.images.count, word: "item"), color: .teal, image_name: "photo", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                         
-                        StandardNavigationCard(name: "Listings", count_number: base_stc.listings.count, image_name: "scroll", color: .indigo)
+                        NavigationLink(destination: ListingsListView())
                         {
-                            ListingsListView()
+                            BoxCard(title: "Listings", subtitle: numeral_endings(base_stc.listings.count, word: "item"), color: .indigo, image_name: "scroll", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                         
-                        StandardNavigationCard(name: "Kinematics", count_number: base_stc.kinematic_groups.count, image_name: "point.3.connected.trianglepath.dotted", color: .purple)
+                        NavigationLink(destination: KinematicsListView())
                         {
-                            KinematicsListView()
+                            BoxCard(title: "Kinematics", subtitle: numeral_endings(base_stc.kinematic_groups.count, word: "item"), color: .purple, image_name: "point.3.connected.trianglepath.dotted", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                     }
                     .padding(20)
                 }
             }
         }
     }
+}
+
+func numeral_endings(_ count: Int, word: String) -> String
+{
+    count == 1 ? "\(count) \(word)" : "\(count) \(word)s"
 }
 
 #Preview

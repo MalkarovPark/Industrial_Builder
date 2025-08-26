@@ -45,6 +45,7 @@ struct KinematicDesignerView: View
                 Rectangle()
                     .fill(.gray)
             }
+            .modifier(BackgroundExtensionModifier(color: Color(red: 142/255, green: 142/255, blue: 147/255)))
             #if !os(macOS)
             .ignoresSafeArea(.container, edges: .bottom)
             #endif
@@ -71,6 +72,7 @@ struct KinematicDesignerView: View
                     .popover(isPresented: $position_view_presented)
                     {
                         PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
+                            .frame(minWidth: 256)
                     }
                     .padding(.bottom)
                     
@@ -90,6 +92,7 @@ struct KinematicDesignerView: View
                     .popover(isPresented: $origin_position_view_presented)
                     {
                         SpaceOriginView(robot: $app_state.kinematic_preview_robot)
+                            .frame(minWidth: 256)
                     }
                 }
             }
@@ -124,6 +127,53 @@ struct KinematicDesignerView: View
             KinematicInspectorView(elements: $group.data)
         }
         .frame(minWidth: 640, minHeight: 480)
+    }
+}
+
+struct BackgroundExtensionModifier: ViewModifier
+{
+    let color: Color
+    
+    func body(content: Content) -> some View
+    {
+        ZStack
+        {
+            ScrollView(.vertical) {
+                VStack
+                {
+                    Rectangle()
+                        .foregroundStyle(Color(red: 142/255, green: 142/255, blue: 147/255))
+                        .aspectRatio(contentMode: .fit)
+                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                        .backgroundExtensionEffect()
+                }
+            }
+            .background(color)
+            
+            content
+                .mask(
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .black, location: 0.05),
+                            .init(color: .black, location: 1)
+                        ]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .mask(
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .black, location: 0.05),
+                            .init(color: .black, location: 1)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+        }
     }
 }
 

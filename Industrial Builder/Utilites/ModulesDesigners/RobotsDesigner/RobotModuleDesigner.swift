@@ -68,7 +68,9 @@ struct RobotModuleDesigner: View
                     Text("Code").tag(1)
                     Text("Resources").tag(2)
                 }
+                #if os(macOS)
                 .pickerStyle(.segmented)
+                #endif
                 .labelsHidden()
             }
             

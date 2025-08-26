@@ -246,7 +246,7 @@ struct ToolModulesView: View
                         }
                         .disabled(picker_in_rename)
                     }
-                    .padding()
+                    .frame(maxWidth: .infinity)
                 }
             }
             #endif

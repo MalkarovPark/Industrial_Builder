@@ -84,7 +84,7 @@ struct InfoGalleryView: View
             .modifier(DoubleModifier(update_toggle: $update_toggle))
         }
         .frame(width: 192)
-        .overlay(alignment: .bottomTrailing)
+        .overlay(alignment: .bottom)
         {
             GlassEffectContainer
             {
@@ -101,7 +101,7 @@ struct InfoGalleryView: View
                         #else
                             .frame(width: 24, height: 24)
                         #endif
-                            .padding(8)
+                            .padding(4)
                     }
                     .buttonBorderShape(.circle)
                     .buttonStyle(.plain)
@@ -116,13 +116,12 @@ struct InfoGalleryView: View
                         #else
                             .frame(width: 24, height: 24)
                         #endif
-                            .padding(8)
+                            .padding(4)
                     }
                     .buttonBorderShape(.circle)
                     .buttonStyle(.plain)
                     .padding(8)
-                    .fileImporter(isPresented: $load_panel_presented,
-                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+                    .fileImporter(isPresented: $load_panel_presented, allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
                 }
                 .glassEffect(.regular.interactive())
                 .padding()

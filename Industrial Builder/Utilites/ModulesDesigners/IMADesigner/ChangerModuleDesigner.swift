@@ -50,7 +50,9 @@ struct ChangerModuleDesigner: View
                     Text("Description").tag(0)
                     Text("Code").tag(1)
                 }
+                #if os(macOS)
                 .pickerStyle(.segmented)
+                #endif
                 .labelsHidden()
             }
         }

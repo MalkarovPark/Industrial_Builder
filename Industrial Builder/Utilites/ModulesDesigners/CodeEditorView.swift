@@ -63,11 +63,7 @@ struct CodeEditorView: View
                         Text(name)
                     }
                 }
-                #if os(macOS)
                 .buttonStyle(.bordered)
-                #elseif os(iOS)
-                .modifier(PickerBorderer())
-                #endif
                 .frame(maxWidth: .infinity)
                 .padding(.trailing)
                 .disabled(code_items.count == 1)
@@ -76,11 +72,7 @@ struct CodeEditorView: View
                 {
                     code_import_presented.toggle()
                 }
-                #if os(macOS)
-                .menuStyle(.borderedButton)
-                #elseif os(iOS)
-                .modifier(ButtonBorderer())
-                #endif
+                .buttonStyle(.bordered)
                 .sheet(isPresented: $code_import_presented)
                 {
                     CodeBuilderView(is_presented: $code_import_presented, avaliable_templates_names: avaliable_templates_names[code_item_name] ?? [String]())

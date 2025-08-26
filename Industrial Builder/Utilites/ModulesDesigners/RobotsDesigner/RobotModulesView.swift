@@ -40,7 +40,7 @@ struct RobotModulesView: View
                         {
                             if rename_item == item.id
                             {
-                                TextField("Input new Name", text: $new_name)
+                                TextField("Input new name", text: $new_name)
                                     .onSubmit
                                 {
                                     item.name = new_name
@@ -245,7 +245,7 @@ struct RobotModulesView: View
                         }
                         .disabled(picker_in_rename)
                     }
-                    .padding()
+                    .frame(maxWidth: .infinity)
                 }
             }
             #endif

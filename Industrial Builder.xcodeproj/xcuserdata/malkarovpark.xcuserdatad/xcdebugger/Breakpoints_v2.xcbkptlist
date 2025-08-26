@@ -238,9 +238,9 @@
             filePath = "Industrial Builder/Views/Cards.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
-            landmarkName = "delete_image()"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "init(name:count_number:image_name:color:link_view:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -798,8 +798,8 @@
             filePath = "Industrial Builder/Views/InfoView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "perform_drop(providers:)"
             landmarkType = "7">
          </BreakpointContent>

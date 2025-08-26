@@ -7,145 +7,7 @@
 
 import SwiftUI
 import SceneKit
-//import IndustrialKit
 import IndustrialKitUI
-
-struct StandardCard: View
-{
-    @State private var is_presented = false
-    
-    let name: String
-    let image_name: String
-    
-    let count_number: Int?
-    
-    let color: Color
-    
-    public init(name: String, count_number: Int? = nil, image_name: String, color: Color)
-    {
-        self.name = name
-        self.count_number = count_number
-        self.image_name = image_name
-        self.color = color
-    }
-    
-    var body: some View
-    {
-        VStack(spacing: 0)
-        {
-            ZStack
-            {
-                Rectangle()
-                    .foregroundColor(color)
-                    .overlay(alignment: .trailing)
-                    {
-                        Image(systemName: image_name)
-                            .fontWeight(.bold)
-                            .font(.system(size: 96))
-                        #if os(macOS)
-                            .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                        #else
-                            .foregroundColor(Color(UIColor.quaternaryLabel))
-                        #endif
-                            .padding()
-                            .offset(x: 40, y: 20)
-                    }
-                    .overlay(alignment: .leading)
-                    {
-                        VStack(spacing: 0)
-                        {
-                            Text(name)
-                                .font(.system(size: 28))
-                                .foregroundColor(.white)
-                                .padding()
-                        }
-                    }
-                    .overlay(alignment: .topTrailing)
-                    {
-                        if count_number != nil
-                        {
-                            if count_number! > 0
-                            {
-                                Text("\(count_number!)")
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 28, design: .rounded))
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .offset(y: -6)
-                            }
-                        }
-                    }
-            }
-            .frame(height: 96)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        }
-        .shadow(radius: 8)
-    }
-}
-
-struct StandardNavigationCard<Content: View>: View
-{
-    let name: String
-    let image_name: String
-    
-    let count_number: Int?
-    
-    let color: Color
-    
-    let link_view: () -> Content
-    
-    public init(name: String, count_number: Int? = nil, image_name: String, color: Color, link_view: @escaping () -> Content)
-    {
-        self.name = name
-        self.count_number = count_number
-        self.image_name = image_name
-        self.color = color
-        
-        self.link_view = link_view
-    }
-    
-    var body: some View
-    {
-        NavigationLink(destination: link_view)
-        {
-            StandardCard(name: name, count_number: count_number, image_name: image_name, color: color)
-        }
-        .buttonStyle(.borderless)
-    }
-}
-
-struct StandardSheetCard<Content: View>: View
-{
-    @State private var is_presented = false
-    
-    let name: String
-    let image_name: String
-    
-    let count_number: Int?
-    let color: Color
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
-    
-    public init(name: String, count_number: Int? = nil, image_name: String, color: Color, @ViewBuilder content: @escaping (_ is_presented: Binding<Bool>) -> Content)
-    {
-        self.name = name
-        self.image_name = image_name
-        self.count_number = count_number
-        self.color = color
-        
-        self.content = content
-    }
-    
-    var body: some View
-    {
-        StandardCard(name: name, count_number: count_number, image_name: image_name, color: color)
-            .onTapGesture
-            {
-                is_presented = true
-            }
-            .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
-    }
-}
 
 struct ImageCard<Content: View>: View
 {
@@ -159,6 +21,8 @@ struct ImageCard<Content: View>: View
     let name: String
     
     let content: (_ is_presented: Binding<Bool>) -> Content
+    
+    @State private var hovered = false
     
     var body: some View
     {
@@ -198,13 +62,21 @@ struct ImageCard<Content: View>: View
                 }
             #endif
         }
+        .offset(y: hovered ? -2 : 0)
         .background
         {
             Rectangle()
-                .foregroundStyle(.regularMaterial)
-                .shadow(radius: 8)
+                .blur(radius: 16)
+                .opacity(0.2)
         }
         .frame(height: 192)
+        .onHover
+        { hovered in
+            withAnimation(.easeInOut(duration: 0.2))
+            {
+                self.hovered = hovered
+            }
+        }
         .onTapGesture
         {
             is_presented.toggle()
@@ -343,6 +215,8 @@ struct ListingCard<Content: View>: View
     
     let content: (_ is_presented: Binding<Bool>) -> Content
     
+    @State private var hovered = false
+    
     var body: some View
     {
         ZStack
@@ -353,7 +227,6 @@ struct ListingCard<Content: View>: View
             #else
                 .foregroundStyle(.bar)
             #endif
-                .shadow(radius: 8)
                 .overlay(alignment: .topLeading)
                 {
                     Text(code)
@@ -369,7 +242,21 @@ struct ListingCard<Content: View>: View
                         }
                 }
         }
+        .offset(y: hovered ? -2 : 0)
+        .background
+        {
+            Rectangle()
+                .blur(radius: 16)
+                .opacity(0.2)
+        }
         .frame(height: 192)
+        .onHover
+        { hovered in
+            withAnimation(.easeInOut(duration: 0.2))
+            {
+                self.hovered = hovered
+            }
+        }
         .onTapGesture
         {
             is_presented.toggle()
@@ -409,32 +296,11 @@ struct SceneCard<Content: View>: View
     {
         Button(action: { is_presented = true })
         {
-            ObjectSceneView(scene: scene)
-                .disabled(true)
+            GlassBoxCard(title: name, node: scene.rootNode)
         }
         .buttonStyle(.borderless)
-        .background(.regularMaterial)
         .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
         .frame(height: 192)
-        #if !os(visionOS)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .shadow(radius: 8)
-        #else
-        .glassBackgroundEffect()
-        #endif
-        .overlay(alignment: .bottomTrailing)
-        {
-            Text(URL(fileURLWithPath: name).deletingPathExtension().lastPathComponent)
-                .padding(8)
-                #if os(macOS)
-                .foregroundColor(Color(NSColor.secondaryLabelColor))
-                #else
-                .foregroundColor(Color(UIColor.secondaryLabel))
-                #endif
-                .background(.bar)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .padding(8)
-        }
         .contextMenu
         {
             Button(role: .destructive, action: delete_scene)
@@ -523,83 +389,6 @@ struct SelectSceneCard: View
     }
 }
 
-struct KinematicCard<Content: View>: View
-{
-    let group: KinematicGroup
-    
-    let link_view: () -> Content
-    
-    public init(group: KinematicGroup, link_view: @escaping () -> Content)
-    {
-        self.group = group
-        
-        self.link_view = link_view
-    }
-    
-    var body: some View
-    {
-        NavigationLink(destination: link_view)
-        {
-            VStack(spacing: 0)
-            {
-                ZStack
-                {
-                    Rectangle()
-                        .foregroundStyle(.thinMaterial)
-                        .overlay(alignment: .center)
-                        {
-                            Image(systemName: "point.3.connected.trianglepath.dotted")
-                                .fontWeight(.bold)
-                                .font(.system(size: 96))
-                            #if os(macOS)
-                                .foregroundColor(Color(NSColor.quaternaryLabelColor).opacity(0.25))
-                            #else
-                                .foregroundColor(Color(UIColor.quaternaryLabel).opacity(0.25))
-                            #endif
-                                .padding()
-                                .offset(x: 40, y: 20)
-                        }
-                        .overlay(alignment: .topLeading)
-                        {
-                            VStack(spacing: 0)
-                            {
-                                Text(group.name)
-                                    .font(.system(size: 24))
-                                    .foregroundColor(.secondary)
-                                    .padding(6)
-                            }
-                        }
-                        .overlay(alignment: .bottomLeading)
-                        {
-                            Text(group.type.rawValue)
-                                .font(.system(size: 16))
-                                .foregroundColor(.secondary.opacity(0.75))
-                                .padding(6)
-                        }
-                }
-                .frame(minWidth: 96, minHeight: 96)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            }
-            .shadow(radius: 8)
-        }
-        .buttonStyle(.borderless)
-    }
-}
-
-#Preview
-{
-    VStack(spacing: 0)
-    {
-        StandardCard(name: "Name", image_name: "gearshape.2.fill", color: .gray)
-            .frame(width: 256)
-            .padding(.bottom)
-        
-        StandardCard(name: "Name", count_number: 2, image_name: "cylinder.fill", color: .mint)
-            .frame(width: 256)
-    }
-    .padding()
-}
-
 #Preview
 {
     ImageCard(image: .constant(UIImage()), name: "Image")
@@ -628,15 +417,5 @@ struct KinematicCard<Content: View>: View
         
         SelectSceneCard(scene: SCNScene(), name: "Image", is_selected: .constant(true), is_main: .constant(false), on_main_set: {}, on_main_unset: {})
     }
-    .padding()
-}
-
-#Preview
-{
-    KinematicCard(group: KinematicGroup(name: "Name", type: .portal))
-    {
-        EmptyView()
-    }
-    .frame(width: 96, height: 96)
     .padding()
 }

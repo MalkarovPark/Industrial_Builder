@@ -48,7 +48,9 @@ struct PartModuleDesigner: View
                     Text("Description").tag(0)
                     Text("Resources").tag(1)
                 }
+                #if os(macOS)
                 .pickerStyle(.segmented)
+                #endif
                 .labelsHidden()
             }
         }

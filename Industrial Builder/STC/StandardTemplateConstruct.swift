@@ -393,7 +393,7 @@ public class StandardTemplateConstruct: ObservableObject
         #if os(macOS)
         return NSPasteboard.general.string(forType: .string) ?? ""
         #else
-        return UIPasteboard.general.string
+        return UIPasteboard.general.string ?? ""
         #endif
     }
     

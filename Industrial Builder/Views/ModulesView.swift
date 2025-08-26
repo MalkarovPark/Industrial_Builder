@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IndustrialKitUI
 
 struct ModulesView: View
 {
@@ -24,25 +25,33 @@ struct ModulesView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        StandardNavigationCard(name: "Robot", count_number: base_stc.robot_modules.count, image_name: "r.square", color: .green)
+                        NavigationLink(destination: RobotModulesView())
                         {
-                            RobotModulesView()
+                            BoxCard(title: "Robot", subtitle: numeral_endings(base_stc.robot_modules.count, word: "item"), color: .green, image_name: "r.square", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                         
-                        StandardNavigationCard(name: "Tool", count_number: base_stc.tool_modules.count, image_name: "hammer", color: .teal)
+                        NavigationLink(destination: ToolModulesView())
                         {
-                            ToolModulesView()
+                            BoxCard(title: "Tool", subtitle: numeral_endings(base_stc.tool_modules.count, word: "item"), color: .teal, image_name: "hammer", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                         
-                        StandardNavigationCard(name: "Part", count_number: base_stc.part_modules.count, image_name: "shippingbox", color: .indigo)
+                        NavigationLink(destination: PartModulesView())
                         {
-                            PartModulesView()
+                            BoxCard(title: "Part", subtitle: numeral_endings(base_stc.part_modules.count, word: "item"), color: .indigo, image_name: "shippingbox", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                         
-                        StandardNavigationCard(name: "Changer", count_number: base_stc.changer_modules.count, image_name: "wand.and.rays", color: .pink)
+                        NavigationLink(destination: ChangerModulesView())
                         {
-                            ChangerModulesView()
+                            BoxCard(title: "Changer", subtitle: numeral_endings(base_stc.changer_modules.count, word: "item"), color: .pink, image_name: "wand.and.rays", image_size: 80)
                         }
+                        .buttonStyle(.borderless)
+                        .frame(height: 128)
                     }
                     .padding(20)
                 }
