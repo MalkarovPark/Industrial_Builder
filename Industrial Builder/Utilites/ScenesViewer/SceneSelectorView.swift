@@ -71,7 +71,7 @@ struct ElementItemView: View
         .frame(width: 120, height: 120)
         #endif
         .clipShape(RoundedRectangle(cornerRadius: 8.0, style: .continuous))
-        .shadow(radius: 1)
+        .shadow(color: .black.opacity(0.2), radius: 1)
     }
 }
 
@@ -84,7 +84,7 @@ struct NoElementItemView: View
             Rectangle()
                 .foregroundStyle(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 8.0, style: .continuous))
-                .shadow(radius: 1)
+                .shadow(color: .black.opacity(0.2), radius: 1)
                 .padding(4)
             Image(systemName: "nosign")
                 .font(.system(size: 24))

@@ -41,7 +41,7 @@ struct TextFrame: ViewModifier
         content
             .frame(minHeight: 64)
         #if os(macOS)
-            .shadow(radius: 1)
+            .shadow(color: .black.opacity(0.2), radius: 1)
         #endif
     }
 }

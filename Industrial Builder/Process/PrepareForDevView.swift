@@ -24,7 +24,7 @@ struct PrepareForDevView: View
     {
         VStack(spacing: 0)
         {
-            Picker(selection: $base_stc.prepare_for_dev_type, label: Text("Export type"))
+            Picker(selection: $base_stc.prepare_for_dev_type, label: Text("Export Type"))
             {
                 ForEach(PrepareForDevType.allCases, id: \.self)
                 { export_type in

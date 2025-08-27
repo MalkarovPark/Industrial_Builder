@@ -241,7 +241,7 @@ struct ToolOperationView: View
                         .foregroundColor(.white)
                     #endif
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .shadow(radius: 1)
+                        .shadow(color: .black.opacity(0.2), radius: 1)
                     
                     Image(systemName: "\(item.symbol)")
                         .foregroundColor(.accentColor)

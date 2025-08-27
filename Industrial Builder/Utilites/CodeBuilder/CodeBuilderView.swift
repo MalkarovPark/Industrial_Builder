@@ -269,7 +269,7 @@ struct CodeTileView: View
         {
             Rectangle()
                 .foregroundStyle(.ultraThinMaterial)
-                .shadow(radius: is_selected ? 4 : 0)
+                .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
                 .overlay(alignment: .bottomTrailing)
                 {
                     Text(name)

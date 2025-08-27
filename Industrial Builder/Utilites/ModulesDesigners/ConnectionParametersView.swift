@@ -21,6 +21,9 @@ struct ConnectionParametersView: View
     {
         VStack(spacing: 0)
         {
+            Text("Connection Parameters")
+                .padding(.bottom)
+            
             VStack(spacing: 0)
             {
                 List

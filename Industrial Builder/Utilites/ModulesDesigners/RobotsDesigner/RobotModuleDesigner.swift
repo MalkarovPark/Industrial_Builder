@@ -101,6 +101,9 @@ struct RobotModuleDesigner: View
                 {
                     VStack(spacing: 12)
                     {
+                        Text("Origin Shift")
+                            .padding(.bottom, 4)
+                        
                         OriginShiftView(shift: $robot_module.origin_shift)
                         {
                             document_handler.document_update_robots()

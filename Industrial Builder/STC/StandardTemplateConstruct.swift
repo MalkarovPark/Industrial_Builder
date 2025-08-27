@@ -1099,7 +1099,7 @@ public enum InternalExportType: String, Equatable, CaseIterable
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
 {
-    case blank_project = "Blank project"
+    case blank_project = "Blank Project"
     case from_listing = "From selected listing"
     case mbk_only = "Module Building Kit only"
 }

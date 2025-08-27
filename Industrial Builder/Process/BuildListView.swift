@@ -306,7 +306,7 @@ struct ModuleTileView: View
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .shadow(radius: is_selected ? 4 : 0)
+                .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
         }
         .overlay
         {
@@ -377,8 +377,8 @@ public var all_code_templates: [String] = [
     "Internal Tool Controller",
     "Tool Module",
     "Part Module",
-    "Change External",
-    "Change Internal",
+    "External Change",
+    "Internal Change",
     "Changer Module"
 ]
 
@@ -387,7 +387,7 @@ public var external_app_code_templates: [String] = [
     "External Robot Controller",
     "External Tool Connector",
     "External Tool Controller",
-    "Change External"
+    "External Change"
 ]
 
 #Preview

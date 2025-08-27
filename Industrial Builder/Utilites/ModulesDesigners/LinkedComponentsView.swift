@@ -17,6 +17,9 @@ struct LinkedComponentsView: View
     {
         VStack(spacing: 0)
         {
+            Text("Internal Overrides")
+                .padding(.bottom)
+            
             ForEach(Array(linked_components.keys), id: \.self)
             { key in
                 HStack(spacing: 0)

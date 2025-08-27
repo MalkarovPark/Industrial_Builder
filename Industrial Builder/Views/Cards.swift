@@ -189,7 +189,7 @@ struct SelectImageCard: View
         {
             Rectangle()
                 .foregroundStyle(.regularMaterial)
-                .shadow(radius: is_selected ? 4 : 0)
+                .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
         }
         .scaleEffect(is_selected ? 1 : 0.95)
         .onTapGesture
@@ -368,7 +368,7 @@ struct SelectSceneCard: View
         .buttonStyle(.borderless)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .shadow(radius: is_selected ? 4 : 0)
+        .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
         .scaleEffect(is_selected ? 1 : 0.95)
         .animation(.easeInOut(duration: 0.2), value: is_selected)
         .help(name)

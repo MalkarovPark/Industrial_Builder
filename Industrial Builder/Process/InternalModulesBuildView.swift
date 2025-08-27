@@ -45,7 +45,7 @@ struct InternalModulesBuildView: View
                     {
                         HStack
                         {
-                            Picker(selection: $base_stc.internal_export_type, label: Text("Export type"))
+                            Picker(selection: $base_stc.internal_export_type, label: Text("Export Type"))
                             {
                                 ForEach(InternalExportType.allCases, id: \.self)
                                 { export_type in

@@ -153,6 +153,6 @@ struct CodeEditorView: View
     {
         Rectangle()
             .foregroundStyle(.white)
-            .shadow(radius: 1)
+            .shadow(color: .black.opacity(0.2), radius: 1)
     }
 }
