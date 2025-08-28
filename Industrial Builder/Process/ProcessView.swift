@@ -30,22 +30,87 @@ struct ProcessView: View
                     {
                         NavigationLink(destination: ExternalModulesBuildView(document: $document)
                             .navigationTitle("Files"), label: {
-                                ProcessItemView(title: "Files", subtitle: "Export to separated modules files", image: Image("build_to_files_icon"))
+                                ProcessItemView(title: "Files", subtitle: "Export to separated modules files")
+                                {
+                                    ZStack
+                                    {
+                                        Rectangle()
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(stops: [
+                                                        Gradient.Stop(color: .white, location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                                    ]),
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                )
+                                            )
+                                            .scaledToFill()
+                                        
+                                        Image(systemName: "folder.fill")
+                                            .foregroundStyle(.cyan)
+                                            .font(.system(size: 20))
+                                            //.imageScale(.large)
+                                    }
+                                }
                             })
                             .navigationTitle("Process")
                         
                         NavigationLink(destination: InternalModulesBuildView(document: $document)
                             .navigationTitle("App"), label: {
                                 ProcessItemView(title: "App",
-                                                subtitle: "Make a project with internal modules",
-                                                image: Image("build_to_app_icon"))
+                                                subtitle: "Make a project with internal modules")
+                                {
+                                    ZStack
+                                    {
+                                        Rectangle()
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(stops: [
+                                                        Gradient.Stop(color: Color(hex: "8BCAC9"), location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "4EA3A3"), location: 1.0)
+                                                    ]),
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                )
+                                            )
+                                            .scaledToFill()
+                                        
+                                        Image(systemName: "cube.fill")
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 20))
+                                            //.imageScale(.large)
+                                            .scaleEffect(x: 1, y: -1)
+                                            .opacity(0.5)
+                                    }
+                                }
                             })
                         
                         NavigationLink(destination: PrepareForDevView()
                             .navigationTitle("Development"), label: {
                                 ProcessItemView(title: "Development",
-                                                subtitle: "Prepare industrial application project",
-                                                image: Image("prepare_for_dev_icon"))
+                                                subtitle: "Prepare industrial application project")
+                                {
+                                    ZStack
+                                    {
+                                        Rectangle()
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(stops: [
+                                                        Gradient.Stop(color: Color(hex: "262626"), location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
+                                                    ]),
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                )
+                                            )
+                                            .scaledToFill()
+                                        
+                                        Image(systemName: "terminal")
+                                            .foregroundStyle(.white)
+                                            .imageScale(.large)
+                                    }
+                                }
                             })
                         
                         /*Button(action: {  })
@@ -79,11 +144,11 @@ struct ProcessView: View
     }
 }
 
-struct ProcessItemView: View
+struct ProcessItemView<Content: View>: View
 {
     let title: String
     let subtitle: String
-    let image: Image
+    let content: () -> Content
     
     var body: some View
     {
@@ -91,13 +156,8 @@ struct ProcessItemView: View
         {
             ZStack
             {
-                // Rectangle()
-                // .foregroundStyle(Color.accentColor)
-                image
-                    .resizable()
-                // .scaledToFill()
+                content()
                     .scaledToFit()
-                    .foregroundStyle(.white)
             }
             #if os(macOS)
             .frame(width: 40, height: 40)
@@ -105,6 +165,7 @@ struct ProcessItemView: View
             .frame(width: 48, height: 48)
             #endif
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .shadow(color: .black.opacity(0.1), radius: 2)
             
             VStack(alignment: .leading)
             {
@@ -131,9 +192,13 @@ struct ProcessItemView: View
 #Preview
 {
     ProcessView(document: .constant(STCDocument()), is_presented: .constant(true))
+        .frame(width: 320, height: 400)
 }
 
 #Preview
 {
-    ProcessItemView(title: "Packages", subtitle: "None", image: Image(systemName: "cube.fill"))
+    ProcessItemView(title: "Packages", subtitle: "None", content: {
+        EmptyView()
+    })
+    .frame(width: 256)
 }
