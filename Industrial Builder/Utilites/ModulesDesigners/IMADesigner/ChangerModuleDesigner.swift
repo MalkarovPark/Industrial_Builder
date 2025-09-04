@@ -41,7 +41,9 @@ struct ChangerModuleDesigner: View
         }
         .toolbar
         {
+            #if !os(visionOS)
             ToolbarSpacer()
+            #endif
             
             ToolbarItem
             {

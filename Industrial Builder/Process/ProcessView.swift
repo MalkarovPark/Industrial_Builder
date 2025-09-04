@@ -39,7 +39,7 @@ struct ProcessView: View
                                                 LinearGradient(
                                                     gradient: Gradient(stops: [
                                                         Gradient.Stop(color: .white, location: 0.0),
-                                                        Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                                        Gradient.Stop(color: Color("F1F2FA"), location: 1.0)
                                                     ]),
                                                     startPoint: .top,
                                                     endPoint: .bottom
@@ -67,8 +67,8 @@ struct ProcessView: View
                                             .foregroundStyle(
                                                 LinearGradient(
                                                     gradient: Gradient(stops: [
-                                                        Gradient.Stop(color: Color(hex: "8BCAC9"), location: 0.0),
-                                                        Gradient.Stop(color: Color(hex: "4EA3A3"), location: 1.0)
+                                                        Gradient.Stop(color: Color("8BCAC9"), location: 0.0),
+                                                        Gradient.Stop(color: Color("4EA3A3"), location: 1.0)
                                                     ]),
                                                     startPoint: .top,
                                                     endPoint: .bottom
@@ -97,8 +97,8 @@ struct ProcessView: View
                                             .foregroundStyle(
                                                 LinearGradient(
                                                     gradient: Gradient(stops: [
-                                                        Gradient.Stop(color: Color(hex: "262626"), location: 0.0),
-                                                        Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
+                                                        Gradient.Stop(color: Color("262626"), location: 0.0),
+                                                        Gradient.Stop(color: Color("262626"), location: 1.0)
                                                     ]),
                                                     startPoint: .top,
                                                     endPoint: .bottom

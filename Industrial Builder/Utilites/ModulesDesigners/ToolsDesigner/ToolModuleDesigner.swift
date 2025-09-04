@@ -59,7 +59,9 @@ struct ToolModuleDesigner: View
         }
         .toolbar
         {
+            #if !os(visionOS)
             ToolbarSpacer()
+            #endif
             
             ToolbarItem
             {                
@@ -76,7 +78,9 @@ struct ToolModuleDesigner: View
                 .labelsHidden()
             }
             
+            #if !os(visionOS)
             ToolbarSpacer()
+            #endif
             
             ToolbarItem
             {
@@ -108,9 +112,6 @@ struct ToolModuleDesigner: View
                 }
             }
         }
-        #if !os(visionOS)
-        .background(.white)
-        #endif
     }
 }
 

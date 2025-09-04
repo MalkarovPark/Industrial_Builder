@@ -52,6 +52,7 @@ struct KinematicDesignerView: View
         }
         .overlay(alignment: .bottomLeading)
         {
+            #if !os(visionOS)
             GlassEffectContainer
             {
                 VStack(spacing: 0)
@@ -73,6 +74,7 @@ struct KinematicDesignerView: View
                     {
                         PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
                             .frame(minWidth: 256)
+                            .padding()
                     }
                     .padding(.bottom)
                     
@@ -97,6 +99,50 @@ struct KinematicDesignerView: View
                 }
             }
             .padding()
+            #else
+            VStack(spacing: 0)
+            {
+                Button(action: { position_view_presented = true })
+                {
+                    Image(systemName: "move.3d")
+                        .imageScale(.large)
+                        #if os(macOS)
+                        .frame(width: 16, height: 16)
+                        #else
+                        .frame(width: 24, height: 24)
+                        #endif
+                        .padding(8)
+                }
+                .buttonBorderShape(.circle)
+                .glassBackgroundEffect()
+                .popover(isPresented: $position_view_presented)
+                {
+                    PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
+                        .frame(minWidth: 256)
+                        .padding()
+                }
+                .padding(.bottom)
+                
+                Button(action: { origin_position_view_presented = true })
+                {
+                    Image(systemName: "cube")
+                        .imageScale(.large)
+                        #if os(macOS)
+                        .frame(width: 16, height: 16)
+                        #else
+                        .frame(width: 24, height: 24)
+                        #endif
+                        .padding(8)
+                }
+                .buttonBorderShape(.circle)
+                .glassBackgroundEffect()
+                .popover(isPresented: $origin_position_view_presented)
+                {
+                    SpaceOriginView(robot: $app_state.kinematic_preview_robot)
+                        .frame(minWidth: 256)
+                }
+            }
+            #endif
         }
         .toolbar
         {

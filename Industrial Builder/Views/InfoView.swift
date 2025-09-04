@@ -86,6 +86,7 @@ struct InfoGalleryView: View
         .frame(width: 192)
         .overlay(alignment: .bottom)
         {
+            #if !os(visionOS)
             GlassEffectContainer
             {
                 HStack(spacing: 0)
@@ -126,6 +127,37 @@ struct InfoGalleryView: View
                 .glassEffect(.regular.interactive())
                 .padding()
             }
+            #else
+            HStack(spacing: 0)
+            {
+                Button(action: {
+                    document.package_info.clear_gallery()
+                })
+                {
+                    Image(systemName: "trash")
+                        .imageScale(.large)
+                        .frame(width: 24, height: 24)
+                        .padding(4)
+                }
+                .buttonBorderShape(.circle)
+                .buttonStyle(.plain)
+                .padding(8)
+                
+                Button(action: { load_panel_presented.toggle() })
+                {
+                    Image(systemName: "square.and.arrow.down")
+                        .imageScale(.large)
+                        .frame(width: 24, height: 24)
+                        .padding(4)
+                }
+                .buttonBorderShape(.circle)
+                .buttonStyle(.plain)
+                .padding(8)
+                .fileImporter(isPresented: $load_panel_presented, allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+            }
+            .glassBackgroundEffect()
+            .padding()
+            #endif
         }
         .overlay
         {

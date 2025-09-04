@@ -58,7 +58,9 @@ struct RobotModuleDesigner: View
         #endif
         .toolbar
         {
+            #if !os(visionOS)
             ToolbarSpacer()
+            #endif
             
             ToolbarItem
             {
@@ -74,7 +76,9 @@ struct RobotModuleDesigner: View
                 .labelsHidden()
             }
             
+            #if !os(visionOS)
             ToolbarSpacer()
+            #endif
             
             ToolbarItem
             {

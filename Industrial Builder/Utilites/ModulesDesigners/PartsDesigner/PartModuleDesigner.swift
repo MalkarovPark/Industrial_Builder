@@ -39,7 +39,9 @@ struct PartModuleDesigner: View
         }
         .toolbar
         {
+            #if !os(visionOS)
             ToolbarSpacer()
+            #endif
             
             ToolbarItem
             {

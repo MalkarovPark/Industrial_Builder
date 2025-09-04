@@ -49,28 +49,25 @@ struct Industrial_BuilderApp: App
         }
         
         #if !os(macOS)
-        if #available(iOS 18.0, visionOS 2.0, *)
+        DocumentGroupLaunchScene("Industrial Builder")
         {
-            DocumentGroupLaunchScene("Industrial Builder")
-            {
-                NewDocumentButton("New STC")
-            }
+            NewDocumentButton("New STC")
+        }
         background:
-            {
-                Rectangle()
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color(hex: "#8E81DD"), Color(hex: "#AA9FEF")]),
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
+        {
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color("#8E81DD"), Color("#AA9FEF")]),
+                        startPoint: .leading,
+                        endPoint: .trailing
                     )
-                    .ignoresSafeArea()
-            }
+                )
+                .ignoresSafeArea()
+        }
         overlayAccessoryView:
-            { _ in
-                //AccessoryView()
-            }
+        { _ in
+            //AccessoryView()
         }
         #endif
     }
@@ -88,60 +85,3 @@ let default_popover_edge_inverted: Edge = .bottom
 #else
 let default_popover_edge_inverted: Edge = .top
 #endif
-
-// MARK: - Color by hex
-extension Color
-{
-    /**
-     Initializes a `Color` instance from a HEX string.
-     
-     - Parameters:
-        - hex: A string representing the HEX color. Supported formats: `#RRGGBB`, `#RRGGBBAA`, `RRGGBB`, `RRGGBBAA`.
-        - alpha: An optional alpha value between 0 and 1. Defaults to `1.0` (fully opaque). If the HEX string includes alpha, this parameter is ignored.
-     
-     - Returns: A `Color` instance or a fallback to `clear` if the HEX string is invalid.
-     */
-    init(hex: String, alpha: Double = 1.0)
-    {
-        // Remove any leading "#" and ensure proper casing
-        let sanitizedHex = hex
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: "#", with: "")
-            .uppercased()
-        
-        // Convert HEX string to UInt64
-        var hexValue: UInt64 = 0
-        guard Scanner(string: sanitizedHex).scanHexInt64(&hexValue)
-        else
-        {
-            self = .clear // Fallback to a transparent color if invalid
-            return
-        }
-        
-        let red, green, blue, computedAlpha: Double
-        
-        switch sanitizedHex.count
-        {
-        case 6: // #RRGGBB
-            red = Double((hexValue >> 16) & 0xFF) / 255.0
-            green = Double((hexValue >> 8) & 0xFF) / 255.0
-            blue = Double(hexValue & 0xFF) / 255.0
-            computedAlpha = alpha
-        case 8: // #RRGGBBAA
-            red = Double((hexValue >> 24) & 0xFF) / 255.0
-            green = Double((hexValue >> 16) & 0xFF) / 255.0
-            blue = Double((hexValue >> 8) & 0xFF) / 255.0
-            computedAlpha = Double(hexValue & 0xFF) / 255.0
-        default:
-            self = .clear // Fallback for invalid length
-            return
-        }
-        
-        self = Color(
-            red: red,
-            green: green,
-            blue: blue,
-            opacity: computedAlpha
-        )
-    }
-}
