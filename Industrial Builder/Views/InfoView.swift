@@ -33,7 +33,9 @@ struct InfoView: View
             }
             .frame(maxWidth: .infinity)
             
+            #if !os(visionOS)
             Divider()
+            #endif
             
             InfoGalleryView(document: $document)
         }

@@ -15,9 +15,6 @@ struct KinematicDesignerView: View
     @Binding var group: KinematicGroup
     @EnvironmentObject var app_state: AppState
     
-    @State private var pointer_location: [Float] = [0, 0, 0]
-    @State private var pointer_rotation: [Float] = [0, 0, 0]
-    
     @State private var show_inspector = true
     
     @State private var origin_move_view_presented = false
@@ -33,22 +30,26 @@ struct KinematicDesignerView: View
         ZStack
         {
             ObjectSceneView(scene: viewed_scene)
-            .onAppear
-            {
-                let cleaning_node = viewed_scene.rootNode.childNode(withName: "robot", recursively: true)
-                cleaning_node?.removeFromParentNode()
-                
-                app_state.prepare_robot(group, scene: viewed_scene)
-            }
-            .background
-            {
-                Rectangle()
-                    .fill(.gray)
-            }
-            .modifier(BackgroundExtensionModifier(color: Color(red: 142/255, green: 142/255, blue: 147/255)))
-            #if !os(macOS)
-            .ignoresSafeArea(.container, edges: .bottom)
-            #endif
+                .onAppear
+                {
+                    let cleaning_node = viewed_scene.rootNode.childNode(withName: "robot", recursively: true)
+                    cleaning_node?.removeFromParentNode()
+                    
+                    app_state.prepare_robot(group, scene: viewed_scene)
+                }
+                #if os(macOS) || os(iOS)
+                .background
+                {
+                    Rectangle()
+                        .fill(.gray)
+                }
+                .modifier(BackgroundExtensionModifier(color: Color(red: 142/255, green: 142/255, blue: 147/255)))
+                #else
+                .modifier(BackgroundExtensionModifier())
+                #endif
+                #if !os(macOS)
+                .ignoresSafeArea(.container, edges: .bottom)
+                #endif
         }
         .overlay(alignment: .bottomLeading)
         {
@@ -106,15 +107,13 @@ struct KinematicDesignerView: View
                 {
                     Image(systemName: "move.3d")
                         .imageScale(.large)
-                        #if os(macOS)
-                        .frame(width: 16, height: 16)
-                        #else
                         .frame(width: 24, height: 24)
-                        #endif
-                        .padding(8)
+                        .padding(16)
                 }
                 .buttonBorderShape(.circle)
+                .buttonStyle(.borderless)
                 .glassBackgroundEffect()
+                .frame(depth: 24)
                 .popover(isPresented: $position_view_presented)
                 {
                     PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
@@ -127,28 +126,26 @@ struct KinematicDesignerView: View
                 {
                     Image(systemName: "cube")
                         .imageScale(.large)
-                        #if os(macOS)
-                        .frame(width: 16, height: 16)
-                        #else
                         .frame(width: 24, height: 24)
-                        #endif
-                        .padding(8)
+                        .padding(16)
                 }
                 .buttonBorderShape(.circle)
+                .buttonStyle(.borderless)
                 .glassBackgroundEffect()
+                .frame(depth: 24)
                 .popover(isPresented: $origin_position_view_presented)
                 {
                     SpaceOriginView(robot: $app_state.kinematic_preview_robot)
                         .frame(minWidth: 256)
                 }
             }
+            .padding(32)
             #endif
         }
         .toolbar
         {
             Button (action: { make_components_view_presented.toggle() })
             {
-                // Image(systemName: "hexagon")
                 Label("Make Module", systemImage: "arrow.up.document")
             }
             #if os(visionOS)
@@ -161,7 +158,6 @@ struct KinematicDesignerView: View
             
             Button (action: { show_inspector.toggle() })
             {
-                // Image(systemName: "sidebar.trailing")
                 Label("Kinematic Inspector", systemImage: "sidebar.trailing")
             }
             #if os(visionOS)
@@ -180,6 +176,11 @@ struct BackgroundExtensionModifier: ViewModifier
 {
     let color: Color
     
+    public init(color: Color = .clear)
+    {
+        self.color = color
+    }
+    
     func body(content: Content) -> some View
     {
         ZStack
@@ -188,7 +189,7 @@ struct BackgroundExtensionModifier: ViewModifier
                 VStack
                 {
                     Rectangle()
-                        .foregroundStyle(Color(red: 142/255, green: 142/255, blue: 147/255))
+                        .foregroundStyle(color)
                         .aspectRatio(contentMode: .fit)
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                         .backgroundExtensionEffect()

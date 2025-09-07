@@ -38,27 +38,30 @@ struct KinematicInspectorView: View
             }
             .listStyle(.plain)
             .modifier(ListBorderer())
-            #if !os(visionOS)
-            .padding([.horizontal, .top, .bottom])
-            #else
-            .padding([.horizontal])
-            #endif
+            .padding()
             
             List
             {
                 Section("Origin Shift")
                 {
+                    #if !os(visionOS)
                     OriginShiftView(shift: $app_state.kinematic_preview_robot.origin_shift)
+                    #else
+                    VStack
+                    {
+                        OriginShiftView(shift: $app_state.kinematic_preview_robot.origin_shift)
+                    }
+                    #endif
                 }
             }
             .listStyle(.plain)
             .modifier(ListBorderer())
-            #if !os(visionOS)
             .padding([.horizontal, .bottom])
-            #else
-            .padding([.horizontal])
-            #endif
+            #if !os(visionOS)
             .frame(height: 160)
+            #else
+            .frame(height: 240)
+            #endif
         }
         #if os(visionOS)
         .frame(width: 400)

@@ -6,14 +6,15 @@
 //
 
 import SwiftUI
+import IndustrialKit
 
 struct ProcessView: View
 {
-#if os(macOS)
+    #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
-#else
+    #else
     private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 16)]
-#endif
+    #endif
     
     @Binding var document: STCDocument
     @Binding var is_presented: Bool
@@ -34,18 +35,33 @@ struct ProcessView: View
                                 {
                                     ZStack
                                     {
+                                        #if !os(visionOS)
                                         Rectangle()
                                             .foregroundStyle(
                                                 LinearGradient(
                                                     gradient: Gradient(stops: [
                                                         Gradient.Stop(color: .white, location: 0.0),
-                                                        Gradient.Stop(color: Color("F1F2FA"), location: 1.0)
+                                                        Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
                                                     ]),
                                                     startPoint: .top,
                                                     endPoint: .bottom
                                                 )
                                             )
                                             .scaledToFill()
+                                        #else
+                                        Circle()
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(stops: [
+                                                        Gradient.Stop(color: .white, location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                                    ]),
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                )
+                                            )
+                                            .scaledToFill()
+                                        #endif
                                         
                                         Image(systemName: "folder.fill")
                                             .foregroundStyle(.cyan)
@@ -63,18 +79,33 @@ struct ProcessView: View
                                 {
                                     ZStack
                                     {
+                                        #if !os(visionOS)
                                         Rectangle()
                                             .foregroundStyle(
                                                 LinearGradient(
                                                     gradient: Gradient(stops: [
-                                                        Gradient.Stop(color: Color("8BCAC9"), location: 0.0),
-                                                        Gradient.Stop(color: Color("4EA3A3"), location: 1.0)
+                                                        Gradient.Stop(color: Color(hex: "8BCAC9"), location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "4EA3A3"), location: 1.0)
                                                     ]),
                                                     startPoint: .top,
                                                     endPoint: .bottom
                                                 )
                                             )
                                             .scaledToFill()
+                                        #else
+                                        Circle()
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(stops: [
+                                                        Gradient.Stop(color: Color(hex: "8BCAC9"), location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "4EA3A3"), location: 1.0)
+                                                    ]),
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                )
+                                            )
+                                            .scaledToFill()
+                                        #endif
                                         
                                         Image(systemName: "cube.fill")
                                             .foregroundStyle(.white)
@@ -93,18 +124,33 @@ struct ProcessView: View
                                 {
                                     ZStack
                                     {
+                                        #if !os(visionOS)
                                         Rectangle()
                                             .foregroundStyle(
                                                 LinearGradient(
                                                     gradient: Gradient(stops: [
-                                                        Gradient.Stop(color: Color("262626"), location: 0.0),
-                                                        Gradient.Stop(color: Color("262626"), location: 1.0)
+                                                        Gradient.Stop(color: Color(hex: "262626"), location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
                                                     ]),
                                                     startPoint: .top,
                                                     endPoint: .bottom
                                                 )
                                             )
                                             .scaledToFill()
+                                        #else
+                                        Circle()
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(stops: [
+                                                        Gradient.Stop(color: Color(hex: "262626"), location: 0.0),
+                                                        Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
+                                                    ]),
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                )
+                                            )
+                                            .scaledToFill()
+                                        #endif
                                         
                                         Image(systemName: "terminal")
                                             .foregroundStyle(.white)

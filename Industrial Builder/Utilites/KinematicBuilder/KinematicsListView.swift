@@ -34,7 +34,7 @@ struct KinematicsListView: View
                             {
                                 BoxCard(title: base_stc.kinematic_groups[index].name, subtitle: base_stc.kinematic_groups[index].type.rawValue, color: .gray, image_name: "point.3.connected.trianglepath.dotted")
                             }
-                            .buttonStyle(.borderless)
+                            .buttonStyle(.plain)
                             .frame(height: 128)
                             .contextMenu
                             {

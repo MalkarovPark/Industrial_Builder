@@ -225,7 +225,7 @@ struct ListingCard<Content: View>: View
             #if !os(visionOS)
                 .foregroundStyle(.white)
             #else
-                .foregroundStyle(.bar)
+                .foregroundStyle(.black.opacity(0.25))
             #endif
                 .overlay(alignment: .topLeading)
                 {
@@ -246,6 +246,7 @@ struct ListingCard<Content: View>: View
         .background
         {
             Rectangle()
+                .foregroundStyle(.black)
                 .blur(radius: 16)
                 .opacity(0.2)
         }
@@ -298,7 +299,7 @@ struct SceneCard<Content: View>: View
         {
             GlassBoxCard(title: name, node: scene.rootNode)
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(.plain)
         .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
         .frame(height: 192)
         .contextMenu

@@ -6,14 +6,18 @@
 //
 
 import SwiftUI
+#if !os(visionOS)
 import CodeEditorView
+#endif
 import LanguageSupport
 
 struct CodeView: View
 {
     @Binding var text: String
     
+    #if !os(visionOS)
     @State private var position: CodeEditor.Position = CodeEditor.Position()
+    #endif
     @State private var messages: Set<TextLocated<Message>> = Set()
     
     @State private var show_minimap: Bool = true

@@ -27,6 +27,10 @@ struct PartModulesView: View
     
     var body: some View
     {
+        #if os(visionOS)
+        Divider()
+        #endif
+        
         HStack(spacing: 0)
         {
             if sidebar_enabled
@@ -94,6 +98,9 @@ struct PartModulesView: View
                                 Label("Delete", systemImage: "trash")
                             }
                         }
+                        #if os(visionOS)
+                        .listRowBackground(selection == item.id ? Color.accentColor.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous)) : Color.clear.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
+                        #endif
                     }
                 }
                 #if os(macOS)

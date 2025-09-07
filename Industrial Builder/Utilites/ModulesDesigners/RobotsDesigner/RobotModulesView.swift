@@ -29,6 +29,10 @@ struct RobotModulesView: View
     {
         HStack(spacing: 0)
         {
+            #if os(visionOS)
+            Divider()
+            #endif
+            
             if sidebar_enabled
             {
                 // MARK: - List View
@@ -94,6 +98,9 @@ struct RobotModulesView: View
                                 Label("Delete", systemImage: "trash")
                             }
                         }
+                        #if os(visionOS)
+                        .listRowBackground(selection == item.id ? Color.accentColor.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous)) : Color.clear.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
+                        #endif
                     }
                 }
                 #if os(macOS)
