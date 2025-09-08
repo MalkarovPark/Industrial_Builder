@@ -210,7 +210,9 @@ struct ProcessItemView<Content: View>: View
             #else
             .frame(width: 48, height: 48)
             #endif
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            #if !os(visionOS)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            #endif
             .shadow(color: .black.opacity(0.1), radius: 2)
             
             VStack(alignment: .leading)

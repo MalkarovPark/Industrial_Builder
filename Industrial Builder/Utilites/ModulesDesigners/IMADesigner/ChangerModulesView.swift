@@ -44,13 +44,13 @@ struct ChangerModulesView: View
                         {
                             if rename_item == item.id
                             {
-                                TextField("Input new name", text: $new_name)
+                                TextField("None", text: $new_name)
                                     .onSubmit
                                 {
                                     item.name = new_name
                                     document_handler.document_update_ima()
                                     rename_item = nil
-                                    new_name = ""
+                                    new_name = "None"
                                 }
                             }
                             else
@@ -194,7 +194,7 @@ struct ChangerModulesView: View
                     {
                         if picker_in_rename
                         {
-                            TextField("Input new name", text: $new_name)
+                            TextField("None", text: $new_name)
                                 .onSubmit
                             {
                                 if let selected_module_index = base_stc.changer_modules.firstIndex(where: { $0.id == selection })
@@ -204,7 +204,7 @@ struct ChangerModulesView: View
                                 
                                 document_handler.document_update_ima()
                                 picker_in_rename = false
-                                new_name = ""
+                                new_name = "None"
                             }
                         }
                         else

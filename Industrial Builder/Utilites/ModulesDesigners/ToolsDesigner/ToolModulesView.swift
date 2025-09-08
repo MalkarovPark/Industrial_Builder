@@ -44,13 +44,13 @@ struct ToolModulesView: View
                         {
                             if rename_item == item.id
                             {
-                                TextField("Input new name", text: $new_name)
+                                TextField("None", text: $new_name)
                                     .onSubmit
                                 {
                                     item.name = new_name
                                     document_handler.document_update_tools()
                                     rename_item = nil
-                                    new_name = ""
+                                    new_name = "None"
                                 }
                             }
                             else
@@ -195,7 +195,7 @@ struct ToolModulesView: View
                     {
                         if picker_in_rename
                         {
-                            TextField("Input new name", text: $new_name)
+                            TextField("None", text: $new_name)
                                 .onSubmit
                             {
                                 if let selected_module_index = base_stc.tool_modules.firstIndex(where: { $0.id == selection })
@@ -205,7 +205,7 @@ struct ToolModulesView: View
                                 
                                 document_handler.document_update_tools()
                                 picker_in_rename = false
-                                new_name = ""
+                                new_name = "None"
                             }
                         }
                         else
