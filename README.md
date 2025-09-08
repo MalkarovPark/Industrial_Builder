@@ -1,4 +1,4 @@
-![ib_caption](https://github.com/user-attachments/assets/55e23273-9772-4467-859b-af6cdf7a3d52)
+![ib_caption](https://github.com/user-attachments/assets/a8599d15-563d-40e4-88a3-3ff4ef27f511)
 
 
 # Industrial Builder
@@ -70,7 +70,7 @@ The creation of production begins with the preparation of all the necessary info
 Resources can be added by simply dragging them into the appropriate Resources sections or selected via the "<img width="12" src="https://github.com/user-attachments/assets/36c66c44-f149-4691-aea2-bba0e9bcdf7a" />" button on the toolbar. Empty listings can also be created using the "<img width="12" src="https://github.com/user-attachments/assets/0be8f024-daa6-4cd0-bc0a-0183e4e3b892" />" button and edited. Editing scenes and images, in turn, is not supported.
 
 <p align="center">
-  <img width="808" src="https://github.com/user-attachments/assets/2089acaf-8360-4978-90d0-e9209ac397a2" />
+  <img width="960" height="696" alt="scenes view" src="https://github.com/user-attachments/assets/027aa46a-1958-4447-8a36-50f7b8771fea" />
 </p>
 
 A separate, specific type of resource is a kinematic group. It is a named list of kinematic elements with a parameter indicating the kinematics type. The kinematic element itself is a named and identifiable Float value.
@@ -88,7 +88,7 @@ Thus, the module providing the program code of the digital and the components of
 The current version of Industrial Builder allows you to create and edit modules of four types – for production facilities (Robot, Tool, Part) and Changer elements.
 
 <p align="center">
-  <img width="808" src="https://github.com/user-attachments/assets/f1788f32-7c69-4659-ac20-aa24288fc323" />
+  <img width="792" height="320" alt="components selector – cropped" src="https://github.com/user-attachments/assets/da0ee431-c2c9-4d6f-9858-8f1d95145858" />
 </p>
 
 Editing of all module components is performed in Module Designer. The set of components available for editing varies depending on the module type. Model editing is available for robots, tools and parts.
@@ -129,7 +129,7 @@ The set of modules to be composed is specified in the assembly sheet implemented
 In Industrial Builder, editing assembly sheets and assembling modules is performed using the Build assembly tool, accessible via the "<img width="12" src="https://github.com/user-attachments/assets/de10176a-2dbc-41a2-815f-3bb7817a2d35" />" button in the Package section.
 
 <p align="center">
-  <img width="808" src="https://github.com/user-attachments/assets/525aba5d-8d94-402d-932c-d68cc75d5c07" />
+  <img width="960" height="696" alt="modules building" src="https://github.com/user-attachments/assets/21dc9aea-960f-425c-9efe-5918ba0fa0f1" />
 </p>
 
 There are two types of assembly available – Files for exporting modules as a set of external plug-in packages and App for exporting as packages embedded in the application project and compiled together with it.
