@@ -70,7 +70,7 @@ The creation of production begins with the preparation of all the necessary info
 Resources can be added by simply dragging them into the appropriate Resources sections or selected via the "<img width="12" src="https://github.com/user-attachments/assets/36c66c44-f149-4691-aea2-bba0e9bcdf7a" />" button on the toolbar. Empty listings can also be created using the "<img width="12" src="https://github.com/user-attachments/assets/0be8f024-daa6-4cd0-bc0a-0183e4e3b892" />" button and edited. Editing scenes and images, in turn, is not supported.
 
 <p align="center">
-  <img width="960" height="696" alt="scenes view" src="https://github.com/user-attachments/assets/027aa46a-1958-4447-8a36-50f7b8771fea" />
+  <img width="792" height="728" alt="scenes view" src="https://github.com/user-attachments/assets/e9a71c6e-92de-453c-9cea-cf734e735c6c" />
 </p>
 
 A separate, specific type of resource is a kinematic group. It is a named list of kinematic elements with a parameter indicating the kinematics type. The kinematic element itself is a named and identifiable Float value.
