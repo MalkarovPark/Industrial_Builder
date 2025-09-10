@@ -34,13 +34,13 @@ struct PackageView: View
                 //.modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
             ProcessView(document: $document, is_presented: $build_view_presented)
             #if os(macOS)// || os(visionOS)
-                .fitted()
+                .presentationSizing(.fitted)
             #endif
             #if os(macOS)
                 .frame(minWidth: 320, maxWidth: 600, minHeight: 400, maxHeight: 640)
             #endif
         }
-        //.fitted()
+        //.presentationSizing(.fitted)
         .toolbar
         {
             Button(action: { build_view_presented = true })

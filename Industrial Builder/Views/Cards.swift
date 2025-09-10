@@ -81,7 +81,7 @@ struct ImageCard<Content: View>: View
         {
             is_presented.toggle()
         }
-        .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
+        .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
         .contextMenu
         {
             Button(role: .destructive, action: delete_image)
@@ -262,7 +262,7 @@ struct ListingCard<Content: View>: View
         {
             is_presented.toggle()
         }
-        .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
+        .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
         .contextMenu
         {
             Button(role: .destructive, action: delete_listing)
@@ -300,7 +300,7 @@ struct SceneCard<Content: View>: View
             GlassBoxCard(title: name, node: scene.rootNode)
         }
         .buttonStyle(.plain)
-        .sheet(isPresented: $is_presented, content: { content($is_presented).fitted() })
+        .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
         .frame(height: 192)
         .contextMenu
         {
