@@ -30,8 +30,6 @@ struct PackageView: View
         }
         .sheet(isPresented: $build_view_presented)
         {
-            //BuildView(document: $document)
-                //.modifier(SheetCaption(is_presented: $build_view_presented, label: "Build"))
             ProcessView(document: $document, is_presented: $build_view_presented)
             #if os(macOS)// || os(visionOS)
                 .presentationSizing(.fitted)

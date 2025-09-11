@@ -68,7 +68,7 @@ struct CodeEditorView: View
                 .padding(.trailing)
                 .disabled(code_items.count == 1)
                 
-                Button("Build")
+                Button("Import")
                 {
                     code_import_presented.toggle()
                 }
