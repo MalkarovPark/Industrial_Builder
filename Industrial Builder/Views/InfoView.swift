@@ -41,6 +41,9 @@ struct InfoView: View
         }
         .ignoresSafeArea(.container, edges: .bottom)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        #if !os(macOS)
+        .toolbarBackground(.bar, for: .navigationBar)
+        #endif
     }
 }
 

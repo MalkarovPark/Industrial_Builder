@@ -782,8 +782,8 @@
             filePath = "Industrial Builder/Views/InfoView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
             landmarkName = "perform_drop(providers:)"
             landmarkType = "7">
          </BreakpointContent>

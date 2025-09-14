@@ -61,16 +61,9 @@ struct KinematicDesignerView: View
                     Button(action: { position_view_presented = true })
                     {
                         Image(systemName: "move.3d")
-                            .imageScale(.large)
-                            #if os(macOS)
-                            .frame(width: 16, height: 16)
-                            #else
-                            .frame(width: 24, height: 24)
-                            #endif
-                            .padding(8)
+                            .modifier(CircleButtonImageFramer())
                     }
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.glass)
+                    .modifier(CircleButtonGlassBorderer())
                     .popover(isPresented: $position_view_presented)
                     {
                         PositionControl(position: $app_state.kinematic_preview_robot.pointer_position, scale: $app_state.kinematic_preview_robot.space_scale)
@@ -82,16 +75,9 @@ struct KinematicDesignerView: View
                     Button(action: { origin_position_view_presented = true })
                     {
                         Image(systemName: "cube")
-                            .imageScale(.large)
-                            #if os(macOS)
-                            .frame(width: 16, height: 16)
-                            #else
-                            .frame(width: 24, height: 24)
-                            #endif
-                            .padding(8)
+                            .modifier(CircleButtonImageFramer())
                     }
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.glass)
+                    .modifier(CircleButtonGlassBorderer())
                     .popover(isPresented: $origin_position_view_presented)
                     {
                         SpaceOriginView(robot: $app_state.kinematic_preview_robot)
@@ -106,13 +92,9 @@ struct KinematicDesignerView: View
                 Button(action: { position_view_presented = true })
                 {
                     Image(systemName: "move.3d")
-                        .imageScale(.large)
-                        .frame(width: 24, height: 24)
-                        .padding(16)
+                        .modifier(CircleButtonImageFramer())
                 }
-                .buttonBorderShape(.circle)
-                .buttonStyle(.plain)
-                .glassBackgroundEffect()
+                .modifier(CircleButtonGlassBorderer())
                 .frame(depth: 24)
                 .popover(isPresented: $position_view_presented)
                 {
@@ -125,13 +107,9 @@ struct KinematicDesignerView: View
                 Button(action: { origin_position_view_presented = true })
                 {
                     Image(systemName: "cube")
-                        .imageScale(.large)
-                        .frame(width: 24, height: 24)
-                        .padding(16)
+                        .modifier(CircleButtonImageFramer())
                 }
-                .buttonBorderShape(.circle)
-                .buttonStyle(.plain)
-                .glassBackgroundEffect()
+                .modifier(CircleButtonGlassBorderer())
                 .frame(depth: 24)
                 .popover(isPresented: $origin_position_view_presented)
                 {

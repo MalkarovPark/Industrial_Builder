@@ -54,9 +54,20 @@ struct SimpleImageView: View
             .resizable()
             .aspectRatio(contentMode: .fit)
         #else
-        Image(uiImage: image)
+        /*Image(uiImage: image)
             .resizable()
-            .aspectRatio(contentMode: .fit)
+            .aspectRatio(contentMode: .fit)*/
+        ZStack
+        {
+            Rectangle()
+                .foregroundStyle(.clear)
+                .overlay
+                {
+                    Image(uiImage: image)
+                        .aspectRatio(contentMode: .fit)
+                }
+        }
+        .frame(width: image.size.width, height: image.size.height - 20)
         #endif
     }
 }

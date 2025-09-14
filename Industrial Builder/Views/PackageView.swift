@@ -23,10 +23,6 @@ struct PackageView: View
         VStack(spacing: 0)
         {
             InfoView(document: $document)
-            #if !os(visionOS)
-                .background(.white)
-            #endif
-                // .ignoresSafeArea(.container, edges: .bottom)
         }
         .sheet(isPresented: $build_view_presented)
         {

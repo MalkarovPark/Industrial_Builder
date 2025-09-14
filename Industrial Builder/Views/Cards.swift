@@ -120,7 +120,10 @@ struct SimpleImageCard<Content: View>: View
             {
                 is_presented.toggle()
             }
-            .sheet(isPresented: $is_presented, content: { content($is_presented).modifier(ViewCloseButton(is_presented: $is_presented)) })
+            .sheet(isPresented: $is_presented, content: {
+                content($is_presented)
+                    .modifier(ViewCloseButton(is_presented: $is_presented))
+            })
         #else
         Image(uiImage: image)
             .resizable()
@@ -129,7 +132,17 @@ struct SimpleImageCard<Content: View>: View
             {
                 is_presented.toggle()
             }
-            .sheet(isPresented: $is_presented, content: { content($is_presented).modifier(ViewCloseButton(is_presented: $is_presented)) })
+            .sheet(isPresented: $is_presented, content: {
+                //content($is_presented)
+                    //.presentationSizing(.fitted)
+                ZStack
+                {
+                    content($is_presented)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .presentationSizing(.fitted)
+                .modifier(ViewCloseButton(is_presented: $is_presented))
+            })
         #endif
     }
 }
