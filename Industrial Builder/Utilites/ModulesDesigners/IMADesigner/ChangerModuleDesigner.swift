@@ -58,9 +58,6 @@ struct ChangerModuleDesigner: View
                 .labelsHidden()
             }
         }
-        #if !os(visionOS)
-        .background(.white)
-        #endif
     }
 }
 

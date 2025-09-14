@@ -29,7 +29,7 @@ struct ToolModulesView: View
     {
         VStack(spacing: 0)
         {
-            #if !os(macOS)
+            #if os(iOS)
             Divider()
             #endif
             
@@ -145,9 +145,6 @@ struct ToolModulesView: View
                         Text("Select an existing tool module to edit.")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    #if !os(visionOS)
-                    .background(.white)
-                    #endif
                 }
             }
         }

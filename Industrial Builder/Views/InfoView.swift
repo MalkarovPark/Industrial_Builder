@@ -19,7 +19,7 @@ struct InfoView: View
     
     var body: some View
     {
-        #if !os(macOS)
+        #if os(iOS)
         Divider()
         #endif
         
@@ -168,6 +168,9 @@ struct InfoGalleryView: View
             .padding()
             #endif
         }
+        #if os(visionOS)
+        .background(.thinMaterial)
+        #endif
         .overlay
         {
             if is_targeted

@@ -29,7 +29,7 @@ struct RobotModulesView: View
     {
         VStack(spacing: 0)
         {
-            #if !os(macOS)
+            #if os(iOS)
             Divider()
             #endif
             
@@ -144,9 +144,6 @@ struct RobotModulesView: View
                         Text("Select an existing robot module to edit.")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    #if !os(visionOS)
-                    .background(.white)
-                    #endif
                 }
             }
         }

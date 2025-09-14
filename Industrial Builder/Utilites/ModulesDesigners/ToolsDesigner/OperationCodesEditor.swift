@@ -190,9 +190,6 @@ struct ToolOperationCard: View
             
             Image(systemName: "\(item.symbol)")
                 .frame(width: 48, height: 48)
-            #if !os(visionOS)
-                .background(.white)
-            #endif
                 .popover(isPresented: $is_presented, arrowEdge: default_popover_edge)
                 {
                     TextField("Symbol", text: $item.symbol)
@@ -209,9 +206,7 @@ struct ToolOperationCard: View
                 }
         }
         .frame(height: 48)
-        #if !os(visionOS)
-        .background(.white)
-        #else
+        #if os(visionOS)
         .glassBackgroundEffect()
         #endif
         .modifier(ViewBorderer())

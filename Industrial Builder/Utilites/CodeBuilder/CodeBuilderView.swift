@@ -370,7 +370,6 @@ struct BottomToolbarModifier: ViewModifier
     { _ in
         
     }
-    .background(.white)
     .environmentObject(StandardTemplateConstruct())
 }
 
@@ -380,5 +379,4 @@ struct BottomToolbarModifier: ViewModifier
     {
         CodeTileView(name: "UwU", image_name: "text.justify.left", is_selected: .constant(false))
     }
-    .background(.white)
 }

@@ -87,7 +87,7 @@ let default_popover_edge_inverted: Edge = .bottom
 let default_popover_edge_inverted: Edge = .top
 #endif
 
-/*// MARK: - DocumentGroupAlt
+/*// MARK: - Document Group Injector
 public struct DocumentInjectorView<Document, Content>: Scene
 where Document: FileDocument, Content: View {
     

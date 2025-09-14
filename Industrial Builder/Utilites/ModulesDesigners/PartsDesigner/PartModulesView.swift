@@ -29,7 +29,7 @@ struct PartModulesView: View
     {
         VStack(spacing: 0)
         {
-            #if !os(macOS)
+            #if os(iOS)
             Divider()
             #endif
             
@@ -144,9 +144,6 @@ struct PartModulesView: View
                         Text("Select an existing part module to edit.")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    #if !os(visionOS)
-                    .background(.white)
-                    #endif
                 }
             }
         }
