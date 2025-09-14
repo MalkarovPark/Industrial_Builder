@@ -29,8 +29,9 @@ struct RobotModulesView: View
     {
         HStack(spacing: 0)
         {
-            #if os(visionOS)
+            #if !os(macOS)
             Divider()
+                .hidden()
             #endif
             
             if sidebar_enabled

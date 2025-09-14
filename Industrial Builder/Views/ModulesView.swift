@@ -29,28 +29,28 @@ struct ModulesView: View
                         {
                             BoxCard(title: "Robot", subtitle: numeral_endings(base_stc.robot_modules.count, word: "item"), color: .green, image_name: "r.square", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ToolModulesView())
                         {
                             BoxCard(title: "Tool", subtitle: numeral_endings(base_stc.tool_modules.count, word: "item"), color: .teal, image_name: "hammer", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: PartModulesView())
                         {
                             BoxCard(title: "Part", subtitle: numeral_endings(base_stc.part_modules.count, word: "item"), color: .indigo, image_name: "shippingbox", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ChangerModulesView())
                         {
                             BoxCard(title: "Changer", subtitle: numeral_endings(base_stc.changer_modules.count, word: "item"), color: .pink, image_name: "wand.and.rays", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                     }
                     .padding(20)

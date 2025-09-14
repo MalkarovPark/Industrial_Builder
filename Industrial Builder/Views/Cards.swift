@@ -366,7 +366,7 @@ struct SelectSceneCard: View
                     }
                 }
         }
-        .buttonStyle(.borderless)
+        .buttonStyle(.plain)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)

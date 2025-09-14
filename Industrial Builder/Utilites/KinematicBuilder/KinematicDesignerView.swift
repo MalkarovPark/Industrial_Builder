@@ -111,7 +111,7 @@ struct KinematicDesignerView: View
                         .padding(16)
                 }
                 .buttonBorderShape(.circle)
-                .buttonStyle(.borderless)
+                .buttonStyle(.plain)
                 .glassBackgroundEffect()
                 .frame(depth: 24)
                 .popover(isPresented: $position_view_presented)
@@ -130,7 +130,7 @@ struct KinematicDesignerView: View
                         .padding(16)
                 }
                 .buttonBorderShape(.circle)
-                .buttonStyle(.borderless)
+                .buttonStyle(.plain)
                 .glassBackgroundEffect()
                 .frame(depth: 24)
                 .popover(isPresented: $origin_position_view_presented)

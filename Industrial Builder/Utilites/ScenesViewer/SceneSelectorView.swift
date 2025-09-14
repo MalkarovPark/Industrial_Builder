@@ -63,7 +63,7 @@ struct ElementItemView: View
                 ObjectSceneView(node: node)
                     .disabled(true)
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.plain)
         }
         #if os(macOS)
         .frame(width: 80, height: 80)

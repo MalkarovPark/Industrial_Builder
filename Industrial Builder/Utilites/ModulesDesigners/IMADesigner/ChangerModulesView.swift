@@ -27,12 +27,13 @@ struct ChangerModulesView: View
     
     var body: some View
     {
-        #if os(visionOS)
-        Divider()
-        #endif
-        
         HStack(spacing: 0)
         {
+            #if !os(macOS)
+            Divider()
+                .hidden()
+            #endif
+            
             if sidebar_enabled
             {
                 // MARK: - List View

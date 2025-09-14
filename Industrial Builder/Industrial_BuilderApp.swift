@@ -17,7 +17,7 @@ struct Industrial_BuilderApp: App
     
     var body: some Scene
     {
-        //DocumentGroupAlt(newDocument: STCDocument())
+        //DocumentInjectorView(newDocument: STCDocument())
         DocumentGroup(newDocument: STCDocument())
         { file in
             ContentView(document: file.$document, document_url: file.fileURL)
@@ -87,8 +87,8 @@ let default_popover_edge_inverted: Edge = .bottom
 let default_popover_edge_inverted: Edge = .top
 #endif
 
-// MARK: - DocumentGroupAlt
-public struct DocumentGroupAlt<Document, Content>: Scene
+/*// MARK: - DocumentGroupAlt
+public struct DocumentInjectorView<Document, Content>: Scene
 where Document: FileDocument, Content: View {
     
     private let newDocument: () -> Document
@@ -110,19 +110,22 @@ where Document: FileDocument, Content: View {
 }
 
 // MARK: - DocumentView
-struct DocumentView<Document: FileDocument, Content: View>: View {
+struct DocumentView<Document: FileDocument, Content: View>: View
+{
     @State private var document: Document
     @State private var fileURL: URL? = nil
     
     private let content: (FileDocumentConfiguration<Document>) -> Content
     
     init(newDocument: @escaping () -> Document,
-         content: @escaping (FileDocumentConfiguration<Document>) -> Content) {
+         content: @escaping (FileDocumentConfiguration<Document>) -> Content)
+    {
         _document = State(initialValue: newDocument())
         self.content = content
     }
     
-    var body: some View {
+    var body: some View
+    {
         content(
             FileDocumentConfiguration(
                 document: $document,
@@ -133,12 +136,14 @@ struct DocumentView<Document: FileDocument, Content: View>: View {
 }
 
 // MARK: - FileDocumentConfiguration
-public struct FileDocumentConfiguration<Document: FileDocument> {
-    @Binding public var document: Document   // <-- @Binding!
+public struct FileDocumentConfiguration<Document: FileDocument>
+{
+    @Binding public var document: Document
     public var fileURL: URL?
     
-    public init(document: Binding<Document>, fileURL: URL?) {
+    public init(document: Binding<Document>, fileURL: URL?)
+    {
         self._document = document
         self.fileURL = fileURL
     }
-}
+}*/

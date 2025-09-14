@@ -29,28 +29,28 @@ struct ComponentsView: View
                         {
                             BoxCard(title: "Scenes", subtitle: numeral_endings(base_stc.scenes.count, word: "item"), color: .green, image_name: "cube", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ImagesListView())
                         {
                             BoxCard(title: "Images", subtitle: numeral_endings(base_stc.images.count, word: "item"), color: .teal, image_name: "photo", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ListingsListView())
                         {
                             BoxCard(title: "Listings", subtitle: numeral_endings(base_stc.listings.count, word: "item"), color: .indigo, image_name: "scroll", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: KinematicsListView())
                         {
                             BoxCard(title: "Kinematics", subtitle: numeral_endings(base_stc.kinematic_groups.count, word: "item"), color: .purple, image_name: "point.3.connected.trianglepath.dotted", image_size: 80)
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.plain)
                         .frame(height: 128)
                     }
                     .padding(20)
