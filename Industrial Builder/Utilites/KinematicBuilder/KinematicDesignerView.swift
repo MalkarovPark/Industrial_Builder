@@ -120,31 +120,37 @@ struct KinematicDesignerView: View
             .padding(32)
             #endif
         }
-        .toolbar
-        {
-            Button (action: { make_components_view_presented.toggle() })
-            {
-                Label("Make Module", systemImage: "arrow.up.document")
-            }
-            #if os(visionOS)
-            .buttonBorderShape(.circle)
-            #endif
-            .popover(isPresented: $make_components_view_presented, arrowEdge: .bottom)
-            {
-                MakeRobotComponentsView(group: $group)
-            }
-            
-            Button (action: { show_inspector.toggle() })
-            {
-                Label("Kinematic Inspector", systemImage: "sidebar.trailing")
-            }
-            #if os(visionOS)
-            .buttonBorderShape(.circle)
-            #endif
-        }
         .inspector(isPresented: $show_inspector)
         {
             KinematicInspectorView(elements: $group.data)
+        }
+        .toolbar
+        {
+            ToolbarItem(id: "Kinematic")
+            {
+                ControlGroup
+                {
+                    Button (action: { make_components_view_presented.toggle() })
+                    {
+                        Label("Make Module", systemImage: "arrow.up.document")
+                    }
+                    #if os(visionOS)
+                    .buttonBorderShape(.circle)
+                    #endif
+                    .popover(isPresented: $make_components_view_presented, arrowEdge: .bottom)
+                    {
+                        MakeRobotComponentsView(group: $group)
+                    }
+                    
+                    Button (action: { show_inspector.toggle() })
+                    {
+                        Label("Kinematic Inspector", systemImage: "sidebar.trailing")
+                    }
+                    #if os(visionOS)
+                    .buttonBorderShape(.circle)
+                    #endif
+                }
+            }
         }
         .frame(minWidth: 640, minHeight: 480)
     }

@@ -57,8 +57,10 @@ struct KinematicInspectorView: View
             .listStyle(.plain)
             .modifier(ListBorderer())
             .padding([.horizontal, .bottom])
-            #if !os(visionOS)
+            #if os(macOS)
             .frame(height: 160)
+            #elseif os(iOS)
+            .frame(height: 270)
             #else
             .frame(height: 240)
             #endif

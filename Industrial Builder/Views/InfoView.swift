@@ -19,6 +19,10 @@ struct InfoView: View
     
     var body: some View
     {
+        #if !os(macOS)
+        Divider()
+        #endif
+        
         HStack(spacing: 0)
         {
             TextEditor(text: $base_stc.package_info.description)

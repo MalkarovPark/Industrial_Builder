@@ -27,118 +27,128 @@ struct ToolModulesView: View
     
     var body: some View
     {
-        HStack(spacing: 0)
+        VStack(spacing: 0)
         {
             #if !os(macOS)
             Divider()
-                .hidden()
             #endif
             
-            if sidebar_enabled
+            HStack(spacing: 0)
             {
-                // MARK: - List View
-                List(selection: $selection)
+                #if !os(macOS)
+                Divider()
+                    .hidden()
+                #endif
+                
+                if sidebar_enabled
                 {
-                    ForEach($base_stc.tool_modules)
-                    { $item in
-                        HStack
-                        {
-                            if rename_item == item.id
+                    // MARK: - List View
+                    List(selection: $selection)
+                    {
+                        ForEach($base_stc.tool_modules)
+                        { $item in
+                            HStack
                             {
-                                TextField("None", text: $new_name)
-                                    .onSubmit
+                                if rename_item == item.id
                                 {
-                                    item.name = new_name
-                                    document_handler.document_update_tools()
-                                    rename_item = nil
-                                    new_name = "None"
+                                    TextField("None", text: $new_name)
+                                        .onSubmit
+                                    {
+                                        item.name = new_name
+                                        document_handler.document_update_tools()
+                                        rename_item = nil
+                                        new_name = "None"
+                                    }
+                                }
+                                else
+                                {
+                                    Text(item.name)
+                                }
+                                Spacer()
+                            }
+                            .listRowSeparator(.hidden)
+                            .contentShape(Rectangle())
+                            .contextMenu
+                            {
+                                Button
+                                {
+                                    rename_item = item.id
+                                    new_name = item.name
+                                }
+                                label:
+                                {
+                                    Label("Rename", systemImage: "pencil")
+                                }
+                                
+                                Button(role: .destructive)
+                                {
+                                    if let index = base_stc.tool_modules.firstIndex(where: { $0.id == item.id })
+                                    {
+                                        base_stc.tool_modules.remove(at: index)
+                                    }
+                                }
+                                label:
+                                {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
-                            else
+                            .swipeActions
                             {
-                                Text(item.name)
-                            }
-                            Spacer()
-                        }
-                        .listRowSeparator(.hidden)
-                        .contentShape(Rectangle())
-                        .contextMenu
-                        {
-                            Button
-                            {
-                                rename_item = item.id
-                                new_name = item.name
-                            }
-                            label:
-                            {
-                                Label("Rename", systemImage: "pencil")
-                            }
-                            
-                            Button(role: .destructive)
-                            {
-                                if let index = base_stc.tool_modules.firstIndex(where: { $0.id == item.id })
+                                Button(role: .destructive)
                                 {
-                                    base_stc.tool_modules.remove(at: index)
+                                    if let index = base_stc.tool_modules.firstIndex(where: { $0.id == item.id })
+                                    {
+                                        base_stc.tool_modules.remove(at: index)
+                                    }
+                                }
+                                label:
+                                {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
-                            label:
-                            {
-                                Label("Delete", systemImage: "trash")
-                            }
+                            #if os(visionOS)
+                            .listRowBackground(selection == item.id ? Color.accentColor.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)) : Color.clear.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
+                            #endif
                         }
-                        .swipeActions
-                        {
-                            Button(role: .destructive)
-                            {
-                                if let index = base_stc.tool_modules.firstIndex(where: { $0.id == item.id })
-                                {
-                                    base_stc.tool_modules.remove(at: index)
-                                }
-                            }
-                            label:
-                            {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
-                        #if os(visionOS)
-                        .listRowBackground(selection == item.id ? Color.accentColor.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous)) : Color.clear.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
-                        #endif
                     }
+                    #if os(macOS)
+                    .frame(maxWidth: 128)
+                    #elseif os(iOS)
+                    .frame(maxWidth: 192)
+                    #else
+                    .frame(maxWidth: 256)
+                    .background(.thinMaterial)
+                    #endif
+                    .listStyle(.plain)
                 }
-                #if os(macOS)
-                .frame(maxWidth: 128)
-                #elseif os(iOS)
-                .frame(maxWidth: 192)
-                #else
-                .frame(maxWidth: 256)
-                .background(.thinMaterial)
-                #endif
-                .listStyle(.plain)
-            }
-            
-            #if !os(visionOS)
-            Divider()
-            #endif
-            
-            // MARK: - Detail View
-            if let selected_item_id = selection, let selected_module_index = base_stc.tool_modules.firstIndex(where: { $0.id == selected_item_id })
-            {
-                ToolModuleDesigner(tool_module: $base_stc.tool_modules[selected_module_index])
-            }
-            else
-            {
-                ContentUnavailableView
-                {
-                    Label("No module selected", systemImage: "hammer")
-                }
-                description:
-                {
-                    Text("Select an existing tool module to edit.")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                
                 #if !os(visionOS)
-                .background(.white)
+                Divider()
+                #if !os(macOS)
+                    .ignoresSafeArea(.container, edges: .bottom)
                 #endif
+                #endif
+                
+                // MARK: - Detail View
+                if let selected_item_id = selection, let selected_module_index = base_stc.tool_modules.firstIndex(where: { $0.id == selected_item_id })
+                {
+                    ToolModuleDesigner(tool_module: $base_stc.tool_modules[selected_module_index])
+                }
+                else
+                {
+                    ContentUnavailableView
+                    {
+                        Label("No module selected", systemImage: "hammer")
+                    }
+                    description:
+                    {
+                        Text("Select an existing tool module to edit.")
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    #if !os(visionOS)
+                    .background(.white)
+                    #endif
+                }
             }
         }
         .onChange(of: base_stc.tool_modules)
@@ -261,7 +271,7 @@ struct ToolModulesView: View
         }
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(.bar, for: .navigationBar)
         #endif
     }
     
