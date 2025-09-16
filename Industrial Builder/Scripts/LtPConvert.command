@@ -60,7 +60,7 @@ let package = Package(
         .visionOS("26.0")
     ],
     dependencies: [
-        .package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "main"),
+        .package(url: "https://github.com/MalkarovPark/IndustrialKit", "5.0.0"..<"6.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.

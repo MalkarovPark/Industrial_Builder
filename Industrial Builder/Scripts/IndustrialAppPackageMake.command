@@ -38,7 +38,7 @@ cd "$PACKAGE_DIR" || exit
 
 # Create Package.swift
 PACKAGE_SWIFT_CONTENT='
-// swift-tools-version: 5.9
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -46,11 +46,12 @@ import PackageDescription
 let package = Package(
     name: "'"$PROJECT_NAME"'",
     platforms: [
-        .iOS("17.0"),
-        .macOS("14.0")
+        .iOS("26.0"),
+        .macOS("26.0"),
+        .visionOS("26.0")
     ],
     dependencies: [
-        .package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "main"),
+        .package(url: "https://github.com/MalkarovPark/IndustrialKit", "5.0.0"..<"6.0.0"),
     ],
     targets: [
         .executableTarget(
