@@ -213,7 +213,8 @@ struct ProcessItemView<Content: View>: View
             #if !os(visionOS)
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             #endif
-            .shadow(color: .black.opacity(0.1), radius: 2)
+            .shadow(color: .black.opacity(0.1), radius: 6)
+            //.shadow(color: .black.opacity(0.05), radius: 4)
             
             VStack(alignment: .leading)
             {
@@ -230,6 +231,7 @@ struct ProcessItemView<Content: View>: View
         }
         #if os(iOS)
         .padding(10)
+        .glassEffect(in: .rect(cornerRadius: 16.0))
         #else
         .padding(.vertical, 8)
         #endif

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -139,10 +139,26 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		620AA44E2CDFAC08008C2918 /* Robot */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Robot; sourceTree = "<group>"; };
-		620AA4542CDFAC1C008C2918 /* Tool */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tool; sourceTree = "<group>"; };
-		620AA4552CDFAC25008C2918 /* Changer */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Changer; sourceTree = "<group>"; };
-		62D311A02CE3882A002A39B8 /* Part */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Part; sourceTree = "<group>"; };
+		620AA44E2CDFAC08008C2918 /* Robot */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Robot;
+			sourceTree = "<group>";
+		};
+		620AA4542CDFAC1C008C2918 /* Tool */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Tool;
+			sourceTree = "<group>";
+		};
+		620AA4552CDFAC25008C2918 /* Changer */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Changer;
+			sourceTree = "<group>";
+		};
+		62D311A02CE3882A002A39B8 /* Part */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Part;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -457,7 +473,6 @@
 				};
 			};
 			buildConfigurationList = 6289FCBE2AD0398100BB7F5E /* Build configuration list for PBXProject "Industrial Builder" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -469,6 +484,7 @@
 				628E14502AD73C0400BC8FD9 /* XCRemoteSwiftPackageReference "IndustrialKit" */,
 				62B005792D8EA9F400544A76 /* XCRemoteSwiftPackageReference "CodeEditorView" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 6289FCC42AD0398100BB7F5E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
