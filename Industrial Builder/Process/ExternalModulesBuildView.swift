@@ -47,7 +47,7 @@ struct ExternalModulesBuildView: View
                         {
                             Toggle(isOn: $base_stc.compile_program_elements)
                             {
-                                Text("Compile program elements")
+                                Text("Compile Listings")
                             }
                             .padding()
                             #if !os(macOS)

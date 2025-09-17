@@ -81,18 +81,18 @@ while performed
             {
             case "update_nodes_positions":
                 output = update_nodes_positions(
-                    pointer_location: [Float(input[1]) ?? 0,
-                                       Float(input[2]) ?? 0,
-                                       Float(input[3]) ?? 0],
-                    pointer_rotation: [Float(input[4]) ?? 0,
-                                       Float(input[5]) ?? 0,
-                                       Float(input[6]) ?? 0],
-                    origin_location:  [Float(input[7]) ?? 0,
-                                       Float(input[8]) ?? 0,
-                                       Float(input[9]) ?? 0],
-                    origin_rotation:  [Float(input[10]) ?? 0,
-                                       Float(input[11]) ?? 0,
-                                       Float(input[12]) ?? 0])
+                    pointer_position: (x: Float(input[1]) ?? 0,
+                                       y: Float(input[2]) ?? 0,
+                                       z: Float(input[3]) ?? 0,
+                                       r: Float(input[4]) ?? 0,
+                                       p: Float(input[5]) ?? 0,
+                                       w: Float(input[6]) ?? 0),
+                    origin_position: (x: Float(input[7]) ?? 0,
+                                      y: Float(input[8]) ?? 0,
+                                      z: Float(input[9]) ?? 0,
+                                      r: Float(input[10]) ?? 0,
+                                      p: Float(input[11]) ?? 0,
+                                      w: Float(input[12]) ?? 0))
             case "reset_model":
                 output = reset_nodes()
                 
@@ -123,11 +123,11 @@ while performed
 }
 
 // MARK: - Performing
-func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> String
+@MainActor func update_nodes_positions(pointer_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float), origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)) -> String
 {
     var output_string = ""
     
-    let values = inverse_kinematic_calculation(pointer_location: pointer_location, pointer_rotation: pointer_rotation, origin_location:  origin_location, origin_rotation:  origin_rotation)
+    let values = inverse_kinematic_calculation(pointer_position: pointer_position, origin_position: origin_position)
     
     output_string += "d0 setLocation(\(values[1]), 0, 0)\n"
     output_string += "d2 setLocation(0, \(values[2]), 0)\n"
@@ -136,7 +136,7 @@ func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float]
     return output_string
 }
 
-func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
+@MainActor func inverse_kinematic_calculation(pointer_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float), origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)) -> [Float]
 {
     let lengths: [Float] = [
         <#lengths#>
@@ -144,9 +144,9 @@ func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: 
     
     var px, py, pz: Float
     
-    px = pointer_location[0] + origin_location[0] - lengths[1]
-    py = pointer_location[1] + origin_location[1] - lengths[2]
-    pz = pointer_location[2] + origin_location[2] - lengths[0] + lengths[3] + lengths[4]
+    px = pointer_position.x + origin_position.x - lengths[1]
+    py = pointer_position.y + origin_position.y - lengths[2]
+    pz = pointer_position.z + origin_position.z - lengths[0] + lengths[3] + lengths[4]
     
     // Checking X part limit
     if px < 0
@@ -191,27 +191,27 @@ func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: 
 }
 
 // MARK: - Statistics
-func reset_nodes() -> String
+@MainActor func reset_nodes() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-func initial_charts_data() -> [WorkspaceObjectChart]?
+@MainActor func initial_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
 }
 
-func updated_charts_data() -> [WorkspaceObjectChart]?
+@MainActor func updated_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
 }
 
-func initial_states_data() -> [StateItem]?
+@MainActor func initial_states_data() -> [StateItem]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }
 
-func updated_states_data() -> [StateItem]?
+@MainActor func updated_states_data() -> [StateItem]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }

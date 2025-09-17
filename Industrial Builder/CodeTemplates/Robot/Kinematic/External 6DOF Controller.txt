@@ -81,18 +81,18 @@ while performed
             {
             case "update_nodes_positions":
                 output = update_nodes_positions(
-                    pointer_location: [Float(input[1]) ?? 0,
-                                       Float(input[2]) ?? 0,
-                                       Float(input[3]) ?? 0],
-                    pointer_rotation: [Float(input[4]) ?? 0,
-                                       Float(input[5]) ?? 0,
-                                       Float(input[6]) ?? 0],
-                    origin_location:  [Float(input[7]) ?? 0,
-                                       Float(input[8]) ?? 0,
-                                       Float(input[9]) ?? 0],
-                    origin_rotation:  [Float(input[10]) ?? 0,
-                                       Float(input[11]) ?? 0,
-                                       Float(input[12]) ?? 0])
+                    pointer_position: (x: Float(input[1]) ?? 0,
+                                       y: Float(input[2]) ?? 0,
+                                       z: Float(input[3]) ?? 0,
+                                       r: Float(input[4]) ?? 0,
+                                       p: Float(input[5]) ?? 0,
+                                       w: Float(input[6]) ?? 0),
+                    origin_position: (x: Float(input[7]) ?? 0,
+                                      y: Float(input[8]) ?? 0,
+                                      z: Float(input[9]) ?? 0,
+                                      r: Float(input[10]) ?? 0,
+                                      p: Float(input[11]) ?? 0,
+                                      w: Float(input[12]) ?? 0))
             case "reset_model":
                 output = reset_nodes()
                 
@@ -123,7 +123,7 @@ while performed
 }
 
 // MARK: - Performing
-func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> String
+@MainActor func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> String
 {
     var output_string = ""
     
@@ -139,7 +139,7 @@ func update_nodes_positions(pointer_location: [Float], pointer_rotation: [Float]
     return output_string
 }
 
-func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
+@MainActor func inverse_kinematic_calculation(pointer_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float), origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)) -> [Float]
 {
     let lengths: [Float] = [
         <#lengths#>
@@ -157,15 +157,16 @@ func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: 
         var asx, asy, asz, bsx, bsy, bsz: Float
         var p5x, p5y, p5z: Float
         var C1, C23, S1, S23: Float
+        
         var M, N, A, B: Float
         
-        px = -(pointer_location[0] + origin_location[0])
-        py =   pointer_location[1] + origin_location[1]
-        pz =   pointer_location[2] + origin_location[2]
+        px = -(pointer_position.x + origin_position.x)
+        py = pointer_position.y + origin_position.y
+        pz = pointer_position.z + origin_position.z
         
-        rx = -(pointer_rotation[0].to_rad + origin_rotation[0].to_rad)
-        ry = -(pointer_rotation[1].to_rad + origin_rotation[1].to_rad) + .pi
-        rz = -(pointer_rotation[2].to_rad + origin_rotation[2].to_rad)
+        rx = -(pointer_position.r.to_rad + origin_position.r.to_rad)
+        ry = -(pointer_position.p.to_rad + origin_position.p.to_rad) + (.pi)
+        rz = -(pointer_position.w.to_rad + origin_position.w.to_rad)
         
         bx = cos(rx) * sin(ry) * cos(rz) - sin(rx) * sin(rz)
         by = cos(rx) * sin(ry) * sin(rz) - sin(rx) * cos(rz)
@@ -179,40 +180,36 @@ func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: 
         p5y = py - (lengths[4] + lengths[5]) * ay
         p5z = pz - (lengths[4] + lengths[5]) * az
         
-        C3 = (pow(p5x, 2) + pow(p5y, 2) + pow(p5z - lengths[0], 2)
-              - pow(lengths[1], 2) - pow(lengths[2] + lengths[3], 2)) /
-        (2 * lengths[1] * (lengths[2] + lengths[3]))
+        C3 = (pow(p5x, 2) + pow(p5y, 2) + pow(p5z - lengths[0], 2) - pow(lengths[1], 2) - pow(lengths[2] + lengths[3], 2)) / (2 * lengths[1] * (lengths[2] + lengths[3]))
         
         // Joint 1
-        theta[0] = atan2(p5y, p5x)
+        theta[0] = Float(atan2(p5y, p5x))
         
-        // Joints 2 and 3
-        theta[2] = atan2(sqrt(abs(1 - C3 * C3)), C3)
+        // Joints 3, 2
+        theta[2] = Float(atan2(pow(abs(1 - pow(C3, 2)), 0.5), C3))
         
         M = lengths[1] + (lengths[2] + lengths[3]) * C3
-        N = (lengths[2] + lengths[3]) * sin(theta[2])
-        A = sqrt(p5x * p5x + p5y * p5y)
+        N = (lengths[2] + lengths[3]) * sin(Float(theta[2]))
+        A = pow(p5x * p5x + p5y * p5y, 0.5)
         B = p5z - lengths[0]
-        
-        theta[1] = atan2(M * A - N * B, N * A + M * B)
+        theta[1] = Float(atan2(M * A - N * B, N * A + M * B))
         
         // Joints 4, 5, 6
-        C1  = cos(theta[0])
-        S1  = sin(theta[0])
-        C23 = cos(theta[1] + theta[2])
-        S23 = sin(theta[1] + theta[2])
+        C1 = cos(Float(theta[0]))
+        C23 = cos(Float(theta[1]) + Float(theta[2]))
+        S1 = sin(Float(theta[0]))
+        S23 = sin(Float(theta[1]) + Float(theta[2]))
         
         asx = C23 * (C1 * ax + S1 * ay) - S23 * az
         asy = -S1 * ax + C1 * ay
         asz = S23 * (C1 * ax + S1 * ay) + C23 * az
-        
         bsx = C23 * (C1 * bx + S1 * by) - S23 * bz
         bsy = -S1 * bx + C1 * by
         bsz = S23 * (C1 * bx + S1 * by) + C23 * bz
         
-        theta[3] = atan2(asy, asx)
-        theta[4] = atan2(cos(theta[3]) * asx + sin(theta[3]) * asy, asz)
-        theta[5] = atan2(cos(theta[3]) * bsy - sin(theta[3]) * bsx, -bsz / sin(theta[4]))
+        theta[3] = Float(atan2(asy, asx))
+        theta[4] = Float(atan2(cos(Float(theta[3])) * asx + sin(Float(theta[3])) * asy, asz))
+        theta[5] = Float(atan2(cos(Float(theta[3])) * bsy - sin(Float(theta[3])) * bsx, -bsz / sin(Float(theta[4]))))
         
         angles.append(-(theta[0] + .pi))
         angles.append(-theta[1])
@@ -226,27 +223,27 @@ func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: 
 }
 
 // MARK: - Statistics
-func reset_nodes() -> String
+@MainActor func reset_nodes() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-func initial_charts_data() -> [WorkspaceObjectChart]?
+@MainActor func initial_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
 }
 
-func updated_charts_data() -> [WorkspaceObjectChart]?
+@MainActor func updated_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
 }
 
-func initial_states_data() -> [StateItem]?
+@MainActor func initial_states_data() -> [StateItem]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }
 
-func updated_states_data() -> [StateItem]?
+@MainActor func updated_states_data() -> [StateItem]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }

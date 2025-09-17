@@ -29,8 +29,8 @@ class <#Name#>_Controller: RobotModelController
     private func inverse_kinematic_calculation(pointer_location: [Float], pointer_rotation: [Float], origin_location: [Float], origin_rotation: [Float]) -> [Float]
     {
         var angles = [Float]()
-        var C3 = Float()
         var theta = [Float](repeating: 0, count: 6)
+        var C3 = Float()
         
         do
         {

@@ -106,9 +106,9 @@ while performed
                 output = updated_charts_data().json_string()
             case "updated_states_data":
                 output = updated_states_data().json_string()
-            case "initial_charts_data":
-                output = initial_charts_data().json_string()
             case "initial_states_data":
+                output = initial_charts_data().json_string()
+            case "updated_states_data":
                 output = initial_states_data().json_string()
 
             case "sync_model":
@@ -146,7 +146,7 @@ while performed
 }
 
 // MARK: - Connection
-func connect(parameters: [String]) -> String
+@MainActor func connect(parameters: [String]) -> String
 {
     /*let connection_enabled = true
     
@@ -165,13 +165,13 @@ func connect(parameters: [String]) -> String
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-func disconnect() -> String
+@MainActor func disconnect() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
 // MARK: - Performing
-func move_to(point: PositionPoint, origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float) = (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0)) -> String
+@MainActor func move_to(point: PositionPoint, origin_position: (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float) = (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0)) -> String
 {
     /*completed = false
     
@@ -183,39 +183,39 @@ func move_to(point: PositionPoint, origin_position: (x: Float, y: Float, z: Floa
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
-func performing_state() -> PerformingState
+@MainActor func performing_state() -> PerformingState
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return .completed@*/return .completed/*@END_MENU_TOKEN@*/
 }
 
-func reset_device() -> String
+@MainActor func reset_device() -> String
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return String()@*/return String()/*@END_MENU_TOKEN@*/
 }
 
 // MARK: - Statistics
-func initial_charts_data() -> [WorkspaceObjectChart]?
+@MainActor func initial_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
 }
 
-func updated_charts_data() -> [WorkspaceObjectChart]?
+@MainActor func updated_charts_data() -> [WorkspaceObjectChart]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
 }
 
-func initial_states_data() -> [StateItem]?
+@MainActor func initial_states_data() -> [StateItem]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }
 
-func updated_states_data() -> [StateItem]?
+@MainActor func updated_states_data() -> [StateItem]?
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
 }
 
 // MARK: - Modeling
-func sync_model() -> [String]?
+@MainActor func sync_model() -> [String]?
 {
     /*var positions_list: [String]? = nil
     //positions_list = update_nodes_positions(pointer_position: (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z, r: pointer_position.r, p: pointer_position.p, w: pointer_position.w), origin_position: (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0))
@@ -224,7 +224,7 @@ func sync_model() -> [String]?
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return nil@*/return nil/*@END_MENU_TOKEN@*/
 }
 
-func sync_pointer() -> (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)?
+@MainActor func sync_pointer() -> (x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)?
 {
     //return (x: pointer_position.x, y: pointer_position.y, z: pointer_position.z, r: pointer_position.r, p: pointer_position.p, w: pointer_position.w)
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return nil@*/return nil/*@END_MENU_TOKEN@*/

@@ -105,7 +105,7 @@ while performed
 }
 
 // MARK: - Function
-func change(registers: inout [Float])
+@MainActor func change(registers: inout [Float])
 {
     /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
 }
