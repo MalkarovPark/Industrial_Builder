@@ -5,7 +5,7 @@
 import Foundation
 import IndustrialKit
 
-class <#Name#>_Connector: ToolConnector
+nonisolated class <#Name#>_Connector: ToolConnector, @unchecked Sendable
 {
     // MARK: - Connection
     override var parameters: [ConnectionParameter]

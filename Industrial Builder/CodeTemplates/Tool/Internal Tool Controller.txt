@@ -6,7 +6,7 @@ import Foundation
 import SceneKit
 import IndustrialKit
 
-class <#Name#>_Controller: ToolModelController
+nonisolated class <#Name#>_Controller: ToolModelController, @unchecked Sendable
 {
     // MARK: - Parameters
     override var nodes_names: [String]
