@@ -208,6 +208,8 @@ struct ToolOperationCard: View
         .frame(height: 48)
         #if os(visionOS)
         .glassBackgroundEffect()
+        #else
+        .background(.white)
         #endif
         .modifier(ViewBorderer())
     }

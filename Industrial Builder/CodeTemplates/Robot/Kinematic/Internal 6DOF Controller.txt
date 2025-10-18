@@ -6,7 +6,7 @@ import Foundation
 import SceneKit
 import IndustrialKit
 
-class <#Name#>_Controller: RobotModelController
+nonisolated class <#Name#>_Controller: RobotModelController
 {
     // MARK: - Parameters
     override var nodes_names: [String]

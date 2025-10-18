@@ -92,7 +92,8 @@ while performed
                                       z: Float(input[9]) ?? 0,
                                       r: Float(input[10]) ?? 0,
                                       p: Float(input[11]) ?? 0,
-                                      w: Float(input[12]) ?? 0))
+                                      w: Float(input[12]) ?? 0)
+                )
             case "reset_model":
                 output = reset_nodes()
                 
@@ -127,7 +128,7 @@ while performed
 {
     var output_string = ""
     
-    let values = inverse_kinematic_calculation(pointer_location: pointer_location, pointer_rotation: pointer_rotation, origin_location:  origin_location, origin_rotation:  origin_rotation)
+    let values = inverse_kinematic_calculation(pointer_position: pointer_position, origin_position: origin_position)
     
     output_string += "d0 setRotation(0, \(values[0]), 0)\n"
     output_string += "d1 setRotation(0, 0, \(values[1]))\n"
