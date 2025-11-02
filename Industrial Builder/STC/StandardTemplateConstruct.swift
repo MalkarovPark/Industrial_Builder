@@ -482,13 +482,35 @@ public class StandardTemplateConstruct: ObservableObject
     // Store the Modules Building Kit
     public func store_mbk(to url: URL)
     {
-        internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command", "LCompile.command"], to: url)
+        internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command", "LCompile.command", "MPCompile.command"], to: url)
     }
     
     // Store text files from the app itself to external files
     private func internal_files_store(_ file_names: [String], to folder_url: URL)
     {
         for file_name in file_names
+        {
+            guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { continue }
+            let destination_url = folder_url.appendingPathComponent(file_name)
+            
+            do
+            {
+                // If file already exists at destination — remove it first
+                if FileManager.default.fileExists(atPath: destination_url.path)
+                {
+                    try FileManager.default.removeItem(at: destination_url)
+                }
+
+                // Copy new file from app bundle
+                try FileManager.default.copyItem(at: file_url, to: destination_url)
+            }
+            catch
+            {
+                print("Failed to copy \(file_name): \(error.localizedDescription)")
+            }
+        }
+        
+        /*for file_name in file_names
         {
             guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { return }
             let destination_url = folder_url.appendingPathComponent(file_name)
@@ -504,7 +526,7 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 print(error.localizedDescription)
             }
-        }
+        }*/
     }
     
     private func perform_external_project_creation(in folder_url: URL)
@@ -726,6 +748,15 @@ public class StandardTemplateConstruct: ObservableObject
     {
         do
         {
+            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
+            
+            // Remove existing file or directory if it already exists
+            if FileManager.default.fileExists(atPath: module_path.path)
+            {
+                try FileManager.default.removeItem(at: module_path)
+            }
+            
+            // Now safely create the folder
             let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
             
             // Info file store
@@ -1048,7 +1079,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         do
         {
-            try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
+            try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command -c")
             { output in
                 let lines = output.components(separatedBy: .newlines)
                 

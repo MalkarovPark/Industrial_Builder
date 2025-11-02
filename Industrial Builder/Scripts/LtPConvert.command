@@ -37,8 +37,10 @@ PACKAGE_DIR="$(dirname "$ABSOLUTE_SWIFT_FILE")/$PACKAGE_NAME_WITH_POSTFIX"
 
 # Check if the directory already exists
 if [ -d "$PACKAGE_DIR" ]; then
-    echo "Directory $PACKAGE_DIR already exists. Exiting."
-    exit 1
+    # echo "Directory $PACKAGE_DIR already exists. Exiting."
+    # exit 1
+    echo "Directory $PACKAGE_DIR already exists. Replacing..."
+    rm -rf "$PACKAGE_DIR"
 fi
 
 # Create the directory
