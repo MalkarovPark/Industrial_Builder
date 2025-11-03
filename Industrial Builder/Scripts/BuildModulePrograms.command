@@ -78,7 +78,9 @@ for dir in "${dirs[@]}"; do
         continue
     fi
 
-    echo "Processing Code folder: $CODE_DIR"
+    # echo "Processing Code Folder: $CODE_DIR"
+    # echo "Processing ${dir##*.} Module – $(basename "${dir%.*}")"
+    echo "Processing $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${dir%.*}")"
 
     shopt -s nullglob
 
@@ -119,7 +121,8 @@ for dir in "${dirs[@]}"; do
         # No .swift listings, check for existing *_Project folders
         for project_dir in "$CODE_DIR"/*_Project; do
             if [ -d "$project_dir" ]; then
-                echo "Found existing project: $(basename "$project_dir")"
+                # echo "Found existing project: $(basename "$project_dir")"
+                echo "Process component: $(basename "${project_dir%_Project}")"
                 if [ "$CLEAR_FLAG" = true ]; then
                     ./ProjectToProgram.command -clear "$project_dir" >/dev/null 2>&1
                 else

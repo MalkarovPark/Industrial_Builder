@@ -1085,23 +1085,23 @@ public class StandardTemplateConstruct: ObservableObject
                 {
                     DispatchQueue.main.async
                     {
-                        //self.build_info = last_line
+                        self.build_info = last_line
                         //self.build_progress += 1
                     }
                 }
             }
             
-            DispatchQueue.main.async
+            /*DispatchQueue.main.async
             {
-                //self.build_info += "\nExternal code compilation finished."
-            }
+                self.build_info += "\nExternal code compilation finished."
+            }*/
         }
         catch
         {
-            DispatchQueue.main.async
+            /*DispatchQueue.main.async
             {
                 self.build_info += "\nError during external compilation: \(error.localizedDescription)"
-            }
+            }*/
         }
     }
     #endif
@@ -1120,9 +1120,9 @@ public enum ExternalExportType: String, Equatable, CaseIterable
     case no_build = "No Build"
     case programs_only = "Build To Programs"
     case projects_and_programs = "Build To Projects and Programs"
-    case projects_only = "Build To Projects Only"
-    case build_from_projects = "Build Programs from Existing Projects"
-    case projects_to_programs = "Convert Projects to Programs"
+    case projects_only = "Build To Projects"
+    case build_from_projects = "Build Existing Projects To Programs"
+    case projects_to_programs = "Turn Existing Projects to Programs"
 }
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
