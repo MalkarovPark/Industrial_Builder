@@ -1,10 +1,22 @@
 #
-# Convert swift source file to application project package
+# ListingToProject
+#
+# Converts a Swift listing (.swift) into a project (<listing_name>_Project).
+# Arguments:
+#   <swift_file>    Path to the Swift file.
+#   -clear          Deletes the original Swift file after conversion.
 #
 
 #!/bin/bash
 
-# Determine the package directory based on the input argument
+# --- Check for -clear argument ---
+CLEAR_LISTING=false
+if [[ "$1" == "-clear" ]]; then
+    CLEAR_LISTING=true
+    shift
+fi
+
+# Determine the Swift file from the argument
 if [ -n "$1" ]; then
     SWIFT_FILE="$1"
 else
@@ -23,7 +35,6 @@ if [[ "$SWIFT_FILE" != *.swift ]]; then
     exit 1
 fi
 
-
 # Get the filename without extension to be used as package name
 PACKAGE_NAME=$(basename "$SWIFT_FILE" .swift)
 PACKAGE_NAME_WITH_POSTFIX="${PACKAGE_NAME}_Project" # Add _Project postfix
@@ -34,11 +45,8 @@ ABSOLUTE_SWIFT_FILE=$(readlink -f "$SWIFT_FILE")
 # Create the directory for the package in the same directory as the swift file
 PACKAGE_DIR="$(dirname "$ABSOLUTE_SWIFT_FILE")/$PACKAGE_NAME_WITH_POSTFIX"
 
-
 # Check if the directory already exists
 if [ -d "$PACKAGE_DIR" ]; then
-    # echo "Directory $PACKAGE_DIR already exists. Exiting."
-    # exit 1
     echo "Directory $PACKAGE_DIR already exists. Replacing..."
     rm -rf "$PACKAGE_DIR"
 fi
@@ -65,8 +73,6 @@ let package = Package(
         .package(url: "https://github.com/MalkarovPark/IndustrialKit", "5.0.0"..<"6.0.0"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .executableTarget(
             name: "'"$PACKAGE_NAME"'",
             dependencies: [
@@ -81,11 +87,18 @@ let package = Package(
 # Create Package.swift file
 echo "$PACKAGE_SWIFT_CONTENT" > Package.swift
 
-# Create the main.swift file
-mkdir Sources
-mkdir Sources/"$PACKAGE_NAME"
+# Create Sources folder and main.swift
+mkdir -p Sources/"$PACKAGE_NAME"
 
 # Copy content from given swift file into main.swift
 cp "$ABSOLUTE_SWIFT_FILE" Sources/"$PACKAGE_NAME"/main.swift
 
-echo "Package '$PACKAGE_NAME_WITH_POSTFIX' created with IndustrialKit dependency and full references"
+# --- Remove original Swift file if -clear was specified ---
+if $CLEAR_LISTING; then
+    rm -f "$ABSOLUTE_SWIFT_FILE"
+    echo "Original Swift file '$SWIFT_FILE' has been deleted due to -clear flag."
+else
+    echo "Original Swift file '$SWIFT_FILE' preserved (no -clear flag)."
+fi
+
+echo "Package '$PACKAGE_NAME_WITH_POSTFIX' created with IndustrialKit dependency and full references."

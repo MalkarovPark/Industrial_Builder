@@ -321,7 +321,7 @@ public class StandardTemplateConstruct: ObservableObject
         if as_internal
         {
             #if os(macOS)
-            xcode_compilation_progrss_info()
+            xcode_compilation_progress_info()
             #endif
         }
         else
@@ -341,7 +341,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         #if os(macOS)
-        func xcode_compilation_progrss_info()
+        func xcode_compilation_progress_info()
         {
             build_total += 5 // Xcode project stages
         }
@@ -366,13 +366,8 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // MARK: - Process preferences
-    #if os(macOS)
-    @Published var compile_program_elements = true
-    #else
-    @Published var compile_program_elements = false
-    #endif
-    
     @Published var internal_export_type: InternalExportType = .files_only
+    @Published var external_export_type: ExternalExportType = .no_build
     
     @Published var prepare_for_dev_type: PrepareForDevType = .blank_project
     
@@ -465,12 +460,12 @@ public class StandardTemplateConstruct: ObservableObject
     // Makes a Swift package project with IndustrialKit framework import (from file)
     public func make_industrial_app_project(from file_name: String, to url: URL)
     {
-        internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command"], to: url)
+        internal_files_store(["IndustrialAppPackageMake.command"], to: url)
         
         #if os(macOS)
         do
         {
-            try perform_terminal_command("cd '\(url.path)' && ./LtPConvert.command '\(file_name)'")
+            try perform_terminal_command("cd '\(url.path)' && ./ListingToProject.command -clear '\(file_name)'")
         }
         catch
         {
@@ -482,7 +477,7 @@ public class StandardTemplateConstruct: ObservableObject
     // Store the Modules Building Kit
     public func store_mbk(to url: URL)
     {
-        internal_files_store(["IndustrialAppPackageMake.command", "LtPConvert.command", "PBuild.command", "LCompile.command", "MPCompile.command"], to: url)
+        internal_files_store(["IndustrialAppPackageMake.command", "ListingToProject.command", "ProjectToProgram.command", "BuildModuleProgram.command"], to: url)
     }
     
     // Store text files from the app itself to external files
@@ -527,51 +522,6 @@ public class StandardTemplateConstruct: ObservableObject
                 print(error.localizedDescription)
             }
         }*/
-    }
-    
-    private func perform_external_project_creation(in folder_url: URL)
-    {
-        #if os(macOS)
-        do
-        {
-            try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command")
-            { output in
-                let lines = output.components(separatedBy: .newlines)
-                
-                // Find the last non-empty line
-                var last_line: String? = nil
-                for line in lines.reversed()
-                {
-                    if !line.isEmpty
-                    {
-                        last_line = line
-                        break
-                    }
-                }
-                
-                if let last_line = last_line
-                {
-                    DispatchQueue.main.async
-                    {
-                        self.build_info = last_line
-                        self.build_progress += 1
-                    }
-                }
-            }
-            
-            DispatchQueue.main.async
-            {
-                self.build_info += "\nExternal code compilation finished."
-            }
-        }
-        catch
-        {
-            DispatchQueue.main.async
-            {
-                self.build_info += "\nError during external compilation: \(error.localizedDescription)"
-            }
-        }
-        #endif
     }
     
     // MARK: - Modules build functions
@@ -694,58 +644,57 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // Builds modules in separated files.
+    // Builds modules
     private func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
     {
+        // Store compilation kit for external modules build
+        if !as_internal
+        {
+            internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
+        }
+        
+        // Builds modules in separated files
         let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
         for robot_module in filtered_robot_modules
         {
-            build_module_file(module: robot_module, to: folder_url, as_internal: as_internal)
+            build_module_file(module: robot_module, to: folder_url, as_internal: as_internal) // Create robot module package
+            perform_external_compilation(module: robot_module, to: folder_url, type: external_export_type) // Compile programs
             self.build_progress += 1
         }
         
         let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
-            build_module_file(module: tool_module, to: folder_url, as_internal: as_internal)
+            build_module_file(module: tool_module, to: folder_url, as_internal: as_internal) // Create tool module package
+            perform_external_compilation(module: tool_module, to: folder_url, type: external_export_type) // Compile programs
             self.build_progress += 1
         }
         
         let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
-            build_module_file(module: part_module, to: folder_url, as_internal: as_internal)
+            build_module_file(module: part_module, to: folder_url, as_internal: as_internal) // Create part module package
+            perform_external_compilation(module: part_module, to: folder_url, type: external_export_type) // Compile programs
             self.build_progress += 1
         }
         
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
-        
         for changer_module in filtered_changer_modules
         {
-            build_module_file(module: changer_module, to: folder_url, as_internal: as_internal)
+            build_module_file(module: changer_module, to: folder_url, as_internal: as_internal) // Create changer module package
+            perform_external_compilation(module: changer_module, to: folder_url, type: external_export_type) // Compile programs
             self.build_progress += 1
-        }
-        
-        if !as_internal
-        {
-            compilation_kit_store(to: folder_url)
-            
-            /*#if os(macOS)
-            perform_external_compilation(in: folder_url)
-            #endif*/
-            
-            if compile_program_elements
-            {
-                #if os(macOS)
-                perform_external_compilation(in: folder_url)
-                #endif
-            }
         }
     }
     
     // MARK: Build module file
     private func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
     {
+        if !as_internal && (external_export_type == .build_from_projects || external_export_type == .projects_to_programs)
+        {
+            return // Skip modules files build for only compilation/conversion export type
+        }
+        
         do
         {
             let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
@@ -1068,18 +1017,56 @@ public class StandardTemplateConstruct: ObservableObject
         return folder_url
     }
     
-    // MARK: Compilation kit handling (for external)
-    private func compilation_kit_store(to url: URL)
-    {
-        internal_files_store(["LtPConvert.command", "PBuild.command", "LCompile.command", "MPCompile.command"], to: url)
-    }
-    
     #if os(macOS)
-    private func perform_external_compilation(in folder_url: URL)
+    // MARK: Compilation handling (for external program components)
+    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, type: ExternalExportType)
     {
+        if type == .no_build { return }
+        
+        var command_line = "cd '\(folder_url.path)' && ./"
+        var module_package_name = module.name
+        
+        switch module
+        {
+        case is RobotModule:
+            module_package_name += ".robot"
+        case is ToolModule:
+            module_package_name += ".tool"
+        case is PartModule:
+            module_package_name += ".part"
+        case is ChangerModule:
+            module_package_name += ".changer"
+        default:
+            return
+        }
+        
+        module_package_name = module_package_name.replacingOccurrences(of: " ", with: "\\ ")
+        
+        //print(module_package_name)
+        
+        switch type
+        {
+        case .no_build:
+            return
+        case .programs_only:
+            command_line += "BuildModulePrograms.command -programs "
+        case .projects_and_programs:
+            command_line += "BuildModulePrograms.command -projects-programs "
+        case .projects_only:
+            command_line += "BuildModulePrograms.command -projects "
+        case .build_from_projects:
+            command_line += "BuildModulePrograms.command "
+        case .projects_to_programs:
+            command_line += "BuildModulePrograms.command -clear "
+        }
+        
+        command_line += module_package_name
+        
+        //print(command_line)
+        
         do
         {
-            try perform_terminal_command("cd '\(folder_url.path)' && ./MPCompile.command -c")
+            try perform_terminal_command(command_line)
             { output in
                 let lines = output.components(separatedBy: .newlines)
                 
@@ -1098,15 +1085,15 @@ public class StandardTemplateConstruct: ObservableObject
                 {
                     DispatchQueue.main.async
                     {
-                        self.build_info = last_line
-                        self.build_progress += 1
+                        //self.build_info = last_line
+                        //self.build_progress += 1
                     }
                 }
             }
             
             DispatchQueue.main.async
             {
-                self.build_info += "\nExternal code compilation finished."
+                //self.build_info += "\nExternal code compilation finished."
             }
         }
         catch
@@ -1126,6 +1113,16 @@ public enum InternalExportType: String, Equatable, CaseIterable
     case files_only = "Files Only"
     //case swift_playground = "Swift Playground"
     //case xcode_project = "Xcode Project"
+}
+
+public enum ExternalExportType: String, Equatable, CaseIterable
+{
+    case no_build = "No Build"
+    case programs_only = "Build To Programs"
+    case projects_and_programs = "Build To Projects and Programs"
+    case projects_only = "Build To Projects Only"
+    case build_from_projects = "Build Programs from Existing Projects"
+    case projects_to_programs = "Convert Projects to Programs"
 }
 
 public enum PrepareForDevType: String, Equatable, CaseIterable

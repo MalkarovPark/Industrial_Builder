@@ -13,12 +13,11 @@
 		620AA44C2CDF92C9008C2918 /* CodeBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */; };
 		621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A4E9F2BB73DEB006A081A /* ImageView.swift */; };
 		622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225786F2C24A9940023004E /* ResourcesPackageView.swift */; };
-		62277B722D285D19002E9D4D /* PBuild.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B712D285D19002E9D4D /* PBuild.command */; };
-		62277B732D285D19002E9D4D /* LCompile.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B6E2D285D19002E9D4D /* LCompile.command */; };
-		62277B742D285D19002E9D4D /* LtPConvert.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B6F2D285D19002E9D4D /* LtPConvert.command */; };
-		62277B752D285D19002E9D4D /* MPCompile.command in Resources */ = {isa = PBXBuildFile; fileRef = 62277B702D285D19002E9D4D /* MPCompile.command */; };
 		622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C88A12BB71C7200A53213 /* ImagesListView.swift */; };
 		623D72482ADAFD8500927DEA /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D72472ADAFD8500927DEA /* SceneView.swift */; };
+		625519852EB823EE007D5945 /* BuildModulePrograms.command in Resources */ = {isa = PBXBuildFile; fileRef = 625519822EB823EE007D5945 /* BuildModulePrograms.command */; };
+		625519862EB823EE007D5945 /* ListingToProject.command in Resources */ = {isa = PBXBuildFile; fileRef = 625519832EB823EE007D5945 /* ListingToProject.command */; };
+		625519872EB823EE007D5945 /* ProjectToProgram.command in Resources */ = {isa = PBXBuildFile; fileRef = 625519842EB823EE007D5945 /* ProjectToProgram.command */; };
 		6255B9202B9BDC86002B575C /* Framers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6255B91F2B9BDC86002B575C /* Framers.swift */; };
 		6255B9242B9E0DD4002B575C /* DocumentUpdateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6255B9232B9E0DD4002B575C /* DocumentUpdateHandler.swift */; };
 		6261B1F22C02692A00FECFF0 /* CodeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */; };
@@ -79,12 +78,11 @@
 		620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBuilderView.swift; sourceTree = "<group>"; };
 		621A4E9F2BB73DEB006A081A /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		6225786F2C24A9940023004E /* ResourcesPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesPackageView.swift; sourceTree = "<group>"; };
-		62277B6E2D285D19002E9D4D /* LCompile.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = LCompile.command; sourceTree = "<group>"; };
-		62277B6F2D285D19002E9D4D /* LtPConvert.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = LtPConvert.command; sourceTree = "<group>"; };
-		62277B702D285D19002E9D4D /* MPCompile.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = MPCompile.command; sourceTree = "<group>"; };
-		62277B712D285D19002E9D4D /* PBuild.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = PBuild.command; sourceTree = "<group>"; };
 		622C88A12BB71C7200A53213 /* ImagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListView.swift; sourceTree = "<group>"; };
 		623D72472ADAFD8500927DEA /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
+		625519822EB823EE007D5945 /* BuildModulePrograms.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = BuildModulePrograms.command; sourceTree = "<group>"; };
+		625519832EB823EE007D5945 /* ListingToProject.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = ListingToProject.command; sourceTree = "<group>"; };
+		625519842EB823EE007D5945 /* ProjectToProgram.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProjectToProgram.command; sourceTree = "<group>"; };
 		6255B91F2B9BDC86002B575C /* Framers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Framers.swift; sourceTree = "<group>"; };
 		6255B9232B9E0DD4002B575C /* DocumentUpdateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUpdateHandler.swift; sourceTree = "<group>"; };
 		6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorView.swift; sourceTree = "<group>"; };
@@ -191,11 +189,10 @@
 		62277B6D2D285223002E9D4D /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				625519822EB823EE007D5945 /* BuildModulePrograms.command */,
+				625519832EB823EE007D5945 /* ListingToProject.command */,
+				625519842EB823EE007D5945 /* ProjectToProgram.command */,
 				626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */,
-				62277B6E2D285D19002E9D4D /* LCompile.command */,
-				62277B6F2D285D19002E9D4D /* LtPConvert.command */,
-				62277B702D285D19002E9D4D /* MPCompile.command */,
-				62277B712D285D19002E9D4D /* PBuild.command */,
 			);
 			path = Scripts;
 			sourceTree = "<group>";
@@ -503,10 +500,9 @@
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
 				62D3118E2CE2905C002A39B8 /* List.txt in Resources */,
-				62277B722D285D19002E9D4D /* PBuild.command in Resources */,
-				62277B732D285D19002E9D4D /* LCompile.command in Resources */,
-				62277B742D285D19002E9D4D /* LtPConvert.command in Resources */,
-				62277B752D285D19002E9D4D /* MPCompile.command in Resources */,
+				625519852EB823EE007D5945 /* BuildModulePrograms.command in Resources */,
+				625519862EB823EE007D5945 /* ListingToProject.command in Resources */,
+				625519872EB823EE007D5945 /* ProjectToProgram.command in Resources */,
 				62BA0F9F2E28418600DF0FCC /* IndustrialBuilder.icon in Resources */,
 				62AE55342AE99FE300554A5B /* KinematicComponents.scnassets in Resources */,
 			);
@@ -720,7 +716,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 3.0.1;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = celadon.IndustrialBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -765,7 +761,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 3.0.1;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = celadon.IndustrialBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

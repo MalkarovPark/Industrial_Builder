@@ -45,14 +45,18 @@ struct ExternalModulesBuildView: View
                     {
                         HStack
                         {
-                            Toggle(isOn: $base_stc.compile_program_elements)
+                            Picker(selection: $base_stc.external_export_type, label: Text("Export Type"))
                             {
-                                Text("Compile Listings")
+                                ForEach(ExternalExportType.allCases, id: \.self)
+                                { export_type in
+                                    Text(export_type.rawValue).tag(export_type)
+                                    /*if export_type != .xcode_project
+                                    {
+                                        Text(export_type.rawValue).tag(export_type)
+                                    }*/
+                                }
                             }
-                            .padding()
-                            #if !os(macOS)
-                            .disabled(true)
-                            #endif
+                            .padding(8)
                         }
                         .frame(maxWidth: .infinity)
                         .background(.bar)
