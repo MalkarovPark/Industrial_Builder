@@ -313,43 +313,34 @@ public class StandardTemplateConstruct: ObservableObject
     // Progressbar startup info
     private func set_build_info(list: BuildModulesList, as_internal: Bool)
     {
+        // Reset
         build_progress = 0
         build_total = 0
         
-        pkg_export_progrss_info() // Packages export info
-        
+        // Package to process count
         if as_internal
         {
+            
+        }
+        else
+        {
+            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * 3
+            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * 3
+            //build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * 0
+            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count) * 2
+        }
+        
+        /*if as_internal
+        {
+            // Project creation stages count
             #if os(macOS)
-            xcode_compilation_progress_info()
+            build_total += 5
             #endif
         }
         else
         {
+            // Compilation stages count
             #if os(macOS)
-            program_compilation_progrss_info()
-            #endif
-        }
-        
-        self.build_info = String()
-        func pkg_export_progrss_info()
-        {
-            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count)
-            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count)
-            build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count)
-            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)
-        }
-        
-        #if os(macOS)
-        func xcode_compilation_progress_info()
-        {
-            build_total += 5 // Xcode project stages
-        }
-        #endif
-        
-        #if os(macOS)
-        func program_compilation_progrss_info()
-        {
             let robot_module_code_items_count: Float = 2
             let tool_module_code_items_count: Float = 2
             // let part_module_code_items_count: Float = 0
@@ -361,8 +352,8 @@ public class StandardTemplateConstruct: ObservableObject
             build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)// * changer_module_code_items_count
             
             build_total += 2 // Additive terminal output stages
-        }
-        #endif
+            #endif
+        }*/
     }
     
     // MARK: - Process preferences
@@ -530,13 +521,14 @@ public class StandardTemplateConstruct: ObservableObject
     {
         DispatchQueue.global(qos: .background).async
         {
-            //self.set_build_info(list: list, as_internal: false)
+            self.set_build_info(list: list, as_internal: false)
+            self.on_building_modules = true
             
-            DispatchQueue.main.async
+            /*DispatchQueue.main.async
             {
                 self.set_build_info(list: list, as_internal: false)
                 self.on_building_modules = true
-            }
+            }*/
             
             guard folder_url.startAccessingSecurityScopedResource()
             else
@@ -659,7 +651,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             build_module_file(module: robot_module, to: folder_url, as_internal: as_internal) // Create robot module package
             perform_external_compilation(module: robot_module, to: folder_url, type: external_export_type) // Compile programs
-            self.build_progress += 1
+            //self.build_progress += 1
         }
         
         let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
@@ -667,7 +659,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             build_module_file(module: tool_module, to: folder_url, as_internal: as_internal) // Create tool module package
             perform_external_compilation(module: tool_module, to: folder_url, type: external_export_type) // Compile programs
-            self.build_progress += 1
+            //self.build_progress += 1
         }
         
         let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
@@ -675,7 +667,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             build_module_file(module: part_module, to: folder_url, as_internal: as_internal) // Create part module package
             perform_external_compilation(module: part_module, to: folder_url, type: external_export_type) // Compile programs
-            self.build_progress += 1
+            //self.build_progress += 1
         }
         
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
@@ -683,7 +675,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             build_module_file(module: changer_module, to: folder_url, as_internal: as_internal) // Create changer module package
             perform_external_compilation(module: changer_module, to: folder_url, type: external_export_type) // Compile programs
-            self.build_progress += 1
+            //self.build_progress += 1
         }
     }
     
@@ -1083,10 +1075,12 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 if let last_line = last_line
                 {
+                    print(last_line)
+                    print("\(self.build_progress) in \(self.build_total)")
                     DispatchQueue.main.async
                     {
                         self.build_info = last_line
-                        //self.build_progress += 1
+                        self.build_progress += 1
                     }
                 }
             }

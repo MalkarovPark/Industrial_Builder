@@ -9,7 +9,7 @@
 
 #!/bin/bash
 
-# --- Check for -clear argument ---
+# Check for -clear argument
 CLEAR_LISTING=false
 if [[ "$1" == "-clear" ]]; then
     CLEAR_LISTING=true
@@ -93,7 +93,7 @@ mkdir -p Sources/"$PACKAGE_NAME"
 # Copy content from given swift file into main.swift
 cp "$ABSOLUTE_SWIFT_FILE" Sources/"$PACKAGE_NAME"/main.swift
 
-# --- Remove original Swift file if -clear was specified ---
+# Remove original Swift file if -clear was specified
 if $CLEAR_LISTING; then
     rm -f "$ABSOLUTE_SWIFT_FILE"
     echo "Original Swift file '$SWIFT_FILE' has been deleted due to -clear flag."
