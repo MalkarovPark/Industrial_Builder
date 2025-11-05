@@ -550,13 +550,21 @@ public class StandardTemplateConstruct: ObservableObject
             
             DispatchQueue.main.async
             {
-                self.build_info = "Finished"
+                if !self.compilation_cancelled
+                {
+                    self.build_info = "Finished"
+                }
+                else
+                {
+                    self.build_info = "Canceled"
+                }
             }
             
             let work_item = DispatchWorkItem
             {
                 DispatchQueue.main.async
                 {
+                    if self.compilation_cancelled { self.compilation_cancelled = false }
                     self.on_building_modules = false
                 }
             }
@@ -636,7 +644,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // Builds modules
+    // Build modules
     private func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
     {
         // Store compilation kit for external modules build
@@ -649,33 +657,69 @@ public class StandardTemplateConstruct: ObservableObject
         let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
         for robot_module in filtered_robot_modules
         {
-            build_module_file(module: robot_module, to: folder_url, as_internal: as_internal) // Create robot module package
-            perform_external_compilation(module: robot_module, to: folder_url, type: external_export_type) // Compile programs
-            //self.build_progress += 1
+            if !compilation_cancelled
+            {
+                build_module_file(module: robot_module, to: folder_url, as_internal: as_internal) // Create robot module package
+                #if os(macOS)
+                perform_external_compilation(module: robot_module, to: folder_url, type: external_export_type) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
         }
         
         let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
-            build_module_file(module: tool_module, to: folder_url, as_internal: as_internal) // Create tool module package
-            perform_external_compilation(module: tool_module, to: folder_url, type: external_export_type) // Compile programs
-            //self.build_progress += 1
+            if !compilation_cancelled
+            {
+                build_module_file(module: tool_module, to: folder_url, as_internal: as_internal) // Create tool module package
+                #if os(macOS)
+                perform_external_compilation(module: tool_module, to: folder_url, type: external_export_type) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
         }
         
         let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
-            build_module_file(module: part_module, to: folder_url, as_internal: as_internal) // Create part module package
-            perform_external_compilation(module: part_module, to: folder_url, type: external_export_type) // Compile programs
-            //self.build_progress += 1
+            if !compilation_cancelled
+            {
+                build_module_file(module: part_module, to: folder_url, as_internal: as_internal) // Create part module package
+                #if os(macOS)
+                perform_external_compilation(module: part_module, to: folder_url, type: external_export_type) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
         }
         
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
         for changer_module in filtered_changer_modules
         {
-            build_module_file(module: changer_module, to: folder_url, as_internal: as_internal) // Create changer module package
-            perform_external_compilation(module: changer_module, to: folder_url, type: external_export_type) // Compile programs
-            //self.build_progress += 1
+            if !compilation_cancelled
+            {
+                build_module_file(module: changer_module, to: folder_url, as_internal: as_internal) // Create changer module package
+                #if os(macOS)
+                perform_external_compilation(module: changer_module, to: folder_url, type: external_export_type) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
         }
     }
     
@@ -1009,8 +1053,11 @@ public class StandardTemplateConstruct: ObservableObject
         return folder_url
     }
     
-    #if os(macOS)
     // MARK: Compilation handling (for external program components)
+    private var compilation_cancelled = false
+    #if os(macOS)
+    private var compilation_process: Process? = nil
+    
     private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, type: ExternalExportType)
     {
         if type == .no_build { return }
@@ -1034,12 +1081,8 @@ public class StandardTemplateConstruct: ObservableObject
         
         module_package_name = module_package_name.replacingOccurrences(of: " ", with: "\\ ")
         
-        //print(module_package_name)
-        
         switch type
         {
-        case .no_build:
-            return
         case .programs_only:
             command_line += "BuildModulePrograms.command -programs "
         case .projects_and_programs:
@@ -1050,55 +1093,81 @@ public class StandardTemplateConstruct: ObservableObject
             command_line += "BuildModulePrograms.command "
         case .projects_to_programs:
             command_line += "BuildModulePrograms.command -clear "
+        case .no_build:
+            return
         }
         
         command_line += module_package_name
         
-        //print(command_line)
-        
         do
         {
-            try perform_terminal_command(command_line)
-            { output in
-                let lines = output.components(separatedBy: .newlines)
-                
-                // Find the last non-empty line
-                var last_line: String? = nil
-                for line in lines.reversed()
+            self.compilation_cancelled = false
+            
+            let task = Process()
+            let pipe = Pipe()
+            
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.arguments = ["-c", command_line]
+            task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+            
+            self.compilation_process = task
+            
+            let handle = pipe.fileHandleForReading
+            handle.readabilityHandler =
+            { fileHandle in
+                let data = fileHandle.availableData
+                if data.isEmpty { return }
+                if let output = String(data: data, encoding: .utf8)
                 {
-                    if !line.isEmpty
+                    let lines = output.components(separatedBy: .newlines)
+                    if let last_line = lines.last(where: { !$0.isEmpty })
                     {
-                        last_line = line
-                        break
-                    }
-                }
-                
-                if let last_line = last_line
-                {
-                    print(last_line)
-                    print("\(self.build_progress) in \(self.build_total)")
-                    DispatchQueue.main.async
-                    {
-                        self.build_info = last_line
-                        self.build_progress += 1
+                        DispatchQueue.main.async
+                        {
+                            self.build_info = last_line
+                            self.build_progress += 1
+                        }
                     }
                 }
             }
             
-            /*DispatchQueue.main.async
+            try task.run()
+            task.waitUntilExit()
+            handle.readabilityHandler = nil
+            self.compilation_process = nil
+            
+            if !self.compilation_cancelled
             {
-                self.build_info += "\nExternal code compilation finished."
-            }*/
+                DispatchQueue.main.async
+                {
+                    self.build_info += "\nExternal code compilation finished."
+                }
+            }
         }
         catch
         {
-            /*DispatchQueue.main.async
+            DispatchQueue.main.async
             {
-                self.build_info += "\nError during external compilation: \(error.localizedDescription)"
-            }*/
+                self.build_info += "\nCompilation error: \(error.localizedDescription)"
+            }
         }
     }
     #endif
+    
+    public func cancel_build()
+    {
+        #if os(macOS)
+        if let process = compilation_process
+        {
+            compilation_cancelled = true
+            process.terminate()
+            compilation_process = nil
+        }
+        #else
+        compilation_cancelled = true
+        #endif
+    }
 }
 
 // MARK: - Enums

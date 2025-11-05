@@ -24,28 +24,28 @@ struct BuildProgressView: View
                 ProgressView(
                     value: base_stc.build_progress, total: base_stc.build_total,
                     label:
-                        {
-                            Text("Modules build")
-                        },
+                    {
+                        Text("Modules build")
+                    },
                     currentValueLabel:
-                        {
-                            Text(base_stc.build_info)
-                        }
+                    {
+                        Text(base_stc.build_info)
+                    }
                 )
                 
-                /*HStack(spacing: 0)
+                HStack(spacing: 0)
                 {
                     Spacer()
                     
                     Button("Cancel")
                     {
-                        
+                        base_stc.cancel_build()
                     }
-                }*/
+                }
             }
             .padding()
             .background(.bar)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .frame(width: 224)
         }
         .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))

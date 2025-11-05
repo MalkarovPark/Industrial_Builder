@@ -67,22 +67,22 @@ for dir in "${dirs[@]}"; do
         echo "Directory does not exist: $dir"
         continue
     fi
-
+    
     CODE_DIR="$dir/Code"
     if [ ! -d "$CODE_DIR" ]; then
         echo "No 'Code' directory in: $dir"
         continue
     fi
-
+    
     # echo "Code Folder: $CODE_DIR"
     # echo "Processing ${dir##*.} Module – $(basename "${dir%.*}")"
     echo "Start processing "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module"
-
+    
     shopt -s nullglob
-
+    
     # Find top-level .swift files
     SWIFT_FILES=("$CODE_DIR"/*.swift)
-
+    
     if [ ${#SWIFT_FILES[@]} -gt 0 ]; then
         # Swift listings found
         for swift_file in "${SWIFT_FILES[@]}"; do
@@ -122,7 +122,7 @@ for dir in "${dirs[@]}"; do
             if [ -d "$project_dir" ]; then
                 # echo "Found existing project: $(basename "$project_dir")"
                 # echo "Process component – $(basename "${project_dir%_Project}")"
-                echo "Build "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${project_dir%_Project}")"
+                echo "Building "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${project_dir%_Project}")"
                 
                 if [ "$CLEAR_FLAG" = true ]; then
                     ./ProjectToProgram.command -clear "$project_dir" >/dev/null 2>&1
