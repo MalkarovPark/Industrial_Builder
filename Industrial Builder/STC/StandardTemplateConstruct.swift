@@ -524,6 +524,8 @@ public class StandardTemplateConstruct: ObservableObject
             self.set_build_info(list: list, as_internal: false)
             self.on_building_modules = true
             
+            //print(self.build_total)
+            
             /*DispatchQueue.main.async
             {
                 self.set_build_info(list: list, as_internal: false)
@@ -688,7 +690,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        /*let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
             if !compilation_cancelled
@@ -703,7 +705,7 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 break
             }
-        }
+        }*/
         
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
         for changer_module in filtered_changer_modules
@@ -1127,6 +1129,7 @@ public class StandardTemplateConstruct: ObservableObject
                         {
                             self.build_info = last_line
                             self.build_progress += 1
+                            //print("\(self.build_progress) in \(self.build_total)")
                         }
                     }
                 }
@@ -1180,12 +1183,12 @@ public enum InternalExportType: String, Equatable, CaseIterable
 
 public enum ExternalExportType: String, Equatable, CaseIterable
 {
-    case no_build = "No Build"
-    case programs_only = "Build To Programs"
     case projects_and_programs = "Build To Projects and Programs"
-    case projects_only = "Build To Projects"
+    case programs_only = "Build To Programs Only"
+    case projects_only = "Build To Projects Only"
     case build_from_projects = "Build Existing Projects To Programs"
     case projects_to_programs = "Turn Existing Projects to Programs"
+    case no_build = "No Build (Listings Only)"
 }
 
 public enum PrepareForDevType: String, Equatable, CaseIterable

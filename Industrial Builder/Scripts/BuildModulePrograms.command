@@ -91,7 +91,7 @@ for dir in "${dirs[@]}"; do
             PROJECT_DIR="$CODE_DIR/$PROJECT_NAME"
             
             # echo "Process component – $(basename "${LISTING_NAME}")"
-            echo "Build "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${LISTING_NAME}")"
+            # echo "Build "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${LISTING_NAME}")"
 
             if [ "$CLEAR_FLAG" = true ]; then
                 # Build project and delete it after compilation
@@ -115,20 +115,22 @@ for dir in "${dirs[@]}"; do
                         ;;
                 esac
             fi
+            
+            # echo "Built "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${LISTING_NAME}")"
+            echo "Built "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "$swift_file")"
         done
     else
         # No .swift listings, check for existing *_Project folders
         for project_dir in "$CODE_DIR"/*_Project; do
             if [ -d "$project_dir" ]; then
-                # echo "Found existing project: $(basename "$project_dir")"
-                # echo "Process component – $(basename "${project_dir%_Project}")"
-                echo "Building "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${project_dir%_Project}")"
-                
                 if [ "$CLEAR_FLAG" = true ]; then
                     ./ProjectToProgram.command -clear "$project_dir" >/dev/null 2>&1
                 else
                     ./ProjectToProgram.command "$project_dir" >/dev/null 2>&1
                 fi
+                
+                # echo "Built "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "${project_dir%_Project}")"
+                echo "Built "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module – $(basename "$project_dir")"
             fi
         done
     fi

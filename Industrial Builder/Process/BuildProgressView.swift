@@ -22,7 +22,8 @@ struct BuildProgressView: View
             VStack//(spacing: 0)
             {
                 ProgressView(
-                    value: base_stc.build_progress, total: base_stc.build_total,
+                    value: base_stc.build_progress,
+                    total: base_stc.build_total,
                     label:
                     {
                         Text("Modules build")
