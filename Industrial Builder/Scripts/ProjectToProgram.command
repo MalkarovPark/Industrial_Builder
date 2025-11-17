@@ -4,7 +4,7 @@
 # Builds a Swift project (<project_name>_Project) into a UNIX executable.
 # Arguments:
 #   <project_dir>   Path to the project directory.
-#   -clear          Deletes the project after building.
+#   --clear          Deletes the project after building.
 #
 
 #!/bin/bash
@@ -15,8 +15,8 @@ SCRIPT_DIR="$(dirname "$0")"
 # Initialize clear flag
 CLEAR_PROJECT=false
 
-# Check if first argument is -clear
-if [[ "$1" == "-clear" ]]; then
+# Check if first argument is --clear
+if [[ "$1" == "--clear" ]]; then
     CLEAR_PROJECT=true
     shift
 fi
@@ -65,9 +65,9 @@ fi
 # Move executable to parent directory
 mv "$EXECUTABLE_PATH" "$PARENT_DIR"
 
-# If -clear flag was specified, remove the original project folder
+# If --clear flag was specified, remove the original project folder
 if $CLEAR_PROJECT; then
-    echo "Removing project folder '$PACKAGE_DIR' as requested (-clear)..."
+    echo "Removing project folder '$PACKAGE_DIR' as requested (--clear)..."
     rm -rf "$PACKAGE_DIR"
 fi
 

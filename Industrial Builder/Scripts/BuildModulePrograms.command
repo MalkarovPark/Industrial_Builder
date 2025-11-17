@@ -6,12 +6,12 @@
 #   - Builds projects into executables
 #   - Lists .robot/.tool/.part/.changer files
 # Modes:
-#   -programs          Keep only programs after build.
-#   -projects          Create only projects (do not build programs).
-#   -projects-programs Keep both projects and programs.
+#   --programs          Keep only programs after build.
+#   --projects          Create only projects (do not build programs).
+#   --projects-programs Keep both projects and programs.
 #   (no argument)      Only build existing projects.
 # Arguments:
-#   -clear             Build and delete projects after building.
+#   --clear             Build and delete projects after building.
 #   <directories>      List of directories to process (prompted if not provided).
 #
 
@@ -19,7 +19,7 @@
 
 # Determine clear flag
 CLEAR_FLAG=false
-if [[ "$1" == "-clear" ]]; then
+if [[ "$1" == "--clear" ]]; then
     CLEAR_FLAG=true
     shift
 fi
@@ -28,19 +28,19 @@ fi
 mode=""
 mode_description=""
 
-if [[ "$1" == "-programs" || "$1" == "-projects" || "$1" == "-projects-programs" ]]; then
+if [[ "$1" == "--programs" || "$1" == "--projects" || "$1" == "--projects-programs" ]]; then
     mode="$1"
     shift
 fi
 
 case "$mode" in
-    -programs)
+    --programs)
         mode_description="Mode: Programs — keep only programs after build."
         ;;
-    -projects)
+    --projects)
         mode_description="Mode: Projects — create only projects."
         ;;
-    -projects-programs)
+    --projects-programs)
         mode_description="Mode: Projects & Programs — keep projects and programs."
         ;;
     *)
@@ -96,18 +96,18 @@ for dir in "${dirs[@]}"; do
             if [ "$CLEAR_FLAG" = true ]; then
                 # Build project and delete it after compilation
                 ./ListingToProject.command "$swift_file" >/dev/null 2>&1
-                ./ProjectToProgram.command -clear "$PROJECT_DIR" >/dev/null 2>&1
+                ./ProjectToProgram.command --clear "$PROJECT_DIR" >/dev/null 2>&1
             else
                 case "$mode" in
-                    -programs)
-                        ./ListingToProject.command -clear "$swift_file" >/dev/null 2>&1
-                        ./ProjectToProgram.command -clear "$PROJECT_DIR" >/dev/null 2>&1
+                    --programs)
+                        ./ListingToProject.command --clear "$swift_file" >/dev/null 2>&1
+                        ./ProjectToProgram.command --clear "$PROJECT_DIR" >/dev/null 2>&1
                         ;;
-                    -projects)
-                        ./ListingToProject.command -clear "$swift_file" >/dev/null 2>&1
+                    --projects)
+                        ./ListingToProject.command --clear "$swift_file" >/dev/null 2>&1
                         ;;
-                    -projects-programs)
-                        ./ListingToProject.command -clear "$swift_file" >/dev/null 2>&1
+                    --projects-programs)
+                        ./ListingToProject.command --clear "$swift_file" >/dev/null 2>&1
                         ./ProjectToProgram.command "$PROJECT_DIR" >/dev/null 2>&1
                         ;;
                     *)
@@ -124,7 +124,7 @@ for dir in "${dirs[@]}"; do
         for project_dir in "$CODE_DIR"/*_Project; do
             if [ -d "$project_dir" ]; then
                 if [ "$CLEAR_FLAG" = true ]; then
-                    ./ProjectToProgram.command -clear "$project_dir" >/dev/null 2>&1
+                    ./ProjectToProgram.command --clear "$project_dir" >/dev/null 2>&1
                 else
                     ./ProjectToProgram.command "$project_dir" >/dev/null 2>&1
                 fi

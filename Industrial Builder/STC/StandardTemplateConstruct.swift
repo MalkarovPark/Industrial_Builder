@@ -456,7 +456,7 @@ public class StandardTemplateConstruct: ObservableObject
         #if os(macOS)
         do
         {
-            try perform_terminal_command("cd '\(url.path)' && ./ListingToProject.command -clear '\(file_name)'")
+            try perform_terminal_command("cd '\(url.path)' && ./ListingToProject.command --clear '\(file_name)'")
         }
         catch
         {
@@ -1086,15 +1086,15 @@ public class StandardTemplateConstruct: ObservableObject
         switch type
         {
         case .programs_only:
-            command_line += "BuildModulePrograms.command -programs "
+            command_line += "BuildModulePrograms.command --programs "
         case .projects_and_programs:
-            command_line += "BuildModulePrograms.command -projects-programs "
+            command_line += "BuildModulePrograms.command --projects-programs "
         case .projects_only:
-            command_line += "BuildModulePrograms.command -projects "
+            command_line += "BuildModulePrograms.command --projects "
         case .build_from_projects:
             command_line += "BuildModulePrograms.command "
         case .projects_to_programs:
-            command_line += "BuildModulePrograms.command -clear "
+            command_line += "BuildModulePrograms.command --clear "
         case .no_build:
             return
         }

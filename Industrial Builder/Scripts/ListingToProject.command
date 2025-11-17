@@ -4,14 +4,14 @@
 # Converts a Swift listing (.swift) into a project (<listing_name>_Project).
 # Arguments:
 #   <swift_file>    Path to the Swift file.
-#   -clear          Deletes the original Swift file after conversion.
+#   --clear          Deletes the original Swift file after conversion.
 #
 
 #!/bin/bash
 
-# Check for -clear argument
+# Check for --clear argument
 CLEAR_LISTING=false
-if [[ "$1" == "-clear" ]]; then
+if [[ "$1" == "--clear" ]]; then
     CLEAR_LISTING=true
     shift
 fi
@@ -93,12 +93,12 @@ mkdir -p Sources/"$PACKAGE_NAME"
 # Copy content from given swift file into main.swift
 cp "$ABSOLUTE_SWIFT_FILE" Sources/"$PACKAGE_NAME"/main.swift
 
-# Remove original Swift file if -clear was specified
+# Remove original Swift file if --clear was specified
 if $CLEAR_LISTING; then
     rm -f "$ABSOLUTE_SWIFT_FILE"
-    echo "Original Swift file '$SWIFT_FILE' has been deleted due to -clear flag."
+    echo "Original Swift file '$SWIFT_FILE' has been deleted due to --clear flag."
 else
-    echo "Original Swift file '$SWIFT_FILE' preserved (no -clear flag)."
+    echo "Original Swift file '$SWIFT_FILE' preserved (no --clear flag)."
 fi
 
 echo "Package '$PACKAGE_NAME_WITH_POSTFIX' created with IndustrialKit dependency and full references."
