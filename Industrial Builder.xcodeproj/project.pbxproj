@@ -25,7 +25,7 @@
 		6268723F2BC18D21005F8B3C /* ModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268723E2BC18D20005F8B3C /* ModulesView.swift */; };
 		626872422BC1A3D2005F8B3C /* ListingsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872412BC1A3D2005F8B3C /* ListingsListView.swift */; };
 		626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626872432BC1A3E5005F8B3C /* ListingView.swift */; };
-		626A6BE42DBC06CC000395F6 /* IndustrialAppPackageMake.command in Resources */ = {isa = PBXBuildFile; fileRef = 626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */; };
+		626A6BE42DBC06CC000395F6 /* MakeIndustrialApp.command in Resources */ = {isa = PBXBuildFile; fileRef = 626A6BE32DBC06CC000395F6 /* MakeIndustrialApp.command */; };
 		626A6C092DBC0FF0000395F6 /* ProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C082DBC0FF0000395F6 /* ProcessView.swift */; };
 		626A6C0E2DBC1702000395F6 /* InternalModulesBuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C0D2DBC1702000395F6 /* InternalModulesBuildView.swift */; };
 		626A6C102DBC170E000395F6 /* ExternalModulesBuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626A6C0F2DBC170E000395F6 /* ExternalModulesBuildView.swift */; };
@@ -91,7 +91,7 @@
 		6268723E2BC18D20005F8B3C /* ModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulesView.swift; sourceTree = "<group>"; };
 		626872412BC1A3D2005F8B3C /* ListingsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsListView.swift; sourceTree = "<group>"; };
 		626872432BC1A3E5005F8B3C /* ListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingView.swift; sourceTree = "<group>"; };
-		626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndustrialAppPackageMake.command; sourceTree = "<group>"; };
+		626A6BE32DBC06CC000395F6 /* MakeIndustrialApp.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = MakeIndustrialApp.command; sourceTree = "<group>"; };
 		626A6C082DBC0FF0000395F6 /* ProcessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessView.swift; sourceTree = "<group>"; };
 		626A6C0D2DBC1702000395F6 /* InternalModulesBuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalModulesBuildView.swift; sourceTree = "<group>"; };
 		626A6C0F2DBC170E000395F6 /* ExternalModulesBuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalModulesBuildView.swift; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 				625519822EB823EE007D5945 /* BuildModulePrograms.command */,
 				625519832EB823EE007D5945 /* ListingToProject.command */,
 				625519842EB823EE007D5945 /* ProjectToProgram.command */,
-				626A6BE32DBC06CC000395F6 /* IndustrialAppPackageMake.command */,
+				626A6BE32DBC06CC000395F6 /* MakeIndustrialApp.command */,
 			);
 			path = Scripts;
 			sourceTree = "<group>";
@@ -496,7 +496,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				626A6BE42DBC06CC000395F6 /* IndustrialAppPackageMake.command in Resources */,
+				626A6BE42DBC06CC000395F6 /* MakeIndustrialApp.command in Resources */,
 				6289FCD22AD0398300BB7F5E /* Preview Assets.xcassets in Resources */,
 				6289FCCD2AD0398300BB7F5E /* Assets.xcassets in Resources */,
 				62D3118E2CE2905C002A39B8 /* List.txt in Resources */,

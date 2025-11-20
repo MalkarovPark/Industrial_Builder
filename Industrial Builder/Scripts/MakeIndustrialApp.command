@@ -1,22 +1,47 @@
 #
-# Create an empty Swift application project package
+# MakeIndustrialApp
+#
+# Creates an empty Swift application project package with IndustrialKit support (<name>_Project).
+# Arguments:
+#   <project_dir | file>   Optional path to a directory or a file.
+#                          If provided, the project will be created next to it.
 #
 
 #!/bin/bash
 
-# Work around macOS double-click issue
-# Set directory where Terminal opens .command from
-CALL_DIR="$(osascript -e 'tell application "Finder" to set p to (POSIX path of (target of front window as alias))')"
+# Get the directory where the script is located
+SCRIPT_DIR="$(dirname "$0")"
 
-# Ask for the project name
+# Determine the target directory / project name source
 if [ -n "$1" ]; then
-    PROJECT_NAME="$1"
+    INPUT="$1"
+
+    if [ -d "$INPUT" ]; then
+        # User passed a directory
+        TARGET_PARENT_DIR="$INPUT"
+        echo "Enter project name: "
+        read PROJECT_NAME
+
+    elif [ -f "$INPUT" ]; then
+        # User passed a file — use its directory
+        TARGET_PARENT_DIR=$(dirname "$INPUT")
+        echo "Enter project name: "
+        read PROJECT_NAME
+
+    else
+        # User passed a project name directly (not a path)
+        PROJECT_NAME="$INPUT"
+        TARGET_PARENT_DIR="$SCRIPT_DIR"
+    fi
+
 else
+    # No args — ask for name and create in script directory
     echo "Enter project name: "
     read PROJECT_NAME
+    TARGET_PARENT_DIR="$SCRIPT_DIR"
 fi
 
-# Check if the name is not empty
+# Validate project name
 if [[ -z "$PROJECT_NAME" ]]; then
     echo "Error: Project name cannot be empty"
     exit 1
@@ -24,15 +49,15 @@ fi
 
 # Add _Project suffix
 PACKAGE_NAME_WITH_POSTFIX="${PROJECT_NAME}_Project"
-PACKAGE_DIR="$CALL_DIR/$PACKAGE_NAME_WITH_POSTFIX"
+PACKAGE_DIR="$TARGET_PARENT_DIR/$PACKAGE_NAME_WITH_POSTFIX"
 
-# Check if the directory already exists
+# Check for existing directory
 if [ -d "$PACKAGE_DIR" ]; then
     echo "Directory $PACKAGE_DIR already exists. Exiting."
     exit 1
 fi
 
-# Create the directory
+# Create project folder
 mkdir "$PACKAGE_DIR"
 cd "$PACKAGE_DIR" || exit
 

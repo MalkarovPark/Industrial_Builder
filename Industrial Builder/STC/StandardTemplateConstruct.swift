@@ -387,12 +387,12 @@ public class StandardTemplateConstruct: ObservableObject
     // Makes a Swift package project with IndustrialKit framework import (blank project)
     public func make_industrial_app_project(name: String, to url: URL, remove_tmp_from: URL?)
     {
-        internal_files_store(["IndustrialAppPackageMake.command", "PBuild.command"], to: url)
+        internal_files_store(["MakeIndustrialApp.command", "PBuild.command"], to: url)
         
         do
         {
             #if os(macOS)
-            try perform_terminal_command("cd '\(url.path)' && ./IndustrialAppPackageMake.command '\(name)'")
+            try perform_terminal_command("cd '\(url.path)' && ./MakeIndustrialApp.command '\(name)'")
             /*{ output in
                 let lines = output.components(separatedBy: .newlines)
                 
@@ -451,7 +451,7 @@ public class StandardTemplateConstruct: ObservableObject
     // Makes a Swift package project with IndustrialKit framework import (from file)
     public func make_industrial_app_project(from file_name: String, to url: URL)
     {
-        internal_files_store(["IndustrialAppPackageMake.command"], to: url)
+        internal_files_store(["MakeIndustrialApp.command"], to: url)
         
         #if os(macOS)
         do
@@ -468,7 +468,7 @@ public class StandardTemplateConstruct: ObservableObject
     // Store the Modules Building Kit
     public func store_mbk(to url: URL)
     {
-        internal_files_store(["IndustrialAppPackageMake.command", "ListingToProject.command", "ProjectToProgram.command", "BuildModuleProgram.command"], to: url)
+        internal_files_store(["MakeIndustrialApp.command", "ListingToProject.command", "ProjectToProgram.command", "BuildModuleProgram.command"], to: url)
     }
     
     // Store text files from the app itself to external files
