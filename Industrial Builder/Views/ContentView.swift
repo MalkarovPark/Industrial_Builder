@@ -46,8 +46,6 @@ struct Sidebar: View
     
     #if !os(macOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
-    
-    @Environment(\.dismiss) private var dismiss
     #endif
     
     var body: some View
@@ -152,32 +150,6 @@ struct Sidebar: View
                 #if !os(macOS)
                 .navigationTitle("STC")
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar
-                {
-                    #if os(visionOS)
-                    ToolbarItem
-                    {
-                        HStack(alignment: .center)
-                        {
-                            Button(action: { dismiss() })
-                            {
-                                Label("Dismiss", systemImage: "folder")
-                            }
-                            #if os(visionOS)
-                            .buttonBorderShape(.circle)
-                            #endif
-                            
-                            /*Button (action: { app_state.settings_view_presented = true })
-                            {
-                                Label("Settings", systemImage: "gear")
-                            }
-                            #if os(visionOS)
-                            .buttonBorderShape(.circle)
-                            #endif*/
-                        }
-                    }
-                    #endif
-                }
                 /*.sheet(isPresented: $app_state.settings_view_presented)
                 {
                     SettingsView(setting_view_presented: $app_state.settings_view_presented)

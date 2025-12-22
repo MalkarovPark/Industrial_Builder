@@ -1,5 +1,5 @@
 //
-//  ModelView.swift
+//  SceneFileView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 14.10.2023.
@@ -10,7 +10,7 @@ import SceneKit
 import IndustrialKit
 import IndustrialKitUI
 
-struct SceneView: View
+struct SceneFileView: View
 {
     @Binding var node: SCNNode
     
@@ -29,5 +29,5 @@ typealias UIColor = NSColor
 
 #Preview
 {
-    SceneView(node: .constant(SCNNode()))
+    SceneFileView(node: .constant(SCNNode()))
 }

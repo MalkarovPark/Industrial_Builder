@@ -14,7 +14,7 @@
 		621A4EA02BB73DEB006A081A /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621A4E9F2BB73DEB006A081A /* ImageView.swift */; };
 		622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225786F2C24A9940023004E /* ResourcesPackageView.swift */; };
 		622C88A22BB71C7200A53213 /* ImagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622C88A12BB71C7200A53213 /* ImagesListView.swift */; };
-		623D72482ADAFD8500927DEA /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D72472ADAFD8500927DEA /* SceneView.swift */; };
+		623D72482ADAFD8500927DEA /* SceneFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D72472ADAFD8500927DEA /* SceneFileView.swift */; };
 		625519852EB823EE007D5945 /* BuildModulePrograms.command in Resources */ = {isa = PBXBuildFile; fileRef = 625519822EB823EE007D5945 /* BuildModulePrograms.command */; };
 		625519862EB823EE007D5945 /* ListingToProject.command in Resources */ = {isa = PBXBuildFile; fileRef = 625519832EB823EE007D5945 /* ListingToProject.command */; };
 		625519872EB823EE007D5945 /* ProjectToProgram.command in Resources */ = {isa = PBXBuildFile; fileRef = 625519842EB823EE007D5945 /* ProjectToProgram.command */; };
@@ -79,7 +79,7 @@
 		621A4E9F2BB73DEB006A081A /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		6225786F2C24A9940023004E /* ResourcesPackageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourcesPackageView.swift; sourceTree = "<group>"; };
 		622C88A12BB71C7200A53213 /* ImagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListView.swift; sourceTree = "<group>"; };
-		623D72472ADAFD8500927DEA /* SceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
+		623D72472ADAFD8500927DEA /* SceneFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneFileView.swift; sourceTree = "<group>"; };
 		625519822EB823EE007D5945 /* BuildModulePrograms.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = BuildModulePrograms.command; sourceTree = "<group>"; };
 		625519832EB823EE007D5945 /* ListingToProject.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = ListingToProject.command; sourceTree = "<group>"; };
 		625519842EB823EE007D5945 /* ProjectToProgram.command */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProjectToProgram.command; sourceTree = "<group>"; };
@@ -382,7 +382,7 @@
 			isa = PBXGroup;
 			children = (
 				629B526B2AF69056003F45D2 /* ScenesListView.swift */,
-				623D72472ADAFD8500927DEA /* SceneView.swift */,
+				623D72472ADAFD8500927DEA /* SceneFileView.swift */,
 				629B52692AF68902003F45D2 /* SceneSelectorView.swift */,
 			);
 			path = ScenesViewer;
@@ -546,7 +546,7 @@
 				626A6C0E2DBC1702000395F6 /* InternalModulesBuildView.swift in Sources */,
 				622578702C24A9940023004E /* ResourcesPackageView.swift in Sources */,
 				62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */,
-				623D72482ADAFD8500927DEA /* SceneView.swift in Sources */,
+				623D72482ADAFD8500927DEA /* SceneFileView.swift in Sources */,
 				626A6C102DBC170E000395F6 /* ExternalModulesBuildView.swift in Sources */,
 				62D52D712C37EA91009A3DC7 /* OperationCodesEditor.swift in Sources */,
 				62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */,

@@ -17,7 +17,6 @@ struct Industrial_BuilderApp: App
     
     var body: some Scene
     {
-        //DocumentInjectorView(newDocument: STCDocument())
         DocumentGroup(newDocument: STCDocument())
         { file in
             ContentView(document: file.$document, document_url: file.fileURL)
@@ -86,64 +85,3 @@ let default_popover_edge_inverted: Edge = .bottom
 #else
 let default_popover_edge_inverted: Edge = .top
 #endif
-
-/*// MARK: - Document Group Injector
-public struct DocumentInjectorView<Document, Content>: Scene
-where Document: FileDocument, Content: View {
-    
-    private let newDocument: () -> Document
-    private let content: (FileDocumentConfiguration<Document>) -> Content
-    
-    public init(
-        newDocument: @autoclosure @escaping () -> Document,
-        @ViewBuilder content: @escaping (FileDocumentConfiguration<Document>) -> Content
-    ) {
-        self.newDocument = newDocument
-        self.content = content
-    }
-    
-    public var body: some Scene {
-        WindowGroup {
-            DocumentView(newDocument: newDocument, content: content)
-        }
-    }
-}
-
-// MARK: - DocumentView
-struct DocumentView<Document: FileDocument, Content: View>: View
-{
-    @State private var document: Document
-    @State private var fileURL: URL? = nil
-    
-    private let content: (FileDocumentConfiguration<Document>) -> Content
-    
-    init(newDocument: @escaping () -> Document,
-         content: @escaping (FileDocumentConfiguration<Document>) -> Content)
-    {
-        _document = State(initialValue: newDocument())
-        self.content = content
-    }
-    
-    var body: some View
-    {
-        content(
-            FileDocumentConfiguration(
-                document: $document,
-                fileURL: fileURL
-            )
-        )
-    }
-}
-
-// MARK: - FileDocumentConfiguration
-public struct FileDocumentConfiguration<Document: FileDocument>
-{
-    @Binding public var document: Document
-    public var fileURL: URL?
-    
-    public init(document: Binding<Document>, fileURL: URL?)
-    {
-        self._document = document
-        self.fileURL = fileURL
-    }
-}*/
