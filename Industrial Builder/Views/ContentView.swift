@@ -184,7 +184,7 @@ struct Sidebar: View
     
     private var components_count: Int
     {
-        base_stc.scenes.count + base_stc.images.count + base_stc.listings.count + base_stc.kinematic_groups.count
+        base_stc.entities.count + base_stc.images.count + base_stc.listings.count// + base_stc.kinematic_groups.count
     }
     
     private var modules_count: Int
@@ -202,7 +202,7 @@ struct ComponentsSidebarGroup: View
         NavigationLink(destination: ScenesListView().modifier(WindowFramer()))
         {
             Label("Scenes", systemImage: "cube")
-                .badge(base_stc.scenes.count)
+                .badge(base_stc.entities.count)
         }
         
         NavigationLink(destination: ImagesListView().modifier(WindowFramer()))
@@ -217,11 +217,11 @@ struct ComponentsSidebarGroup: View
                 .badge(base_stc.listings.count)
         }
         
-        NavigationLink(destination: KinematicsListView().modifier(WindowFramer()))
+        /*NavigationLink(destination: KinematicsListView().modifier(WindowFramer()))
         {
             Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
                 .badge(base_stc.kinematic_groups.count)
-        }
+        }*/
     }
 }
 
@@ -231,7 +231,7 @@ struct ModulesSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: RobotModulesView().modifier(WindowFramer()))
+        /*NavigationLink(destination: RobotModulesView().modifier(WindowFramer()))
         {
             Label("Robot", systemImage: "r.square")
                 .badge(base_stc.robot_modules.count)
@@ -240,7 +240,7 @@ struct ModulesSidebarGroup: View
         {
             Label("Tool", systemImage: "hammer")
                 .badge(base_stc.tool_modules.count)
-        }
+        }*/
         NavigationLink(destination: PartModulesView().modifier(WindowFramer()))
         {
             Label("Part", systemImage: "shippingbox")

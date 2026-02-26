@@ -7,7 +7,6 @@
 
 import SwiftUI
 import IndustrialKit
-import SceneKit
 
 struct ResourcesPackageView: View
 {

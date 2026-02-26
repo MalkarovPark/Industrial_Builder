@@ -19,7 +19,7 @@ class AppState : ObservableObject
     
     // Pass data
     @Published var preferences_pass_mode = false
-    public var robot_from = Robot()
+    //public var robot_from = Robot()
     
     public var origin_location_flag = false
     public var origin_rotation_flag = false
@@ -35,7 +35,7 @@ class AppState : ObservableObject
     @Published var view_update_state = false // Flag for update parts view grid
     
     // MARK: - Kinematic view functions
-    @Published var kinematic_preview_robot = Robot()
+    /*@Published var kinematic_preview_robot = Robot()
     
     public func prepare_robot(_ kinematic: KinematicGroup, scene: SCNScene)
     {
@@ -72,7 +72,7 @@ class AppState : ObservableObject
     
     @Published var make_model_from_kinematic = true
     @Published var make_controller_from_kinematic = true
-    @Published var kinematic_module_type_selection = 0
+    @Published var kinematic_module_type_selection = 0*/
 }
 
 // MARK: - Service Functions

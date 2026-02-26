@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import SceneKit
-//import IndustrialKit
 import IndustrialKitUI
 
 struct SceneSelectorView: View

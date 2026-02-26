@@ -31,10 +31,11 @@ struct PartModuleDesigner: View
                 TextEditor(text: $part_module.description)
                     .textFieldStyle(.plain)
             default:
-                ResourcesPackageView(resources_names: $part_module.resources_names, main_scene_name: $part_module.main_scene_name)
+                EmptyView()
+                /*ResourcesPackageView(resources_names: $part_module.resources_names, main_scene_name: $part_module.main_scene_name)
                 {
                     document_handler.document_update_parts()
-                }
+                }*/
             }
         }
         .toolbar

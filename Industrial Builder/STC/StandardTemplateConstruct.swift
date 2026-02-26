@@ -7,7 +7,8 @@
 
 import Foundation
 import SwiftUI
-import SceneKit
+import RealityKit
+
 import IndustrialKit
 
 public class StandardTemplateConstruct: ObservableObject
@@ -20,17 +21,24 @@ public class StandardTemplateConstruct: ObservableObject
         // make_contents()
     }
     
-    func document_view(_ info: STCPackageInfo, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], scenes: [SCNScene], kinematic_groups: [KinematicGroup])
+    /*func document_view(
+        _ info: STCPackageInfo,
+        images: [UIImage],
+        changer_modules: [ChangerModule],
+        tool_modules: [ToolModule],
+        entities: [Entity]//,
+        //kinematic_groups: [KinematicGroup]
+    )
     {
         self.package_info = info
         
         self.images = images
-        self.scenes = scenes
-        self.kinematic_groups = kinematic_groups
+        self.scenes = entities
+        //self.kinematic_groups = kinematic_groups
         
         self.changer_modules = changer_modules
         self.tool_modules = tool_modules
-    }
+    }*/
     
     func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
     {
@@ -39,21 +47,66 @@ public class StandardTemplateConstruct: ObservableObject
         self.images = document.images
         self.listings = document.listings
         self.listings_files_names = document.listings_files_names
-        self.kinematic_groups = document.kinematic_groups
         
         self.robot_modules = document.robot_modules
         self.tool_modules = document.tool_modules
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
         
-        // Deferred import for scenes
-        if let folder_bookmark = get_bookmark(url: bookmark_url) // self.scenes = document.scenes
+        load_all_external_entities()
+        
+        func load_all_external_entities(_ completion: @escaping () -> Void = {})
         {
-            let scene_file_data = document.deferred_scene_view(folder_bookmark: folder_bookmark)
-            self.scenes = scene_file_data.scenes
-            self.scenes_files_names = scene_file_data.names
+            Task
+            {
+                if let folder_bookmark = get_bookmark(url: bookmark_url)
+                {
+                    if let loaded_entities = await document.deferred_scene_import(folder_bookmark: folder_bookmark)
+                    {
+                        await MainActor.run
+                        {
+                            self.entities = loaded_entities
+                        }
+                    }
+                }
+                
+                completion()
+            }
         }
     }
+    
+    /*func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
+    {
+        self.package_info = document.package_info
+        
+        self.images = document.images
+        self.listings = document.listings
+        self.listings_files_names = document.listings_files_names
+        //self.kinematic_groups = document.kinematic_groups
+        
+        self.robot_modules = document.robot_modules
+        self.tool_modules = document.tool_modules
+        self.part_modules = document.part_modules
+        self.changer_modules = document.changer_modules
+        
+        load_all_external_entities()
+        
+        func load_all_external_entities(_ completion: @escaping () -> Void = {})
+        {
+            Task
+            {
+                if let folder_bookmark = get_bookmark(url: bookmark_url)
+                {
+                    if let entities = await document.deferred_scene_import(folder_bookmark: folder_bookmark) //Value of type 'STCDocument' has no member 'deferred_scene_import'
+                    {
+                        self.entities = entities
+                    }
+                }
+                
+                completion()
+            }
+        }
+    }*/
     
     private func get_bookmark(url: URL?) -> Data?
     {
@@ -80,17 +133,24 @@ public class StandardTemplateConstruct: ObservableObject
     // Imported files
     @Published var images = [UIImage]()
     @Published var listings = [String]()
-    @Published var scenes = [SCNScene]()
-    @Published var kinematic_groups = [KinematicGroup]()
+    @Published var entities = [EntityItem]()
+    //@Published var kinematic_groups = [KinematicGroup]()
     
     // Imported files names
-    public var scenes_files_names = [String]()
     public var images_files_names = [String]()
     public var listings_files_names = [String]()
     
     // MARK: Kinematic groups functions
     // Build separated components by kinematic group
-    public func make_copmponents_from_kinematic(group: KinematicGroup, node: SCNNode, make_controller: Bool, make_model: Bool, is_internal: Bool, listings_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
+    /*public func make_copmponents_from_kinematic(
+        group: KinematicGroup,
+        node: SCNNode,
+        make_controller: Bool,
+        make_model: Bool,
+        is_internal: Bool,
+        listings_update_function: (() -> Void) = {},
+        scenes_update_function: (() -> Void) = {}
+    )
     {
         if make_controller
         {
@@ -129,7 +189,16 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // Build virtual robot components by kinematic group to robot model
-    public func make_copmponents_from_kinematic(group: KinematicGroup, to module_name: String, node: SCNNode, make_controller: Bool, make_model: Bool, is_internal: Bool, robots_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
+    public func make_copmponents_from_kinematic(
+        group: KinematicGroup,
+        to module_name: String,
+        node: SCNNode,
+        make_controller: Bool,
+        make_model: Bool,
+        is_internal: Bool,
+        robots_update_function: (() -> Void) = {},
+        scenes_update_function: (() -> Void) = {}
+    )
     {
         guard let module = robot_modules.first(where: { $0.name == module_name })
         else
@@ -219,20 +288,7 @@ public class StandardTemplateConstruct: ObservableObject
         """
         
         return code
-    }
-    
-    // MARK: Model nodes functions
-    @Published var viewed_model_node = SCNNode()
-    
-    private func make_preview()
-    {
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.green
-        
-        let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-        box.materials = [material]
-        viewed_model_node = SCNNode(geometry: box)
-    }
+    }*/
     
     // MARK: - Modules handling
     // MARK: Robot modules
@@ -329,31 +385,6 @@ public class StandardTemplateConstruct: ObservableObject
             //build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * 0
             build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count) * 2
         }
-        
-        /*if as_internal
-        {
-            // Project creation stages count
-            #if os(macOS)
-            build_total += 5
-            #endif
-        }
-        else
-        {
-            // Compilation stages count
-            #if os(macOS)
-            let robot_module_code_items_count: Float = 2
-            let tool_module_code_items_count: Float = 2
-            // let part_module_code_items_count: Float = 0
-            // let changer_module_code_items_count: Float = 1
-            
-            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * robot_module_code_items_count
-            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * tool_module_code_items_count
-            // build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * part_module_code_items_count
-            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)// * changer_module_code_items_count
-            
-            build_total += 2 // Additive terminal output stages
-            #endif
-        }*/
     }
     
     // MARK: - Process preferences
@@ -393,34 +424,6 @@ public class StandardTemplateConstruct: ObservableObject
         {
             #if os(macOS)
             try perform_terminal_command("cd '\(url.path)' && ./MakeIndustrialApp.command '\(name)'")
-            /*{ output in
-                let lines = output.components(separatedBy: .newlines)
-                
-                // Find the last non-empty line
-                var last_line: String? = nil
-                for line in lines.reversed()
-                {
-                    if !line.isEmpty
-                    {
-                        last_line = line
-                        break
-                    }
-                }
-                
-                if let last_line = last_line
-                {
-                    DispatchQueue.main.async
-                    {
-                        self.build_info = last_line
-                        self.build_progress += 1
-                    }
-                }
-            }
-            
-            DispatchQueue.main.async
-            {
-                self.build_info += "\nProject creation finished."
-            }*/
             #endif
             
             // Remove unused template blank file
@@ -495,24 +498,6 @@ public class StandardTemplateConstruct: ObservableObject
                 print("Failed to copy \(file_name): \(error.localizedDescription)")
             }
         }
-        
-        /*for file_name in file_names
-        {
-            guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { return }
-            let destination_url = folder_url.appendingPathComponent(file_name)
-            
-            do
-            {
-                if FileManager.default.fileExists(atPath: file_url.path)
-                {
-                    try FileManager.default.copyItem(at: file_url, to: destination_url)
-                }
-            }
-            catch
-            {
-                print(error.localizedDescription)
-            }
-        }*/
     }
     
     // MARK: - Modules build functions
@@ -789,13 +774,41 @@ public class StandardTemplateConstruct: ObservableObject
             switch module
             {
             case is RobotModule:
-                module_code = robot_module_code(module as? RobotModule ?? RobotModule())
+                if let robot = module as? RobotModule
+                {
+                    module_code = robot_module_code(robot)
+                }
+                else
+                {
+                    break
+                }
             case is ToolModule:
-                module_code = tool_module_code(module as? ToolModule ?? ToolModule())
+                if let tool = module as? ToolModule
+                {
+                    module_code = tool_module_code(tool)
+                }
+                else
+                {
+                    break
+                }
             case is PartModule:
-                module_code = part_module_code(module as? PartModule ?? PartModule())
+                if let part = module as? PartModule
+                {
+                    module_code = part_module_code(part)
+                }
+                else
+                {
+                    break
+                }
             case is ChangerModule:
-                module_code = changer_module_code(module as? ChangerModule ?? ChangerModule())
+                if let changer = module as? ChangerModule
+                {
+                    module_code = changer_module_code(changer)
+                }
+                else
+                {
+                    break
+                }
             default:
                 break
             }
@@ -809,14 +822,14 @@ public class StandardTemplateConstruct: ObservableObject
             
             let resources_url = try make_module_folder("Resources.scnassets", module_url: url, module_name: module.name, as_internal: as_internal)
             
-            if let resources_names = module.resources_names
+            /*if let resources_names = module.resources_names
             {
                 for resource_name in resources_names
                 {
                     let resource_url = resources_url.appendingPathComponent(resource_name)
                     try resource_data(resource_name)?.write(to: resource_url)
                 }
-            }
+            }*/
         }
         
         func make_info_file(url: URL) throws // For external module
@@ -845,9 +858,6 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
                 try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
-                
-                //let updated_code_item = code_item.value.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                //try updated_code_item.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
         }
         
@@ -920,10 +930,10 @@ public class StandardTemplateConstruct: ObservableObject
             
             if file_extension == "scn"
             {
-                if let scene_index = scenes_files_names.firstIndex(of: name)
+                /*if let scene_index = scenes_files_names.firstIndex(of: name)
                 {
-                    data = try? NSKeyedArchiver.archivedData(withRootObject: scenes[scene_index], requiringSecureCoding: false)
-                }
+                    data = try? NSKeyedArchiver.archivedData(withRootObject: entities[scene_index], requiringSecureCoding: false)
+                }*/
             }
             else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
             {
@@ -969,7 +979,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         // Main Nodes
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+        //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
         
         // Connected nodes names
         let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
@@ -998,7 +1008,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         // Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+        //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
         
         // Operation codes
         code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
@@ -1026,7 +1036,7 @@ public class StandardTemplateConstruct: ObservableObject
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         // Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+        //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
         
         return code
     }

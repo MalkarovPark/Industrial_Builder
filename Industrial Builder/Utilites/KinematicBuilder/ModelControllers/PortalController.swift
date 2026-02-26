@@ -1,5 +1,4 @@
 import Foundation
-import SceneKit
 import IndustrialKit
 
 class Portal_Controller: DesignerRobotModelController, @unchecked Sendable

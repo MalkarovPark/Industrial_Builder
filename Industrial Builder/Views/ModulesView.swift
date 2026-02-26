@@ -25,7 +25,7 @@ struct ModulesView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        NavigationLink(destination: RobotModulesView())
+                        /*NavigationLink(destination: RobotModulesView())
                         {
                             BoxCard(title: "Robot", subtitle: numeral_endings(base_stc.robot_modules.count, word: "item"), color: .green, image_name: "r.square", image_size: 80)
                         }
@@ -37,7 +37,7 @@ struct ModulesView: View
                             BoxCard(title: "Tool", subtitle: numeral_endings(base_stc.tool_modules.count, word: "item"), color: .teal, image_name: "hammer", image_size: 80)
                         }
                         .buttonStyle(.plain)
-                        .frame(height: 128)
+                        .frame(height: 128)*/
                         
                         NavigationLink(destination: PartModulesView())
                         {

@@ -79,12 +79,12 @@ struct DocumentUpdateModifier: ViewModifier
                 
                 update_deferred_import()
             }
-            .onChange(of: document_handler.update_kinematics_document_notify)
+            /*.onChange(of: document_handler.update_kinematics_document_notify)
             { _, _ in
                 document.kinematic_groups = base_stc.kinematic_groups
                 
                 update_deferred_import()
-            }
+            }*/
             
             // Modules
             .onChange(of: document_handler.update_robots_document_notify)
@@ -138,8 +138,8 @@ struct DocumentUpdateModifier: ViewModifier
         STCDocument.new_images_names = base_stc.images_files_names
         document.images = base_stc.images
         
-        STCDocument.new_scenes_names = base_stc.scenes_files_names // If that data was deferred imported
-        document.scenes = base_stc.scenes
+        //STCDocument.new_scenes_names = base_stc.entities.map { $0.name } // If that data was deferred imported
+        document.entities = base_stc.entities//.map { $0.entity } // document.entities = base_stc.entities.map(\.entity)
     }
     
     /*private func update_scenes()

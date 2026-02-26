@@ -32,7 +32,7 @@ struct ConnectionParametersView: View
                     {
                         ForEach($connection_parameters.indices, id: \.self)
                         { index in
-                            ConnectionParameterView(parameter: $connection_parameters[index], update_file_data: update_file_data)
+                            ConnectionParameterView(parameter: connection_parameters[index], on_update: update_file_data)
                                 .contextMenu
                             {
                                 Button(role: .destructive)

@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mchakravarty/CodeEditorView",
       "state" : {
-        "revision" : "aba6c189bb2f6fd9d7b8e9f5739aeb3c8c7e3254",
-        "version" : "0.15.4"
+        "revision" : "2b532411ae79520b973f1647e7ed51a6678d1188",
+        "version" : "0.15.3"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/MalkarovPark/IndustrialKit",
       "state" : {
         "branch" : "development",
-        "revision" : "2559c58a68ed487d5300e8d1b70bbe8952777dcb"
+        "revision" : "dc7ac6dc3ffa6d4ec5dd8c1e40fe6b61874af72c"
       }
     },
     {
