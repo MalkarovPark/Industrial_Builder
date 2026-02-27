@@ -15,7 +15,7 @@
 			<array>
 				<string>celadon.stc</string>
 			</array>
-			<key>LSTypelsPackage</key>
+			<key>LSTypeIsPackage</key>
 			<true/>
 			<key>NSDocumentClass</key>
 			<string></string>
@@ -41,7 +41,7 @@
 			<string>celadon.stc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.file_name-extension</key>
+				<key>public.filename-extension</key>
 				<array>
 					<string>stcpkg</string>
 				</array>
@@ -65,7 +65,7 @@
 			<string>celadon.stc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.file_name-extension</key>
+				<key>public.filename-extension</key>
 				<array>
 					<string>stcpkg</string>
 				</array>
