@@ -8,6 +8,9 @@
 import Foundation
 import RealityKit
 import IndustrialKit
+#if !os(macOS)
+import UIKit
+#endif
 
 // MARK: - Scene item wrapper
 public class EntityItem: Identifiable, Equatable, ObservableObject

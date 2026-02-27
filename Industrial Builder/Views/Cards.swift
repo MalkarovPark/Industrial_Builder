@@ -51,7 +51,7 @@ struct ImageCard<Content: View>: View
             }
             .overlay(alignment: .bottomTrailing)
             {
-                Text(name)
+                Text(image_item.name)
                     .padding(8)
                     .background
                 {
@@ -93,7 +93,7 @@ struct ImageCard<Content: View>: View
     
     func delete_image()
     {
-        base_stc.images.removeAll { $0 == image_item }
+        base_stc.image_items.removeAll { $0 == image_item }
         document_handler.document_update_images()
     }
 }
@@ -216,7 +216,7 @@ struct ListingCard<Content: View>: View
     
     func delete_listing()
     {
-        base_stc.listings.removeAll { $0 == listing_item }
+        base_stc.listing_items.removeAll { $0 == listing_item }
         document_handler.document_update_listings()
     }
 }
@@ -259,7 +259,7 @@ struct SceneCard<Content: View>: View
         //guard let index = base_stc.entities.firstIndex(where: { $0 == entity }) else { return }
         //base_stc.entities.remove(at: index)
         
-        base_stc.entities.removeAll { $0 == entity_item }
+        base_stc.entity_items.removeAll { $0 == entity_item }
         document_handler.document_update_scenes()
     }
 }

@@ -47,20 +47,16 @@ struct ListingView: View
             {
                 CodeView(text: code_text)
             }
-            .modifier(SheetCaption(is_presented: $is_presented, label: label))
+            .modifier(SheetCaption(is_presented: $is_presented, label: listing_item.name))
             .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         }
         else
         {
             VStack(spacing: 0)
             {
-                CodeView(text: $code)
-                    .onChange(of: code)
-                    { _, _ in
-                        document_handler.document_update_listings()
-                    }
+                CodeView(text: code_text)
             }
-            .modifier(SheetCaption(is_presented: $is_presented, label: label))
+            .modifier(SheetCaption(is_presented: $is_presented, label: listing_item.name))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         #endif

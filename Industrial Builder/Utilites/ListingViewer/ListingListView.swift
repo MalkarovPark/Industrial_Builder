@@ -28,13 +28,13 @@ struct ListingListView: View
     {
         VStack(spacing: 0)
         {
-            if base_stc.listings.count > 0
+            if base_stc.listing_items.count > 0
             {
                 ScrollView(.vertical)
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.listings)
+                        ForEach(base_stc.listing_items)
                         { item in
                             ListingCard(listing_item: item)
                             { is_presented in
@@ -44,7 +44,7 @@ struct ListingListView: View
                     }
                     .padding(20)
                 }
-                // .modifier(DoubleModifier(update_toggle: $document_handler.update_listings_document_notify))
+                .animation(.spring(), value: base_stc.listing_items)
             }
             else
             {
@@ -94,9 +94,9 @@ struct ListingListView: View
                         new_listing_name = "Name"
                     }
                     
-                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listings_files_names)
+                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listing_items.map(\.name))
                     
-                    base_stc.listings.append(ListingItem(name: new_listing_name, text: output))
+                    base_stc.listing_items.append(ListingItem(name: new_listing_name, text: output))
                     new_listing_name = ""
                     
                     document_handler.document_update_listings()
@@ -130,10 +130,9 @@ struct ListingListView: View
                         new_listing_name = "Name"
                     }
                     
-                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listings_files_names)
+                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listing_items.map(\.name))
                     
-                    base_stc.listings.append(output)
-                    base_stc.listings_files_names.append(new_listing_name)
+                    base_stc.listing_items.append(ListingItem(name: new_listing_name, text: output))
                     new_listing_name = ""
                     
                     document_handler.document_update_listings()
@@ -172,7 +171,7 @@ struct ListingListView: View
                             {
                                 return
                             }
-                            base_stc.listings.append(ListingItem(name: String(file_name.split(separator: ".").first!), text: text))
+                            base_stc.listing_items.append(ListingItem(name: String(file_name.split(separator: ".").first!), text: text))
                             
                             document_handler.drop_document_update_listings()
                         }
@@ -198,7 +197,7 @@ struct ListingListView: View
                     if let listing_data = try? Data(contentsOf: url),
                        let text = String(data: listing_data, encoding: .utf8)
                     {
-                        base_stc.listings.append(ListingItem(name: String(url.lastPathComponent.split(separator: ".").first!), text: text))
+                        base_stc.listing_items.append(ListingItem(name: String(url.lastPathComponent.split(separator: ".").first!), text: text))
                     }
                     url.stopAccessingSecurityScopedResource()
                 }

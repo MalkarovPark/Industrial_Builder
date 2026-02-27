@@ -183,7 +183,7 @@ struct Sidebar: View
     
     private var components_count: Int
     {
-        base_stc.entities.count + base_stc.images.count + base_stc.listings.count// + base_stc.kinematic_groups.count
+        base_stc.entity_items.count + base_stc.image_items.count + base_stc.listing_items.count// + base_stc.kinematic_groups.count
     }
     
     private var modules_count: Int
@@ -201,19 +201,19 @@ struct ComponentsSidebarGroup: View
         NavigationLink(destination: EntityListView().modifier(WindowFramer()))
         {
             Label("Scenes", systemImage: "cube")
-                .badge(base_stc.entities.count)
+                .badge(base_stc.entity_items.count)
         }
         
         NavigationLink(destination: ImageListView().modifier(WindowFramer()))
         {
             Label("Images", systemImage: "photo")
-                .badge(base_stc.images.count)
+                .badge(base_stc.image_items.count)
         }
         
         NavigationLink(destination: ListingListView().modifier(WindowFramer()))
         {
             Label("Listings", systemImage: "scroll")
-                .badge(base_stc.listings.count)
+                .badge(base_stc.listing_items.count)
         }
         
         /*NavigationLink(destination: KinematicsListView().modifier(WindowFramer()))

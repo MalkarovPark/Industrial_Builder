@@ -27,13 +27,13 @@ struct EntityListView: View
     {
         VStack(spacing: 0)
         {
-            if !base_stc.entities.isEmpty
+            if !base_stc.entity_items.isEmpty
             {
                 ScrollView(.vertical)
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.entities)
+                        ForEach(base_stc.entity_items)
                         { item in
                             SceneCard(entity_item: item)
                             { is_presented in
@@ -46,6 +46,7 @@ struct EntityListView: View
                     }
                     .padding(20)
                 }
+                .animation(.spring(), value: base_stc.entity_items)
             }
             else
             {
@@ -169,7 +170,7 @@ struct EntityListView: View
             
             await MainActor.run
             {
-                base_stc.entities.append(item)
+                base_stc.entity_items.append(item)
                 document_handler.document_update_scenes()
             }
         }
@@ -194,7 +195,7 @@ struct EntityListView: View
                 
                 await MainActor.run
                 {
-                    base_stc.entities.append(item)
+                    base_stc.entity_items.append(item)
                     document_handler.document_update_scenes()
                 }
             }

@@ -90,7 +90,7 @@ struct InfoGalleryView: View
                 }
             }
             .animation(.easeInOut, value: document.package_info.gallery)
-            .modifier(DoubleModifier(update_toggle: $update_toggle))
+            //.modifier(DoubleModifier(update_toggle: $update_toggle))
         }
         .frame(width: 192)
         .overlay(alignment: .bottom)

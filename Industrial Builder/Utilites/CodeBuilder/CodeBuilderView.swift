@@ -95,7 +95,7 @@ struct CodeBuilderView: View
                     .padding(.bottom, 16)
                 }
                 
-                if base_stc.listings_files_names.count > 0 && view_listings
+                if base_stc.listing_items.count > 0 && view_listings
                 {
                     VStack(alignment: .leading, spacing: 8)
                     {
@@ -104,7 +104,7 @@ struct CodeBuilderView: View
                         
                         LazyVGrid(columns: columns, spacing: 16)
                         {
-                            ForEach(base_stc.listings_files_names, id: \.self)
+                            ForEach(base_stc.listing_items.map(\.name), id: \.self)
                             { name in
                                 CodeTileView(
                                     name: name,
@@ -235,7 +235,7 @@ struct CodeBuilderView: View
         case .template:
             return import_text_data(from: selected_template_name ?? "")
         case .listing:
-            return base_stc.listings.first(where: { $0.name == selected_template_name })?.text
+            return base_stc.listing_items.first(where: { $0.name == selected_template_name })?.text
         case .misc:
             return base_stc.misc_code_process(type: MiscCodeGenerationFunction(rawValue: selected_template_name ?? "") ?? .blank)
         }

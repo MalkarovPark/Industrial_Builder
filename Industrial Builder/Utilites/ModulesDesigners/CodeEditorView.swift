@@ -102,9 +102,9 @@ struct CodeEditorView: View
     
     private func import_from_listing(_ file_name: String)
     {
-        guard let index = base_stc.listings_files_names.firstIndex(of: file_name) else { return }
+        guard let item = base_stc.listing_items.first(where: { $0.name == file_name }) else { return }
         
-        code_items[code_item_name] = base_stc.listings.first(where: { $0.name == file_name })?.text
+        code_items[code_item_name] = item.text
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {

@@ -25,9 +25,8 @@ public class StandardTemplateConstruct: ObservableObject
     {
         self.package_info = document.package_info
         
-        self.images = document.images
-        self.listings = document.listings
-        self.listings_files_names = document.listings_files_names
+        self.image_items = document.image_items
+        self.listing_items = document.listing_items
         
         self.robot_modules = document.robot_modules
         self.tool_modules = document.tool_modules
@@ -46,7 +45,7 @@ public class StandardTemplateConstruct: ObservableObject
                     {
                         await MainActor.run
                         {
-                            self.entities = loaded_entities
+                            self.entity_items = loaded_entities
                         }
                     }
                 }
@@ -79,13 +78,10 @@ public class StandardTemplateConstruct: ObservableObject
     
     // MARK: - Components handling
     // Imported files
-    @Published var images = [ImageItem]()
-    @Published var listings = [ListingItem]()
-    @Published var entities = [EntityItem]()
+    @Published var image_items = [ImageItem]()
+    @Published var listing_items = [ListingItem]()
+    @Published var entity_items = [EntityItem]()
     //@Published var kinematic_groups = [KinematicGroup]()
-    
-    // Imported files names
-    public var listings_files_names = [String]()
     
     // MARK: Kinematic groups functions
     // Build separated components by kinematic group
@@ -885,7 +881,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
             {
-                data = images
+                data = image_items
                     .first(where: { $0.name == name })?
                     .image
                     .pngData()

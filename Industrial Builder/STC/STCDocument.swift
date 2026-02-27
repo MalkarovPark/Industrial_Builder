@@ -20,9 +20,10 @@ extension UTType
 struct STCDocument: FileDocument
 {
     var package_info = STCPackageInfo()
-    var entities = [EntityItem]()
-    var images = [ImageItem]()
-    var listings = [ListingItem]()
+    
+    var entity_items = [EntityItem]()
+    var image_items = [ImageItem]()
+    var listing_items = [ListingItem]()
     
     var robot_modules = [RobotModule]()
     var tool_modules = [ToolModule]()
@@ -210,7 +211,7 @@ struct STCDocument: FileDocument
                             if let data = file_wrapper.regularFileContents,
                                let image = UIImage(data: data)
                             {
-                                images.append(ImageItem(name: filename, image: image))
+                                image_items.append(ImageItem(name: filename, image: image))
                             }
                         }
                     }
@@ -225,7 +226,7 @@ struct STCDocument: FileDocument
                             if let filename = file_wrapper.filename, filename.hasSuffix(".swift"),
                                let listing = String(data: file_wrapper.regularFileContents ?? Data(), encoding: .utf8)
                             {
-                                listings.append(ListingItem(name: String(filename.split(separator: ".").first!), text: listing))
+                                listing_items.append(ListingItem(name: String(filename.split(separator: ".").first!), text: listing))
                             }
                         }
                     }
@@ -388,7 +389,7 @@ struct STCDocument: FileDocument
             
             guard let scene_files = scene_wrapper?.fileWrappers else { return FileWrapper(directoryWithFileWrappers: [:]) }
             
-            for entity_item in entities
+            for entity_item in entity_items
             {
                 let file_name_with_ext = entity_item.name.hasSuffix(".usdz") ? entity_item.name : entity_item.name + ".usdz"
                 
@@ -420,7 +421,7 @@ struct STCDocument: FileDocument
             }
             
             // Images
-            for image_item in images
+            for image_item in image_items
             {
                 guard let data = image_item.image.pngData() else { continue }
                 
@@ -441,7 +442,7 @@ struct STCDocument: FileDocument
         {
             var file_wrappers = [String: FileWrapper]()
             
-            for listing_item in listings
+            for listing_item in listing_items
             {
                 guard let data = listing_item.text.data(using: .utf8) else { continue }
                 

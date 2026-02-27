@@ -74,8 +74,7 @@ struct DocumentUpdateModifier: ViewModifier
             }
             .onChange(of: document_handler.update_listings_document_notify)
             { _, _ in
-                document.listings_files_names = base_stc.listings_files_names
-                document.listings = base_stc.listings
+                document.listing_items = base_stc.listing_items
                 
                 update_deferred_import()
             }
@@ -123,8 +122,7 @@ struct DocumentUpdateModifier: ViewModifier
             }
             .onChange(of: document_handler.drop_update_listings_document_notify)
             { _, _ in
-                document.listings_files_names = base_stc.listings_files_names
-                document.listings = base_stc.listings
+                document.listing_items = base_stc.listing_items
                 
                 update_deferred_import()
             }
@@ -132,10 +130,10 @@ struct DocumentUpdateModifier: ViewModifier
     
     private func update_deferred_import()
     {
-        document.images = base_stc.images
+        document.image_items = base_stc.image_items
         
         //STCDocument.new_scenes_names = base_stc.entities.map { $0.name } // If that data was deferred imported
-        document.entities = base_stc.entities//.map { $0.entity } // document.entities = base_stc.entities.map(\.entity)
+        document.entity_items = base_stc.entity_items//.map { $0.entity } // document.entities = base_stc.entities.map(\.entity)
     }
 }
 

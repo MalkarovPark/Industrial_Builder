@@ -24,13 +24,13 @@ struct ImageListView: View
     {
         VStack(spacing: 0)
         {
-            if base_stc.images.count > 0
+            if base_stc.image_items.count > 0
             {
                 ScrollView(.vertical)
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.images)
+                        ForEach(base_stc.image_items)
                         { item in
                             ImageCard(image_item: item)
                             { is_presented in
@@ -41,6 +41,7 @@ struct ImageListView: View
                     }
                     .padding(20)
                 }
+                .animation(.spring(), value: base_stc.image_items)
             }
             else
             {
@@ -61,7 +62,6 @@ struct ImageListView: View
                         .padding()
                 }
                 .background(.thinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
             }
@@ -73,20 +73,6 @@ struct ImageListView: View
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar
         {
-            /*Button(action: { clear_message_presented.toggle() })
-            {
-                Image(systemName: "eraser")
-            }
-            .confirmationDialog(Text("Remove all images?"), isPresented: $clear_message_presented)
-            {
-                Button("Remove", role: .destructive)
-                {
-                    base_stc.images.removeAll()
-                    base_stc.images_files_names.removeAll()
-                    document_handler.document_update_images()
-                }
-            }*/
-            
             Button(action: { load_panel_presented = true })
             {
                 Image(systemName: "square.and.arrow.down")
@@ -94,8 +80,12 @@ struct ImageListView: View
             #if os(visionOS)
             .buttonBorderShape(.circle)
             #endif
-            .fileImporter(isPresented: $load_panel_presented,
-                                  allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
+            .fileImporter(
+                isPresented: $load_panel_presented,
+                allowedContentTypes: [.image],
+                allowsMultipleSelection: true,
+                onCompletion: import_images
+            )
         }
     }
     
@@ -118,7 +108,8 @@ struct ImageListView: View
                             {
                                 return
                             }
-                            base_stc.images.append(ImageItem(name: file_name, image: image))
+                            
+                            base_stc.image_items.append(ImageItem(name: file_name, image: image))
                             
                             document_handler.drop_document_update_images()
                         }
@@ -142,7 +133,7 @@ struct ImageListView: View
                     guard url.startAccessingSecurityScopedResource() else { return }
                     if let image_data = try? Data(contentsOf: url), let image = UIImage(data: image_data)
                     {
-                        base_stc.images.append(ImageItem(name: url.lastPathComponent, image: image))
+                        base_stc.image_items.append(ImageItem(name: url.lastPathComponent, image: image))
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
