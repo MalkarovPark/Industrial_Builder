@@ -41,7 +41,7 @@
 			<string>celadon.stc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
+				<key>public.file_name-extension</key>
 				<array>
 					<string>stcpkg</string>
 				</array>
@@ -65,7 +65,7 @@
 			<string>celadon.stc</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
-				<key>public.filename-extension</key>
+				<key>public.file_name-extension</key>
 				<array>
 					<string>stcpkg</string>
 				</array>

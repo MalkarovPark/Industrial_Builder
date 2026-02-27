@@ -7,20 +7,19 @@
 
 import SwiftUI
 import RealityKit
+import IndustrialKit
 import IndustrialKitUI
 
 struct ImageCard<Content: View>: View
 {
-    @Binding var image: UIImage
+    let image_item: ImageItem
+    
+    let content: (_ isPresented: Binding<Bool>) -> Content
     
     @State private var is_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
-    let name: String
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
     
     @State private var hovered = false
     
@@ -28,13 +27,13 @@ struct ImageCard<Content: View>: View
     {
         ZStack
         {
-#if os(macOS)
-            Image(nsImage: image)
+            #if os(macOS)
+            Image(nsImage: image_item.image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .overlay(alignment: .bottomTrailing)
             {
-                Text(name)
+                Text(image_item.name)
                     .padding(8)
                     .background
                 {
@@ -42,8 +41,8 @@ struct ImageCard<Content: View>: View
                         .foregroundStyle(.thinMaterial)
                 }
             }
-#else
-            Image(uiImage: image)
+            #else
+            Image(uiImage: image_item.image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .onTapGesture
@@ -60,8 +59,9 @@ struct ImageCard<Content: View>: View
                         .foregroundStyle(.thinMaterial)
                 }
             }
-#endif
+            #endif
         }
+        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .offset(y: hovered ? -2 : 0)
         .background
         {
@@ -93,8 +93,7 @@ struct ImageCard<Content: View>: View
     
     func delete_image()
     {
-        base_stc.images_files_names.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
-        base_stc.images.remove(at: base_stc.images.firstIndex(of: image) ?? 0)
+        base_stc.images.removeAll { $0 == image_item }
         document_handler.document_update_images()
     }
 }
@@ -106,13 +105,12 @@ struct SimpleImageCard<Content: View>: View
     @State private var is_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var app_state: AppState
     
     let content: (_ is_presented: Binding<Bool>) -> Content
     
     var body: some View
     {
-#if os(macOS)
+        #if os(macOS)
         Image(nsImage: image)
             .resizable()
             .aspectRatio(contentMode: .fit)
@@ -124,7 +122,7 @@ struct SimpleImageCard<Content: View>: View
             content($is_presented)
                 .modifier(ViewCloseButton(is_presented: $is_presented))
         })
-#else
+        #else
         Image(uiImage: image)
             .resizable()
             .aspectRatio(contentMode: .fit)
@@ -143,90 +141,20 @@ struct SimpleImageCard<Content: View>: View
             .presentationSizing(.fitted)
             .modifier(ViewCloseButton(is_presented: $is_presented))
         })
-#endif
+        #endif
     }
 }
 
-/*struct SelectImageCard: View
- {
- let image: UIImage
- let name: String
- 
- @EnvironmentObject var base_stc: StandardTemplateConstruct
- @EnvironmentObject var document_handler: DocumentUpdateHandler
- 
- @Binding var is_selected: Bool
- 
- public init(image: UIImage, name: String, is_selected: Binding<Bool>, on_select: @escaping () -> Void = {}, on_deselect: @escaping () -> Void = {})
- {
- self.image = image
- self.name = name
- self._is_selected = is_selected
- }
- 
- var body: some View
- {
- ZStack
- {
- #if os(macOS)
- Image(nsImage: image)
- .resizable()
- .aspectRatio(contentMode: .fit)
- #else
- Image(uiImage: image)
- .resizable()
- .aspectRatio(contentMode: .fit)
- #endif
- }
- .overlay
- {
- if is_selected
- {
- ZStack
- {
- Image(systemName: "checkmark")
- .resizable()
- .aspectRatio(contentMode: .fit)
- .frame(width: 16, height: 16)
- .foregroundStyle(.primary)
- }
- #if os(macOS)
- .frame(width: 40, height: 40)
- #else
- .frame(width: 48, height: 48)
- #endif
- .background(.ultraThinMaterial)
- }
- }
- .background
- {
- Rectangle()
- .foregroundStyle(.regularMaterial)
- .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
- }
- .scaleEffect(is_selected ? 1 : 0.95)
- .onTapGesture
- {
- is_selected.toggle()
- }
- .animation(.easeInOut(duration: 0.2), value: is_selected)
- .help(name)
- .aspectRatio(1, contentMode: .fit)
- }
- }*/
-
 struct ListingCard<Content: View>: View
 {
-    @Binding var code: String
+    let listing_item: ListingItem
+    
+    let content: (_ isPresented: Binding<Bool>) -> Content
     
     @State private var is_presented = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
-    let name: String
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
     
     @State private var hovered = false
     
@@ -242,11 +170,11 @@ struct ListingCard<Content: View>: View
             #endif
                 .overlay(alignment: .topLeading)
             {
-                Text(code)
+                Text(listing_item.text)
             }
             .overlay(alignment: .bottomTrailing)
             {
-                Text(name)
+                Text(listing_item.name)
                     .padding(8)
                     .background
                 {
@@ -255,6 +183,7 @@ struct ListingCard<Content: View>: View
                 }
             }
         }
+        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
         .offset(y: hovered ? -2 : 0)
         .background
         {
@@ -287,8 +216,7 @@ struct ListingCard<Content: View>: View
     
     func delete_listing()
     {
-        base_stc.listings_files_names.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
-        base_stc.listings.remove(at: base_stc.listings.firstIndex(of: code) ?? 0)
+        base_stc.listings.removeAll { $0 == listing_item }
         document_handler.document_update_listings()
     }
 }
@@ -296,6 +224,7 @@ struct ListingCard<Content: View>: View
 struct SceneCard<Content: View>: View
 {
     let entity_item: EntityItem
+    
     let content: (_ isPresented: Binding<Bool>) -> Content
     
     @State private var is_presented = false
@@ -307,7 +236,6 @@ struct SceneCard<Content: View>: View
     {
         Button(action: { is_presented = true })
         {
-            // GlassBoxCard теперь получает Entity и title, но сам не трогаем
             GlassBoxCard(title: entity_item.name, entity: entity_item.entity)
         }
         .buttonStyle(.plain)
@@ -319,7 +247,7 @@ struct SceneCard<Content: View>: View
             {
                 delete_scene()
             }
-        label:
+            label:
             {
                 Label("Delete", systemImage: "trash")
             }
@@ -336,95 +264,24 @@ struct SceneCard<Content: View>: View
     }
 }
 
-/*struct SelectSceneCard: View
-{
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
-    let scene: SCNScene
-    let name: String
-    
-    @Binding var is_selected: Bool
-    @Binding var is_main: Bool
-    
-    public init(scene: SCNScene, name: String, is_selected: Binding<Bool>, is_main: Binding<Bool>, on_main_set: @escaping () -> Void = {}, on_main_unset: @escaping () -> Void = {})
-    {
-        self.scene = scene
-        self.name = name
-        self._is_selected = is_selected
-        self._is_main = is_main
-    }
-    
-    var body: some View
-    {
-        ZStack
-        {
-            ObjectSceneView(scene: scene)
-                .disabled(true)
-                .overlay
-                {
-                    if is_selected
-                    {
-                        ZStack
-                        {
-                            Image(systemName: is_main ? "diamond" : "checkmark")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 16, height: 16)
-                                .foregroundStyle(.primary)
-                        }
-                        #if os(macOS)
-                        .frame(width: 40, height: 40)
-                        #else
-                        .frame(width: 48, height: 48)
-                        #endif
-                        .background(.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                    }
-                }
-        }
-        .buttonStyle(.plain)
-        .background(.regularMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
-        .scaleEffect(is_selected ? 1 : 0.95)
-        .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .help(name)
-        .onTapGesture
-        {
-            selecttion_toggle()
-        }
-        .contextMenu
-        {
-            Toggle("Is Main Scene", isOn: $is_main)
-        }
-        .aspectRatio(1, contentMode: .fit)
-    }
-    
-    private func selecttion_toggle()
-    {
-        is_selected.toggle()
-    }
-}*/
-
 #Preview
 {
-    ImageCard(image: .constant(UIImage()), name: "Image")
+    ImageCard(image_item: ImageItem(name: "Image", image: UIImage()))
     { is_presented in
         EmptyView()
     }
     .padding()
 }
 
-/*#Preview
+#Preview
 {
-    SceneCard(scene: .constant(SCNScene()), name: "Name")
+    SceneCard(entity_item: EntityItem(name: "Entity", entity: ModelEntity(mesh: .generateBox(size: 1.0, cornerRadius: 0.1), materials: [SimpleMaterial(color: .white, isMetallic: false)])))
     { is_presented in
         EmptyView()
     }
     .frame(width: 256)
     .padding()
-}*/
+}
 
 /*#Preview
 {

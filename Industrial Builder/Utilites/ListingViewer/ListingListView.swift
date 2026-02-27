@@ -1,5 +1,5 @@
 //
-//  ListingsListView.swift
+//  ListingListView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 06.04.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ListingsListView: View
+struct ListingListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var app_state: AppState
@@ -34,11 +34,11 @@ struct ListingsListView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.listings.indices, id: \.self)
-                        { index in
-                            ListingCard(code: $base_stc.listings[index], name: base_stc.listings_files_names[index])
+                        ForEach(base_stc.listings)
+                        { item in
+                            ListingCard(listing_item: item)
                             { is_presented in
-                                ListingView(code: $base_stc.listings[index], is_presented: is_presented, label: base_stc.listings_files_names[index])
+                                ListingView(is_presented: is_presented, listing_item: item)
                             }
                         }
                     }
@@ -96,8 +96,7 @@ struct ListingsListView: View
                     
                     new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listings_files_names)
                     
-                    base_stc.listings.append(output)
-                    base_stc.listings_files_names.append(new_listing_name)
+                    base_stc.listings.append(ListingItem(name: new_listing_name, text: output))
                     new_listing_name = ""
                     
                     document_handler.document_update_listings()
@@ -168,13 +167,12 @@ struct ListingsListView: View
                         
                         if let listing_data = try? Data(contentsOf: url)
                         {
-                            guard let listing = String(data: listing_data, encoding: .utf8)
+                            guard let text = String(data: listing_data, encoding: .utf8)
                             else
                             {
                                 return
                             }
-                            base_stc.listings.append(listing)
-                            base_stc.listings_files_names.append(String(file_name.split(separator: ".").first!))
+                            base_stc.listings.append(ListingItem(name: String(file_name.split(separator: ".").first!), text: text))
                             
                             document_handler.drop_document_update_listings()
                         }
@@ -197,10 +195,10 @@ struct ListingsListView: View
                 for url in urls
                 {
                     guard url.startAccessingSecurityScopedResource() else { return }
-                    if let listing_data = try? Data(contentsOf: url), let listing = String(data: listing_data, encoding: .utf8)
+                    if let listing_data = try? Data(contentsOf: url),
+                       let text = String(data: listing_data, encoding: .utf8)
                     {
-                        base_stc.listings.append(listing)
-                        base_stc.listings_files_names.append(String(url.lastPathComponent.split(separator: ".").first!))
+                        base_stc.listings.append(ListingItem(name: String(url.lastPathComponent.split(separator: ".").first!), text: text))
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
@@ -216,7 +214,7 @@ struct ListingsListView: View
 
 #Preview
 {
-    ListingsListView()
+    ListingListView()
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(AppState())
 }

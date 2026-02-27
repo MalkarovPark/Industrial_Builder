@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IndustrialKit
 #if !os(macOS)
 import UIKit
 #endif

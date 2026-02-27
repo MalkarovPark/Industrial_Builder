@@ -11,8 +11,9 @@ import IndustrialKitUI
 
 struct ListingView: View
 {
-    @Binding var code: String
     @Binding var is_presented: Bool
+    
+    @ObservedObject var listing_item: ListingItem
     
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
@@ -20,31 +21,31 @@ struct ListingView: View
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
     #endif
     
-    let label: String
-    
     var body: some View
     {
+        let code_text = Binding(
+            get: { listing_item.text },
+            set:
+                { new_value in
+                    listing_item.text = new_value
+                    
+                    document_handler.document_update_listings()//on_update()
+                }
+        )
+        
         #if os(macOS) || os(visionOS)
         VStack(spacing: 0)
         {
-            CodeView(text: $code)
-                .onChange(of: code)
-                { _, _ in
-                    document_handler.document_update_listings()
-                }
+            CodeView(text: code_text)
         }
-        .modifier(SheetCaption(is_presented: $is_presented, label: label))
+        .modifier(SheetCaption(is_presented: $is_presented, label: listing_item.name))
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
         if horizontal_size_class != .compact
         {
             VStack(spacing: 0)
             {
-                CodeView(text: $code)
-                    .onChange(of: code)
-                    { _, _ in
-                        document_handler.document_update_listings()
-                    }
+                CodeView(text: code_text)
             }
             .modifier(SheetCaption(is_presented: $is_presented, label: label))
             .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
@@ -68,5 +69,5 @@ struct ListingView: View
 
 #Preview
 {
-    ListingView(code: .constant(""), is_presented: .constant(true), label: "code")
+    ListingView(is_presented: .constant(true), listing_item: ListingItem(name: "Code", text: "import Foundation"))
 }

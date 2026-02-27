@@ -235,14 +235,7 @@ struct CodeBuilderView: View
         case .template:
             return import_text_data(from: selected_template_name ?? "")
         case .listing:
-            if let index = base_stc.listings_files_names.firstIndex(of: selected_template_name ?? "")
-            {
-                return base_stc.listings[index]
-            }
-            else
-            {
-                return nil
-            }
+            return base_stc.listings.first(where: { $0.name == selected_template_name })?.text
         case .misc:
             return base_stc.misc_code_process(type: MiscCodeGenerationFunction(rawValue: selected_template_name ?? "") ?? .blank)
         }

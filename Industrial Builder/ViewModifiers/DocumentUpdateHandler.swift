@@ -132,21 +132,11 @@ struct DocumentUpdateModifier: ViewModifier
     
     private func update_deferred_import()
     {
-        // update_scenes()
-        // update_scripts()
-        
-        STCDocument.new_images_names = base_stc.images_files_names
         document.images = base_stc.images
         
         //STCDocument.new_scenes_names = base_stc.entities.map { $0.name } // If that data was deferred imported
         document.entities = base_stc.entities//.map { $0.entity } // document.entities = base_stc.entities.map(\.entity)
     }
-    
-    /*private func update_scenes()
-    {
-        STCDocument.new_scenes_names = base_stc.scenes_files_names // If that data was deferred imported
-        document.scenes = base_stc.scenes
-    }*/
 }
 
 struct DoubleModifier: ViewModifier

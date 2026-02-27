@@ -21,25 +21,6 @@ public class StandardTemplateConstruct: ObservableObject
         // make_contents()
     }
     
-    /*func document_view(
-        _ info: STCPackageInfo,
-        images: [UIImage],
-        changer_modules: [ChangerModule],
-        tool_modules: [ToolModule],
-        entities: [Entity]//,
-        //kinematic_groups: [KinematicGroup]
-    )
-    {
-        self.package_info = info
-        
-        self.images = images
-        self.scenes = entities
-        //self.kinematic_groups = kinematic_groups
-        
-        self.changer_modules = changer_modules
-        self.tool_modules = tool_modules
-    }*/
-    
     func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
     {
         self.package_info = document.package_info
@@ -75,39 +56,6 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    /*func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
-    {
-        self.package_info = document.package_info
-        
-        self.images = document.images
-        self.listings = document.listings
-        self.listings_files_names = document.listings_files_names
-        //self.kinematic_groups = document.kinematic_groups
-        
-        self.robot_modules = document.robot_modules
-        self.tool_modules = document.tool_modules
-        self.part_modules = document.part_modules
-        self.changer_modules = document.changer_modules
-        
-        load_all_external_entities()
-        
-        func load_all_external_entities(_ completion: @escaping () -> Void = {})
-        {
-            Task
-            {
-                if let folder_bookmark = get_bookmark(url: bookmark_url)
-                {
-                    if let entities = await document.deferred_scene_import(folder_bookmark: folder_bookmark) //Value of type 'STCDocument' has no member 'deferred_scene_import'
-                    {
-                        self.entities = entities
-                    }
-                }
-                
-                completion()
-            }
-        }
-    }*/
-    
     private func get_bookmark(url: URL?) -> Data?
     {
         guard ((url?.startAccessingSecurityScopedResource()) != nil) else
@@ -131,13 +79,12 @@ public class StandardTemplateConstruct: ObservableObject
     
     // MARK: - Components handling
     // Imported files
-    @Published var images = [UIImage]()
-    @Published var listings = [String]()
+    @Published var images = [ImageItem]()
+    @Published var listings = [ListingItem]()
     @Published var entities = [EntityItem]()
     //@Published var kinematic_groups = [KinematicGroup]()
     
     // Imported files names
-    public var images_files_names = [String]()
     public var listings_files_names = [String]()
     
     // MARK: Kinematic groups functions
@@ -933,18 +880,15 @@ public class StandardTemplateConstruct: ObservableObject
                 /*if let scene_index = scenes_files_names.firstIndex(of: name)
                 {
                     data = try? NSKeyedArchiver.archivedData(withRootObject: entities[scene_index], requiringSecureCoding: false)
+                    // Replace to copy
                 }*/
             }
             else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
             {
-                if let image_index = images_files_names.firstIndex(of: name)
-                {
-                    guard let image_data = images[image_index].pngData() else
-                    {
-                        return nil
-                    }
-                    data = image_data
-                }
+                data = images
+                    .first(where: { $0.name == name })?
+                    .image
+                    .pngData()
             }
             else
             {
@@ -1224,25 +1168,6 @@ public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
         }
     }
 }
-
-// MARK: - Typealiases
-#if os(macOS)
-typealias UIImage = NSImage
-
-// MARK: - Extensions
-extension UIImage
-{
-    func pngData() -> Data?
-    {
-        if let tiffRepresentation = self.tiffRepresentation, let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
-        {
-            return bitmapImage.representation(using: .png, properties: [:])
-        }
-
-        return nil
-    }
-}
-#endif
 
 extension ConnectionParameter
 {

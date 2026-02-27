@@ -1,5 +1,5 @@
 //
-//  ScenesListView.swift
+//  SceneListView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 04.11.2023.
@@ -12,35 +12,8 @@ import RealityKit
 import IndustrialKit
 import IndustrialKitUI
 
-// MARK: - Scene item wrapper
-class EntityItem: Identifiable, Equatable, ObservableObject
-{
-    public let id: UUID = UUID()
-    
-    static func == (lhs: EntityItem, rhs: EntityItem) -> Bool
-    {
-        lhs.id == rhs.id
-    }
-    
-    public var name: String
-    public var entity: Entity
-    
-    public var source_url: URL?
-    
-    public init(
-        name: String,
-        entity: Entity,
-        source_url: URL? = nil
-    )
-    {
-        self.entity = entity
-        self.name = name
-        self.source_url = source_url
-    }
-}
-
 // MARK: - ScenesListView
-struct ScenesListView: View
+struct EntityListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -64,7 +37,7 @@ struct ScenesListView: View
                         { item in
                             SceneCard(entity_item: item)
                             { is_presented in
-                                SceneFileView(entity: item.entity)
+                                EntityFileView(entity: item.entity)
                                     .frame(minWidth: 320, idealWidth: 640, maxWidth: 800,
                                            minHeight: 240, idealHeight: 480, maxHeight: 600)
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: false))
@@ -249,7 +222,7 @@ struct ScenesListView: View
 
 #Preview
 {
-    ScenesListView()
+    EntityListView()
         .environmentObject(StandardTemplateConstruct())
         .environmentObject(DocumentUpdateHandler())
 }

@@ -1,5 +1,5 @@
 //
-//  ImagesView.swift
+//  ImageListView.swift
 //  Industrial Builder
 //
 //  Created by Artem on 29.03.2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import IndustrialKit
 
-struct ImagesListView: View
+struct ImageListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var app_state: AppState
@@ -30,11 +30,11 @@ struct ImagesListView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.images.indices, id: \.self)
-                        { index in
-                            ImageCard(image: $base_stc.images[index], name: base_stc.images_files_names[index])
+                        ForEach(base_stc.images)
+                        { item in
+                            ImageCard(image_item: item)
                             { is_presented in
-                                ImageView(is_presented: is_presented, image: base_stc.images[index], label: base_stc.images_files_names[index])
+                                ImageView(is_presented: is_presented, image: item.image, label: item.name)
                                     .frame(maxWidth: 800)
                             }
                         }
@@ -118,8 +118,7 @@ struct ImagesListView: View
                             {
                                 return
                             }
-                            base_stc.images.append(image)
-                            base_stc.images_files_names.append(file_name)
+                            base_stc.images.append(ImageItem(name: file_name, image: image))
                             
                             document_handler.drop_document_update_images()
                         }
@@ -143,8 +142,7 @@ struct ImagesListView: View
                     guard url.startAccessingSecurityScopedResource() else { return }
                     if let image_data = try? Data(contentsOf: url), let image = UIImage(data: image_data)
                     {
-                        base_stc.images.append(image)
-                        base_stc.images_files_names.append(url.lastPathComponent)
+                        base_stc.images.append(ImageItem(name: url.lastPathComponent, image: image))
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
@@ -160,6 +158,6 @@ struct ImagesListView: View
 
 #Preview
 {
-    ImagesListView()
+    ImageListView()
         .environmentObject(StandardTemplateConstruct())
 }

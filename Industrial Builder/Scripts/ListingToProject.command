@@ -35,7 +35,7 @@ if [[ "$SWIFT_FILE" != *.swift ]]; then
     exit 1
 fi
 
-# Get the filename without extension to be used as package name
+# Get the file_name without extension to be used as package name
 PACKAGE_NAME=$(basename "$SWIFT_FILE" .swift)
 PACKAGE_NAME_WITH_POSTFIX="${PACKAGE_NAME}_Project" # Add _Project postfix
 

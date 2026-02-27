@@ -28,7 +28,6 @@ struct ContentView: View
             .onAppear
             {
                 base_stc.document_view(document, document_url)
-                base_stc.images_files_names = document.images_files_names
             }
             .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
             .environmentObject(document_handler)
@@ -199,19 +198,19 @@ struct ComponentsSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: ScenesListView().modifier(WindowFramer()))
+        NavigationLink(destination: EntityListView().modifier(WindowFramer()))
         {
             Label("Scenes", systemImage: "cube")
                 .badge(base_stc.entities.count)
         }
         
-        NavigationLink(destination: ImagesListView().modifier(WindowFramer()))
+        NavigationLink(destination: ImageListView().modifier(WindowFramer()))
         {
             Label("Images", systemImage: "photo")
                 .badge(base_stc.images.count)
         }
         
-        NavigationLink(destination: ListingsListView().modifier(WindowFramer()))
+        NavigationLink(destination: ListingListView().modifier(WindowFramer()))
         {
             Label("Listings", systemImage: "scroll")
                 .badge(base_stc.listings.count)

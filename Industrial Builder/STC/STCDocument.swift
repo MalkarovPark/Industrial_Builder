@@ -21,8 +21,8 @@ struct STCDocument: FileDocument
 {
     var package_info = STCPackageInfo()
     var entities = [EntityItem]()
-    var images = [UIImage]()
-    var listings = [String]()
+    var images = [ImageItem]()
+    var listings = [ListingItem]()
     
     var robot_modules = [RobotModule]()
     var tool_modules = [ToolModule]()
@@ -196,14 +196,10 @@ struct STCDocument: FileDocument
                     {
                         guard let filename = file_wrapper.filename else { continue }
                         
-                        // MARK: USDZ (только регистрируем имя)
+                        // MARK: USDZ
                         if filename.lowercased().hasSuffix(".usdz")
                         {
-                            let clean_name = URL(fileURLWithPath: filename)
-                                .deletingPathExtension()
-                                .lastPathComponent
-                            
-                            scenes_files_names.append(clean_name)
+                            scenes_files_names.append(URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent)
                         }
                         
                         // MARK: Images
@@ -214,8 +210,7 @@ struct STCDocument: FileDocument
                             if let data = file_wrapper.regularFileContents,
                                let image = UIImage(data: data)
                             {
-                                images.append(image)
-                                images_files_names.append(filename)
+                                images.append(ImageItem(name: filename, image: image))
                             }
                         }
                     }
@@ -227,10 +222,10 @@ struct STCDocument: FileDocument
                     {
                         for (_, file_wrapper) in file_wrappers
                         {
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".swift"), let listing = String(data: file_wrapper.regularFileContents ?? Data(), encoding: .utf8)
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".swift"),
+                               let listing = String(data: file_wrapper.regularFileContents ?? Data(), encoding: .utf8)
                             {
-                                listings.append(listing)
-                                listings_files_names.append(String(filename.split(separator: ".").first!))
+                                listings.append(ListingItem(name: String(filename.split(separator: ".").first!), text: listing))
                             }
                         }
                     }
@@ -321,8 +316,8 @@ struct STCDocument: FileDocument
         return entity_items
     }
     
-    var scenes_files_names = [String]()
-    var images_files_names = [String]()
+    var scenes_files_names = [String]() // For deferred import
+    
     var listings_files_names = [String]()
     
     // MARK: - Export
@@ -425,14 +420,15 @@ struct STCDocument: FileDocument
             }
             
             // Images
-            for (index, image) in images.enumerated()
+            for image_item in images
             {
-                guard let data = image.pngData() else { continue }
+                guard let data = image_item.image.pngData() else { continue }
                 
-                let file_name = STCDocument.new_images_names[safe: index] ?? "Image \(index).png"
+                let file_name = image_item.name
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
+                
                 file_wrappers[file_name] = file_wrapper
             }
             
@@ -445,14 +441,16 @@ struct STCDocument: FileDocument
         {
             var file_wrappers = [String: FileWrapper]()
             
-            for (index, listing) in listings.enumerated()
+            for listing_item in listings
             {
-                let file_name = "\(listings_files_names[index]).swift"
-                guard let data = listing.data(using: .utf8) else { continue }
+                guard let data = listing_item.text.data(using: .utf8) else { continue }
                 
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
+                
+                let file_name = listing_item.name + ".swift"
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
+                
                 file_wrappers[file_name] = file_wrapper
             }
             

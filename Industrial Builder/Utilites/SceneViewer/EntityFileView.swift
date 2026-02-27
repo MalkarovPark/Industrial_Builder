@@ -8,7 +8,7 @@
 import SwiftUI
 import RealityKit
 
-struct SceneFileView: View
+struct EntityFileView: View
 {
     let entity: Entity?
     
@@ -45,7 +45,7 @@ struct SceneFileView: View
 
 #Preview
 {
-    SceneFileView(entity: ModelEntity(
+    EntityFileView(entity: ModelEntity(
         mesh: .generateBox(size: 1.0, cornerRadius: 0.1),
         materials: [SimpleMaterial(color: .white, isMetallic: false)]))
 }
