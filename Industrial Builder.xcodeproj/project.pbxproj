@@ -211,19 +211,19 @@
 			path = IMADesigner;
 			sourceTree = "<group>";
 		};
-		6255B9222B9D26AA002B575C /* ModulesDesigners */ = {
+		6255B9222B9D26AA002B575C /* ModuleDesigners */ = {
 			isa = PBXGroup;
 			children = (
 				6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */,
 				6225786F2C24A9940023004E /* ResourcesPackageView.swift */,
 				62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */,
 				628E72122CCC15FA00E71E7F /* LinkedComponentsView.swift */,
-				62988BD42BD046F900371AFE /* RobotsDesigner */,
-				62988BD32BD046E400371AFE /* ToolsDesigner */,
-				62988BD22BD0419E00371AFE /* PartsDesigner */,
+				62988BD42BD046F900371AFE /* RobotDesigner */,
+				62988BD32BD046E400371AFE /* ToolDesigner */,
+				62988BD22BD0419E00371AFE /* PartDesigner */,
 				6255B9212B9D242F002B575C /* IMADesigner */,
 			);
-			path = ModulesDesigners;
+			path = ModuleDesigners;
 			sourceTree = "<group>";
 		};
 		626450B92DC289A7001101A5 /* CodeBuilder */ = {
@@ -327,32 +327,32 @@
 			path = ModelControllers;
 			sourceTree = "<group>";
 		};
-		62988BD22BD0419E00371AFE /* PartsDesigner */ = {
+		62988BD22BD0419E00371AFE /* PartDesigner */ = {
 			isa = PBXGroup;
 			children = (
 				62988BD72BD0600100371AFE /* PartModulesView.swift */,
 				62BAE7762BD71846000972EA /* PartModuleDesigner.swift */,
 			);
-			path = PartsDesigner;
+			path = PartDesigner;
 			sourceTree = "<group>";
 		};
-		62988BD32BD046E400371AFE /* ToolsDesigner */ = {
+		62988BD32BD046E400371AFE /* ToolDesigner */ = {
 			isa = PBXGroup;
 			children = (
 				628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */,
 				627DA06F2BEEDB7B00FD957F /* ToolModuleDesigner.swift */,
 				62D52D702C37EA91009A3DC7 /* OperationCodesEditor.swift */,
 			);
-			path = ToolsDesigner;
+			path = ToolDesigner;
 			sourceTree = "<group>";
 		};
-		62988BD42BD046F900371AFE /* RobotsDesigner */ = {
+		62988BD42BD046F900371AFE /* RobotDesigner */ = {
 			isa = PBXGroup;
 			children = (
 				628E14572AD8ADCC00BC8FD9 /* RobotModulesView.swift */,
 				62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */,
 			);
-			path = RobotsDesigner;
+			path = RobotDesigner;
 			sourceTree = "<group>";
 		};
 		629AABC12BC855D200720386 /* STC */ = {
@@ -383,7 +383,7 @@
 				629B52682AF6887D003F45D2 /* SceneViewer */,
 				626872402BC1A3A6005F8B3C /* ListingViewer */,
 				62AE552C2AE707CF00554A5B /* KinematicBuilder */,
-				6255B9222B9D26AA002B575C /* ModulesDesigners */,
+				6255B9222B9D26AA002B575C /* ModuleDesigners */,
 				626450B92DC289A7001101A5 /* CodeBuilder */,
 			);
 			path = Utilites;

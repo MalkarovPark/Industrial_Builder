@@ -11,6 +11,105 @@ import IndustrialKitUI
 
 struct PartModulesView: View
 {
+    @EnvironmentObject var app_state: AppState
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    @State private var new_module_view_presented: Bool = false
+    
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
+    
+    var body: some View
+    {
+        NavigationStack
+        {
+            ScrollView(.vertical)
+            {
+                LazyVGrid(columns: columns, spacing: 24)
+                {
+                    ForEach(base_stc.part_modules)
+                    { module in
+                        PartModuleCard(module: module)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(20)
+            }
+            .animation(.spring(), value: base_stc.part_modules)
+        }
+        .toolbar
+        {
+            ToolbarItem(id: "Add Module", placement: .topBarTrailing)
+            {
+                Button(action: { new_module_view_presented = true })
+                {
+                    Label("Add Object", systemImage: "plus")
+                }
+                .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
+                {
+                    AddNewView(is_presented: $new_module_view_presented, names: base_stc.part_modules_names)
+                    { new_name in
+                        base_stc.part_modules.append(PartModule(new_name: new_name))
+                        document_handler.document_update_parts()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct PartModuleCard: View
+{
+    @ObservedObject var module: PartModule
+    
+    @State private var to_rename = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    var body: some View
+    {
+        NavigationLink(destination: PartModuleDesigner(part_module: module))
+        {
+            GlassBoxCard(
+                title: module.name,
+                symbol_name: "cube",
+                to_rename: $to_rename,
+                edited_name: $module.name,
+                on_rename:
+                    {
+                        document_handler.document_update_parts()
+                        to_rename = false
+                    }
+            )
+            .contextMenu
+            {
+                RenameButton()
+                    .renameAction
+                {
+                    withAnimation
+                    {
+                        to_rename = true
+                    }
+                }
+                
+                Button(role: .destructive, action: { delete_module(module) })
+                {
+                    Label("Delete", systemImage: "trash")
+                }
+            }
+        }
+    }
+    
+    private func delete_module(_ module: PartModule)
+    {
+        base_stc.part_modules.removeAll { $0 == module }
+        document_handler.document_update_parts()
+    }
+}
+
+/*struct PartModulesView2: View
+{
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
@@ -279,7 +378,7 @@ struct PartModulesView: View
         return horizontal_size_class != .compact
         #endif
     }
-}
+}*/
 
 #Preview
 {

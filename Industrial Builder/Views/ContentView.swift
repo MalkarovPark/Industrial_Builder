@@ -285,6 +285,11 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
     }
 }
 
+func numeral_endings(_ count: Int, word: String) -> String
+{
+    count == 1 ? "\(count) \(word)" : "\(count) \(word)s"
+}
+
 #Preview
 {
     ContentView(document: .constant(STCDocument()), document_url: nil)

@@ -19,10 +19,6 @@ struct InfoView: View
     
     var body: some View
     {
-        #if os(iOS)
-        Divider()
-        #endif
-        
         HStack(spacing: 0)
         {
             TextEditor(text: $base_stc.package_info.description)
@@ -45,9 +41,6 @@ struct InfoView: View
         }
         .ignoresSafeArea(.container, edges: .bottom)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        #if !os(macOS)
-        .toolbarBackground(.bar, for: .navigationBar)
-        #endif
     }
 }
 
