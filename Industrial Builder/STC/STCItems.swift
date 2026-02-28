@@ -38,6 +38,24 @@ public class EntityItem: Identifiable, Equatable, ObservableObject
         self.entity = entity
         
         self.source_url = source_url
+        
+        //import_entity(self.entity)
+    }
+    
+    public func import_entity(_ model_entity: Entity?)
+    {
+        guard let model_entity = model_entity else { return }
+        
+        model_entity.generateCollisionShapes(recursive: true)
+        /*model_entity.visit
+        { entity in
+            entity.components.set(entity_tag)
+        }*/
+        
+        //model_entity.components.set(InputTargetComponent())
+        
+        /*self.model_entity = model_entity
+        self.entity.addChild(model_entity)*/
     }
 }
 

@@ -27,7 +27,7 @@ struct ComponentsView: View
                     {
                         NavigationLink(destination: EntityListView())
                         {
-                            BoxCard(title: "Scenes", subtitle: numeral_endings(base_stc.entity_items.count, word: "item"), color: .green, symbol_name: "cube", symbol_size: 80)
+                            BoxCard(title: "Entities", subtitle: numeral_endings(base_stc.entity_items.count, word: "item"), color: .green, symbol_name: "cube", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)

@@ -23,23 +23,40 @@ struct PartModulesView: View
     {
         NavigationStack
         {
-            ScrollView(.vertical)
+            if base_stc.part_modules.count > 0
             {
-                LazyVGrid(columns: columns, spacing: 24)
+                ScrollView(.vertical)
                 {
-                    ForEach(base_stc.part_modules)
-                    { module in
-                        PartModuleCard(module: module)
+                    LazyVGrid(columns: columns, spacing: 24)
+                    {
+                        ForEach(base_stc.part_modules)
+                        { module in
+                            PartModuleCard(module: module)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
+                    .padding(20)
                 }
-                .padding(20)
+                .animation(.spring(), value: base_stc.part_modules)
             }
-            .animation(.spring(), value: base_stc.part_modules)
+            else
+            {
+                ContentUnavailableView
+                {
+                    Label("No part modules", systemImage: "shippingbox")
+                }
+                description:
+                {
+                    Text("""
+                         Press "+" to add new part module.
+                         """)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
         .toolbar
         {
-            ToolbarItem(id: "Add Module", placement: .topBarTrailing)
+            ToolbarItem(id: "Add Module", placement: trailing_placement)
             {
                 Button(action: { new_module_view_presented = true })
                 {
@@ -56,6 +73,12 @@ struct PartModulesView: View
             }
         }
     }
+    
+    #if os(macOS)
+    private var trailing_placement: ToolbarItemPlacement = .confirmationAction
+    #else
+    private var trailing_placement: ToolbarItemPlacement = .topBarTrailing
+    #endif
 }
 
 struct PartModuleCard: View

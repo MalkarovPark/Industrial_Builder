@@ -687,7 +687,7 @@ public class StandardTemplateConstruct: ObservableObject
             // Code folder store
             let code_url = try make_module_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
             
-            if as_internal
+            /*if as_internal
             {
                 if module is RobotModule || module is ToolModule || module is ChangerModule
                 {
@@ -697,7 +697,7 @@ public class StandardTemplateConstruct: ObservableObject
             else
             {
                 try code_files_store_external(code_items: module.code_items, to: code_url)
-            }
+            }*/
             
             // Resources folder store
             try make_resources_folder(url: module_url)
@@ -807,7 +807,7 @@ public class StandardTemplateConstruct: ObservableObject
         // Store internal code items to lisitngs
         func code_files_store_internal(code_items: [String: String], to code_url: URL) throws
         {
-            var updated_code_items = module.code_items
+            /*var updated_code_items = module.code_items
             
             // Inject parameters in code items
             if module is RobotModule || module is ToolModule
@@ -821,14 +821,14 @@ public class StandardTemplateConstruct: ObservableObject
                 result["\(module.name)_\(entry.key)"] = entry.value
             }
             
-            try code_files_store(code_items: updated_code_items, to: code_url)
+            try code_files_store(code_items: updated_code_items, to: code_url)*/
         }
         
         func inject_controller_parameters(code: inout String?, module: IndustrialModule) // Inject model controller parameters (nodes names) to internal code file
         {
             var nodes_names = String()
             
-            if let robot_module = module as? RobotModule
+            /*if let robot_module = module as? RobotModule
             {
                 nodes_names = robot_module.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
             }
@@ -836,7 +836,7 @@ public class StandardTemplateConstruct: ObservableObject
             if let tool_odule = module as? ToolModule
             {
                 nodes_names = tool_odule.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
-            }
+            }*/
             
             code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
         }
@@ -861,7 +861,7 @@ public class StandardTemplateConstruct: ObservableObject
         // Store external code items for subsequent compilation
         func code_files_store_external(code_items: [String: String], to code_url: URL) throws
         {
-            try code_files_store(code_items: module.code_items, to: code_url)
+            //try code_files_store(code_items: module.code_items, to: code_url)
         }
         
         // Resources store
@@ -907,7 +907,7 @@ public class StandardTemplateConstruct: ObservableObject
         // Origin Shift
         code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
         
-        // Components
+        /*// Components
         if !(module.code_items["Controller"]?.isEmpty ?? false)
         {
             code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
@@ -923,7 +923,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         // Connected nodes names
         let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)
+        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)*/
         
         return code
     }
@@ -937,7 +937,7 @@ public class StandardTemplateConstruct: ObservableObject
         code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
         
         // Components
-        if !(module.code_items["Controller"]?.isEmpty ?? false)
+        /*if !(module.code_items["Controller"]?.isEmpty ?? false)
         {
             code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
         }
@@ -945,7 +945,7 @@ public class StandardTemplateConstruct: ObservableObject
         if !(module.code_items["Connector"]?.isEmpty ?? false)
         {
             code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-        }
+        }*/
         
         // Main scene
         //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)

@@ -8,17 +8,18 @@
 import SwiftUI
 import IndustrialKit
 import IndustrialKitUI
+import RealityKit
 
 struct PartModuleDesigner: View
 {
+    @ObservedObject var part_module: PartModule
+    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @ObservedObject var part_module: PartModule
-    
     @State private var inspector_presented = false
     
-    @State private var editor_selection = 0
+    @State private var entity_selector_presented = false
     
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
@@ -26,38 +27,84 @@ struct PartModuleDesigner: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        ZStack
         {
-            EmptyView()
-            
-            /*switch editor_selection
+            if let entity_file_name = part_module.entity_file_name,
+               let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-            case 0:
-                TextEditor(text: $part_module.description)
-                    .textFieldStyle(.plain)
-            default:
-                EmptyView()
-                /*ResourcesPackageView(resources_names: $part_module.resources_names, main_scene_name: $part_module.main_scene_name)
+                ObjectView(entity: entity_file_item.entity)
+                    .overlay(alignment: .bottomLeading)
                 {
-                    document_handler.document_update_parts()
-                }*/
-            }*/
+                    HStack
+                    {
+                        Text(entity_file_name)
+                        
+                        Button("Select New...")
+                        {
+                            entity_selector_presented = true
+                        }
+                    }
+                    .padding(4)
+                    .glassEffect(.regular, in: .rect(cornerRadius: 10, style: .continuous))
+                    .padding(16)
+                }
+            }
+            else
+            {
+                VStack
+                {
+                    Text("No entity")
+                        .font(.title2)
+                    
+                    Button("Select...")
+                    {
+                        entity_selector_presented = true
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .animation(.spring(), value: part_module.entity_file_name != nil)
+        .onAppear
+        {
+            #if os(macOS) || os(visionOS)
+            inspector_presented = true
+            #else
+            if horizontal_size_class != .compact { inspector_presented = true }
+            #endif
+        }
+        .sheet(isPresented: $entity_selector_presented)
+        {
+            EntitySelectorView(is_presented: $entity_selector_presented)
+            { entity_file_name in
+                part_module.entity_file_name = entity_file_name
+                document_handler.document_update_parts()
+            }
         }
         .inspector(isPresented: $inspector_presented)
         {
             #if os(macOS) || os(visionOS)
-            InspectorView()//(object: base_workspace.selected_object ?? WorkspaceObject())
+            InspectorView(part_module: part_module)
+            {
+                document_handler.document_update_parts()
+            }
             #else
             if horizontal_size_class != .compact
             {
-                InspectorView()//(object: base_workspace.selected_object ?? WorkspaceObject())
+                InspectorView(part_module: part_module)
+                {
+                    document_handler.document_update_parts()
+                }
             }
             else
             {
-                InspectorView()//(object: base_workspace.selected_object ?? WorkspaceObject())
-                    .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
-                    .modifier(SheetCaption(is_presented: $inspector_presented, label: "Part"/*object_type_name*/))
+                InspectorView(part_module: part_module)
+                {
+                    document_handler.document_update_parts()
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .modifier(SheetCaption(is_presented: $inspector_presented, label: "Part"/*object_type_name*/))
             }
             #endif
         }
@@ -66,19 +113,6 @@ struct PartModuleDesigner: View
             #if !os(visionOS)
             ToolbarSpacer()
             #endif
-            
-            /*ToolbarItem
-            {
-                Picker(selection: $editor_selection, label: Text("Picker"))
-                {
-                    Text("Description").tag(0)
-                    Text("Resources").tag(1)
-                }
-                #if os(macOS)
-                .pickerStyle(.segmented)
-                #endif
-                .labelsHidden()
-            }*/
             
             ToolbarItem(id: "Inspector", placement: .confirmationAction)
             {
@@ -98,13 +132,203 @@ struct PartModuleDesigner: View
     }
 }
 
-struct InspectorView: View
+struct ObjectView: View
 {
+    let entity: Entity?
+    
+    @State private var preview_entity: Entity?
+    
+    @State private var is_pan = false
+    @State private var scene_content: RealityViewCameraContent?
+    @State private var scene_camera = PerspectiveCamera()
+    
+    @StateObject var workspace = Workspace()
+    @StateObject var preview_part = Part(name: "preview", entity: Entity())
+    
     var body: some View
     {
-        Text("Inspector")
+        ZStack
+        {
+            RealityView
+            { content in
+                scene_content = content
+                scene_content?.camera = .virtual
+                
+                workspace.place_entity(to: content)
+                workspace.add_part(preview_part)
+                
+                place_entity(entity)
+            }
+            .realityViewCameraControls(is_pan ? .pan : .orbit)
+            /*.highPriorityGesture(
+                TapGesture()
+                    .targetedToAnyEntity()
+                    .onEnded
+                    { value in
+                        workspace.process_tap(value: value)
+                    }
+            )*/
+            .gesture(
+                TapGesture()
+                    .onEnded
+                    {
+                        workspace.process_empty_tap()
+                    }
+            )
+            
+            //SpatialPendantView(controller: pendant_controller, workspace: workspace)
+                //.padding(10)
+        }
+        .onChange(of: entity)
+        { old_value, new_value in
+            update_entity(new_value)
+        }
+        .onDisappear
+        {
+            workspace.delete_part(name: "preview")
+            preview_entity = nil
+        }
+    }
+    
+    private func place_entity(_ new_entity: Entity?)
+    {
+        if let new_entity = new_entity?.clone(recursive: true)
+        {
+            preview_entity = new_entity
+            preview_part.model_entity?.addChild(new_entity)
+        }
+        
+        /*DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            //workspace.focus(on: preview_part.model_entity)
+            workspace.process_empty_tap()
+        }*/
+    }
+    
+    private func update_entity(_ new_entity: Entity?)
+    {
+        preview_entity?.removeFromParent()
+        
+        place_entity(new_entity)
+    }
+    
+    /*var body: some View
+    {
+        RealityView
+        { content in
+            scene_content = content
+            scene_content?.camera = .virtual
+            
+            place_entity()
+        }
+        .realityViewCameraControls(is_pan ? .pan : .orbit)
+        .onDisappear
+        {
+            preview_entity?.removeFromParent()
+            preview_entity = nil
+        }
+        .onChange(of: entity)
+        { _, new_value in
+            update_entity(new_value)
+        }
+    }
+    
+    private func place_entity()
+    {
+        // Duplicate entity
+        if preview_entity == nil, let entity = entity
+        {
+            preview_entity = entity.clone(recursive: true)
+        }
+        
+        if let preview_entity = preview_entity
+        {
+            scene_content?.add(preview_entity)
+            
+            // Camera reposition
+            let bounds = preview_entity.visualBounds(relativeTo: nil).extents
+            scene_camera.position = [0, bounds.y / 2, bounds.z * 2]
+            scene_content?.add(scene_camera)
+        }
+    }
+    
+    private func update_entity(_ new_entity: Entity?)
+    {
+        preview_entity?.removeFromParent()
+        preview_entity = nil
+        
+        guard let new_entity = new_entity else { return }
+        
+        scene_content?.add(new_entity)
+        
+        // Camera reposition
+        let bounds = new_entity.visualBounds(relativeTo: nil).extents
+        scene_camera.position = [0, bounds.y / 2, bounds.z * 2]
+    }*/
+}
+
+private struct InspectorView: View
+{
+    @ObservedObject var part_module: PartModule
+    
+    public let on_update: () -> ()
+    
+    @State private var description_expanded = true
+    
+    var body: some View
+    {
+        ScrollView
+        {
+            VStack(spacing: 0)
+            {
+                let name = Binding(
+                    get: { part_module.name },
+                    set:
+                        { new_value in
+                            part_module.name = new_value
+                            
+                            on_update()
+                        }
+                )
+                
+                TextField("None", text: name)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(10)
+                
+                Divider()
+                
+                DisclosureGroup(isExpanded: $description_expanded)
+                {
+                    let description = Binding(
+                        get: { part_module.description },
+                        set:
+                            { new_value in
+                                part_module.description = new_value
+                                
+                                on_update()
+                            }
+                    )
+                    
+                    TextEditor(text: description)
+                        .multilineTextAlignment(.leading)
+                        .textFieldStyle(.roundedBorder)
+                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        .frame(minHeight: 160)
+                }
+                label:
+                {
+                    Text("Description")
+                        .font(.system(size: 13, weight: .bold))
+                }
+                .padding(10)
+                
+                Divider()
+            }
+        }
     }
 }
+
+
 
 #Preview
 {

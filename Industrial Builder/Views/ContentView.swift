@@ -200,7 +200,7 @@ struct ComponentsSidebarGroup: View
     {
         NavigationLink(destination: EntityListView().modifier(WindowFramer()))
         {
-            Label("Scenes", systemImage: "cube")
+            Label("Entities", systemImage: "cube")
                 .badge(base_stc.entity_items.count)
         }
         

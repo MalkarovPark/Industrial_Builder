@@ -25,7 +25,7 @@ struct ChangerModuleDesigner: View
     {
         VStack(spacing: 0)
         {
-            switch editor_selection
+            /*switch editor_selection
             {
             case 0:
                 TextEditor(text: $changer_module.description)
@@ -37,7 +37,7 @@ struct ChangerModuleDesigner: View
                 {
                     document_handler.document_update_ima()
                 }
-            }
+            }*/
         }
         .toolbar
         {

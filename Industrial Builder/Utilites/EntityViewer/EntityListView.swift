@@ -12,7 +12,7 @@ import RealityKit
 import IndustrialKit
 import IndustrialKitUI
 
-// MARK: - ScenesListView
+// MARK: - EntityListView
 struct EntityListView: View
 {
     @EnvironmentObject var base_stc: StandardTemplateConstruct
@@ -52,7 +52,7 @@ struct EntityListView: View
             {
                 ContentUnavailableView
                 {
-                    Label("No Scenes", systemImage: "cube")
+                    Label("No Entities", systemImage: "cube")
                 }
             }
         }
@@ -72,11 +72,7 @@ struct EntityListView: View
             Task
             {
                 let urls = await extract_urls(from: providers)
-                
-                for url in urls
-                {
-                    await handle_file_sequential(url: url)
-                }
+                await load_scenes(from: urls)
             }
             
             return true
@@ -89,8 +85,22 @@ struct EntityListView: View
             }
             .fileImporter(isPresented: $load_panel_presented,
                           allowedContentTypes: [.usdz, .realityFile],
-                          allowsMultipleSelection: true,
-                          onCompletion: import_scenes)
+                          allowsMultipleSelection: true)
+            { result in
+                
+                switch result
+                {
+                case .success(let urls):
+                    
+                    Task
+                    {
+                        await load_scenes(from: urls)
+                    }
+                    
+                case .failure(let error):
+                    print("Import error:", error.localizedDescription)
+                }
+            }
         }
     }
     
@@ -154,6 +164,19 @@ struct EntityListView: View
         }
     }
     
+    private func load_scenes(from urls: [URL]) async
+    {
+        for url in urls
+        {
+            await handle_file_sequential(url: url)
+        }
+        
+        await MainActor.run
+        {
+            document_handler.document_update_scenes()
+        }
+    }
+    
     private func handle_file_sequential(url: URL) async
     {
         guard url.startAccessingSecurityScopedResource() else { return }
@@ -173,46 +196,6 @@ struct EntityListView: View
                 base_stc.entity_items.append(item)
                 document_handler.document_update_scenes()
             }
-        }
-        catch
-        {
-            print(error.localizedDescription)
-        }
-    }
-    
-    // MARK: - Handle single file
-    private func handle_file(url: URL)
-    {
-        Task
-        {
-            guard url.startAccessingSecurityScopedResource() else { return }
-            defer { url.stopAccessingSecurityScopedResource() }
-            
-            do
-            {
-                let entity = try await Entity(contentsOf: url)
-                let item = EntityItem(name: url.lastPathComponent, entity: entity, source_url: url)
-                
-                await MainActor.run
-                {
-                    base_stc.entity_items.append(item)
-                    document_handler.document_update_scenes()
-                }
-            }
-            catch
-            {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    // MARK: - Handle fileImporter result
-    private func import_scenes(_ res: Result<[URL], Error>)
-    {
-        do
-        {
-            let urls = try res.get()
-            for url in urls { handle_file(url: url) }
         }
         catch
         {
