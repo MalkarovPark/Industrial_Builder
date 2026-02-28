@@ -20,6 +20,7 @@ struct PartModuleDesigner: View
     @State private var inspector_presented = false
     
     @State private var entity_selector_presented = false
+    @State private var is_pan = false
     
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
@@ -32,28 +33,13 @@ struct PartModuleDesigner: View
             if let entity_file_name = part_module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-                ObjectView(entity: entity_file_item.entity)
-                    .overlay(alignment: .bottomLeading)
-                {
-                    HStack
-                    {
-                        Text(entity_file_name)
-                        
-                        Button("Select New...")
-                        {
-                            entity_selector_presented = true
-                        }
-                    }
-                    .padding(4)
-                    .glassEffect(.regular, in: .rect(cornerRadius: 10, style: .continuous))
-                    .padding(16)
-                }
+                ObjectView(entity: entity_file_item.entity, is_pan: $is_pan)
             }
             else
             {
                 VStack
                 {
-                    Text("No entity")
+                    Text("No Entity")
                         .font(.title2)
                     
                     Button("Select...")
@@ -84,7 +70,7 @@ struct PartModuleDesigner: View
         .inspector(isPresented: $inspector_presented)
         {
             #if os(macOS) || os(visionOS)
-            InspectorView(part_module: part_module)
+            InspectorView(part_module: part_module, entity_selector_presented: $entity_selector_presented)
             {
                 document_handler.document_update_parts()
             }
@@ -114,6 +100,16 @@ struct PartModuleDesigner: View
             ToolbarSpacer()
             #endif
             
+            ToolbarItem(id: "View", placement: .confirmationAction)
+            {
+                Button(action: { is_pan.toggle() })
+                {
+                    Label("View", systemImage: is_pan ? "move.3d" : "rotate.3d")
+                        .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                        .animation(.easeInOut(duration: 0.3), value: is_pan)
+                }
+            }
+            
             ToolbarItem(id: "Inspector", placement: .confirmationAction)
             {
                 ControlGroup
@@ -138,7 +134,8 @@ struct ObjectView: View
     
     @State private var preview_entity: Entity?
     
-    @State private var is_pan = false
+    //@State private var is_pan = false
+    @Binding var is_pan: Bool
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
     
@@ -160,19 +157,11 @@ struct ObjectView: View
                 place_entity(entity)
             }
             .realityViewCameraControls(is_pan ? .pan : .orbit)
-            /*.highPriorityGesture(
-                TapGesture()
-                    .targetedToAnyEntity()
-                    .onEnded
-                    { value in
-                        workspace.process_tap(value: value)
-                    }
-            )*/
             .gesture(
                 TapGesture()
                     .onEnded
                     {
-                        workspace.process_empty_tap()
+                        workspace.focus(on: preview_part.model_entity)
                     }
             )
             
@@ -198,11 +187,10 @@ struct ObjectView: View
             preview_part.model_entity?.addChild(new_entity)
         }
         
-        /*DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
-            //workspace.focus(on: preview_part.model_entity)
-            workspace.process_empty_tap()
-        }*/
+            workspace.focus(on: preview_part.model_entity)
+        }
     }
     
     private func update_entity(_ new_entity: Entity?)
@@ -271,9 +259,12 @@ private struct InspectorView: View
 {
     @ObservedObject var part_module: PartModule
     
+    @Binding var entity_selector_presented: Bool
+    
     public let on_update: () -> ()
     
     @State private var description_expanded = true
+    @State private var entity_expanded = true
     
     var body: some View
     {
@@ -313,11 +304,58 @@ private struct InspectorView: View
                         .multilineTextAlignment(.leading)
                         .textFieldStyle(.roundedBorder)
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                        .frame(minHeight: 160)
+                        .frame(minHeight: 80)
                 }
                 label:
                 {
                     Text("Description")
+                        .font(.system(size: 13, weight: .bold))
+                }
+                .padding(10)
+                
+                Divider()
+                
+                DisclosureGroup(isExpanded: $entity_expanded)
+                {
+                    HStack
+                    {
+                        if let entity_file_name = part_module.entity_file_name
+                        {
+                            Text(entity_file_name)
+                                .frame(maxWidth: .infinity)
+                            
+                            Button
+                            {
+                                part_module.entity_file_name = nil
+                                on_update()
+                            }
+                            label:
+                            {
+                                Image(systemName: "xmark.circle.fill")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        else
+                        {
+                            Text("None")
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity)
+                        }
+                        
+                        Button
+                        {
+                            entity_selector_presented = true
+                        }
+                        label:
+                        {
+                            Image(systemName: "arrowshape.right.circle.fill")
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                label:
+                {
+                    Text("Entity")
                         .font(.system(size: 13, weight: .bold))
                 }
                 .padding(10)

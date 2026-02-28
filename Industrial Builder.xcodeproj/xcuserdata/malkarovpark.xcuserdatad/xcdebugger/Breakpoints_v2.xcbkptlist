@@ -1022,8 +1022,8 @@
             filePath = "Industrial Builder/Utilites/ModuleDesigners/PartDesigner/PartModuleDesigner.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
             landmarkName = "place_entity(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1038,8 +1038,8 @@
             filePath = "Industrial Builder/Utilites/ModuleDesigners/PartDesigner/PartModuleDesigner.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
             landmarkName = "place_entity(_:)"
             landmarkType = "7">
          </BreakpointContent>

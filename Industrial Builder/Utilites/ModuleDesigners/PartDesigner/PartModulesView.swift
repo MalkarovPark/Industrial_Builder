@@ -94,32 +94,54 @@ struct PartModuleCard: View
     {
         NavigationLink(destination: PartModuleDesigner(part_module: module))
         {
-            GlassBoxCard(
-                title: module.name,
-                symbol_name: "cube",
-                to_rename: $to_rename,
-                edited_name: $module.name,
-                on_rename:
-                    {
-                        document_handler.document_update_parts()
-                        to_rename = false
-                    }
-            )
-            .contextMenu
+            if let entity_file_name = module.entity_file_name,
+               let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-                RenameButton()
-                    .renameAction
+                GlassBoxCard(
+                    title: module.name,
+                    entity: entity_file_item.entity,
+                    vertical_repostion: true,
+                    to_rename: $to_rename,
+                    edited_name: $module.name,
+                    on_rename:
+                        {
+                            document_handler.document_update_parts()
+                            to_rename = false
+                        }
+                )
+            }
+            else
+            {
+                GlassBoxCard(
+                    title: module.name,
+                    symbol_name: "shippingbox",
+                    symbol_size: 64,
+                    symbol_weight: .regular,
+                    to_rename: $to_rename,
+                    edited_name: $module.name,
+                    on_rename:
+                        {
+                            document_handler.document_update_parts()
+                            to_rename = false
+                        }
+                )
+            }
+        }
+        .frame(height: 192)
+        .contextMenu
+        {
+            RenameButton()
+                .renameAction
+            {
+                withAnimation
                 {
-                    withAnimation
-                    {
-                        to_rename = true
-                    }
+                    to_rename = true
                 }
-                
-                Button(role: .destructive, action: { delete_module(module) })
-                {
-                    Label("Delete", systemImage: "trash")
-                }
+            }
+            
+            Button(role: .destructive, action: { delete_module(module) })
+            {
+                Label("Delete", systemImage: "trash")
             }
         }
     }
