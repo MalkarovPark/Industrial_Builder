@@ -12,7 +12,7 @@ import RealityKit
 
 struct PartModuleDesigner: View
 {
-    @ObservedObject var part_module: PartModule
+    @ObservedObject var module: PartModule
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -30,7 +30,7 @@ struct PartModuleDesigner: View
     {
         ZStack
         {
-            if let entity_file_name = part_module.entity_file_name,
+            if let entity_file_name = module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
                 ObjectView(entity: entity_file_item.entity, is_pan: $is_pan)
@@ -50,7 +50,7 @@ struct PartModuleDesigner: View
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .animation(.spring(), value: part_module.entity_file_name != nil)
+        .animation(.spring(), value: module.entity_file_name != nil)
         .onAppear
         {
             #if os(macOS) || os(visionOS)
@@ -63,28 +63,28 @@ struct PartModuleDesigner: View
         {
             EntitySelectorView(is_presented: $entity_selector_presented)
             { entity_file_name in
-                part_module.entity_file_name = entity_file_name
+                module.entity_file_name = entity_file_name
                 document_handler.document_update_parts()
             }
         }
         .inspector(isPresented: $inspector_presented)
         {
             #if os(macOS) || os(visionOS)
-            InspectorView(part_module: part_module, entity_selector_presented: $entity_selector_presented)
+            PartInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
             {
                 document_handler.document_update_parts()
             }
             #else
             if horizontal_size_class != .compact
             {
-                InspectorView(part_module: part_module)
+                InspectorView(module: module)
                 {
                     document_handler.document_update_parts()
                 }
             }
             else
             {
-                InspectorView(part_module: part_module)
+                InspectorView(module: module)
                 {
                     document_handler.document_update_parts()
                 }
@@ -100,7 +100,7 @@ struct PartModuleDesigner: View
             ToolbarSpacer()
             #endif
             
-            ToolbarItem(id: "View", placement: .confirmationAction)
+            ToolbarItem(placement: .confirmationAction)
             {
                 Button(action: { is_pan.toggle() })
                 {
@@ -110,7 +110,7 @@ struct PartModuleDesigner: View
                 }
             }
             
-            ToolbarItem(id: "Inspector", placement: .confirmationAction)
+            ToolbarItem(placement: .confirmationAction)
             {
                 ControlGroup
                 {
@@ -255,121 +255,10 @@ struct ObjectView: View
     }*/
 }
 
-private struct InspectorView: View
-{
-    @ObservedObject var part_module: PartModule
-    
-    @Binding var entity_selector_presented: Bool
-    
-    public let on_update: () -> ()
-    
-    @State private var description_expanded = true
-    @State private var entity_expanded = true
-    
-    var body: some View
-    {
-        ScrollView
-        {
-            VStack(spacing: 0)
-            {
-                let name = Binding(
-                    get: { part_module.name },
-                    set:
-                        { new_value in
-                            part_module.name = new_value
-                            
-                            on_update()
-                        }
-                )
-                
-                TextField("None", text: name)
-                    .textFieldStyle(.roundedBorder)
-                    .padding(10)
-                
-                Divider()
-                
-                DisclosureGroup(isExpanded: $description_expanded)
-                {
-                    let description = Binding(
-                        get: { part_module.description },
-                        set:
-                            { new_value in
-                                part_module.description = new_value
-                                
-                                on_update()
-                            }
-                    )
-                    
-                    TextEditor(text: description)
-                        .multilineTextAlignment(.leading)
-                        .textFieldStyle(.roundedBorder)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                        .frame(minHeight: 80)
-                }
-                label:
-                {
-                    Text("Description")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
-                
-                Divider()
-                
-                DisclosureGroup(isExpanded: $entity_expanded)
-                {
-                    HStack
-                    {
-                        if let entity_file_name = part_module.entity_file_name
-                        {
-                            Text(entity_file_name)
-                                .frame(maxWidth: .infinity)
-                            
-                            Button
-                            {
-                                part_module.entity_file_name = nil
-                                on_update()
-                            }
-                            label:
-                            {
-                                Image(systemName: "xmark.circle.fill")
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        else
-                        {
-                            Text("None")
-                                .foregroundStyle(.secondary)
-                                .frame(maxWidth: .infinity)
-                        }
-                        
-                        Button
-                        {
-                            entity_selector_presented = true
-                        }
-                        label:
-                        {
-                            Image(systemName: "arrowshape.right.circle.fill")
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                label:
-                {
-                    Text("Entity")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
-                
-                Divider()
-            }
-        }
-    }
-}
-
 
 
 #Preview
 {
-    PartModuleDesigner(part_module: PartModule())
+    PartModuleDesigner(module: PartModule())
         .environmentObject(StandardTemplateConstruct())
 }

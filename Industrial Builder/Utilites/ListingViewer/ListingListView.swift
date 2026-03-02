@@ -16,7 +16,7 @@ struct ListingListView: View
     
     @State private var is_targeted = false
     
-    @State private var new_panel_presented = false
+    @State private var new_code_view_presented = false
     @State private var new_listing_name = ""
     
     @State private var load_panel_presented = false
@@ -77,17 +77,17 @@ struct ListingListView: View
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar
         {
-            Button(action: { new_panel_presented.toggle() })
+            Button(action: { new_code_view_presented.toggle() })
             {
                 Image(systemName: "plus")
             }
             #if os(visionOS)
             .buttonBorderShape(.circle)
             #endif
-            .sheet(isPresented: $new_panel_presented)
+            .sheet(isPresented: $new_code_view_presented)
             {
                 #if os(macOS)
-                CodeBuilderView(is_presented: $new_panel_presented, avaliable_templates_names: all_code_templates)
+                CodeBuilderView(is_presented: $new_code_view_presented, avaliable_templates_names: all_code_templates)
                 { output in
                     if new_listing_name.isEmpty
                     {
@@ -115,7 +115,7 @@ struct ListingListView: View
                     }
                 }
                 #else
-                CodeBuilderView(is_presented: $new_panel_presented,
+                CodeBuilderView(is_presented: $new_code_view_presented,
                                 avaliable_templates_names: all_code_templates,
                                 bottom_view:
                                     TextField("Name", text: $new_listing_name)

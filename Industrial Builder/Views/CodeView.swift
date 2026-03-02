@@ -11,8 +11,9 @@ import CodeEditorView
 #endif
 import LanguageSupport
 
-struct CodeView: View
+public struct CodeView: View
 {
+    let language: LanguageConfiguration
     @Binding var text: String
     
     #if !os(visionOS)
@@ -25,12 +26,20 @@ struct CodeView: View
     
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
     
-    //@AppStorage("CodePlainTextRepresentation") private var code_plain_text_representation: Bool = false
+    public init
+    (
+        text: Binding<String>,
+        language: LanguageConfiguration = .swift()
+    )
+    {
+        self._text = text
+        self.language = language
+    }
     
-    var body: some View
+    public var body: some View
     {
         #if !os(visionOS)
-        CodeEditor(text: $text, position: $position, messages: $messages, language: .swift())
+        CodeEditor(text: $text, position: $position, messages: $messages, language: language)
             .environment(\.codeEditorTheme, colorScheme == .dark ? Theme.defaultDark : Theme.defaultLight)
             .environment(\.codeEditorLayoutConfiguration,
                           CodeEditor.LayoutConfiguration(showMinimap: show_minimap, wrapText: wrap_text))

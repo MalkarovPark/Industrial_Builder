@@ -15,269 +15,121 @@ struct ChangerModulesView: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var new_module_view_presented: Bool = false
-    @State private var selection: ChangerModule.ID?
-    @State private var rename_item: ChangerModule.ID?
-    @State private var new_name = ""
     
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
-    
-    @State private var picker_in_rename: Bool = false
-    #endif
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
     {
-        VStack(spacing: 0)
+        NavigationStack
         {
-            #if os(iOS)
-            Divider()
-            #endif
-            
-            HStack(spacing: 0)
+            if base_stc.changer_modules.count > 0
             {
-                #if !os(macOS)
-                Divider()
-                    .hidden()
-                #endif
-                
-                if sidebar_enabled
+                ScrollView(.vertical)
                 {
-                    // MARK: - List View
-                    List(selection: $selection)
+                    LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach($base_stc.changer_modules)
-                        { $item in
-                            HStack
-                            {
-                                if rename_item == item.id
-                                {
-                                    TextField("None", text: $new_name)
-                                        .onSubmit
-                                    {
-                                        item.name = new_name
-                                        document_handler.document_update_ima()
-                                        rename_item = nil
-                                        new_name = "None"
-                                    }
-                                }
-                                else
-                                {
-                                    Text(item.name)
-                                }
-                                Spacer()
-                            }
-                            .listRowSeparator(.hidden)
-                            .contentShape(Rectangle())
-                            .contextMenu
-                            {
-                                Button
-                                {
-                                    rename_item = item.id
-                                    new_name = item.name
-                                }
-                                label:
-                                {
-                                    Label("Rename", systemImage: "pencil")
-                                }
-                                Button(role: .destructive)
-                                {
-                                    if let index = base_stc.changer_modules.firstIndex(where: { $0.id == item.id })
-                                    {
-                                        base_stc.changer_modules.remove(at: index)
-                                    }
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                            .swipeActions
-                            {
-                                Button(role: .destructive)
-                                {
-                                    if let index = base_stc.changer_modules.firstIndex(where: { $0.id == item.id })
-                                    {
-                                        base_stc.changer_modules.remove(at: index)
-                                    }
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                            #if os(visionOS)
-                            .listRowBackground(selection == item.id ? Color.accentColor.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)) : Color.clear.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
-                            #endif
+                        ForEach(base_stc.changer_modules)
+                        { module in
+                            ChangerModuleCard(module: module)
                         }
+                        .buttonStyle(.plain)
                     }
-                    #if os(macOS)
-                    .frame(maxWidth: 128)
-                    #elseif os(iOS)
-                    .frame(maxWidth: 192)
-                    #elseif os(visionOS)
-                    .frame(maxWidth: 256)
-                    .background(.thinMaterial)
-                    #endif
-                    .listStyle(.plain)
+                    .padding(20)
                 }
-                
-                #if !os(visionOS)
-                Divider()
-                #if !os(macOS)
-                    .ignoresSafeArea(.container, edges: .bottom)
-                #endif
-                #endif
-                
-                // MARK: - Detail View
-                if let selected_item_id = selection, let selected_module_index = base_stc.changer_modules.firstIndex(where: { $0.id == selected_item_id })
+                .animation(.spring(), value: base_stc.changer_modules)
+            }
+            else
+            {
+                ContentUnavailableView
                 {
-                    ChangerModuleDesigner(changer_module: $base_stc.changer_modules[selected_module_index])
+                    Label("No changer modules", systemImage: "wand.and.rays")
                 }
-                else
+                description:
                 {
-                    ContentUnavailableView
-                    {
-                        Label("No module selected", systemImage: "wand.and.rays")
-                    }
-                    description:
-                    {
-                        Text("Select an existing changer module to edit.")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    Text("""
+                         Press "+" to add new changer module.
+                         """)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .onChange(of: base_stc.changer_modules)
-        { _, _ in
-            document_handler.document_update_ima()
-        }
-        #if os(iOS)
-        .onAppear
-        {
-            if horizontal_size_class == .compact && base_stc.changer_modules.count > 0
-            {
-                selection = base_stc.changer_modules.first?.id
-            }
-        }
-        .onChange(of: horizontal_size_class)
-        { _, new_value in
-            if new_value == .compact && base_stc.changer_modules.count > 0 && selection == nil
-            {
-                selection = base_stc.changer_modules.first?.id
-            }
-            
-            if new_value != .compact
-            {
-                picker_in_rename = false
-            }
-        }
-        #endif
         .toolbar
         {
-            ToolbarItem
+            ToolbarItem(id: "Add Module", placement: trailing_placement)
             {
                 Button(action: { new_module_view_presented = true })
                 {
-                    Image(systemName: "plus")
+                    Label("Add Object", systemImage: "plus")
                 }
-                #if os(visionOS)
-                .buttonBorderShape(.circle)
-                #endif
                 .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
                 {
                     AddNewView(is_presented: $new_module_view_presented, names: base_stc.changer_modules_names)
                     { new_name in
                         base_stc.changer_modules.append(ChangerModule(new_name: new_name))
-                        selection = base_stc.changer_modules.last?.id
+                        document_handler.document_update_ima()
                     }
+                }
+            }
+        }
+    }
+    
+    #if os(macOS)
+    private var trailing_placement: ToolbarItemPlacement = .confirmationAction
+    #else
+    private var trailing_placement: ToolbarItemPlacement = .topBarTrailing
+    #endif
+}
+
+struct ChangerModuleCard: View
+{
+    @ObservedObject var module: ChangerModule
+    
+    @State private var to_rename = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    var body: some View
+    {
+        NavigationLink(destination: ChangerModuleDesigner(module: module))
+        {
+            GlassBoxCard(
+                title: module.name,
+                symbol_name: "wand.and.rays",
+                symbol_size: 64,
+                symbol_weight: .regular,
+                to_rename: $to_rename,
+                edited_name: $module.name,
+                on_rename:
+                    {
+                        document_handler.document_update_ima()
+                        to_rename = false
+                    }
+            )
+        }
+        .frame(height: 192)
+        .contextMenu
+        {
+            RenameButton()
+                .renameAction
+            {
+                withAnimation
+                {
+                    to_rename = true
                 }
             }
             
-            #if os(iOS)
-            if horizontal_size_class == .compact && base_stc.changer_modules.count > 0
+            Button(role: .destructive, action: { delete_module(module) })
             {
-                ToolbarItem(placement: .bottomBar)
-                {
-                    HStack
-                    {
-                        if picker_in_rename
-                        {
-                            TextField("None", text: $new_name)
-                                .onSubmit
-                            {
-                                if let selected_module_index = base_stc.changer_modules.firstIndex(where: { $0.id == selection })
-                                {
-                                    base_stc.changer_modules[selected_module_index].name = new_name
-                                }
-                                
-                                document_handler.document_update_ima()
-                                picker_in_rename = false
-                                new_name = "None"
-                            }
-                        }
-                        else
-                        {
-                            Picker(selection: $selection, label: Text("Picker"))
-                            {
-                                ForEach($base_stc.changer_modules)
-                                { $item in
-                                    Text(item.name)
-                                        .tag(item.id)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .labelsHidden()
-                        }
-                        
-                        Button
-                        {
-                            picker_in_rename = true
-                            if let selected_module_index = base_stc.changer_modules.firstIndex(where: { $0.id == selection })
-                            {
-                                new_name = base_stc.changer_modules[selected_module_index].name
-                            }
-                        }
-                        label:
-                        {
-                            Label("Rename", systemImage: "pencil")
-                        }
-                        
-                        Button(role: .destructive)
-                        {
-                            if let index = base_stc.changer_modules.firstIndex(where: { $0.id == selection })
-                            {
-                                base_stc.changer_modules.remove(at: index)
-                                
-                                if base_stc.changer_modules.count > 0
-                                {
-                                    selection = base_stc.changer_modules.first?.id
-                                }
-                            }
-                        }
-                        label:
-                        {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        .disabled(picker_in_rename)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
+                Label("Delete", systemImage: "trash")
             }
-            #endif
         }
-        #if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.bar, for: .navigationBar)
-        #endif
     }
     
-    private var sidebar_enabled: Bool
+    private func delete_module(_ module: ChangerModule)
     {
-        #if !os(iOS)
-        return true
-        #else
-        return horizontal_size_class != .compact
-        #endif
+        base_stc.changer_modules.removeAll { $0 == module }
+        document_handler.document_update_ima()
     }
 }
 
