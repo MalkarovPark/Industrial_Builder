@@ -1153,7 +1153,7 @@ public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
     case blank = "Blank"
     case clipboard = "Clipboard"
     
-    var image_name: String
+    var symbol_name: String
     {
         switch self
         {

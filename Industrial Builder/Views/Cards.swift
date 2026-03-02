@@ -25,47 +25,54 @@ struct ImageCard<Content: View>: View
     
     var body: some View
     {
-        ZStack
+        Button { is_presented.toggle() }
+        label:
         {
-            #if os(macOS)
-            Image(nsImage: image_item.image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            ZStack
+            {
+                #if os(macOS)
+                Image(nsImage: image_item.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .overlay(alignment: .bottomTrailing)
+                    {
+                        Text(image_item.name)
+                            .padding(8)
+                            .background
+                            {
+                                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                    .foregroundStyle(.thinMaterial)
+                            }
+                            .padding(8)
+                    }
+                #else
+                Image(uiImage: image_item.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .onTapGesture
+                {
+                    is_presented.toggle()
+                }
                 .overlay(alignment: .bottomTrailing)
-            {
-                Text(image_item.name)
-                    .padding(8)
-                    .background
                 {
-                    Rectangle()
-                        .foregroundStyle(.thinMaterial)
+                    Text(image_item.name)
+                        .padding(8)
+                        .background
+                        {
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .foregroundStyle(.thinMaterial)
+                        }
+                        .padding(8)
                 }
+                #endif
             }
-            #else
-            Image(uiImage: image_item.image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .onTapGesture
-            {
-                is_presented.toggle()
-            }
-            .overlay(alignment: .bottomTrailing)
-            {
-                Text(image_item.name)
-                    .padding(8)
-                    .background
-                {
-                    Rectangle()
-                        .foregroundStyle(.thinMaterial)
-                }
-            }
-            #endif
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .offset(y: hovered ? -2 : 0)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-        .offset(y: hovered ? -2 : 0)
+        .buttonStyle(.plain)
         .background
         {
-            Rectangle()
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .blur(radius: 16)
                 .opacity(0.2)
         }
@@ -76,10 +83,6 @@ struct ImageCard<Content: View>: View
             {
                 self.hovered = hovered
             }
-        }
-        .onTapGesture
-        {
-            is_presented.toggle()
         }
         .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
         .contextMenu
@@ -160,35 +163,46 @@ struct ListingCard<Content: View>: View
     
     var body: some View
     {
-        ZStack
+        Button { is_presented.toggle() }
+        label:
         {
-            Rectangle()
-            #if !os(visionOS)
-                .foregroundStyle(.white)
-            #else
-                .foregroundStyle(.black.opacity(0.25))
-            #endif
-                .overlay(alignment: .topLeading)
+            ZStack
             {
-                Text(listing_item.text)
-            }
-            .overlay(alignment: .bottomTrailing)
-            {
-                Text(listing_item.name)
-                    .padding(8)
-                    .background
+                Rectangle()
+                #if !os(visionOS)
+                    .foregroundStyle(.white)
+                #else
+                    .foregroundStyle(.black.opacity(0.25))
+                #endif
+                    .overlay(alignment: .topLeading)
                 {
-                    Rectangle()
-                        .foregroundStyle(.thinMaterial)
+                    Text(listing_item.text)
+                    #if os(macOS)
+                        .font(.custom("Menlo", size: 10))
+                    #else
+                        .font(.custom("Menlo", size: 14))
+                    #endif
+                        .foregroundStyle(.secondary)
+                }
+                .overlay(alignment: .bottomTrailing)
+                {
+                    Text(listing_item.name)
+                        .padding(8)
+                        .background
+                        {
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .foregroundStyle(.thinMaterial)
+                        }
+                        .padding(8)
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .offset(y: hovered ? -2 : 0)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-        .offset(y: hovered ? -2 : 0)
+        .buttonStyle(.plain)
         .background
         {
-            Rectangle()
-                .foregroundStyle(.black)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .blur(radius: 16)
                 .opacity(0.2)
         }
@@ -199,10 +213,6 @@ struct ListingCard<Content: View>: View
             {
                 self.hovered = hovered
             }
-        }
-        .onTapGesture
-        {
-            is_presented.toggle()
         }
         .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
         .contextMenu

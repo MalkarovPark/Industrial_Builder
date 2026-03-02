@@ -238,8 +238,8 @@
             filePath = "Industrial Builder/Views/Cards.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "delete_image()"
             landmarkType = "7">
          </BreakpointContent>

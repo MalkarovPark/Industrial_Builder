@@ -87,7 +87,7 @@ struct ListingListView: View
             .sheet(isPresented: $new_code_view_presented)
             {
                 #if os(macOS)
-                CodeBuilderView(is_presented: $new_code_view_presented, avaliable_templates_names: all_code_templates)
+                CodeSelectorView(is_presented: $new_code_view_presented, avaliable_template_names: all_code_templates)
                 { output in
                     if new_listing_name.isEmpty
                     {
@@ -115,7 +115,7 @@ struct ListingListView: View
                     }
                 }
                 #else
-                CodeBuilderView(is_presented: $new_code_view_presented,
+                CodeSelectorView(is_presented: $new_code_view_presented,
                                 avaliable_templates_names: all_code_templates,
                                 bottom_view:
                                     TextField("Name", text: $new_listing_name)

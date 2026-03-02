@@ -70,25 +70,10 @@ struct CodeEditorView: View
             .padding(10)
             .sheet(isPresented: $new_code_view_presented)
             {
-                #if os(macOS)
-                CodeBuilderView(is_presented: $new_code_view_presented, avaliable_templates_names: all_code_templates)
+                CodeSelectorView(is_presented: $new_code_view_presented, avaliable_template_names: all_code_templates)
                 { output in
                     text = output
                 }
-                #else
-                CodeBuilderView(is_presented: $new_code_view_presented,
-                                avaliable_templates_names: all_code_templates,
-                                bottom_view:
-                                    TextField("Name", text: $new_listing_name)
-                                        .padding(.trailing)
-                                        .frame(minWidth: 128, maxWidth: 256)
-                                        .frame(idealWidth: 256)
-                                        .textFieldStyle(.roundedBorder)
-                )
-                { output in
-                    code = output
-                }
-                #endif
             }
             
             CodeView(text: $text, language: .javascript())
