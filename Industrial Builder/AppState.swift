@@ -33,46 +33,6 @@ class AppState : ObservableObject
     public var object_view_was_open = false // Flag for provide model controller for model in scene
     
     @Published var view_update_state = false // Flag for update parts view grid
-    
-    // MARK: - Kinematic view functions
-    /*@Published var kinematic_preview_robot = Robot()
-    
-    public func prepare_robot(_ kinematic: KinematicGroup, scene: SCNScene)
-    {
-        // Build design robot
-        kinematic_preview_robot = kinematic.type.design_robot
-        
-        // Connect workcell box and pointer
-        kinematic_preview_robot.workcell_connect(scene: scene, name: "unit", connect_camera: false)
-        kinematic_preview_robot.origin_position = (x: 100, y: 100, z: 100, r: 0, p: 0, w: 0)
-        
-        update_robot_kinematic(kinematic.data)
-        
-        kinematic_preview_robot.position = (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0)
-    }
-    
-    public func update_robot_kinematic(_ elements: [KinematicElement])
-    {
-        var lengths = [Float]()
-        for element in elements
-        {
-            lengths.append(element.value)
-        }
-        
-        guard let controller = kinematic_preview_robot.model_controller as? DesignerRobotModelController
-        else
-        {
-            return
-        }
-        
-        controller.transform_by_lengths(lengths)
-        kinematic_preview_robot.update()
-        kinematic_preview_robot.robot_location_place()
-    }
-    
-    @Published var make_model_from_kinematic = true
-    @Published var make_controller_from_kinematic = true
-    @Published var kinematic_module_type_selection = 0*/
 }
 
 // MARK: - Service Functions

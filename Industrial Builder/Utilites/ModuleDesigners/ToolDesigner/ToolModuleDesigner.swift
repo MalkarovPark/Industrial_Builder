@@ -10,17 +10,15 @@ import IndustrialKit
 
 struct ToolModuleDesigner: View
 {
+    @ObservedObject var module: ToolModule
+    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var tool_module: ToolModule
+    @State private var inspector_presented = false
     
-    @State private var editor_selection = 0
-    
-    @State private var resources_names_update = false
-    
-    @State private var connection_parameters_view_presented: Bool = false
-    @State private var linked_components_view_presented: Bool = false
+    @State private var entity_selector_presented = false
+    @State private var is_pan = false
     
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
@@ -28,34 +26,71 @@ struct ToolModuleDesigner: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        ZStack
         {
-            switch editor_selection
+            if let entity_file_name = module.entity_file_name,
+               let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-            case 0:
-                TextEditor(text: $tool_module.description)
-                    .textFieldStyle(.plain)
-            case 1:
-                OperationCodesEditor(tool_operations: $tool_module.codes)
-                {
-                    document_handler.document_update_tools()
-                }
-            case 2:
-                CodeEditorView(code_items: $tool_module.code_items, avaliable_templates_names: [
-                    "Controller": ["Internal Tool Controller", "External Tool Controller"],
-                    "Connector": ["Internal Tool Connector", "External Tool Connector"]
-                ], model_name: tool_module.name)
-                {
-                    document_handler.document_update_tools()
-                }
-            case 3:
-                ResourcesPackageView(resources_names: $tool_module.resources_names, main_scene_name: $tool_module.main_scene_name, nodes_names: $tool_module.nodes_names)
-                {
-                    document_handler.document_update_tools()
-                }
-            default:
-                EmptyView()
+                ObjectView(entity: entity_file_item.entity, is_pan: $is_pan)
             }
+            else
+            {
+                VStack
+                {
+                    Text("No Entity")
+                        .font(.title2)
+                    
+                    Button("Select...")
+                    {
+                        entity_selector_presented = true
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .animation(.spring(), value: module.entity_file_name != nil)
+        .onAppear
+        {
+            #if os(macOS) || os(visionOS)
+            inspector_presented = true
+            #else
+            if horizontal_size_class != .compact { inspector_presented = true }
+            #endif
+        }
+        .sheet(isPresented: $entity_selector_presented)
+        {
+            EntitySelectorView(is_presented: $entity_selector_presented)
+            { entity_file_name in
+                module.entity_file_name = entity_file_name
+                document_handler.document_update_tools()
+            }
+        }
+        .inspector(isPresented: $inspector_presented)
+        {
+            #if os(macOS) || os(visionOS)
+            ToolInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
+            {
+                document_handler.document_update_tools()
+            }
+            #else
+            if horizontal_size_class != .compact
+            {
+                InspectorView(module: module)
+                {
+                    document_handler.document_update_tools()
+                }
+            }
+            else
+            {
+                InspectorView(module: module)
+                {
+                    document_handler.document_update_tools()
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .modifier(SheetCaption(is_presented: $inspector_presented, label: "Tool"/*object_type_name*/))
+            }
+            #endif
         }
         .toolbar
         {
@@ -63,51 +98,28 @@ struct ToolModuleDesigner: View
             ToolbarSpacer()
             #endif
             
-            ToolbarItem
-            {                
-                Picker(selection: $editor_selection, label: Text("Picker"))
+            ToolbarItem(placement: .confirmationAction)
+            {
+                Button(action: { is_pan.toggle() })
                 {
-                    Text("Description").tag(0)
-                    Text("Operations").tag(1)
-                    Text("Code").tag(2)
-                    Text("Resources").tag(3)
+                    Label("View", systemImage: is_pan ? "move.3d" : "rotate.3d")
+                        .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                        .animation(.easeInOut(duration: 0.3), value: is_pan)
                 }
-                #if os(macOS)
-                .pickerStyle(.segmented)
-                #endif
-                .labelsHidden()
+                .disabled(module.entity_file_name == nil)
             }
             
-            #if !os(visionOS)
-            ToolbarSpacer()
-            #endif
-            
-            ToolbarItem
+            ToolbarItem(placement: .confirmationAction)
             {
-                Button(action: { connection_parameters_view_presented.toggle() })
+                ControlGroup
                 {
-                    Label("Link Parameters", systemImage: "link")
-                }
-                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .top)
-                {
-                    ConnectionParametersView(connection_parameters: $tool_module.connection_parameters)
+                    Button(action: { inspector_presented.toggle() })
                     {
-                        document_handler.document_update_tools()
-                    }
-                }
-            }
-            
-            ToolbarItem
-            {
-                Button(action: { linked_components_view_presented.toggle() })
-                {
-                    Label("Internal Components", systemImage: "list.triangle")
-                }
-                .popover(isPresented: $linked_components_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    LinkedComponentsView(linked_components: $tool_module.linked_components)
-                    {
-                        document_handler.document_update_tools()
+                        #if os(macOS)
+                        Label("Inspector", systemImage: "sidebar.right")
+                        #else
+                        Image(systemName: horizontal_size_class != .compact ? "sidebar.right" : "inset.filled.bottomthird.rectangle.portrait")
+                        #endif
                     }
                 }
             }
@@ -117,6 +129,6 @@ struct ToolModuleDesigner: View
 
 #Preview
 {
-    ToolModuleDesigner(tool_module: .constant(ToolModule()))
+    ToolModuleDesigner(module: ToolModule())
         .environmentObject(StandardTemplateConstruct())
 }

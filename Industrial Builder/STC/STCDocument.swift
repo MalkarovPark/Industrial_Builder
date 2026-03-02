@@ -160,8 +160,6 @@ struct STCDocument: FileDocument
                     {
                         switch file_wrapper.filename
                         {
-                        case "KinematicGroups":
-                            kinematics_process(file_wrapper)
                         case "Resources":
                             resources_process(file_wrapper)
                         case "Code":
@@ -170,20 +168,6 @@ struct STCDocument: FileDocument
                             break
                         }
                     }
-                }
-                
-                func kinematics_process(_ wrapper: FileWrapper)
-                {
-                    /*if let file_wrappers = wrapper.fileWrappers
-                    {
-                        for (_, file_wrapper) in file_wrappers
-                        {
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".json")
-                            {
-                                kinematic_groups.append(json_decode(file_wrapper, type: KinematicGroup.self) ?? KinematicGroup())
-                            }
-                        }
-                    }*/
                 }
                 
                 func resources_process(_ wrapper: FileWrapper)

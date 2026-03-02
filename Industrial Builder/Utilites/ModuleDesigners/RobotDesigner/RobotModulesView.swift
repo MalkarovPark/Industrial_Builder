@@ -15,269 +15,140 @@ struct RobotModulesView: View
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     @State private var new_module_view_presented: Bool = false
-    @State private var selection: RobotModule.ID?
-    @State private var rename_item: RobotModule.ID?
-    @State private var new_name = ""
     
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
-    
-    @State private var picker_in_rename: Bool = false
-    #endif
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
     var body: some View
     {
-        VStack(spacing: 0)
+        NavigationStack
         {
-            #if os(iOS)
-            Divider()
-            #endif
-            
-            HStack(spacing: 0)
+            if base_stc.robot_modules.count > 0
             {
-                #if !os(macOS)
-                Divider()
-                    .hidden()
-                #endif
-                
-                if sidebar_enabled
+                ScrollView(.vertical)
                 {
-                    // MARK: - List View
-                    List(selection: $selection)
+                    LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach($base_stc.robot_modules)
-                        { $item in
-                            HStack
-                            {
-                                if rename_item == item.id
-                                {
-                                    TextField("None", text: $new_name)
-                                        .onSubmit
-                                    {
-                                        item.name = new_name
-                                        document_handler.document_update_robots()
-                                        rename_item = nil
-                                        new_name = "None"
-                                    }
-                                }
-                                else
-                                {
-                                    Text(item.name)
-                                }
-                                Spacer()
-                            }
-                            .listRowSeparator(.hidden)
-                            .contentShape(Rectangle())
-                            .contextMenu
-                            {
-                                Button
-                                {
-                                    rename_item = item.id
-                                    new_name = item.name
-                                }
-                                label:
-                                {
-                                    Label("Rename", systemImage: "pencil")
-                                }
-                                Button(role: .destructive)
-                                {
-                                    if let index = base_stc.robot_modules.firstIndex(where: { $0.id == item.id })
-                                    {
-                                        base_stc.robot_modules.remove(at: index)
-                                    }
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                            .swipeActions
-                            {
-                                Button(role: .destructive)
-                                {
-                                    if let index = base_stc.robot_modules.firstIndex(where: { $0.id == item.id })
-                                    {
-                                        base_stc.robot_modules.remove(at: index)
-                                    }
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                            #if os(visionOS)
-                            .listRowBackground(selection == item.id ? Color.accentColor.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)) : Color.clear.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous)))
-                            #endif
+                        ForEach(base_stc.robot_modules)
+                        { module in
+                            RobotModuleCard(module: module)
                         }
+                        .buttonStyle(.plain)
                     }
-                    #if os(macOS)
-                    .frame(maxWidth: 128)
-                    #elseif os(iOS)
-                    .frame(maxWidth: 192)
-                    #elseif os(visionOS)
-                    .frame(maxWidth: 256)
-                    .background(.thinMaterial)
-                    #endif
-                    .listStyle(.plain)
+                    .padding(20)
                 }
-                
-                #if !os(visionOS)
-                Divider()
-                #if !os(macOS)
-                    .ignoresSafeArea(.container, edges: .bottom)
-                #endif
-                #endif
-                
-                // MARK: - Detail View
-                if let selected_item_id = selection, let selected_module_index = base_stc.robot_modules.firstIndex(where: { $0.id == selected_item_id })
+                .animation(.spring(), value: base_stc.robot_modules)
+            }
+            else
+            {
+                ContentUnavailableView
                 {
-                    RobotModuleDesigner(robot_module: $base_stc.robot_modules[selected_module_index])
+                    Label("No robot modules", systemImage: "r.square")
                 }
-                else
+                description:
                 {
-                    ContentUnavailableView
-                    {
-                        Label("No module selected", systemImage: "r.square")
-                    }
-                    description:
-                    {
-                        Text("Select an existing robot module to edit.")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    Text("""
+                         Press "+" to add new robot module.
+                         """)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .onChange(of: base_stc.robot_modules)
-        { _, _ in
-            document_handler.document_update_robots()
-        }
-        #if os(iOS)
-        .onAppear
-        {
-            if horizontal_size_class == .compact && base_stc.robot_modules.count > 0
-            {
-                selection = base_stc.robot_modules.first?.id
-            }
-        }
-        .onChange(of: horizontal_size_class)
-        { _, new_value in
-            if new_value == .compact && base_stc.robot_modules.count > 0 && selection == nil
-            {
-                selection = base_stc.robot_modules.first?.id
-            }
-            
-            if new_value != .compact
-            {
-                picker_in_rename = false
-            }
-        }
-        #endif
         .toolbar
         {
-            ToolbarItem
+            ToolbarItem(id: "Add Module", placement: trailing_placement)
             {
                 Button(action: { new_module_view_presented = true })
                 {
-                    Image(systemName: "plus")
+                    Label("Add Object", systemImage: "plus")
                 }
-                #if os(visionOS)
-                .buttonBorderShape(.circle)
-                #endif
                 .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
                 {
                     AddNewView(is_presented: $new_module_view_presented, names: base_stc.robot_modules_names)
                     { new_name in
                         base_stc.robot_modules.append(RobotModule(new_name: new_name))
-                        selection = base_stc.robot_modules.last?.id
+                        document_handler.document_update_robots()
                     }
+                }
+            }
+        }
+    }
+    
+    #if os(macOS)
+    private var trailing_placement: ToolbarItemPlacement = .confirmationAction
+    #else
+    private var trailing_placement: ToolbarItemPlacement = .topBarTrailing
+    #endif
+}
+
+struct RobotModuleCard: View
+{
+    @ObservedObject var module: RobotModule
+    
+    @State private var to_rename = false
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    var body: some View
+    {
+        NavigationLink(destination: RobotModuleDesigner(module: module))
+        {
+            if let entity_file_name = module.entity_file_name,
+               let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
+            {
+                GlassBoxCard(
+                    title: module.name,
+                    entity: entity_file_item.entity,
+                    vertical_repostion: true,
+                    to_rename: $to_rename,
+                    edited_name: $module.name,
+                    on_rename:
+                        {
+                            document_handler.document_update_robots()
+                            to_rename = false
+                        }
+                )
+            }
+            else
+            {
+                GlassBoxCard(
+                    title: module.name,
+                    symbol_name: "r.square",
+                    symbol_size: 64,
+                    symbol_weight: .regular,
+                    to_rename: $to_rename,
+                    edited_name: $module.name,
+                    on_rename:
+                        {
+                            document_handler.document_update_robots()
+                            to_rename = false
+                        }
+                )
+            }
+        }
+        .frame(height: 192)
+        .contextMenu
+        {
+            RenameButton()
+                .renameAction
+            {
+                withAnimation
+                {
+                    to_rename = true
                 }
             }
             
-            #if os(iOS)
-            if horizontal_size_class == .compact && base_stc.robot_modules.count > 0
+            Button(role: .destructive, action: { delete_module(module) })
             {
-                ToolbarItem(placement: .bottomBar)
-                {
-                    HStack
-                    {
-                        if picker_in_rename
-                        {
-                            TextField("None", text: $new_name)
-                                .onSubmit
-                            {
-                                if let selected_module_index = base_stc.robot_modules.firstIndex(where: { $0.id == selection })
-                                {
-                                    base_stc.robot_modules[selected_module_index].name = new_name
-                                }
-                                
-                                document_handler.document_update_robots()
-                                picker_in_rename = false
-                                new_name = "None"
-                            }
-                        }
-                        else
-                        {
-                            Picker(selection: $selection, label: Text("Picker"))
-                            {
-                                ForEach($base_stc.robot_modules)
-                                { $item in
-                                    Text(item.name)
-                                        .tag(item.id)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .labelsHidden()
-                        }
-                        
-                        Button
-                        {
-                            picker_in_rename = true
-                            if let selected_module_index = base_stc.robot_modules.firstIndex(where: { $0.id == selection })
-                            {
-                                new_name = base_stc.robot_modules[selected_module_index].name
-                            }
-                        }
-                        label:
-                        {
-                            Label("Rename", systemImage: "pencil")
-                        }
-                        
-                        Button(role: .destructive)
-                        {
-                            if let index = base_stc.robot_modules.firstIndex(where: { $0.id == selection })
-                            {
-                                base_stc.robot_modules.remove(at: index)
-                                
-                                if base_stc.robot_modules.count > 0
-                                {
-                                    selection = base_stc.robot_modules.first?.id
-                                }
-                            }
-                        }
-                        label:
-                        {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        .disabled(picker_in_rename)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
+                Label("Delete", systemImage: "trash")
             }
-            #endif
         }
-        #if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.bar, for: .navigationBar)
-        #endif
     }
     
-    private var sidebar_enabled: Bool
+    private func delete_module(_ module: RobotModule)
     {
-        #if !os(iOS)
-        return true
-        #else
-        return horizontal_size_class != .compact
-        #endif
+        base_stc.robot_modules.removeAll { $0 == module }
+        document_handler.document_update_robots()
     }
 }
 

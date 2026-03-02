@@ -10,18 +10,15 @@ import IndustrialKit
 
 struct RobotModuleDesigner: View
 {
+    @ObservedObject var module: RobotModule
+    
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @Binding var robot_module: RobotModule
+    @State private var inspector_presented = false
     
-    @State private var editor_selection = 0
-    
-    @State private var resources_names_update = false
-    
-    @State private var origin_shift_view_presented: Bool = false
-    @State private var connection_parameters_view_presented: Bool = false
-    @State private var linked_components_view_presented: Bool = false
+    @State private var entity_selector_presented = false
+    @State private var is_pan = false
     
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
@@ -29,29 +26,71 @@ struct RobotModuleDesigner: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        ZStack
         {
-            switch editor_selection
+            if let entity_file_name = module.entity_file_name,
+               let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-            case 0:
-                TextEditor(text: $robot_module.description)
-                    .textFieldStyle(.plain)
-            case 1:
-                CodeEditorView(code_items: $robot_module.code_items, avaliable_templates_names: [
-                    "Controller": ["Internal Robot Controller", "External Robot Controller"],
-                    "Connector": ["Internal Robot Connector", "External Robot Connector"]
-                ], model_name: robot_module.name)
-                {
-                    document_handler.document_update_tools()
-                }
-            case 2:
-                ResourcesPackageView(resources_names: $robot_module.resources_names, main_scene_name: $robot_module.main_scene_name, nodes_names: $robot_module.nodes_names)
-                {
-                    document_handler.document_update_tools()
-                }
-            default:
-                EmptyView()
+                ObjectView(entity: entity_file_item.entity, is_pan: $is_pan)
             }
+            else
+            {
+                VStack
+                {
+                    Text("No Entity")
+                        .font(.title2)
+                    
+                    Button("Select...")
+                    {
+                        entity_selector_presented = true
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .animation(.spring(), value: module.entity_file_name != nil)
+        .onAppear
+        {
+            #if os(macOS) || os(visionOS)
+            inspector_presented = true
+            #else
+            if horizontal_size_class != .compact { inspector_presented = true }
+            #endif
+        }
+        .sheet(isPresented: $entity_selector_presented)
+        {
+            EntitySelectorView(is_presented: $entity_selector_presented)
+            { entity_file_name in
+                module.entity_file_name = entity_file_name
+                document_handler.document_update_robots()
+            }
+        }
+        .inspector(isPresented: $inspector_presented)
+        {
+            #if os(macOS) || os(visionOS)
+            RobotInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
+            {
+                document_handler.document_update_robots()
+            }
+            #else
+            if horizontal_size_class != .compact
+            {
+                InspectorView(module: module)
+                {
+                    document_handler.document_update_robots()
+                }
+            }
+            else
+            {
+                InspectorView(module: module)
+                {
+                    document_handler.document_update_robots()
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .modifier(SheetCaption(is_presented: $inspector_presented, label: "Robot"/*object_type_name*/))
+            }
+            #endif
         }
         .toolbar
         {
@@ -59,74 +98,28 @@ struct RobotModuleDesigner: View
             ToolbarSpacer()
             #endif
             
-            ToolbarItem
+            ToolbarItem(placement: .confirmationAction)
             {
-                Picker(selection: $editor_selection, label: Text("Picker"))
+                Button(action: { is_pan.toggle() })
                 {
-                    Text("Description").tag(0)
-                    Text("Code").tag(1)
-                    Text("Resources").tag(2)
+                    Label("View", systemImage: is_pan ? "move.3d" : "rotate.3d")
+                        .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                        .animation(.easeInOut(duration: 0.3), value: is_pan)
                 }
-                #if os(macOS)
-                .pickerStyle(.segmented)
-                #endif
-                .labelsHidden()
+                .disabled(module.entity_file_name == nil)
             }
             
-            #if !os(visionOS)
-            ToolbarSpacer()
-            #endif
-            
-            ToolbarItem
+            ToolbarItem(placement: .confirmationAction)
             {
-                Button(action: { connection_parameters_view_presented.toggle() })
+                ControlGroup
                 {
-                    Label("Link Parameters", systemImage: "link")
-                }
-                .popover(isPresented: $connection_parameters_view_presented, arrowEdge: .top)
-                {
-                    ConnectionParametersView(connection_parameters: $robot_module.connection_parameters)
+                    Button(action: { inspector_presented.toggle() })
                     {
-                        document_handler.document_update_robots()
-                    }
-                }
-            }
-            
-            ToolbarItem
-            {
-                Button(action: { origin_shift_view_presented.toggle() })
-                {
-                    Label("Origin Shift", systemImage: "scale.3d")
-                }
-                .popover(isPresented: $origin_shift_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    VStack(spacing: 12)
-                    {
-                        Text("Origin Shift")
-                            .padding(.bottom, 4)
-                        
-                        OriginShiftView(shift: $robot_module.origin_shift)
-                        {
-                            document_handler.document_update_robots()
-                        }
-                    }
-                    .controlSize(.regular)
-                    .frame(minWidth: 160)
-                    .padding()
-                }
-            }
-            
-            ToolbarItem
-            {
-                Button(action: { linked_components_view_presented.toggle() })
-                {
-                    Label("Internal Components", systemImage: "list.triangle")
-                }
-                .popover(isPresented: $linked_components_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    LinkedComponentsView(linked_components: $robot_module.linked_components)
-                    {
-                        document_handler.document_update_robots()
+                        #if os(macOS)
+                        Label("Inspector", systemImage: "sidebar.right")
+                        #else
+                        Image(systemName: horizontal_size_class != .compact ? "sidebar.right" : "inset.filled.bottomthird.rectangle.portrait")
+                        #endif
                     }
                 }
             }
@@ -136,5 +129,6 @@ struct RobotModuleDesigner: View
 
 #Preview
 {
-    RobotModuleDesigner(robot_module: .constant(RobotModule()))
+    RobotModuleDesigner(module: RobotModule())
+        .environmentObject(StandardTemplateConstruct())
 }

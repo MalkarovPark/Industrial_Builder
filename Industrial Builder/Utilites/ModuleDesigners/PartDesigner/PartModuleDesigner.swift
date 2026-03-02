@@ -108,6 +108,7 @@ struct PartModuleDesigner: View
                         .contentTransition(.symbolEffect(.replace.offUp.byLayer))
                         .animation(.easeInOut(duration: 0.3), value: is_pan)
                 }
+                .disabled(module.entity_file_name == nil)
             }
             
             ToolbarItem(placement: .confirmationAction)

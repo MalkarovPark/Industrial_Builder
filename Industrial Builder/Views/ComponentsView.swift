@@ -45,13 +45,6 @@ struct ComponentsView: View
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
-                        
-                        /*NavigationLink(destination: KinematicsListView())
-                        {
-                            BoxCard(title: "Kinematics", subtitle: numeral_endings(base_stc.kinematic_groups.count, word: "item"), color: .purple, symbol_name: "point.3.connected.trianglepath.dotted", symbol_size: 80)
-                        }
-                        .buttonStyle(.plain)
-                        .frame(height: 128)*/
                     }
                     .padding(20)
                 }
