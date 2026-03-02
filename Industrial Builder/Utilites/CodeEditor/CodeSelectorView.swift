@@ -76,7 +76,8 @@ struct CodeSelectorView: View
                                 { name in
                                     CodeTileView(
                                         name: name,
-                                        symbol_name: "curlybraces"
+                                        text: import_text_data(from: name)
+                                        //symbol_name: "curlybraces"
                                     )
                                     {
                                         on_tap(process_template(name: name, type: .template))

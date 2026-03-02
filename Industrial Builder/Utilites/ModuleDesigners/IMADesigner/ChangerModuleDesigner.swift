@@ -36,7 +36,7 @@ struct ChangerModuleDesigner: View
             {
                 ZStack
                 {
-                    ChangerModuleControl(module: module)
+                    ChangerModuleControl(module: module, registers: $registers)
                     {
                         document_handler.document_update_ima()
                     }

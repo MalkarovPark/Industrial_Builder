@@ -13,6 +13,8 @@ public struct ChangerModuleControl: View
 {
     @ObservedObject var module: ChangerModule
     
+    @Binding var registers: [Float]
+    
     public let on_update: () -> ()
     
     @State private var is_expanded = false
@@ -23,12 +25,16 @@ public struct ChangerModuleControl: View
     @State private var code_editor_presented = false
     @State private var new_code_view_presented = false
     
+    @State private var process_error: Error?
+    
     public init(
         module: ChangerModule,
+        registers: Binding<[Float]>,
         on_update: @escaping () -> ()
     )
     {
         self.module = module
+        self._registers = registers
         self.on_update = on_update
     }
     
@@ -57,6 +63,24 @@ public struct ChangerModuleControl: View
                     }
                     .background(.clear)
                     .frame(width: 120)
+                    .overlay(alignment: .topTrailing)
+                    {
+                        if process_error != nil
+                        {
+                            Image(systemName: "circle.fill")
+                                .foregroundStyle(.red)
+                            #if os(macOS)
+                                .font(.system(size: 8))
+                            #else
+                                .font(.system(size: 10))
+                            #endif
+                            #if os(macOS)
+                                .padding(8)
+                            #else
+                                .padding(10)
+                            #endif
+                        }
+                    }
                     .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16, style: .continuous))
                     .matchedGeometryEffect(id: "glass", in: pane_glass)
                     .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -78,7 +102,7 @@ public struct ChangerModuleControl: View
                         }
                     }
                     .transition(.opacity.combined(with: .scale(scale: 1.0)))
-                    .help("Info")
+                    .help("Changer – \(module.name)")
                 }
                 else
                 {
@@ -120,6 +144,58 @@ public struct ChangerModuleControl: View
                                 CodeView(text: code, language: .javascript())
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                            .overlay(alignment: .bottomLeading)
+                            {
+                                if let error = process_error
+                                {
+                                    Button
+                                    {
+                                        process_error = nil
+                                    }
+                                    label:
+                                    {
+                                        //Label(error.localizedDescription, systemImage: "xmark.octagon.fill")
+                                        ZStack
+                                        {
+                                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                                .foregroundStyle(.thinMaterial)
+                                            
+                                            VStack(alignment: .leading)
+                                            {
+                                                Label("Error", systemImage: "xmark.octagon.fill")
+                                                
+                                                ScrollView
+                                                {
+                                                    Text(error.localizedDescription)
+                                                        .multilineTextAlignment(.leading)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                        .lineLimit(nil)
+                                                    #if os(macOS)
+                                                        .font(.system(size: 10))
+                                                    #else
+                                                        .font(.system(size: 14))
+                                                    #endif
+                                                        .foregroundStyle(.secondary)
+                                                }
+                                            }
+                                            .padding(8)
+                                        }
+                                    }
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .frame(
+                                        maxHeight: {
+                                            #if os(macOS)
+                                            80
+                                            #else
+                                            96
+                                            #endif
+                                        }(),
+                                        alignment: .bottom
+                                    )
+                                    .buttonStyle(.plain)
+                                    .padding(8)
+                                }
+                            }
                             
                             Button("Import...", action: { new_code_view_presented = true })
                             #if os(iOS)
@@ -145,7 +221,7 @@ public struct ChangerModuleControl: View
             
             Button
             {
-                //workspace.start_pause_single_element()
+                process_changer()
             }
             label:
             {
@@ -197,6 +273,59 @@ public struct ChangerModuleControl: View
                 on_update()
             }
             #endif
+        }
+    }
+    
+    private func process_changer()
+    {
+        process_error = nil
+        
+        let changer_element = Changer(module: module)
+        let registers_count = registers.count
+        
+        do
+        {
+            try changer_element.change(&registers)
+            check_registers(registers_count)
+        }
+        catch
+        {
+            check_registers(registers_count)
+            process_error = error
+        }
+        
+        func check_registers(_ reference_count: Int)
+        {
+            if registers.count != reference_count
+            {
+                registers = updated_registers(registers, reference_count)
+            }
+        }
+        
+        func updated_registers(_ registers: [Float], _ new_count: Int) -> [Float]
+        {
+            if registers.count > 0
+            {
+                var updated_registers = [Float](repeating: 0, count: new_count)
+                
+                for (index, value) in registers.enumerated()
+                {
+                    if index < updated_registers.count
+                    {
+                        updated_registers[safe: index] = Float(value)
+                    }
+                    else
+                    {
+                        break
+                    }
+                }
+                
+                return updated_registers
+            }
+            else
+            {
+                return registers
+            }
         }
     }
 }
