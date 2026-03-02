@@ -13,7 +13,9 @@ struct CodeEditorView: View
 {
     @Binding var is_presented: Bool
     
-    @Binding var code: String
+    @Binding var text: String
+    
+    let label: String
     
     @State private var new_code_view_presented = false
     
@@ -71,7 +73,7 @@ struct CodeEditorView: View
                 #if os(macOS)
                 CodeBuilderView(is_presented: $new_code_view_presented, avaliable_templates_names: all_code_templates)
                 { output in
-                    code = output
+                    text = output
                 }
                 #else
                 CodeBuilderView(is_presented: $new_code_view_presented,
@@ -89,9 +91,9 @@ struct CodeEditorView: View
                 #endif
             }
             
-            CodeView(text: $code, language: .javascript())
+            CodeView(text: $text, language: .javascript())
         }
-        .modifier(SheetCaption(is_presented: $is_presented, label: "Changer Func", plain: false, clear_background: true))
+        .modifier(SheetCaption(is_presented: $is_presented, label: label, plain: false, clear_background: true))
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #else
         if horizontal_size_class != .compact
@@ -119,5 +121,5 @@ struct CodeEditorView: View
 #Preview
 {
     @Previewable @State var code = "print(output)"
-    CodeEditorView(is_presented: .constant(true), code: $code)
+    CodeEditorView(is_presented: .constant(true), text: $code, label: "Code")
 }

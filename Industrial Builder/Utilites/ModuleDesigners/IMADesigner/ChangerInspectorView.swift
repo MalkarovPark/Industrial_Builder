@@ -37,7 +37,7 @@ struct ChangerInspectorView: View
                         }
                 )
                 
-                let code = Binding(
+                /*let code = Binding(
                     get: { module.changer_function_code },
                     set:
                         { new_value in
@@ -45,7 +45,7 @@ struct ChangerInspectorView: View
                             
                             on_update()
                         }
-                )
+                )*/
                 
                 TextField("None", text: name)
                     .textFieldStyle(.roundedBorder)
@@ -80,7 +80,7 @@ struct ChangerInspectorView: View
                 
                 Divider()
                 
-                DisclosureGroup(isExpanded: $code_expanded)
+                /*DisclosureGroup(isExpanded: $code_expanded)
                 {
                     ZStack
                     {
@@ -132,7 +132,7 @@ struct ChangerInspectorView: View
                     }
                     .sheet(isPresented: $code_editor_presented)
                     {
-                        CodeEditorView(is_presented: $code_editor_presented, code: code)
+                        CodeEditorView(is_presented: $code_editor_presented, code: code, label: "Changer Function")
                     }
                 }
                 label:
@@ -142,7 +142,7 @@ struct ChangerInspectorView: View
                 }
                 .padding(10)
                 
-                Divider()
+                Divider()*/
             }
         }
     }

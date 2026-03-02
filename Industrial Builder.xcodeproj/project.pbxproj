@@ -223,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				62CA56CC2F550B1C0040CB77 /* JSConfiguration.swift */,
-				6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */,
 				6225786F2C24A9940023004E /* ResourcesPackageView.swift */,
 				62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */,
 				628E72122CCC15FA00E71E7F /* LinkedComponentsView.swift */,
@@ -238,6 +237,7 @@
 		626450B92DC289A7001101A5 /* CodeBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				6261B1F12C02692A00FECFF0 /* CodeEditorView.swift */,
 				620AA44B2CDF92C9008C2918 /* CodeBuilderView.swift */,
 			);
 			path = CodeBuilder;
