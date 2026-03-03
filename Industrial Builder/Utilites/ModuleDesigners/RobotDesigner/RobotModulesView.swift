@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import RealityKit
+
 import IndustrialKit
 import IndustrialKitUI
 
@@ -85,20 +87,22 @@ struct RobotModuleCard: View
     @ObservedObject var module: RobotModule
     
     @State private var to_rename = false
+    @State private var preview_entity: Entity?
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    @State private var view_id = UUID()
+    
     var body: some View
     {
-        NavigationLink(destination: RobotModuleDesigner(module: module))
+        NavigationLink(destination: RobotModuleDesigner(module: module).onDisappear(perform: reset_card))
         {
-            if let entity_file_name = module.entity_file_name,
-               let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
+            if preview_entity != nil
             {
                 GlassBoxCard(
                     title: module.name,
-                    entity: entity_file_item.entity,
+                    entity: preview_entity,
                     vertical_repostion: true,
                     to_rename: $to_rename,
                     edited_name: $module.name,
@@ -126,29 +130,35 @@ struct RobotModuleCard: View
                 )
             }
         }
+        .id(view_id)
         .frame(height: 192)
-        .contextMenu
+        .onAppear
         {
-            RenameButton()
-                .renameAction
-            {
-                withAnimation
-                {
-                    to_rename = true
-                }
-            }
-            
-            Button(role: .destructive, action: { delete_module(module) })
-            {
-                Label("Delete", systemImage: "trash")
-            }
+            load_entity()
+        }
+        .onDisappear
+        {
+            preview_entity = nil
         }
     }
     
-    private func delete_module(_ module: RobotModule)
+    private func load_entity()
     {
-        base_stc.robot_modules.removeAll { $0 == module }
-        document_handler.document_update_robots()
+        if let entity_file_name = module.entity_file_name,
+           let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
+        {
+            preview_entity = entity_file_item.entity.clone(recursive: true)
+        }
+        else
+        {
+            preview_entity = nil
+        }
+    }
+    
+    private func reset_card()
+    {
+        view_id = UUID()
+        load_entity()
     }
 }
 

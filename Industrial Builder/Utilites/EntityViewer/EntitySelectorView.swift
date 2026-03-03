@@ -44,7 +44,7 @@ struct EntitySelectorView: View
                         { item in
                             GlassBoxCard(
                                 title: item.name,
-                                entity: item.entity,
+                                entity: item.entity.clone(recursive: true),
                                 vertical_repostion: true,
                             )
                             .frame(height: card_height)

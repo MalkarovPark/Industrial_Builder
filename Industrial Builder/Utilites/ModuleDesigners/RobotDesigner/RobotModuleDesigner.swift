@@ -31,7 +31,7 @@ struct RobotModuleDesigner: View
             if let entity_file_name = module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-                ObjectView(entity: entity_file_item.entity, is_pan: $is_pan)
+                RobotModelView(entity: entity_file_item.entity, is_pan: $is_pan)
             }
             else
             {

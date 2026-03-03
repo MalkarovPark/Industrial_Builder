@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
 import RealityKit
 
 import IndustrialKit

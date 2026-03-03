@@ -6,10 +6,11 @@
 //
 
 import Foundation
-import IndustrialKit
 #if !os(macOS)
 import UIKit
 #endif
+
+import IndustrialKit
 
 public struct STCPackageInfo: Codable
 {

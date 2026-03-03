@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+
 import IndustrialKit
 
 class DocumentUpdateHandler: ObservableObject

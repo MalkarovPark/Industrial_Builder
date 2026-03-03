@@ -7,10 +7,11 @@
 
 import Foundation
 import RealityKit
-import IndustrialKit
 #if !os(macOS)
 import UIKit
 #endif
+
+import IndustrialKit
 
 // MARK: - Scene item wrapper
 public class EntityItem: Identifiable, Equatable, ObservableObject
@@ -35,7 +36,7 @@ public class EntityItem: Identifiable, Equatable, ObservableObject
     )
     {
         self.name = name
-        self.entity = entity
+        self.entity = entity.clone(recursive: true)
         
         self.source_url = source_url
         
