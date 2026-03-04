@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IndustrialKit
+import RealityKit
 
 struct RobotInspectorView: View
 {
@@ -16,10 +17,8 @@ struct RobotInspectorView: View
     
     public let on_update: () -> ()
     
-    @State private var description_expanded = true
-    @State private var entity_expanded = true
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @State private var kinematic_code_expanded = true
     @State private var kinematic_code_editor_presented = false
     
     var body: some View
@@ -54,7 +53,7 @@ struct RobotInspectorView: View
                 
                 Divider()
                 
-                DisclosureGroup(isExpanded: $description_expanded)
+                InspectorItem(label: "Description", is_expanded: true)
                 {
                     let description = Binding(
                         get: { module.description },
@@ -72,18 +71,10 @@ struct RobotInspectorView: View
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .frame(minHeight: 80)
                 }
-                label:
-                {
-                    Text("Description")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
                 
-                Divider()
-                
-                DisclosureGroup(isExpanded: $entity_expanded)
+                InspectorItem(label: "Entity", is_expanded: true)
                 {
-                    HStack
+                    HStack(spacing: 4)
                     {
                         if let entity_file_name = module.entity_file_name
                         {
@@ -100,6 +91,16 @@ struct RobotInspectorView: View
                                 Image(systemName: "xmark.circle.fill")
                             }
                             .buttonStyle(.plain)
+                            
+                            Button
+                            {
+                                entity_selector_presented = true
+                            }
+                            label:
+                            {
+                                Image(systemName: "arrowshape.right.circle.fill")
+                            }
+                            .buttonStyle(.plain)
                         }
                         else
                         {
@@ -107,28 +108,10 @@ struct RobotInspectorView: View
                                 .foregroundStyle(.secondary)
                                 .frame(maxWidth: .infinity)
                         }
-                        
-                        Button
-                        {
-                            entity_selector_presented = true
-                        }
-                        label:
-                        {
-                            Image(systemName: "arrowshape.right.circle.fill")
-                        }
-                        .buttonStyle(.plain)
                     }
                 }
-                label:
-                {
-                    Text("Entity")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
                 
-                Divider()
-                
-                DisclosureGroup(isExpanded: $kinematic_code_expanded)
+                InspectorItem(label: "Functions", is_expanded: true)
                 {
                     ZStack
                     {
@@ -183,15 +166,77 @@ struct RobotInspectorView: View
                         CodeEditorView(is_presented: $kinematic_code_editor_presented, text: code, label: "Kinematic Function")
                     }
                 }
-                label:
-                {
-                    Text("Kinematic Code")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
                 
-                Divider()
+                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name, on_update: on_update)
+                
+                InspectorItem(label: "End Point Entity", is_expanded: false)
+                {
+                    Menu(module.end_entity_name)
+                    {
+                        ForEach(nested_entities_names, id: \.self)
+                        { name in
+                            Button(name)
+                            {
+                                module.end_entity_name = name
+                                on_update()
+                            }
+                        }
+                        
+                        Divider()
+                        
+                        Button("Clear")
+                        {
+                            module.end_entity_name = String()
+                            on_update()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .buttonStyle(.bordered)
+                }
             }
         }
     }
+    
+    var nested_entities_names: [String]
+    {
+        if let entity_file_name = module.entity_file_name,
+           let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
+        {
+            func collect(from entity: Entity) -> [String]
+            {
+                entity.children.flatMap
+                { child in
+                    [child.name] + collect(from: child)
+                }
+            }
+            
+            return collect(from: entity_file_item.entity)
+        }
+        else
+        {
+            return []
+        }
+    }
+}
+
+#Preview
+{
+    @Previewable @ObservedObject var module = RobotModule()
+    
+    @Previewable @State var entity_selector_presented = false
+    
+    ZStack
+    {
+        
+    }
+    .inspector(isPresented: .constant(true))
+    {
+        RobotInspectorView(
+            module: module,
+            entity_selector_presented: $entity_selector_presented)
+            {
+                
+            }
+    }
+    .backgroundStyle(.windowBackground)
 }

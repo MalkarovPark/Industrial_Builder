@@ -2,7 +2,7 @@
 //  PartModelView.swift
 //  Industrial Builder
 //
-//  Created by Artem Malkarov on 02.03.2026.
+//  Created by Artem on 02.03.2026.
 //
 
 import SwiftUI
@@ -47,6 +47,7 @@ struct PartModelView: View
                     }
             )
         }
+        .ignoresSafeArea(.container, edges: .vertical)
         .onChange(of: entity)
         { old_value, new_value in
             update_entity(new_value)

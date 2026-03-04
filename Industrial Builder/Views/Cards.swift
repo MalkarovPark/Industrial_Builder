@@ -102,53 +102,6 @@ struct ImageCard<Content: View>: View
     }
 }
 
-struct SimpleImageCard<Content: View>: View
-{
-    @State var image: UIImage
-    
-    @State private var is_presented = false
-    
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    
-    let content: (_ is_presented: Binding<Bool>) -> Content
-    
-    var body: some View
-    {
-        #if os(macOS)
-        Image(nsImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .onTapGesture
-        {
-            is_presented.toggle()
-        }
-        .sheet(isPresented: $is_presented, content: {
-            content($is_presented)
-                .modifier(ViewCloseButton(is_presented: $is_presented))
-        })
-        #else
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .onTapGesture
-        {
-            is_presented.toggle()
-        }
-        .sheet(isPresented: $is_presented, content: {
-            //content($is_presented)
-            //.presentationSizing(.fitted)
-            ZStack
-            {
-                content($is_presented)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .presentationSizing(.fitted)
-            .modifier(ViewCloseButton(is_presented: $is_presented))
-        })
-        #endif
-    }
-}
-
 struct ListingCard<Content: View>: View
 {
     let listing_item: ListingItem
@@ -247,7 +200,11 @@ struct SceneCard<Content: View>: View
     {
         Button(action: { is_presented = true })
         {
-            GlassBoxCard(title: entity_item.name, entity: entity_item.entity)
+            GlassBoxCard(
+                title: entity_item.name,
+                entity: entity_item.entity,
+                vertical_repostion: true
+            )
         }
         .buttonStyle(.plain)
         .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
@@ -267,9 +224,6 @@ struct SceneCard<Content: View>: View
     
     private func delete_scene()
     {
-        //guard let index = base_stc.entities.firstIndex(where: { $0 == entity }) else { return }
-        //base_stc.entities.remove(at: index)
-        
         base_stc.entity_items.removeAll { $0 == entity_item }
         document_handler.document_update_scenes()
     }
@@ -293,15 +247,3 @@ struct SceneCard<Content: View>: View
     .frame(width: 256)
     .padding()
 }
-
-/*#Preview
-{
-    HStack(spacing: 0)
-    {
-        SelectImageCard(image: UIImage(), name: "Image", is_selected: .constant(true), on_select: {}, on_deselect: {})
-            .padding(.trailing)
-        
-        SelectSceneCard(scene: SCNScene(), name: "Image", is_selected: .constant(true), is_main: .constant(false), on_main_set: {}, on_main_unset: {})
-    }
-    .padding()
-}*/

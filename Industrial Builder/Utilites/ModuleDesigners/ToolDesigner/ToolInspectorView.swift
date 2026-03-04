@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IndustrialKit
+import RealityKit
 
 struct ToolInspectorView: View
 {
@@ -15,9 +16,6 @@ struct ToolInspectorView: View
     @Binding var entity_selector_presented: Bool
     
     public let on_update: () -> ()
-    
-    @State private var description_expanded = true
-    @State private var entity_expanded = true
     
     var body: some View
     {
@@ -41,7 +39,7 @@ struct ToolInspectorView: View
                 
                 Divider()
                 
-                DisclosureGroup(isExpanded: $description_expanded)
+                InspectorItem(label: "Description", is_expanded: true)
                 {
                     let description = Binding(
                         get: { module.description },
@@ -59,18 +57,10 @@ struct ToolInspectorView: View
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .frame(minHeight: 80)
                 }
-                label:
-                {
-                    Text("Description")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
                 
-                Divider()
-                
-                DisclosureGroup(isExpanded: $entity_expanded)
+                InspectorItem(label: "Entity", is_expanded: true)
                 {
-                    HStack
+                    HStack(spacing: 4)
                     {
                         if let entity_file_name = module.entity_file_name
                         {
@@ -87,6 +77,16 @@ struct ToolInspectorView: View
                                 Image(systemName: "xmark.circle.fill")
                             }
                             .buttonStyle(.plain)
+                            
+                            Button
+                            {
+                                entity_selector_presented = true
+                            }
+                            label:
+                            {
+                                Image(systemName: "arrowshape.right.circle.fill")
+                            }
+                            .buttonStyle(.plain)
                         }
                         else
                         {
@@ -94,27 +94,33 @@ struct ToolInspectorView: View
                                 .foregroundStyle(.secondary)
                                 .frame(maxWidth: .infinity)
                         }
-                        
-                        Button
-                        {
-                            entity_selector_presented = true
-                        }
-                        label:
-                        {
-                            Image(systemName: "arrowshape.right.circle.fill")
-                        }
-                        .buttonStyle(.plain)
                     }
                 }
-                label:
-                {
-                    Text("Entity")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
                 
-                Divider()
+                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name, on_update: on_update)
             }
         }
     }
+}
+
+#Preview
+{
+    @Previewable @ObservedObject var module = ToolModule()
+    
+    @Previewable @State var entity_selector_presented = false
+    
+    ZStack
+    {
+        
+    }
+    .inspector(isPresented: .constant(true))
+    {
+        ToolInspectorView(
+            module: module,
+            entity_selector_presented: $entity_selector_presented)
+            {
+                
+            }
+    }
+    .backgroundStyle(.windowBackground)
 }

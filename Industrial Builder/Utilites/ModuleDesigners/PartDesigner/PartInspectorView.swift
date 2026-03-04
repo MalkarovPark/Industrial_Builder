@@ -16,9 +16,6 @@ struct PartInspectorView: View
     
     public let on_update: () -> ()
     
-    @State private var description_expanded = true
-    @State private var entity_expanded = true
-    
     var body: some View
     {
         ScrollView
@@ -41,7 +38,7 @@ struct PartInspectorView: View
                 
                 Divider()
                 
-                DisclosureGroup(isExpanded: $description_expanded)
+                InspectorItem(label: "Description", is_expanded: true)
                 {
                     let description = Binding(
                         get: { module.description },
@@ -59,18 +56,10 @@ struct PartInspectorView: View
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .frame(minHeight: 80)
                 }
-                label:
-                {
-                    Text("Description")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
                 
-                Divider()
-                
-                DisclosureGroup(isExpanded: $entity_expanded)
+                InspectorItem(label: "Entity", is_expanded: true)
                 {
-                    HStack
+                    HStack(spacing: 4)
                     {
                         if let entity_file_name = module.entity_file_name
                         {
@@ -87,6 +76,16 @@ struct PartInspectorView: View
                                 Image(systemName: "xmark.circle.fill")
                             }
                             .buttonStyle(.plain)
+                            
+                            Button
+                            {
+                                entity_selector_presented = true
+                            }
+                            label:
+                            {
+                                Image(systemName: "arrowshape.right.circle.fill")
+                            }
+                            .buttonStyle(.plain)
                         }
                         else
                         {
@@ -94,26 +93,8 @@ struct PartInspectorView: View
                                 .foregroundStyle(.secondary)
                                 .frame(maxWidth: .infinity)
                         }
-                        
-                        Button
-                        {
-                            entity_selector_presented = true
-                        }
-                        label:
-                        {
-                            Image(systemName: "arrowshape.right.circle.fill")
-                        }
-                        .buttonStyle(.plain)
                     }
                 }
-                label:
-                {
-                    Text("Entity")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
-                
-                Divider()
             }
         }
     }

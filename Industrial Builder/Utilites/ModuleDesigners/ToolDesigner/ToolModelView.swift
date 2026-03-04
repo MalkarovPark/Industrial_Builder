@@ -46,7 +46,15 @@ struct ToolModelView: View
                         workspace.focus(on: previewed_tool.model_entity)
                     }
             )
+            
+            FloatingView(alignment: .bottomTrailing)
+            {
+                OperationControl(tool: previewed_tool)
+                    .padding(8)
+            }
+            .padding(10)
         }
+        .ignoresSafeArea(.container, edges: .vertical)
         .onChange(of: entity)
         { old_value, new_value in
             update_entity(new_value)

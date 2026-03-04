@@ -17,8 +17,6 @@ struct ChangerInspectorView: View
     
     public let on_update: () -> ()
     
-    @State private var description_expanded = true
-    
     var body: some View
     {
         ScrollView
@@ -41,7 +39,7 @@ struct ChangerInspectorView: View
                 
                 Divider()
                 
-                DisclosureGroup(isExpanded: $description_expanded)
+                InspectorItem(label: "Description", is_expanded: true)
                 {
                     let description = Binding(
                         get: { module.description },
@@ -59,14 +57,6 @@ struct ChangerInspectorView: View
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .frame(minHeight: 80)
                 }
-                label:
-                {
-                    Text("Description")
-                        .font(.system(size: 13, weight: .bold))
-                }
-                .padding(10)
-                
-                Divider()
             }
         }
     }
