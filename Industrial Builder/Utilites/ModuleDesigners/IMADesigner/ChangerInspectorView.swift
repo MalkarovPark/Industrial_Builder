@@ -61,3 +61,23 @@ struct ChangerInspectorView: View
         }
     }
 }
+
+#Preview
+{
+    @Previewable @ObservedObject var module = ChangerModule()
+    
+    @Previewable @State var entity_selector_presented = false
+    
+    ZStack
+    {
+        
+    }
+    .inspector(isPresented: .constant(true))
+    {
+        ChangerInspectorView(
+            module: module,
+            on_update: {}
+        )
+    }
+    .frame(height: 600)
+}

@@ -71,7 +71,7 @@ public struct LinkedEntitiesItem: View
     
     public var body: some View
     {
-        InspectorItem(label: "Linked", is_expanded: false)
+        InspectorItem(label: "Linked Entities", is_expanded: false)
         {
             VStack(spacing: 4)
             {
@@ -94,7 +94,7 @@ public struct LinkedEntitiesItem: View
                                 Label("Delete", systemImage: "trash")
                             }
                         }
-                        //.listRowSeparator(.hidden)
+                        .textFieldStyle(.plain)
                     }
                     .onDelete(perform: delete_items)
                     
@@ -115,13 +115,21 @@ public struct LinkedEntitiesItem: View
                         
                         Menu
                         {
-                            ForEach(nested_entities_names, id: \.self)
-                            { name in
-                                Button(name)
-                                {
-                                    entity_names.append(name)
-                                    on_update()
+                            if nested_entity_names.count > 0
+                            {
+                                ForEach(nested_entity_names, id: \.self)
+                                { name in
+                                    Button(name)
+                                    {
+                                        entity_names.append(name)
+                                        on_update()
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                Text("None")
+                                    .disabled(true)
                             }
                         }
                         label:
@@ -131,7 +139,6 @@ public struct LinkedEntitiesItem: View
                         }
                         .buttonStyle(.plain)
                     }
-                    //.listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
             }
@@ -152,7 +159,7 @@ public struct LinkedEntitiesItem: View
         on_update()
     }
     
-    var nested_entities_names: [String]
+    var nested_entity_names: [String]
     {
         if let entity_file_name = entity_file_name,
            let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })

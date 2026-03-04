@@ -117,10 +117,9 @@ struct ToolInspectorView: View
     {
         ToolInspectorView(
             module: module,
-            entity_selector_presented: $entity_selector_presented)
-            {
-                
-            }
+            entity_selector_presented: $entity_selector_presented,
+            on_update: {}
+        )
     }
-    .backgroundStyle(.windowBackground)
+    .frame(height: 600)
 }

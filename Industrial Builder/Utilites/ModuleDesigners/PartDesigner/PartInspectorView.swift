@@ -99,3 +99,24 @@ struct PartInspectorView: View
         }
     }
 }
+
+#Preview
+{
+    @Previewable @ObservedObject var module = PartModule()
+    
+    @Previewable @State var entity_selector_presented = false
+    
+    ZStack
+    {
+        
+    }
+    .inspector(isPresented: .constant(true))
+    {
+        PartInspectorView(
+            module: module,
+            entity_selector_presented: $entity_selector_presented,
+            on_update: {}
+        )
+    }
+    .frame(height: 600)
+}

@@ -8,6 +8,7 @@
 import SwiftUI
 import IndustrialKit
 import RealityKit
+import IndustrialKitUI
 
 struct RobotInspectorView: View
 {
@@ -42,6 +43,16 @@ struct RobotInspectorView: View
                     set:
                         { new_value in
                             module.kinematic_function_code = new_value
+                            
+                            on_update()
+                        }
+                )
+                
+                let default_origin_position = Binding(
+                    get: { module.default_origin_position },
+                    set:
+                        { new_value in
+                            module.default_origin_position = new_value
                             
                             on_update()
                         }
@@ -173,31 +184,73 @@ struct RobotInspectorView: View
                 {
                     Menu(module.end_entity_name)
                     {
-                        ForEach(nested_entities_names, id: \.self)
-                        { name in
-                            Button(name)
-                            {
-                                module.end_entity_name = name
-                                on_update()
+                        if nested_entity_names.count > 0
+                        {
+                            ForEach(nested_entity_names, id: \.self)
+                            { name in
+                                Button(name)
+                                {
+                                    module.end_entity_name = name
+                                    on_update()
+                                }
                             }
+                        }
+                        else
+                        {
+                            Text("None")
+                                .disabled(true)
                         }
                         
                         Divider()
                         
-                        Button("Clear")
+                        Button
                         {
                             module.end_entity_name = String()
                             on_update()
                         }
+                        label:
+                        {
+                            Label("Clear", systemImage: "xmark")
+                        }
                     }
                     .frame(maxWidth: .infinity)
                     .buttonStyle(.bordered)
+                    .padding(.top, 5)
+                }
+                
+                InspectorItem(label: "Working Area", is_expanded: false)
+                {
+                    VStack(spacing: 10)
+                    {
+                        GroupBox
+                        {
+                            PositionView(position: default_origin_position)
+                                .padding(.horizontal, 5)
+                        }
+                        label:
+                        {
+                            Text("Default Position")
+                                .font(.system(size: 13))
+                        }
+                        
+                        GroupBox
+                        {
+                            OriginShiftView(module: module, on_update: on_update)
+                                .padding(.horizontal, 5)
+                        }
+                        label:
+                        {
+                            Text("Origin Shift")
+                                .font(.system(size: 13))
+                        }
+                    }
+                    .padding(.vertical, 5)
                 }
             }
         }
     }
     
-    var nested_entities_names: [String]
+    var nested_entity_names: [String]
     {
         if let entity_file_name = module.entity_file_name,
            let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
@@ -219,6 +272,82 @@ struct RobotInspectorView: View
     }
 }
 
+private struct OriginShiftView: View
+{
+    @ObservedObject var module: RobotModule
+    
+    let on_update: () -> ()
+    
+    public var body: some View
+    {
+        HStack
+        {
+            ForEach(ScaleComponents.allCases, id: \.self)
+            { component in
+                VStack
+                {
+                    HStack(spacing: 8)
+                    {
+                        TextField("0", value: binding(for: component), format: .number)
+                            .textFieldStyle(.roundedBorder)
+                        #if os(iOS)
+                            .frame(minWidth: 60)
+                            .keyboardType(.decimalPad)
+                        #elseif os(visionOS)
+                            .frame(minWidth: 80)
+                            .keyboardType(.decimalPad)
+                        #endif
+                    }
+                    
+                    Text(component.info.text)
+                        .fontWeight(.light)
+                        //.font(.system(size: 13, weight: .light))
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 12)
+    }
+    
+    private func binding(for component: ScaleComponents) -> Binding<Float>
+    {
+        switch component
+        {
+        case .x:
+            return Binding(get: { module.origin_shift.x }, set: { module.origin_shift.x = $0; on_update() })
+        case .y:
+            return Binding(get: { module.origin_shift.y }, set: { module.origin_shift.y = $0; on_update() })
+        case .z:
+            return Binding(get: { module.origin_shift.z }, set: { module.origin_shift.z = $0; on_update() })
+        }
+    }
+    
+    private enum ScaleComponents: Equatable, CaseIterable
+    {
+        case x
+        case y
+        case z
+        
+        var info: (text: String, order: Int)
+        {
+            switch self
+            {
+            case .x:
+                return ("X", 0)
+            case .y:
+                return ("Y", 1)
+            case .z:
+                return ("Z", 2)
+            }
+        }
+        
+        static var ordered: [ScaleComponents]
+        {
+            Self.allCases.sorted { $0.info.order < $1.info.order }
+        }
+    }
+}
+
 #Preview
 {
     @Previewable @ObservedObject var module = RobotModule()
@@ -233,10 +362,9 @@ struct RobotInspectorView: View
     {
         RobotInspectorView(
             module: module,
-            entity_selector_presented: $entity_selector_presented)
-            {
-                
-            }
+            entity_selector_presented: $entity_selector_presented,
+            on_update: {}
+        )
     }
-    .backgroundStyle(.windowBackground)
+    .frame(height: 600)
 }
