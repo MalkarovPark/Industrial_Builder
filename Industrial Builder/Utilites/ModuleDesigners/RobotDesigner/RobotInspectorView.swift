@@ -224,23 +224,23 @@ struct RobotInspectorView: View
                     {
                         GroupBox
                         {
-                            PositionView(position: default_origin_position)
-                                .padding(.horizontal, 5)
-                        }
-                        label:
-                        {
-                            Text("Default Position")
-                                .font(.system(size: 13))
-                        }
-                        
-                        GroupBox
-                        {
                             OriginShiftView(module: module, on_update: on_update)
                                 .padding(.horizontal, 5)
                         }
                         label:
                         {
                             Text("Origin Shift")
+                                .font(.system(size: 13))
+                        }
+                        
+                        GroupBox
+                        {
+                            PositionView(position: default_origin_position)
+                                .padding(.horizontal, 5)
+                        }
+                        label:
+                        {
+                            Text("Default Position")
                                 .font(.system(size: 13))
                         }
                     }
