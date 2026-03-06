@@ -132,6 +132,22 @@ struct ToolModuleCard: View
         }
         .id(view_id)
         .frame(height: 192)
+        .contextMenu
+        {
+            RenameButton()
+                .renameAction
+            {
+                withAnimation
+                {
+                    to_rename = true
+                }
+            }
+            
+            Button(role: .destructive, action: { delete_module(module) })
+            {
+                Label("Delete", systemImage: "trash")
+            }
+        }
         .onAppear
         {
             load_entity()
@@ -159,6 +175,12 @@ struct ToolModuleCard: View
     {
         view_id = UUID()
         load_entity()
+    }
+    
+    private func delete_module(_ module: ToolModule)
+    {
+        base_stc.tool_modules.removeAll { $0 == module }
+        document_handler.document_update_ima()
     }
 }
 
