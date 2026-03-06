@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import RealityKit
+
 import IndustrialKit
 
 struct ToolModuleDesigner: View
@@ -19,6 +21,12 @@ struct ToolModuleDesigner: View
     
     @State private var entity_selector_presented = false
     @State private var is_pan = false
+    
+    @ObservedObject private var workspace = Workspace()
+    @StateObject private var previewed_tool = Tool(
+        name: "preview",
+        entity: Entity()
+    )
     
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
@@ -69,7 +77,11 @@ struct ToolModuleDesigner: View
         .inspector(isPresented: $inspector_presented)
         {
             #if os(macOS) || os(visionOS)
-            ToolInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
+            ToolInspectorView(
+                module: module,
+                entity_selector_presented: $entity_selector_presented,
+                previewed_tool: previewed_tool
+            )
             {
                 document_handler.document_update_tools()
             }

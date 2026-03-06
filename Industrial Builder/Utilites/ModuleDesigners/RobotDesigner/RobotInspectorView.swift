@@ -22,10 +22,6 @@ struct RobotInspectorView: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @State private var controller_code_editor_presented = false
-    
-    @State private var model_controller_code = String()
-    
     var body: some View
     {
         ScrollView
@@ -128,7 +124,7 @@ struct RobotInspectorView: View
                     }
                 }
                 
-                InspectorItem(label: "Code", is_expanded: true)
+                InspectorItem(label: "Code", is_expanded: false)
                 {
                     VStack(alignment: .leading)
                     {
@@ -235,8 +231,6 @@ struct RobotInspectorView: View
         }
         .onAppear
         {
-            model_controller_code = module.model_controller_code
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
             {
                 update_model_controller()
@@ -268,9 +262,6 @@ struct RobotInspectorView: View
     
     private func update_model_controller()
     {
-        //module.model_controller_code = model_controller_code
-        //print(module.model_controller_code)
-        
         let new_controller = ExternalRobotModelController(
             entity_names: module.entity_names,
             code: module.model_controller_code

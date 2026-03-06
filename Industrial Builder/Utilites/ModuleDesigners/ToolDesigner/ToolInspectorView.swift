@@ -15,7 +15,11 @@ struct ToolInspectorView: View
     
     @Binding var entity_selector_presented: Bool
     
+    @StateObject var previewed_tool: Tool
+    
     public let on_update: () -> ()
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
     
     var body: some View
     {
@@ -97,9 +101,72 @@ struct ToolInspectorView: View
                     }
                 }
                 
+                InspectorItem(label: "Code", is_expanded: false)
+                {
+                    VStack(alignment: .leading)
+                    {
+                        Text("Model Controller")
+                            .font(.system(size: 13))
+                        
+                        CodeEditorPane(
+                            name: "Model Controller Code",
+                            code: module.model_controller_code
+                        )
+                        { new_value in
+                            on_update()
+                            module.model_controller_code = new_value
+                            update_model_controller()
+                        }
+                        
+                        Text("Connector")
+                            .font(.system(size: 13))
+                        
+                        CodeEditorPane(
+                            name: "Connector Code",
+                            code: module.connector_code
+                        )
+                        { new_value in
+                            on_update()
+                            module.connector_code = new_value
+                            update_model_controller()
+                        }
+                    }
+                }
+                
                 LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name, on_update: on_update)
             }
         }
+    }
+    
+    private var nested_entity_names: [String]
+    {
+        if let entity_file_name = module.entity_file_name,
+           let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
+        {
+            func collect(from entity: Entity) -> [String]
+            {
+                entity.children.flatMap
+                { child in
+                    [child.name] + collect(from: child)
+                }
+            }
+            
+            return collect(from: entity_file_item.entity)
+        }
+        else
+        {
+            return []
+        }
+    }
+    
+    private func update_model_controller()
+    {
+        let new_controller = ExternalToolModelController(
+            entity_names: module.entity_names,
+            code: module.model_controller_code
+        )
+        
+        previewed_tool.model_controller = new_controller as ToolModelController
     }
 }
 
@@ -118,6 +185,7 @@ struct ToolInspectorView: View
         ToolInspectorView(
             module: module,
             entity_selector_presented: $entity_selector_presented,
+            previewed_tool: Tool(),
             on_update: {}
         )
     }

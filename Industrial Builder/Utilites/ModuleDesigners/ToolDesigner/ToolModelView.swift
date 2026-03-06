@@ -17,12 +17,13 @@ struct ToolModelView: View
     
     @State private var preview_entity: Entity?
     
-    @Binding var is_pan: Bool
-    @State private var scene_content: RealityViewCameraContent?
-    @State private var scene_camera = PerspectiveCamera()
-    
     @StateObject var workspace = Workspace()
     @StateObject var previewed_tool = Tool(name: "preview", entity: Entity())
+    
+    @Binding var is_pan: Bool
+    
+    @State private var scene_content: RealityViewCameraContent?
+    @State private var scene_camera = PerspectiveCamera()
     
     var body: some View
     {
@@ -37,6 +38,8 @@ struct ToolModelView: View
                 workspace.add_tool(previewed_tool)
                 
                 place_entity(entity)
+                
+                //workspace.select_tool(name: "preview")
             }
             .realityViewCameraControls(is_pan ? .pan : .orbit)
             .gesture(
@@ -46,6 +49,7 @@ struct ToolModelView: View
                         workspace.focus(on: previewed_tool.model_entity)
                     }
             )
+            .ignoresSafeArea(.container, edges: .all)
             
             FloatingView(alignment: .bottomTrailing)
             {
@@ -54,7 +58,6 @@ struct ToolModelView: View
             }
             .padding(10)
         }
-        .ignoresSafeArea(.container, edges: .vertical)
         .onChange(of: entity)
         { old_value, new_value in
             update_entity(new_value)
@@ -62,7 +65,9 @@ struct ToolModelView: View
         .onDisappear
         {
             workspace.delete_tool(name: "preview")
+            preview_entity?.removeFromParent()
             preview_entity = nil
+            workspace.remove_entity(from: scene_content!)
         }
     }
     
@@ -70,6 +75,7 @@ struct ToolModelView: View
     {
         if let new_entity = new_entity?.clone(recursive: true)
         {
+            //workspace.select_tool(name: "preview")
             preview_entity = new_entity
             previewed_tool.model_entity?.addChild(new_entity)
         }

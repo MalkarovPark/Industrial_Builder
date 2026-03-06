@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
-import IndustrialKit
 import RealityKit
+
+import IndustrialKit
 import IndustrialKitUI
 
 struct RobotModuleDesigner: View
@@ -22,18 +23,10 @@ struct RobotModuleDesigner: View
     @State private var entity_selector_presented = false
     @State private var is_pan = false
     
-    /*@State private var workspace = Workspace()
-    @State private var previewed_robot = Robot(
-        name: "preview",
-        entity: Entity()//,
-        //model_controller: ExternalRobotModelController()
-    )*/
-    
     @ObservedObject private var workspace = Workspace()
     @StateObject private var previewed_robot = Robot(
         name: "preview",
-        entity: Entity()//,
-        //model_controller: ExternalRobotModelController()
+        entity: Entity()
     )
     
     #if os(iOS)
