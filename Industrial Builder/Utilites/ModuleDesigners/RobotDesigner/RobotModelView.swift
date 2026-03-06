@@ -17,12 +17,13 @@ struct RobotModelView: View
     
     @State private var preview_entity: Entity?
     
+    @StateObject var workspace: Workspace
+    @StateObject var previewed_robot: Robot
+    
     @Binding var is_pan: Bool
+    
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
-    
-    @StateObject var workspace = Workspace()
-    @StateObject var previewed_robot = Robot(name: "preview", entity: Entity())
     
     var body: some View
     {
@@ -37,6 +38,10 @@ struct RobotModelView: View
                 workspace.add_robot(previewed_robot)
                 
                 place_entity(entity)
+                
+                //workspace.select_robot(name: "preview")
+                previewed_robot.show_position_pointer()
+                previewed_robot.show_working_area()
             }
             .realityViewCameraControls(is_pan ? .pan : .orbit)
             .gesture(
@@ -67,7 +72,9 @@ struct RobotModelView: View
         .onDisappear
         {
             workspace.delete_robot(name: "preview")
+            preview_entity?.removeFromParent()
             preview_entity = nil
+            workspace.remove_entity(from: scene_content!)
         }
     }
     
@@ -75,6 +82,7 @@ struct RobotModelView: View
     {
         if let new_entity = new_entity?.clone(recursive: true)
         {
+            //workspace.select_robot(name: "preview")
             preview_entity = new_entity
             previewed_robot.model_entity?.addChild(new_entity)
         }

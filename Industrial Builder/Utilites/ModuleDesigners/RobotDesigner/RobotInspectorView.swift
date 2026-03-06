@@ -12,15 +12,19 @@ import IndustrialKitUI
 
 struct RobotInspectorView: View
 {
-    @ObservedObject var module: RobotModule
+    @StateObject var module: RobotModule
     
     @Binding var entity_selector_presented: Bool
+    
+    @StateObject var previewed_robot: Robot
     
     public let on_update: () -> ()
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
-    @State private var kinematic_code_editor_presented = false
+    @State private var controller_code_editor_presented = false
+    
+    @State private var model_controller_code = String()
     
     var body: some View
     {
@@ -38,25 +42,27 @@ struct RobotInspectorView: View
                         }
                 )
                 
-                let code = Binding(
-                    get: { module.kinematic_function_code },
-                    set:
-                        { new_value in
-                            module.kinematic_function_code = new_value
-                            
-                            on_update()
-                        }
-                )
-                
                 let default_origin_position = Binding(
                     get: { module.default_origin_position },
                     set:
                         { new_value in
                             module.default_origin_position = new_value
+                            previewed_robot.origin_position = new_value
+                            previewed_robot.origin_shift
                             
                             on_update()
                         }
                 )
+                
+                /*let default_space_scale = Binding(
+                    get: { module.default_space_scale },
+                    set:
+                        { new_value in
+                            module.default_space_scale = new_value
+                            
+                            on_update()
+                        }
+                )*/
                 
                 TextField("None", text: name)
                     .textFieldStyle(.roundedBorder)
@@ -130,9 +136,9 @@ struct RobotInspectorView: View
                         {
                             ScrollView
                             {
-                                if !module.kinematic_function_code.isEmpty
+                                if !module.model_controller_code.isEmpty
                                 {
-                                    Text(module.kinematic_function_code)
+                                    Text(module.model_controller_code)
                                         .multilineTextAlignment(.leading)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                                     #if os(macOS)
@@ -144,7 +150,7 @@ struct RobotInspectorView: View
                                 }
                             }
                             
-                            if module.kinematic_function_code.isEmpty
+                            if module.model_controller_code.isEmpty
                             {
                                 Text("No Code")
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -163,7 +169,7 @@ struct RobotInspectorView: View
                         {
                             Button
                             {
-                                kinematic_code_editor_presented = true
+                                controller_code_editor_presented = true
                             }
                             label:
                             {
@@ -172,9 +178,15 @@ struct RobotInspectorView: View
                             .padding(10)
                         }
                     }
-                    .sheet(isPresented: $kinematic_code_editor_presented)
+                    .sheet(isPresented: $controller_code_editor_presented)
                     {
-                        CodeEditorView(is_presented: $kinematic_code_editor_presented, text: code, label: "Kinematic Function")
+                        CodeEditorView(is_presented: $controller_code_editor_presented, text: $model_controller_code, label: "Model Contoller Code")
+                            .onDisappear
+                            {
+                                on_update()
+                                module.model_controller_code = model_controller_code
+                                update_model_controller()
+                            }
                     }
                 }
                 
@@ -224,8 +236,11 @@ struct RobotInspectorView: View
                     {
                         GroupBox
                         {
-                            OriginShiftView(module: module, on_update: on_update)
-                                .padding(.horizontal, 5)
+                            OriginShiftView(
+                                module: module,
+                                previewed_robot: previewed_robot,
+                                on_update: on_update)
+                            .padding(.horizontal, 5)
                         }
                         label:
                         {
@@ -248,9 +263,19 @@ struct RobotInspectorView: View
                 }
             }
         }
+        .onAppear
+        {
+            model_controller_code = module.model_controller_code
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+            {
+                update_model_controller()
+            }
+            //update_model_controller()
+        }
     }
     
-    var nested_entity_names: [String]
+    private var nested_entity_names: [String]
     {
         if let entity_file_name = module.entity_file_name,
            let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
@@ -270,11 +295,29 @@ struct RobotInspectorView: View
             return []
         }
     }
+    
+    private func update_model_controller()
+    {
+        //module.model_controller_code = model_controller_code
+        //print(module.model_controller_code)
+        
+        let new_controller = ExternalRobotModelController(
+            entity_names: module.entity_names,
+            code: module.model_controller_code
+        )
+        
+        previewed_robot.model_controller = new_controller as RobotModelController
+        
+        previewed_robot.origin_shift = module.origin_shift
+        previewed_robot.origin_position = module.default_origin_position
+        previewed_robot.update_position()
+    }
 }
 
 private struct OriginShiftView: View
 {
     @ObservedObject var module: RobotModule
+    @ObservedObject var previewed_robot: Robot
     
     let on_update: () -> ()
     
@@ -314,11 +357,26 @@ private struct OriginShiftView: View
         switch component
         {
         case .x:
-            return Binding(get: { module.origin_shift.x }, set: { module.origin_shift.x = $0; on_update() })
+            return Binding(get: { module.origin_shift.x },
+                           set: {
+                module.origin_shift.x = $0
+                previewed_robot.origin_shift = module.origin_shift
+                on_update()
+            })
         case .y:
-            return Binding(get: { module.origin_shift.y }, set: { module.origin_shift.y = $0; on_update() })
+            return Binding(get: { module.origin_shift.y },
+                           set: {
+                module.origin_shift.y = $0
+                previewed_robot.origin_shift = module.origin_shift
+                on_update()
+            })
         case .z:
-            return Binding(get: { module.origin_shift.z }, set: { module.origin_shift.z = $0; on_update() })
+            return Binding(get: { module.origin_shift.z },
+                           set: {
+                module.origin_shift.z = $0
+                previewed_robot.origin_shift = module.origin_shift
+                on_update()
+            })
         }
     }
     
@@ -363,6 +421,7 @@ private struct OriginShiftView: View
         RobotInspectorView(
             module: module,
             entity_selector_presented: $entity_selector_presented,
+            previewed_robot: Robot(),
             on_update: {}
         )
     }
