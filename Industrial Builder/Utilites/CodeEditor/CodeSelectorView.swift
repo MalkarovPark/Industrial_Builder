@@ -76,8 +76,8 @@ struct CodeSelectorView: View
                                 { name in
                                     CodeTileView(
                                         name: name,
+                                        symbol_name: "curlybraces",
                                         text: import_text_data(from: name)
-                                        //symbol_name: "curlybraces"
                                     )
                                     {
                                         on_tap(process_template(name: name, type: .template))
@@ -103,7 +103,6 @@ struct CodeSelectorView: View
                                     CodeTileView(
                                         name: item.name,
                                         text: item.text
-                                        //symbol_name: "text.justify.left"
                                     )
                                     {
                                         on_tap(process_template(name: item.name, type: .listing))
@@ -145,7 +144,7 @@ struct CodeSelectorView: View
                 .padding()
             }
         }
-        .modifier(SheetCaption(is_presented: $is_presented, label: "Update Code", plain: false))
+        .modifier(SheetCaption(is_presented: $is_presented, label: "Select Code", plain: false))
         #if os(macOS)
         .frame(minWidth: 420, maxWidth: 600, minHeight: 480, maxHeight: 512)
         #elseif os(visionOS)
@@ -181,26 +180,14 @@ private struct CodeTileView: View
     
     public init(
         name: String,
-        symbol_name: String,
+        symbol_name: String? = nil,
+        text: String? = nil,
         on_tap: @escaping () -> ()
     )
     {
         self.name = name
         self.symbol_name = symbol_name
-        self.text = nil
-        
-        self.on_tap = on_tap
-    }
-    
-    public init(
-        name: String,
-        text: String,
-        on_tap: @escaping () -> ()
-    )
-    {
-        self.name = name
         self.text = text
-        self.symbol_name = nil
         
         self.on_tap = on_tap
     }
@@ -230,7 +217,8 @@ private struct CodeTileView: View
                         #endif
                             .foregroundStyle(.secondary)
                     }
-                    else if let symbol_name = symbol_name
+                    
+                    if let symbol_name = symbol_name
                     {
                         Image(systemName: symbol_name)
                             .resizable()

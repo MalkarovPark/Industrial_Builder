@@ -128,65 +128,35 @@ struct RobotInspectorView: View
                     }
                 }
                 
-                InspectorItem(label: "Functions", is_expanded: true)
+                InspectorItem(label: "Code", is_expanded: true)
                 {
-                    ZStack
+                    VStack(alignment: .leading)
                     {
-                        ZStack
-                        {
-                            ScrollView
-                            {
-                                if !module.model_controller_code.isEmpty
-                                {
-                                    Text(module.model_controller_code)
-                                        .multilineTextAlignment(.leading)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                                    #if os(macOS)
-                                        .font(.custom("Menlo", size: 10))
-                                    #else
-                                        .font(.custom("Menlo", size: 14))
-                                    #endif
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                            
-                            if module.model_controller_code.isEmpty
-                            {
-                                Text("No Code")
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    #if os(macOS)
-                                    .font(.system(size: 12))
-                                    #else
-                                    .font(.system(size: 16))
-                                    #endif
-                                    .foregroundStyle(.secondary)
-                            }
+                        Text("Model Controller")
+                            .font(.system(size: 13))
+                        
+                        CodeEditorPane(
+                            name: "Model Controller Code",
+                            code: module.model_controller_code
+                        )
+                        { new_value in
+                            on_update()
+                            module.model_controller_code = new_value
+                            update_model_controller()
                         }
-                        .background(.quinary)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .frame(height: 120)
-                        .overlay(alignment: .bottomTrailing)
-                        {
-                            Button
-                            {
-                                controller_code_editor_presented = true
-                            }
-                            label:
-                            {
-                                Image(systemName: "pencil")
-                            }
-                            .padding(10)
+                        
+                        Text("Connector")
+                            .font(.system(size: 13))
+                        
+                        CodeEditorPane(
+                            name: "Connector Code",
+                            code: module.connector_code
+                        )
+                        { new_value in
+                            on_update()
+                            module.connector_code = new_value
+                            update_model_controller()
                         }
-                    }
-                    .sheet(isPresented: $controller_code_editor_presented)
-                    {
-                        CodeEditorView(is_presented: $controller_code_editor_presented, text: $model_controller_code, label: "Model Contoller Code")
-                            .onDisappear
-                            {
-                                on_update()
-                                module.model_controller_code = model_controller_code
-                                update_model_controller()
-                            }
                     }
                 }
                 

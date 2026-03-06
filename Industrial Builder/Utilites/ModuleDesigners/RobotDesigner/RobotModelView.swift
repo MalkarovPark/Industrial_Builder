@@ -51,6 +51,7 @@ struct RobotModelView: View
                         workspace.focus(on: previewed_robot.model_entity)
                     }
             )
+            .ignoresSafeArea(.container, edges: .all)
             
             FloatingView(alignment: .bottomTrailing)
             {
@@ -64,7 +65,6 @@ struct RobotModelView: View
             }
             .padding(10)
         }
-        .ignoresSafeArea(.container, edges: .vertical)
         .onChange(of: entity)
         { old_value, new_value in
             update_entity(new_value)

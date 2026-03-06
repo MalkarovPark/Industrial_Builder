@@ -38,7 +38,8 @@ struct PartModuleDesigner: View
                 VStack
                 {
                     Text("No Entity")
-                        .font(.title2)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
                     
                     Button("Select...")
                     {

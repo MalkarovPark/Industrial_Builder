@@ -39,22 +39,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "04A3ED88-B70A-4830-A3C3-E24C3CF7AEBB"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-ffkdwxqtyaannfbxcoecaodmyjov/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/RobotModelController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "update_robot_model(pointer_position:origin_position:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "75331199-0D57-434A-9039-417E4024FF6E"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -200,7 +184,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "4DC2361C-E616-4CD3-A1F2-D2359DB31B13"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Industrial Builder/Utilites/ModuleDesigners/RobotDesigner/RobotModelView.swift"
@@ -216,7 +200,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "D4F49919-B874-45D8-A097-6A8FED458C85"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Industrial Builder/Utilites/ModuleDesigners/RobotDesigner/RobotModelView.swift"
@@ -225,6 +209,22 @@
             startingLineNumber = "83"
             endingLineNumber = "83"
             landmarkName = "place_entity(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AC100294-DB5C-4BDE-8E86-9710065F5593"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-ffkdwxqtyaannfbxcoecaodmyjov/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/RobotModelController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "update_robot_model(pointer_position:origin_position:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
