@@ -59,8 +59,10 @@ struct ToolInspectorView: View
                         .multilineTextAlignment(.leading)
                         .textFieldStyle(.roundedBorder)
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                        .frame(minHeight: 80)
+                        .frame(minHeight: 80, maxHeight: 160)
                 }
+                
+                OperationCodesItem(operations: $module.codes, on_update: on_update)
                 
                 InspectorItem(label: "Entity", is_expanded: true)
                 {
@@ -109,7 +111,7 @@ struct ToolInspectorView: View
                             .font(.system(size: 13))
                         
                         CodeEditorPane(
-                            name: "Model Controller Code",
+                            label: "Model Controller Code",
                             code: module.model_controller_code
                         )
                         { new_value in
@@ -122,7 +124,7 @@ struct ToolInspectorView: View
                             .font(.system(size: 13))
                         
                         CodeEditorPane(
-                            name: "Connector Code",
+                            label: "Connector Code",
                             code: module.connector_code
                         )
                         { new_value in

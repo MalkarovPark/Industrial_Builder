@@ -54,7 +54,7 @@ struct PartInspectorView: View
                         .multilineTextAlignment(.leading)
                         .textFieldStyle(.roundedBorder)
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                        .frame(minHeight: 80)
+                        .frame(minHeight: 80, maxHeight: 160)
                 }
                 
                 InspectorItem(label: "Entity", is_expanded: true)

@@ -809,7 +809,7 @@ public class StandardTemplateConstruct: ObservableObject
             return """
             \(data.map
             {
-                ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol)\", info: \"\($0.info)\")"
+                ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol_name)\", info: \"\($0.description)\")"
             }
             .joined(separator: ",\n        "))
             """

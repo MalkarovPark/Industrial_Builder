@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct CodeEditorPane: View
 {
-    let name: String
+    let label: String
     
     @State private var code: String
     
@@ -18,12 +18,12 @@ public struct CodeEditorPane: View
     @State private var code_editor_presented = false
     
     public init(
-        name: String,
+        label: String,
         code: String,
         on_update: @escaping (String) -> Void = { _ in }
     )
     {
-        self.name = name
+        self.label = label
         self.code = code
         
         self.on_update = on_update
@@ -87,7 +87,7 @@ public struct CodeEditorPane: View
         }
         .sheet(isPresented: $code_editor_presented)
         {
-            CodeEditorView(is_presented: $code_editor_presented, text: $code, label: "Model Contoller Code")
+            CodeEditorView(is_presented: $code_editor_presented, text: $code, label: label)
                 .onDisappear
                 {
                     on_update(code)
@@ -98,5 +98,5 @@ public struct CodeEditorPane: View
 
 #Preview
 {
-    CodeEditorPane(name: "Code", code: "import IndustrialKit")
+    CodeEditorPane(label: "Code", code: "import IndustrialKit")
 }
