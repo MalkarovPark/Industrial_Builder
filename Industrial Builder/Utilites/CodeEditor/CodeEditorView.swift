@@ -71,7 +71,10 @@ struct CodeEditorView: View
             .padding(10)
             .sheet(isPresented: $new_code_view_presented)
             {
-                CodeSelectorView(is_presented: $new_code_view_presented, avaliable_template_names: all_code_templates)
+                CodeSelectorView(
+                    is_presented: $new_code_view_presented,
+                    avaliable_template_names: all_code_templates
+                )
                 { output in
                     text = output
                 }

@@ -254,20 +254,24 @@ public struct ChangerModuleControl: View
         .sheet(isPresented: $new_code_view_presented)
         {
             #if os(macOS)
-            CodeSelectorView(is_presented: $new_code_view_presented, avaliable_template_names: all_code_templates)
+            CodeSelectorView(
+                is_presented: $new_code_view_presented,
+                avaliable_template_names: all_code_templates
+            )
             { output in
                 module.changer_function_code = output
                 on_update()
             }
             #else
-            CodeSelectorView(is_presented: $new_code_view_presented,
-                            avaliable_templates_names: all_code_templates,
-                            bottom_view:
-                                TextField("Name", text: $new_listing_name)
-                                    .padding(.trailing)
-                                    .frame(minWidth: 128, maxWidth: 256)
-                                    .frame(idealWidth: 256)
-                                    .textFieldStyle(.roundedBorder)
+            CodeSelectorView(
+                is_presented: $new_code_view_presented,
+                avaliable_templates_names: all_code_templates,
+                bottom_view:
+                    TextField("Name", text: $new_listing_name)
+                        .padding(.trailing)
+                        .frame(minWidth: 128, maxWidth: 256)
+                        .frame(idealWidth: 256)
+                        .textFieldStyle(.roundedBorder)
             )
             { output in
                 module.changer_function_code = output

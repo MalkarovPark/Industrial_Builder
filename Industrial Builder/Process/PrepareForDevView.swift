@@ -114,7 +114,10 @@ struct PrepareForDevView: View
                 }
                 .sheet(isPresented: $template_view_presented)
                 {
-                    CodeSelectorView(is_presented: $template_view_presented, avaliable_template_names: external_app_code_templates)
+                    CodeSelectorView(
+                        is_presented: $template_view_presented,
+                        avaliable_template_names: external_app_code_templates
+                    )
                     { output in
                         passed_listing_text = output
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)

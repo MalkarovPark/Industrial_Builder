@@ -215,7 +215,7 @@ private struct CodeTileView: View
                         #else
                             .font(.custom("Menlo", size: 14 / 2))
                         #endif
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(symbol_name == nil ? .secondary : .tertiary)
                     }
                     
                     if let symbol_name = symbol_name
