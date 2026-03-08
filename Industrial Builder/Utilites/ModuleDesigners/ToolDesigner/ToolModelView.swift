@@ -17,8 +17,8 @@ struct ToolModelView: View
     
     @State private var preview_entity: Entity?
     
-    @StateObject var workspace = Workspace()
-    @StateObject var previewed_tool = Tool(name: "preview", entity: Entity())
+    @StateObject var workspace: Workspace
+    @StateObject var previewed_tool: Tool
     
     @Binding var is_pan: Bool
     

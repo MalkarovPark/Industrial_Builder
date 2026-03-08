@@ -58,11 +58,16 @@ struct ToolInspectorView: View
                     TextEditor(text: description)
                         .multilineTextAlignment(.leading)
                         .textFieldStyle(.roundedBorder)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .frame(minHeight: 80, maxHeight: 160)
                 }
                 
-                OperationCodesItem(operations: $module.codes, on_update: on_update)
+                OperationCodesItem(operations: $module.codes)
+                {
+                    on_update()
+                    
+                    previewed_tool.codes = module.codes
+                }
                 
                 InspectorItem(label: "Entity", is_expanded: true)
                 {
@@ -103,6 +108,12 @@ struct ToolInspectorView: View
                     }
                 }
                 
+                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name)
+                {
+                    on_update()
+                    update_model_controller()
+                }
+                
                 InspectorItem(label: "Code", is_expanded: false)
                 {
                     VStack(alignment: .leading)
@@ -134,8 +145,14 @@ struct ToolInspectorView: View
                         }
                     }
                 }
-                
-                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name, on_update: on_update)
+            }
+        }
+        .onAppear
+        {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+            {
+                update_model_controller()
+                previewed_tool.codes = module.codes
             }
         }
     }
@@ -192,4 +209,82 @@ struct ToolInspectorView: View
         )
     }
     .frame(height: 600)
+}
+
+// MARK: - Test
+public class ExternalJSToolModelController: ToolModelController, @unchecked Sendable
+{
+    public init(
+        entity_names: [String],
+        
+        code: String
+    )
+    {
+        self.external_entity_names = entity_names
+        
+        self.js_environment.js_code = code
+    }
+    
+    required init()
+    {
+        //self.module_name = ""
+        //self.package_url = URL(fileURLWithPath: "")
+    }
+    
+    // MARK: Parameters import
+    override open var entity_names: [String]
+    {
+        return external_entity_names
+    }
+    
+    public var external_entity_names = [String]()
+    
+    // MARK: JS Code Handling
+    private var js_environment = JSEnvironment()
+    
+    public func reset_js_context()
+    {
+        js_environment.reset_context()
+    }
+    
+    public var code: String
+    {
+        get { js_environment.js_code }
+        set { js_environment.js_code = newValue }
+    }
+    
+    // MARK: Modeling
+    override open func entity_animations(code: Int) -> [EntityAnimationData]
+    {
+        do
+        {
+            let json_string = try js_environment.call_js_func(
+                name: "entity_animations",
+                args: [code]
+            )
+            
+            guard let json_data = json_string.data(using: .utf8) else { return [] }
+            
+            let animations = try JSONDecoder().decode([EntityAnimationData].self, from: json_data)
+            return animations
+        }
+        catch
+        {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    // MARK: Statistics
+    open override var current_device_state: DeviceState
+    {
+        // Prepare controller output
+        return DeviceState()
+    }
+    
+    open override var initial_device_state: DeviceState?
+    {
+        // Reset contoller output
+        return nil //DeviceState()
+    }
 }

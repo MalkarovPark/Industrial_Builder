@@ -53,7 +53,7 @@ struct PartInspectorView: View
                     TextEditor(text: description)
                         .multilineTextAlignment(.leading)
                         .textFieldStyle(.roundedBorder)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .frame(minHeight: 80, maxHeight: 160)
                 }
                 

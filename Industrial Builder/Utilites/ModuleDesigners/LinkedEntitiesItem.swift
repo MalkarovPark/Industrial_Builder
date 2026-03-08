@@ -107,7 +107,7 @@ public struct LinkedEntitiesItem: View
                 }
                 .listStyle(.plain)
             }
-            .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .frame(minHeight: 160)
         }
     }

@@ -44,7 +44,6 @@ struct RobotInspectorView: View
                         { new_value in
                             module.default_origin_position = new_value
                             previewed_robot.origin_position = new_value
-                            previewed_robot.origin_shift
                             
                             on_update()
                         }
@@ -81,7 +80,7 @@ struct RobotInspectorView: View
                     TextEditor(text: description)
                         .multilineTextAlignment(.leading)
                         .textFieldStyle(.roundedBorder)
-                        .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .frame(minHeight: 80, maxHeight: 160)
                 }
                 
@@ -124,39 +123,11 @@ struct RobotInspectorView: View
                     }
                 }
                 
-                InspectorItem(label: "Code", is_expanded: false)
+                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name)
                 {
-                    VStack(alignment: .leading)
-                    {
-                        Text("Model Controller")
-                            .font(.system(size: 13))
-                        
-                        CodeEditorPane(
-                            label: "Model Controller Code",
-                            code: module.model_controller_code
-                        )
-                        { new_value in
-                            on_update()
-                            module.model_controller_code = new_value
-                            update_model_controller()
-                        }
-                        
-                        Text("Connector")
-                            .font(.system(size: 13))
-                        
-                        CodeEditorPane(
-                            label: "Connector Code",
-                            code: module.connector_code
-                        )
-                        { new_value in
-                            on_update()
-                            module.connector_code = new_value
-                            update_model_controller()
-                        }
-                    }
+                    on_update()
+                    update_model_controller()
                 }
-                
-                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name, on_update: on_update)
                 
                 InspectorItem(label: "End Point Entity", is_expanded: false)
                 {
@@ -194,6 +165,38 @@ struct RobotInspectorView: View
                     .frame(maxWidth: .infinity)
                     .buttonStyle(.bordered)
                     .padding(.top, 5)
+                }
+                
+                InspectorItem(label: "Code", is_expanded: false)
+                {
+                    VStack(alignment: .leading)
+                    {
+                        Text("Model Controller")
+                            .font(.system(size: 13))
+                        
+                        CodeEditorPane(
+                            label: "Model Controller Code",
+                            code: module.model_controller_code
+                        )
+                        { new_value in
+                            on_update()
+                            module.model_controller_code = new_value
+                            update_model_controller()
+                        }
+                        
+                        Text("Connector")
+                            .font(.system(size: 13))
+                        
+                        CodeEditorPane(
+                            label: "Connector Code",
+                            code: module.connector_code
+                        )
+                        { new_value in
+                            on_update()
+                            module.connector_code = new_value
+                            update_model_controller()
+                        }
+                    }
                 }
                 
                 InspectorItem(label: "Working Area", is_expanded: false)

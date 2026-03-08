@@ -39,7 +39,14 @@ struct ToolModuleDesigner: View
             if let entity_file_name = module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
-                ToolModelView(entity: entity_file_item.entity, is_pan: $is_pan)
+                ToolModelView(
+                    entity: entity_file_item.entity,
+                    
+                    workspace: workspace,
+                    previewed_tool: previewed_tool,
+                    
+                    is_pan: $is_pan
+                )
             }
             else
             {
