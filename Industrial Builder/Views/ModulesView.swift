@@ -27,28 +27,28 @@ struct ModulesView: View
                     {
                         NavigationLink(destination: RobotModulesView())
                         {
-                            BoxCard(title: "Robot", subtitle: numeral_endings(base_stc.robot_modules.count, word: "item"), color: .green, symbol_name: "r.square", symbol_size: 80)
+                            BoxCard(title: "Robot", subtitle: numeral_endings(base_stc.robot_modules.count, word: "item"), color: Color(hex: "13C5B5"), symbol_name: "r.square", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ToolModulesView())
                         {
-                            BoxCard(title: "Tool", subtitle: numeral_endings(base_stc.tool_modules.count, word: "item"), color: .teal, symbol_name: "hammer", symbol_size: 80)
+                            BoxCard(title: "Tool", subtitle: numeral_endings(base_stc.tool_modules.count, word: "item"), color: Color(hex: "6CC0FF"), symbol_name: "hammer", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: PartModulesView())
                         {
-                            BoxCard(title: "Part", subtitle: numeral_endings(base_stc.part_modules.count, word: "item"), color: .indigo, symbol_name: "shippingbox", symbol_size: 80)
+                            BoxCard(title: "Part", subtitle: numeral_endings(base_stc.part_modules.count, word: "item"), color: Color(hex: "6965F0"), symbol_name: "shippingbox", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ChangerModulesView())
                         {
-                            BoxCard(title: "Changer", subtitle: numeral_endings(base_stc.changer_modules.count, word: "item"), color: .pink, symbol_name: "wand.and.rays", symbol_size: 80)
+                            BoxCard(title: "Changer", subtitle: numeral_endings(base_stc.changer_modules.count, word: "item"), color: Color(hex: "F350B3"), symbol_name: "wand.and.rays", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)

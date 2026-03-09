@@ -27,36 +27,7 @@ public struct STCPackageInfo: Codable
         self.images_data = images_data
     }
     
-    // /Workspace object preview image.
-    var gallery: [UIImage]
-    {
-        get
-        {
-            var gallery = [UIImage]()
-            for image_data in images_data
-            {
-                gallery.append(UIImage(data: image_data ?? Data()) ?? UIImage())
-            }
-            
-            return gallery
-        }
-        set
-        {
-            images_data.removeAll()
-            for image in newValue
-            {
-                images_data.append(image.pngData() ?? Data())
-            }
-        }
-    }
-    
-    // /Removes all images from gallery.
-    mutating func clear_gallery()
-    {
-        images_data.removeAll()
-    }
-    
-    // /Build modules lists names.
+    // Build modules lists names.
     public var build_modules_lists_names: [String]
     {
         var names = [String]()

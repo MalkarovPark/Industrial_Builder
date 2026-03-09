@@ -228,7 +228,7 @@ private struct CodeTileView: View
                             .padding()
                     }
                 }
-                .overlay(alignment: .bottomTrailing)
+                .overlay(alignment: .bottomLeading)
                 {
                     Text(name)
                     #if os(macOS)

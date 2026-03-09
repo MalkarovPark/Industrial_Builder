@@ -27,21 +27,21 @@ struct ComponentsView: View
                     {
                         NavigationLink(destination: EntityListView())
                         {
-                            BoxCard(title: "Entities", subtitle: numeral_endings(base_stc.entity_items.count, word: "item"), color: .green, symbol_name: "cube", symbol_size: 80)
+                            BoxCard(title: "Entities", subtitle: numeral_endings(base_stc.entity_items.count, word: "item"), color: Color(hex: "4DDD76"), symbol_name: "cube", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ImageListView())
                         {
-                            BoxCard(title: "Images", subtitle: numeral_endings(base_stc.image_items.count, word: "item"), color: .teal, symbol_name: "photo", symbol_size: 80)
+                            BoxCard(title: "Images", subtitle: numeral_endings(base_stc.image_items.count, word: "item"), color: Color(hex: "9593FF"), symbol_name: "photo", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
                         NavigationLink(destination: ListingListView())
                         {
-                            BoxCard(title: "Listings", subtitle: numeral_endings(base_stc.listing_items.count, word: "item"), color: .indigo, symbol_name: "scroll", symbol_size: 80)
+                            BoxCard(title: "Listings", subtitle: numeral_endings(base_stc.listing_items.count, word: "item"), color: Color(hex: "FFD070"), symbol_name: "scroll", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)

@@ -35,7 +35,7 @@ struct PackageView: View
             #endif
         }
         //.presentationSizing(.fitted)
-        .toolbar
+        /*.toolbar
         {
             Button(action: { build_view_presented = true })
             {
@@ -44,7 +44,7 @@ struct PackageView: View
             #if os(visionOS)
             .buttonBorderShape(.circle)
             #endif
-        }
+        }*/
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.visible, for: .navigationBar)

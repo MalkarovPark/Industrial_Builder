@@ -35,7 +35,7 @@ struct ImageCard<Content: View>: View
                 Image(nsImage: image_item.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .overlay(alignment: .bottomTrailing)
+                    .overlay(alignment: .bottomLeading)
                     {
                         Text(image_item.name)
                             .padding(8)
@@ -54,7 +54,7 @@ struct ImageCard<Content: View>: View
                 {
                     is_presented.toggle()
                 }
-                .overlay(alignment: .bottomTrailing)
+                .overlay(alignment: .bottomLeading)
                 {
                     Text(image_item.name)
                         .padding(8)
@@ -138,7 +138,7 @@ struct ListingCard<Content: View>: View
                     #endif
                         .foregroundStyle(.secondary)
                 }
-                .overlay(alignment: .bottomTrailing)
+                .overlay(alignment: .bottomLeading)
                 {
                     Text(listing_item.name)
                         .padding(8)
