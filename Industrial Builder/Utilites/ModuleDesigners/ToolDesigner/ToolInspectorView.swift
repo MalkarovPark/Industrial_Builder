@@ -114,6 +114,8 @@ struct ToolInspectorView: View
                     update_model_controller()
                 }
                 
+                ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update)
+                
                 InspectorItem(label: "Code", is_expanded: false)
                 {
                     VStack(alignment: .leading)

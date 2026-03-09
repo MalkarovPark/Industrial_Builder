@@ -69,7 +69,7 @@
 		62CA56CB2F54DE200040CB77 /* ChangerInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CA56CA2F54DE200040CB77 /* ChangerInspectorView.swift */; };
 		62CA56CD2F550B1C0040CB77 /* JSConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CA56CC2F550B1C0040CB77 /* JSConfiguration.swift */; };
 		62D3118E2CE2905C002A39B8 /* List.txt in Resources */ = {isa = PBXBuildFile; fileRef = 62D3118D2CE2905C002A39B8 /* List.txt */; };
-		62D4304F2CE7E9E900894BEC /* ConnectionParametersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */; };
+		62D4304F2CE7E9E900894BEC /* ConnectionParametersItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4304E2CE7E9E900894BEC /* ConnectionParametersItem.swift */; };
 		62E79B322F57987200D03018 /* InspectorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E79B312F57987100D03018 /* InspectorItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -133,7 +133,7 @@
 		62CA56CA2F54DE200040CB77 /* ChangerInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerInspectorView.swift; sourceTree = "<group>"; };
 		62CA56CC2F550B1C0040CB77 /* JSConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSConfiguration.swift; sourceTree = "<group>"; };
 		62D3118D2CE2905C002A39B8 /* List.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = List.txt; sourceTree = "<group>"; };
-		62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionParametersView.swift; sourceTree = "<group>"; };
+		62D4304E2CE7E9E900894BEC /* ConnectionParametersItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionParametersItem.swift; sourceTree = "<group>"; };
 		62D52D702C37EA91009A3DC7 /* OperationCodesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationCodesItem.swift; sourceTree = "<group>"; };
 		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesView.swift; sourceTree = "<group>"; };
 		62E79B312F57987100D03018 /* InspectorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorItem.swift; sourceTree = "<group>"; };
@@ -233,10 +233,10 @@
 		6255B9222B9D26AA002B575C /* ModuleDesigners */ = {
 			isa = PBXGroup;
 			children = (
-				62D4304E2CE7E9E900894BEC /* ConnectionParametersView.swift */,
 				62E79B312F57987100D03018 /* InspectorItem.swift */,
 				6257C6432F5C4AE900C6174E /* LinkedEntitiesItem.swift */,
 				62D52D702C37EA91009A3DC7 /* OperationCodesItem.swift */,
+				62D4304E2CE7E9E900894BEC /* ConnectionParametersItem.swift */,
 				62988BD42BD046F900371AFE /* RobotDesigner */,
 				62988BD32BD046E400371AFE /* ToolDesigner */,
 				62988BD22BD0419E00371AFE /* PartDesigner */,
@@ -528,7 +528,7 @@
 				6289FCF82AD1EBAE00BB7F5E /* STCDocument.swift in Sources */,
 				6255B9202B9BDC86002B575C /* Framers.swift in Sources */,
 				6265AB0D2F55D0F9004AA44C /* ToolInspectorView.swift in Sources */,
-				62D4304F2CE7E9E900894BEC /* ConnectionParametersView.swift in Sources */,
+				62D4304F2CE7E9E900894BEC /* ConnectionParametersItem.swift in Sources */,
 				626872442BC1A3E5005F8B3C /* ListingView.swift in Sources */,
 				6257C6442F5C4AE900C6174E /* LinkedEntitiesItem.swift in Sources */,
 				626A6C0E2DBC1702000395F6 /* InternalModulesBuildView.swift in Sources */,
