@@ -25,7 +25,7 @@ struct InfoView: View
         {
             LazyVGrid(columns: columns, spacing: 24)
             {
-                DescriptionCard(document: $document)
+                DescriptionCard(stc: base_stc, on_update: { document_handler.document_update_info() })
                     .frame(maxHeight: 256)
                 
                 GlassPaneCard()//color: Color(hex: "9D80FF"))
@@ -105,20 +105,24 @@ public struct GlassPaneCard<Content: View>: View
 
 private struct DescriptionCard: View
 {
-    @Binding var document: STCDocument
+    @ObservedObject var stc: StandardTemplateConstruct
     
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
-    @State private var is_targeted = false
-    @State private var load_panel_presented = false
-    
-    @State private var update_toggle = false
+    let on_update: () -> ()
     
     var body: some View
     {
         GlassPaneCard()
         {
+            let description = Binding(
+                get: { stc.package_info.description },
+                set:
+                    { new_value in
+                        stc.package_info.description = new_value
+                        
+                        on_update()
+                    }
+            )
+            
             VStack(alignment: .leading, spacing: 12)
             {
                 Text("Description")
@@ -127,20 +131,48 @@ private struct DescriptionCard: View
                     .padding(.top, 12)
                     .padding(.leading, 16)
                 
-                TextEditor(text: $base_stc.package_info.description)
+                TextEditor(text: description)
                     .textEditorStyle(.plain)
                     .font(.title3)
                     .frame(maxHeight: .infinity)
-                    .onChange(of: base_stc.package_info.description)
-                    { _, new_value in
-                        document.package_info.description = new_value
-                        document_handler.document_update_info()
-                    }
             }
         }
     }
 }
 
+private struct ExportCard: View
+{
+    @ObservedObject var stc: StandardTemplateConstruct
+    
+    let on_update: () -> ()
+    
+    var body: some View
+    {
+        GlassPaneCard()
+        {
+            let description = Binding(
+                get: { stc.package_info.description },
+                set:
+                    { new_value in
+                        stc.package_info.description = new_value
+                        
+                        on_update()
+                    }
+            )
+            
+            VStack(alignment: .leading, spacing: 12)
+            {
+                Text("Modules")
+                    .font(.system(size: 24, design: .rounded))
+                    .foregroundStyle(.quaternary)
+                    .padding(.top, 12)
+                    .padding(.leading, 16)
+                
+                
+            }
+        }
+    }
+}
 
 #Preview
 {

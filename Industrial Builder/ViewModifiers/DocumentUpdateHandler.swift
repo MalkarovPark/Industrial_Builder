@@ -59,6 +59,7 @@ struct DocumentUpdateModifier: ViewModifier
         content
             .onChange(of: document_handler.update_info_document_notify)
             { _, _ in
+                document.package_info.description = base_stc.package_info.description
                 update_deferred_import()
             }
             

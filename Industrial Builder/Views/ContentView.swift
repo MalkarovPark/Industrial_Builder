@@ -20,7 +20,7 @@ struct ContentView: View
     
     @ViewBuilder var body: some View
     {
-        Sidebar(document: $document)
+        Sidebar(document: $document, sidebar_selection: $sidebar_selection)
             .environmentObject(base_stc)
         #if os(iOS) || os(visionOS)
             .navigationBarHidden(true)
@@ -37,6 +37,7 @@ struct ContentView: View
 struct Sidebar: View
 {
     @Binding var document: STCDocument
+    @Binding var sidebar_selection: navigation_item?
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
@@ -53,7 +54,7 @@ struct Sidebar: View
         {
             NavigationSplitView
             {
-                List
+                List(selection: $sidebar_selection)
                 {
                     ForEach(navigation_item.allCases)
                     { selection in
@@ -66,7 +67,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ComponentsView().modifier(WindowFramer()))
+                                NavigationLink(value: selection)
                                 {
                                     if !components_section_expanded
                                     {
@@ -100,7 +101,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ModulesView().modifier(WindowFramer()))
+                                NavigationLink(value: selection)
                                 {
                                     if !objects_section_expanded
                                     {
@@ -127,19 +128,7 @@ struct Sidebar: View
                         }
                         else
                         {
-                            NavigationLink
-                            {
-                                switch selection
-                                {
-                                case .PackageView:
-                                    PackageView(document: $document)
-                                        .modifier(WindowFramer())
-                                default:
-                                    EmptyView()
-                                        .modifier(WindowFramer())
-                                }
-                            }
-                            label:
+                            NavigationLink(value: selection)
                             {
                                 Label(selection.localizedName, systemImage: selection.image_name)
                             }
@@ -149,18 +138,6 @@ struct Sidebar: View
                 #if !os(macOS)
                 .navigationTitle("STC")
                 .navigationBarTitleDisplayMode(.inline)
-                /*.sheet(isPresented: $app_state.settings_view_presented)
-                {
-                    SettingsView(setting_view_presented: $app_state.settings_view_presented)
-                        .environmentObject(app_state)
-                        .onDisappear
-                    {
-                        app_state.settings_view_presented = false
-                    }
-                    #if os(visionOS)
-                    .frame(width: 512, height: 512)
-                    #endif
-                }*/
                 #else
                 .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
                 #endif
@@ -168,15 +145,28 @@ struct Sidebar: View
             }
             detail:
             {
-                Text("Select an item")
-                    .font(.largeTitle)
-                    .modifier(WindowFramer())
+                switch sidebar_selection
+                {
+                case .PackageView:
+                    PackageView(document: $document)
+                        .modifier(WindowFramer())
+                case .ComponentsView:
+                    ComponentsView()
+                        .modifier(WindowFramer())
+                case .ModulesView:
+                    ModulesView()
+                        .modifier(WindowFramer())
+                default:
+                    Text("Select an item")
+                        .font(.largeTitle)
+                        .modifier(WindowFramer())
                 #if os(macOS)
                     .foregroundColor(Color(NSColor.quaternaryLabelColor))
                 #else
                     .foregroundColor(Color(UIColor.quaternaryLabel))
                 #endif
                     .padding(16)
+                }
             }
         }
     }
