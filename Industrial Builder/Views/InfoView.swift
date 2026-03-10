@@ -26,16 +26,16 @@ struct InfoView: View
             LazyVGrid(columns: columns, spacing: 24)
             {
                 DescriptionCard(stc: base_stc, on_update: { document_handler.document_update_info() })
-                    .frame(maxHeight: 256)
+                    .frame(height: 256)
+                
+                ExportCard(stc: base_stc, on_update: { document_handler.document_update_info() })
+                    .frame(height: 256)
                 
                 GlassPaneCard()//color: Color(hex: "9D80FF"))
-                    .frame(minHeight: 256)
+                    .frame(height: 256)
                 
                 GlassPaneCard()//color: Color(hex: "9D80FF"))
-                    .frame(minHeight: 256)
-                
-                GlassPaneCard()//color: Color(hex: "9D80FF"))
-                    .frame(minHeight: 256)
+                    .frame(height: 256)
             }
             .padding(20)
         }
@@ -146,20 +146,27 @@ private struct ExportCard: View
     
     let on_update: () -> ()
     
+    @State private var selected_name: DeviceMode = .internal_modules
+    
+    enum DeviceMode: String, CaseIterable
+    {
+        case internal_modules = "internal_modules"
+        case external_modules = "external_modules"
+        
+        var title: String
+        {
+            switch self
+            {
+            case .internal_modules: "Internal Modules"
+            case .external_modules: "External Modules"
+            }
+        }
+    }
+    
     var body: some View
     {
         GlassPaneCard()
         {
-            let description = Binding(
-                get: { stc.package_info.description },
-                set:
-                    { new_value in
-                        stc.package_info.description = new_value
-                        
-                        on_update()
-                    }
-            )
-            
             VStack(alignment: .leading, spacing: 12)
             {
                 Text("Modules")
@@ -168,7 +175,63 @@ private struct ExportCard: View
                     .padding(.top, 12)
                     .padding(.leading, 16)
                 
+                let sn = Binding(
+                    get: { selected_name.rawValue },
+                    set:
+                        { _ in
+                            
+                        }
+                )
                 
+                /*if base_stc.robot_modules.isEmpty && base_stc.tool_modules.isEmpty && base_stc.part_modules.isEmpty && base_stc.changer_modules.isEmpty
+                {
+                    Text("No modules for export")
+                        .font(.title2)
+                        .foregroundStyle(.tertiary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }*/
+                
+                BuildListView(stc: stc, selected_name: sn, with_spacer: true, on_update: on_update)
+                    .overlay(alignment: .bottom)
+                {
+                    HStack
+                    {
+                        Picker("Mode", selection: $selected_name)
+                        {
+                            ForEach(DeviceMode.allCases, id: \.self)
+                            { device_mode in
+                                Text(device_mode.title).tag(device_mode)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .buttonStyle(.bordered)
+                        .labelsHidden()
+                        .disabled(stc.package_info.build_modules_lists.count == 0)
+                        
+                        switch selected_name
+                        {
+                        case .internal_modules:
+                            Picker(selection: $stc.internal_export_type, label: Text("Export Type"))
+                            {
+                                ForEach(InternalExportType.allCases, id: \.self)
+                                { export_type in
+                                    Text(export_type.rawValue).tag(export_type)
+                                }
+                            }
+                        case .external_modules:
+                            Picker(selection: $stc.external_export_type, label: Text("Export Type"))
+                            {
+                                ForEach(ExternalExportType.allCases, id: \.self)
+                                { export_type in
+                                    Text(export_type.rawValue).tag(export_type)
+                                }
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(8)
+                    .background(.bar)
+                }
             }
         }
     }

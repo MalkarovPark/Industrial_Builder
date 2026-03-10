@@ -40,7 +40,7 @@ struct InternalModulesBuildView: View
             }
             else
             {
-                BuildListView(selected_name: $selected_name, with_spacer: true)
+                BuildListView(stc: base_stc, selected_name: $selected_name, with_spacer: true, on_update: {})
                     .overlay(alignment: .bottom)
                     {
                         HStack
@@ -122,7 +122,8 @@ struct InternalModulesBuildView: View
     }
 }
 
-#Preview {
+#Preview
+{
     InternalModulesBuildView(document: .constant(STCDocument()))
         .environmentObject(StandardTemplateConstruct())
         .frame(width: 256)

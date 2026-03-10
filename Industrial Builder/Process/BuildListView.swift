@@ -10,17 +10,16 @@ import IndustrialKit
 
 struct BuildListView: View
 {
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    @ObservedObject var stc: StandardTemplateConstruct
     
     @Binding var selected_name: String
+    
+    public let on_update: () -> Void
     
     @State private var targets_palette_view_presented = false
     @State private var new_panel_presented = false
     
     private var with_spacer = false
-    
-    //private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 8)]
     
     #if os(macOS)
     let column_count: Int = 4
@@ -30,15 +29,21 @@ struct BuildListView: View
     let grid_spacing: CGFloat = 16
     #endif
     
-    public init(selected_name: Binding<String>)
+    public init(
+        stc: StandardTemplateConstruct,
+        
+        selected_name: Binding<String>,
+        with_spacer: Bool = false,
+        
+        on_update: @escaping () -> Void
+    )
     {
-        self._selected_name = selected_name
-    }
-    
-    public init(selected_name: Binding<String>, with_spacer: Bool = false)
-    {
+        self.stc = stc
+        
         self._selected_name = selected_name
         self.with_spacer = with_spacer
+        
+        self.on_update = on_update
     }
     
     var body: some View
@@ -47,7 +52,7 @@ struct BuildListView: View
         {
             VStack(spacing: 0)
             {
-                if base_stc.robot_modules.count > 0
+                if stc.robot_modules.count > 0
                 {
                     VStack(alignment: .leading, spacing: 8)
                     {
@@ -56,12 +61,13 @@ struct BuildListView: View
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (base_stc.robot_modules_names, id: \.self)
+                            ForEach (stc.robot_modules_names, id: \.self)
                             { name in
                                 ModuleTileView(
                                     name: name,
-                                    image_name: "r.square", color: .green,
-                                    is_selected: is_module_selected(name: name, type: .robot)
+                                    image_name: "r.square", color: Color(hex: "13C5B5"),
+                                    is_selected: is_module_selected(name: name, type: .robot),
+                                    on_update: on_update
                                 )
                             }
                         }
@@ -69,7 +75,7 @@ struct BuildListView: View
                     .padding(.bottom, 16)
                 }
                 
-                if base_stc.tool_modules.count > 0
+                if stc.tool_modules.count > 0
                 {
                     VStack(alignment: .leading, spacing: 8)
                     {
@@ -78,12 +84,13 @@ struct BuildListView: View
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (base_stc.tool_modules_names, id: \.self)
+                            ForEach (stc.tool_modules_names, id: \.self)
                             { name in
                                 ModuleTileView(
                                     name: name,
-                                    image_name: "hammer", color: .teal,
-                                    is_selected: is_module_selected(name: name, type: .tool)
+                                    image_name: "hammer", color: Color(hex: "6CC0FF"),
+                                    is_selected: is_module_selected(name: name, type: .tool),
+                                    on_update: on_update
                                 )
                             }
                             .aspectRatio(1, contentMode: .fit)
@@ -92,7 +99,7 @@ struct BuildListView: View
                     .padding(.bottom, 16)
                 }
                 
-                if base_stc.part_modules.count > 0
+                if stc.part_modules.count > 0
                 {
                     VStack(alignment: .leading, spacing: 8)
                     {
@@ -101,12 +108,13 @@ struct BuildListView: View
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (base_stc.part_modules_names, id: \.self)
+                            ForEach (stc.part_modules_names, id: \.self)
                             { name in
                                 ModuleTileView(
                                     name: name,
-                                    image_name: "shippingbox", color: .indigo,
-                                    is_selected: is_module_selected(name: name, type: .part)
+                                    image_name: "shippingbox", color: Color(hex: "6965F0"),
+                                    is_selected: is_module_selected(name: name, type: .part),
+                                    on_update: on_update
                                 )
                             }
                             .aspectRatio(1, contentMode: .fit)
@@ -115,7 +123,7 @@ struct BuildListView: View
                     .padding(.bottom, 16)
                 }
                 
-                if base_stc.changer_modules.count > 0
+                if stc.changer_modules.count > 0
                 {
                     VStack(alignment: .leading, spacing: 8)
                     {
@@ -124,12 +132,13 @@ struct BuildListView: View
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (base_stc.changer_modules_names, id: \.self)
+                            ForEach (stc.changer_modules_names, id: \.self)
                             { name in
                                 ModuleTileView(
                                     name: name,
-                                    image_name: "wand.and.rays", color: .pink,
-                                    is_selected: is_module_selected(name: name, type: .changer)
+                                    image_name: "wand.and.rays", color: Color(hex: "F350B3"),
+                                    is_selected: is_module_selected(name: name, type: .changer),
+                                    on_update: on_update
                                 )
                             }
                             .aspectRatio(1, contentMode: .fit)
@@ -145,26 +154,22 @@ struct BuildListView: View
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: base_stc.package_info.build_modules_lists)
-        { _, _ in
-            document_handler.document_update_info()
-        }
     }
     
     // MARK: Module lists handling
     private var selected_list_index: Int
     {
-        return base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name }) ?? -1
+        return stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name }) ?? -1
     }
     
     private var selected_list: BuildModulesList
     {
-        guard let index = base_stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name })
+        guard let index = stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name })
         else
         {
             return BuildModulesList(name: "")
         }
-        return base_stc.package_info.build_modules_lists[index]
+        return stc.package_info.build_modules_lists[index]
     }
     
     // MARK: Module names handling
@@ -204,7 +209,7 @@ struct BuildListView: View
             return []
         }
         
-        let list = base_stc.package_info.build_modules_lists[selected_list_index]
+        let list = stc.package_info.build_modules_lists[selected_list_index]
         switch type
         {
         case .robot:
@@ -223,13 +228,13 @@ struct BuildListView: View
         switch type
         {
         case .robot:
-            base_stc.package_info.build_modules_lists[selected_list_index].robot_modules_names = names
+            stc.package_info.build_modules_lists[selected_list_index].robot_modules_names = names
         case .tool:
-            base_stc.package_info.build_modules_lists[selected_list_index].tool_modules_names = names
+            stc.package_info.build_modules_lists[selected_list_index].tool_modules_names = names
         case .part:
-            base_stc.package_info.build_modules_lists[selected_list_index].part_modules_names = names
+            stc.package_info.build_modules_lists[selected_list_index].part_modules_names = names
         case .changer:
-            base_stc.package_info.build_modules_lists[selected_list_index].changer_modules_names = names
+            stc.package_info.build_modules_lists[selected_list_index].changer_modules_names = names
         }
     }
     
@@ -260,12 +265,23 @@ struct ModuleTileView: View
     
     @Binding var is_selected: Bool
     
-    public init(name: String, image_name: String, color: Color, is_selected: Binding<Bool>)
+    public let on_update: () -> Void
+    
+    public init(
+        name: String,
+        image_name: String,
+        color: Color,
+        is_selected: Binding<Bool>,
+        
+        on_update: @escaping () -> Void
+    )
     {
         self.name = name
         self.image_name = image_name
         self.color = color
         self._is_selected = is_selected
+        
+        self.on_update = on_update
     }
     
     var body: some View
@@ -274,21 +290,18 @@ struct ModuleTileView: View
         {
             Rectangle()
                 .foregroundStyle(color)
-                .overlay(alignment: .trailing)
+                .overlay//(alignment: .trailing)
                 {
                     Image(systemName: image_name)
                         .fontWeight(.bold)
+                        //.font(.system(size: 32))
                         .font(.system(size: 48))
-                    #if os(macOS)
-                        .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                    #else
-                        .foregroundColor(Color(UIColor.quaternaryLabel))
-                    #endif
+                        .foregroundStyle(.quaternary.opacity(0.5))
                         .padding()
                     #if os(macOS)
-                        .offset(x: 30, y: 20)
+                        .offset(x: -20, y: 20)
                     #else
-                        .offset(x: 35, y: 25)
+                        .offset(x: -25, y: 25)
                     #endif
                 }
                 .overlay(alignment: .topLeading)
@@ -306,9 +319,9 @@ struct ModuleTileView: View
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .shadow(color: .black.opacity(0.2), radius: is_selected ? 4 : 0)
+                .shadow(color: color.opacity(0.2), radius: is_selected ? 8 : 0)
         }
-        .overlay
+        .overlay(alignment: .bottomTrailing)
         {
             if is_selected
             {
@@ -317,22 +330,24 @@ struct ModuleTileView: View
                     Image(systemName: "checkmark")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 16, height: 16)
+                        .frame(width: 10, height: 10)
                         .foregroundStyle(.primary)
                 }
                 #if os(macOS)
-                .frame(width: 40, height: 40)
+                .frame(width: 20, height: 20)
                 #else
-                .frame(width: 48, height: 48)
+                .frame(width: 24, height: 24)
                 #endif
                 .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+                .clipShape(Circle())
+                .padding(6)
             }
         }
         .scaleEffect(is_selected ? 1 : 0.95)
         .onTapGesture
         {
             is_selected.toggle()
+            on_update()
         }
         .animation(.easeInOut(duration: 0.2), value: is_selected)
         .aspectRatio(1, contentMode: .fit)
@@ -392,8 +407,7 @@ public var external_app_code_templates: [String] = [
 
 #Preview
 {
-    BuildListView(selected_name: .constant("UwU"))
-        .environmentObject(StandardTemplateConstruct())
+    BuildListView(stc: StandardTemplateConstruct(), selected_name: .constant("UwU"), on_update: {})
         .environmentObject(DocumentUpdateHandler())
         .padding()
 }
