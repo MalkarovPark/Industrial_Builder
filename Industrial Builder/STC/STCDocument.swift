@@ -39,10 +39,7 @@ struct STCDocument: FileDocument
     {
         self.package_info = STCPackageInfo()
         
-        self.package_info.build_modules_lists = [
-            BuildModulesList(name: "internal_modules"),
-            BuildModulesList(name: "external_modules")
-        ]
+        self.package_info.build_modules_list = BuildModulesList()
     }
     
     // MARK: - Import
@@ -77,7 +74,15 @@ struct STCDocument: FileDocument
                     return
                 }
                 
-                package_info = try! JSONDecoder().decode(STCPackageInfo.self, from: data)
+                do
+                {
+                    package_info = try JSONDecoder().decode(STCPackageInfo.self, from: data)
+                }
+                catch
+                {
+                    package_info = STCPackageInfo()
+                }
+                //package_info = try! JSONDecoder().decode(STCPackageInfo.self, from: data)
             }
             
             func json_decode<T: Decodable>(_ wrapper: FileWrapper, type: T.Type) -> T?

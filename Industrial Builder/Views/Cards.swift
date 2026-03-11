@@ -15,7 +15,7 @@ struct ImageCard<Content: View>: View
 {
     let image_item: ImageItem
     
-    let content: (_ isPresented: Binding<Bool>) -> Content
+    let content: (_ is_presented: Binding<Bool>) -> Content
     
     @State private var is_presented = false
     
@@ -50,21 +50,17 @@ struct ImageCard<Content: View>: View
                 Image(uiImage: image_item.image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .onTapGesture
-                {
-                    is_presented.toggle()
-                }
-                .overlay(alignment: .bottomLeading)
-                {
-                    Text(image_item.name)
-                        .padding(8)
-                        .background
-                        {
-                            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                .foregroundStyle(.thinMaterial)
-                        }
-                        .padding(8)
-                }
+                    .overlay(alignment: .bottomLeading)
+                    {
+                        Text(image_item.name)
+                            .padding(8)
+                            .background
+                            {
+                                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                    .foregroundStyle(.thinMaterial)
+                            }
+                            .padding(8)
+                    }
                 #endif
             }
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -189,7 +185,7 @@ struct SceneCard<Content: View>: View
 {
     let entity_item: EntityItem
     
-    let content: (_ isPresented: Binding<Bool>) -> Content
+    let content: (_ is_presented: Binding<Bool>) -> Content
     
     @State private var is_presented = false
     

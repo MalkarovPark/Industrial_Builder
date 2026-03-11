@@ -82,6 +82,11 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var listing_items = [ListingItem]()
     @Published var entity_items = [EntityItem]()
     
+    public var any_modules_avaliable: Bool
+    {
+        return !(robot_modules.isEmpty && tool_modules.isEmpty && part_modules.isEmpty && changer_modules.isEmpty)
+    }
+    
     // MARK: - Modules handling
     // MARK: Robot modules
     @Published var robot_modules = [RobotModule]()
@@ -183,7 +188,7 @@ public class StandardTemplateConstruct: ObservableObject
     @Published var internal_export_type: InternalExportType = .files_only
     @Published var external_export_type: ExternalExportType = .no_build
     
-    @Published var prepare_for_dev_type: PrepareForDevType = .blank_project
+    @Published var prepare_for_dev_type: PrepareForDevType = .from_listing //.blank_project
     
     // MARK: - Code generation functions
     public func misc_code_process(type: MiscCodeGenerationFunction, input: String = String()) -> String
@@ -986,15 +991,14 @@ public enum ExternalExportType: String, Equatable, CaseIterable
     case programs_only = "Build To Programs Only"
     case projects_only = "Build To Projects Only"
     case build_from_projects = "Build Existing Projects To Programs"
-    case projects_to_programs = "Turn Existing Projects to Programs"
+    case projects_to_programs = "Turn Existing Projects To Programs"
     case no_build = "No Build (Listings Only)"
 }
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
 {
-    case blank_project = "Blank Project"
-    case from_listing = "From selected listing"
-    case mbk_only = "Module Building Kit only"
+    case from_listing = "From Selected Code Template"
+    case mbk_only = "Module Building Kit Only"
 }
 
 public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable

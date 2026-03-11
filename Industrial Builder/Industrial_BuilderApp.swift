@@ -21,9 +21,9 @@ struct Industrial_BuilderApp: App
         { file in
             ContentView(document: file.$document, document_url: file.fileURL)
                 .environmentObject(app_state)
-            #if os(macOS)
-                .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-            #endif
+            //#if os(macOS)
+                //.toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+            //#endif
         }
         //.environmentObject(app_state)
         .commands

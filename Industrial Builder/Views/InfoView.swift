@@ -9,12 +9,13 @@ import SwiftUI
 
 import IndustrialKit
 import IndustrialKitUI
+import UniformTypeIdentifiers
 
 struct InfoView: View
 {
     @Binding var document: STCDocument
     
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 24)]
@@ -25,16 +26,16 @@ struct InfoView: View
         {
             LazyVGrid(columns: columns, spacing: 24)
             {
-                DescriptionCard(stc: base_stc, on_update: { document_handler.document_update_info() })
+                DescriptionCard(stc: stc, on_update: { document_handler.document_update_info() })
                     .frame(height: 256)
                 
-                ExportCard(stc: base_stc, on_update: { document_handler.document_update_info() })
+                ModulesCard(stc: stc, on_update: { document_handler.document_update_info() })
                     .frame(height: 256)
                 
-                GlassPaneCard()//color: Color(hex: "9D80FF"))
+                ExternalExportCard(stc: stc)
                     .frame(height: 256)
                 
-                GlassPaneCard()//color: Color(hex: "9D80FF"))
+                DevelopmentCard(stc: stc)
                     .frame(height: 256)
             }
             .padding(20)
@@ -98,6 +99,7 @@ public struct GlassPaneCard<Content: View>: View
             }
             
             content
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
     }
@@ -111,42 +113,51 @@ private struct DescriptionCard: View
     
     var body: some View
     {
-        GlassPaneCard()
+        GlassPaneCard(color: .accentColor)
         {
-            let description = Binding(
-                get: { stc.package_info.description },
-                set:
-                    { new_value in
-                        stc.package_info.description = new_value
-                        
-                        on_update()
-                    }
-            )
-            
-            VStack(alignment: .leading, spacing: 12)
+            ScrollView
             {
-                Text("Description")
-                    .font(.system(size: 24, design: .rounded))
-                    .foregroundStyle(.quaternary)
-                    .padding(.top, 12)
-                    .padding(.leading, 16)
+                let description = Binding(
+                    get: { stc.package_info.description },
+                    set:
+                        { new_value in
+                            stc.package_info.description = new_value
+                            
+                            on_update()
+                        }
+                )
                 
                 TextEditor(text: description)
                     .textEditorStyle(.plain)
                     .font(.title3)
                     .frame(maxHeight: .infinity)
+                    .foregroundStyle(.white)
+                
+                Spacer(minLength: 52)
+            }
+            .overlay(alignment: .bottom)
+            {
+                HStack
+                {
+                    Text("Description")
+                        .font(.system(size: 18, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.vertical, 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                }
+                .background(.ultraThinMaterial)
             }
         }
     }
 }
 
-private struct ExportCard: View
+private struct ModulesCard: View
 {
     @ObservedObject var stc: StandardTemplateConstruct
     
     let on_update: () -> ()
-    
-    @State private var selected_name: DeviceMode = .internal_modules
     
     enum DeviceMode: String, CaseIterable
     {
@@ -167,73 +178,488 @@ private struct ExportCard: View
     {
         GlassPaneCard()
         {
-            VStack(alignment: .leading, spacing: 12)
+            if stc.any_modules_avaliable
             {
-                Text("Modules")
-                    .font(.system(size: 24, design: .rounded))
-                    .foregroundStyle(.quaternary)
-                    .padding(.top, 12)
-                    .padding(.leading, 16)
-                
-                let sn = Binding(
-                    get: { selected_name.rawValue },
-                    set:
-                        { _ in
-                            
-                        }
-                )
-                
-                /*if base_stc.robot_modules.isEmpty && base_stc.tool_modules.isEmpty && base_stc.part_modules.isEmpty && base_stc.changer_modules.isEmpty
+                ScrollView
                 {
-                    Text("No modules for export")
-                        .font(.title2)
-                        .foregroundStyle(.tertiary)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }*/
-                
-                BuildListView(stc: stc, selected_name: sn, with_spacer: true, on_update: on_update)
-                    .overlay(alignment: .bottom)
+                    BuildListView(stc: stc, on_update: on_update)
+                    
+                    Spacer(minLength: 52)
+                }
+                .overlay(alignment: .bottom)
                 {
-                    HStack
+                    VStack
                     {
-                        Picker("Mode", selection: $selected_name)
+                        HStack
                         {
-                            ForEach(DeviceMode.allCases, id: \.self)
-                            { device_mode in
-                                Text(device_mode.title).tag(device_mode)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .buttonStyle(.bordered)
-                        .labelsHidden()
-                        .disabled(stc.package_info.build_modules_lists.count == 0)
-                        
-                        switch selected_name
-                        {
-                        case .internal_modules:
-                            Picker(selection: $stc.internal_export_type, label: Text("Export Type"))
-                            {
-                                ForEach(InternalExportType.allCases, id: \.self)
-                                { export_type in
-                                    Text(export_type.rawValue).tag(export_type)
-                                }
-                            }
-                        case .external_modules:
-                            Picker(selection: $stc.external_export_type, label: Text("Export Type"))
-                            {
-                                ForEach(ExternalExportType.allCases, id: \.self)
-                                { export_type in
-                                    Text(export_type.rawValue).tag(export_type)
-                                }
-                            }
+                            Text("Modules")
+                                .font(.system(size: 18, design: .rounded))
+                                .foregroundStyle(.secondary)
+                                .padding(.vertical, 12)
+                                .padding(.leading, 16)
+                            
+                            Spacer()
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(8)
-                    .background(.bar)
+                    .background(.ultraThinMaterial)
+                }
+            }
+            else
+            {
+                Text("No Modules")
+                    .font(.title2)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+}
+
+private struct ExternalExportCard: View
+{
+    @ObservedObject var stc: StandardTemplateConstruct
+    
+    @State private var is_export_presented = false
+    
+    @State private var external_export_panel_presented = false
+    
+    enum DeviceMode: String, CaseIterable
+    {
+        case internal_modules = "Internal Modules"
+        case external_modules = "External Modules"
+    }
+    
+    #if os(macOS)
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
+    #else
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 16)]
+    #endif
+    
+    var body: some View
+    {
+        GlassPaneCard(color: Color(hex: "3671D9"))
+        {
+            ZStack
+            {
+                Menu
+                {
+                    ForEach(ExternalExportType.allCases, id: \.self)
+                    { export_type in
+                        Button(export_type.rawValue)
+                        {
+                            stc.external_export_type = export_type
+                            external_export_panel_presented = true
+                        }
+                    }
+                }
+                label:
+                {
+                    IconView
+                    {
+                        ZStack
+                        {
+                            Rectangle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: .white, location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .scaledToFill()
+                            
+                            Image(systemName: "folder.fill")
+                                .foregroundStyle(Color(hex: "6CC0FF"))
+                                .font(.system(size: 30))
+                        }
+                        .overlay(alignment: .bottomTrailing)
+                        {
+                            Image(systemName: "chevron.down")
+                                .foregroundStyle(.secondary)
+                                .font(.system(size: 12))
+                                .padding(8)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .disabled(!stc.any_modules_avaliable)
+                .fileImporter(
+                    isPresented: $external_export_panel_presented,
+                    allowedContentTypes: [.folder],
+                    allowsMultipleSelection: false
+                )
+                { result in
+                    switch result
+                    {
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            stc.build_external_modules(list: stc.package_info.build_modules_list, to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .bottom)
+            {
+                HStack
+                {
+                    Text("External Export")
+                        .font(.system(size: 18, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.vertical, 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
                 }
             }
         }
+    }
+}
+
+private struct DevelopmentCard: View
+{
+    @ObservedObject var stc: StandardTemplateConstruct
+    
+    @State private var code_template_view_presented = false
+    @State private var store_listing_panel_presented = false
+    @State private var store_mbk_panel_presented = false
+    @State private var passed_listing_text = String()
+    
+    @State private var project_export_panel_presented = false
+    
+    #if os(macOS)
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
+    #else
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 16)]
+    #endif
+    
+    var body: some View
+    {
+        GlassPaneCard(color: Color(hex: "13C5B5"))
+        {
+            HStack(spacing: 18)
+            {
+                Menu
+                {
+                    ForEach(PrepareForDevType.allCases, id: \.self)
+                    { export_type in
+                        Button(export_type.rawValue)
+                        {
+                            stc.prepare_for_dev_type = export_type
+                            switch export_type
+                            {
+                            case .from_listing: code_template_view_presented = true
+                            case .mbk_only: store_mbk_panel_presented = true
+                            }
+                        }
+                    }
+                }
+                label:
+                {
+                    IconView
+                    {
+                        ZStack
+                        {
+                            Rectangle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: Color(hex: "2E2E2E"), location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .scaledToFill()
+                            
+                            Image(systemName: "terminal")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 30))
+                        }
+                        .overlay(alignment: .bottomTrailing)
+                        {
+                            Image(systemName: "chevron.down")
+                                .foregroundStyle(.white.opacity(0.75))
+                                .font(.system(size: 12))
+                                .padding(8)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .fileExporter(
+                    isPresented: $store_listing_panel_presented,
+                    document: SwiftSourceDocument(content: passed_listing_text),
+                    contentType: .swiftSource,
+                    defaultFilename: "Listing"
+                )
+                { result in
+                    switch result
+                    {
+                    case .success(let url):
+                        let file_name = url.lastPathComponent
+                        let folder_url = url.deletingLastPathComponent()
+                        
+                        stc.make_industrial_app_project(from: file_name, to: folder_url)
+                        passed_listing_text = String()
+                        
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }
+                .fileImporter(
+                    isPresented: $store_mbk_panel_presented,
+                    allowedContentTypes: [.folder],
+                    allowsMultipleSelection: false
+                )
+                { result in
+                    switch result
+                    {
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            stc.store_mbk(to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }
+                .sheet(isPresented: $code_template_view_presented)
+                {
+                    CodeSelectorView(
+                        is_presented: $code_template_view_presented,
+                        avaliable_template_names: external_app_code_templates
+                    )
+                    { output in
+                        passed_listing_text = output
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+                        {
+                            store_listing_panel_presented = true
+                        }
+                    }
+                }
+                
+                Button
+                {
+                    project_export_panel_presented = true
+                }
+                label:
+                {
+                    IconView
+                    {
+                        ZStack
+                        {
+                            Rectangle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: .white, location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .scaledToFill()
+                            
+                            Image(systemName: "app.fill")
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: Color(hex: "0FC1FB"), location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "1F74FF"), location: 1.0)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .font(.system(size: 50))
+                            
+                            Image(systemName: "hammer.fill")
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: Color(hex: "70727E"), location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "16181B"), location: 1.0)
+                                        ]),
+                                        startPoint: .topTrailing,
+                                        endPoint: .bottomLeading
+                                    )
+                                )
+                                .font(.system(size: 25))
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .fileImporter(
+                    isPresented: $project_export_panel_presented,
+                    allowedContentTypes: [.folder],
+                    allowsMultipleSelection: false
+                )
+                { result in
+                    switch result
+                    {
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            stc.build_application_project(list: stc.package_info.build_modules_list, to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }
+                
+                /*Button
+                {
+                    
+                }
+                label:
+                {
+                    IconView
+                    {
+                        ZStack
+                        {
+                            Rectangle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: Color(hex: "FFAD5A"), location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "DD3D4D"), location: 1.0)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .scaledToFill()
+                            
+                            Image(systemName: "swift")
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        gradient: Gradient(stops: [
+                                            Gradient.Stop(color: .white, location: 0.0),
+                                            Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .font(.system(size: 40))
+                                .offset(x: -2, y: -2)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .fileImporter(
+                    isPresented: $external_export_panel_presented,
+                    allowedContentTypes: [.folder],
+                    allowsMultipleSelection: false
+                )
+                { result in
+                    switch result
+                    {
+                    case .success(let urls):
+                        if let url = urls.first
+                        {
+                            stc.build_external_modules(list: stc.package_info.build_modules_list, to: url)
+                        }
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        break
+                    }
+                }*/
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .bottom)
+            {
+                HStack
+                {
+                    Text("Industrial App")
+                        .font(.system(size: 18, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.vertical, 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                }
+            }
+        }
+    }
+}
+
+struct SwiftSourceDocument: FileDocument
+{
+    static var readableContentTypes = [UTType.swiftSource]
+    
+    var text = ""
+    
+    init(configuration: ReadConfiguration) throws
+    {
+        if let data = configuration.file.regularFileContents
+        {
+            text = String(data: data, encoding: .utf8) ?? ""
+        }
+        else
+        {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
+    {
+        let data = text.data(using: .utf8)!
+        return .init(regularFileWithContents: data)
+    }
+    
+    init(content: String = "")
+    {
+        text = content
+    }
+}
+
+struct RawFileDocument: FileDocument
+{
+    static var readableContentTypes: [UTType] { [.data] }
+    var data: Data
+    
+    init(data: Data)
+    {
+        self.data = data
+    }
+    
+    init(configuration: ReadConfiguration) throws
+    {
+        self.data = configuration.file.regularFileContents ?? Data()
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
+    {
+        return FileWrapper(regularFileWithContents: data)
+    }
+}
+
+struct IconView<Content: View>: View
+{
+    let content: () -> Content
+    
+    var body: some View
+    {
+        ZStack
+        {
+            content()
+                .scaledToFit()
+        }
+        .frame(width: 72, height: 72)
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 }
 
@@ -243,3 +669,4 @@ private struct ExportCard: View
         .frame(minWidth: 640, idealWidth: 800, minHeight: 480, idealHeight: 600)
         .environmentObject(StandardTemplateConstruct())
 }
+

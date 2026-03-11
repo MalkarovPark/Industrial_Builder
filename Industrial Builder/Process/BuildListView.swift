@@ -12,14 +12,12 @@ struct BuildListView: View
 {
     @ObservedObject var stc: StandardTemplateConstruct
     
-    @Binding var selected_name: String
-    
     public let on_update: () -> Void
     
     @State private var targets_palette_view_presented = false
     @State private var new_panel_presented = false
     
-    private var with_spacer = false
+    //private var with_spacer = false
     
     #if os(macOS)
     let column_count: Int = 4
@@ -32,16 +30,10 @@ struct BuildListView: View
     public init(
         stc: StandardTemplateConstruct,
         
-        selected_name: Binding<String>,
-        with_spacer: Bool = false,
-        
-        on_update: @escaping () -> Void
+        on_update: @escaping () -> Void = {}
     )
     {
         self.stc = stc
-        
-        self._selected_name = selected_name
-        self.with_spacer = with_spacer
         
         self.on_update = on_update
     }
@@ -57,7 +49,7 @@ struct BuildListView: View
                     VStack(alignment: .leading, spacing: 8)
                     {
                         Text("Robot")
-                            .font(.title3)
+                            .font(.title2)
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
@@ -80,7 +72,7 @@ struct BuildListView: View
                     VStack(alignment: .leading, spacing: 8)
                     {
                         Text("Tool")
-                            .font(.title3)
+                            .font(.title2)
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
@@ -104,7 +96,7 @@ struct BuildListView: View
                     VStack(alignment: .leading, spacing: 8)
                     {
                         Text("Part")
-                            .font(.title3)
+                            .font(.title2)
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
@@ -128,7 +120,7 @@ struct BuildListView: View
                     VStack(alignment: .leading, spacing: 8)
                     {
                         Text("Changer")
-                            .font(.title3)
+                            .font(.title2)
                         
                         LazyVGridU(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
@@ -145,31 +137,10 @@ struct BuildListView: View
                         }
                     }
                 }
-                
-                if with_spacer
-                {
-                    Spacer(minLength: 32)
-                }
             }
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    
-    // MARK: Module lists handling
-    private var selected_list_index: Int
-    {
-        return stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name }) ?? -1
-    }
-    
-    private var selected_list: BuildModulesList
-    {
-        guard let index = stc.package_info.build_modules_lists.firstIndex(where: { $0.name == selected_name })
-        else
-        {
-            return BuildModulesList(name: "")
-        }
-        return stc.package_info.build_modules_lists[index]
     }
     
     // MARK: Module names handling
@@ -204,12 +175,7 @@ struct BuildListView: View
     
     private func get_module_names(for type: ModuleType) -> [String]
     {
-        guard selected_list_index > -1 else
-        {
-            return []
-        }
-        
-        let list = stc.package_info.build_modules_lists[selected_list_index]
+        let list = stc.package_info.build_modules_list
         switch type
         {
         case .robot:
@@ -228,13 +194,13 @@ struct BuildListView: View
         switch type
         {
         case .robot:
-            stc.package_info.build_modules_lists[selected_list_index].robot_modules_names = names
+            stc.package_info.build_modules_list.robot_modules_names = names
         case .tool:
-            stc.package_info.build_modules_lists[selected_list_index].tool_modules_names = names
+            stc.package_info.build_modules_list.tool_modules_names = names
         case .part:
-            stc.package_info.build_modules_lists[selected_list_index].part_modules_names = names
+            stc.package_info.build_modules_list.part_modules_names = names
         case .changer:
-            stc.package_info.build_modules_lists[selected_list_index].changer_modules_names = names
+            stc.package_info.build_modules_list.changer_modules_names = names
         }
     }
     
@@ -407,7 +373,7 @@ public var external_app_code_templates: [String] = [
 
 #Preview
 {
-    BuildListView(stc: StandardTemplateConstruct(), selected_name: .constant("UwU"), on_update: {})
+    BuildListView(stc: StandardTemplateConstruct())
         .environmentObject(DocumentUpdateHandler())
         .padding()
 }
