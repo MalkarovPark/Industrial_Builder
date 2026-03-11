@@ -187,7 +187,7 @@ struct AppDevTile: View
                     }
                 }
                 .buttonStyle(.plain)
-                .fileImporter(
+                /*.fileImporter(
                     isPresented: $project_export_panel_presented,
                     allowedContentTypes: [.folder],
                     allowsMultipleSelection: false
@@ -204,7 +204,7 @@ struct AppDevTile: View
                         print(error.localizedDescription)
                         break
                     }
-                }
+                }*/
                 
                 /*Button
                 {

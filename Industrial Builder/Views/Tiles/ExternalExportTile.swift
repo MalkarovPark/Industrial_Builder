@@ -13,9 +13,9 @@ struct ExternalExportTile: View
     
     @State private var is_export_presented = false
     
-    @State private var external_export_panel_presented = false
+    @State private var file_exporter_presented = false
     
-    @State private var external_export_type: ExternalExportOption = .no_build
+    @State private var external_export_option: ModuleExportOption = .no_build
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
@@ -31,14 +31,21 @@ struct ExternalExportTile: View
             {
                 Menu
                 {
-                    ForEach(ExternalExportOption.allCases, id: \.self)
+                    ForEach(ModuleExportOption.allCases, id: \.self)
                     { export_type in
                         Button(export_type.rawValue)
                         {
-                            external_export_type = export_type
-                            external_export_panel_presented = true
+                            external_export_option = export_type
+                            file_exporter_presented = true
                         }
                     }
+                    
+                    /*Divider()
+                    
+                    Button("For Project Import")
+                    {
+                        
+                    }*/
                 }
                 label:
                 {
@@ -75,7 +82,7 @@ struct ExternalExportTile: View
                 .buttonStyle(.plain)
                 .disabled(!stc.any_modules_avaliable)
                 .fileImporter(
-                    isPresented: $external_export_panel_presented,
+                    isPresented: $file_exporter_presented,
                     allowedContentTypes: [.folder],
                     allowsMultipleSelection: false
                 )
@@ -85,7 +92,7 @@ struct ExternalExportTile: View
                     case .success(let urls):
                         if let url = urls.first
                         {
-                            stc.build_external_modules(list: stc.package_info.build_modules_list, to: url, option: external_export_type)
+                            stc.export_modules(list: stc.package_info.build_modules_list, to: url, option: external_export_option)
                         }
                     case .failure(let error):
                         print(error.localizedDescription)
@@ -98,7 +105,7 @@ struct ExternalExportTile: View
             {
                 HStack
                 {
-                    Text("External Export")
+                    Text("Export Modules")
                         .font(.system(size: 18, design: .rounded))
                         .foregroundStyle(.white)
                         .padding(.vertical, 12)

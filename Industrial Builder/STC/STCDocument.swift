@@ -179,7 +179,7 @@ struct STCDocument: FileDocument
                 {
                     guard let file_wrappers = wrapper.fileWrappers else { return }
                     
-                    scene_wrapper = wrapper
+                    entities_wrapper = wrapper
                     scenes_files_names.removeAll()
                     
                     for (_, file_wrapper) in file_wrappers
@@ -225,13 +225,13 @@ struct STCDocument: FileDocument
     }
     
     var scene_folder_adress = String()
-    var scene_wrapper: FileWrapper?
+    var entities_wrapper: FileWrapper?
     
     public func deferred_scene_import(folder_bookmark: Data) async -> [EntityItem]?
     {
         var entity_items = [EntityItem]()
         
-        guard let file_wrappers = scene_wrapper?.fileWrappers else
+        guard let file_wrappers = entities_wrapper?.fileWrappers else
         {
             return nil
         }
@@ -376,7 +376,7 @@ struct STCDocument: FileDocument
         {
             var file_wrappers = [String: FileWrapper]()
             
-            guard let scene_files = scene_wrapper?.fileWrappers else { return FileWrapper(directoryWithFileWrappers: [:]) }
+            guard let scene_files = entities_wrapper?.fileWrappers else { return FileWrapper(directoryWithFileWrappers: [:]) }
             
             for entity_item in entity_items
             {

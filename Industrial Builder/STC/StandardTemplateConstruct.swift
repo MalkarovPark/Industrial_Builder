@@ -34,7 +34,7 @@ public class StandardTemplateConstruct: ObservableObject
         self.changer_modules = document.changer_modules
         
         load_all_external_entities()
-        self.scene_wrapper = document.scene_wrapper
+        self.entities_wrapper = document.entities_wrapper
         
         func load_all_external_entities(_ completion: @escaping () -> Void = {})
         {
@@ -298,10 +298,12 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: - External Modules
+    // MARK: - Modules Export
     // Builds modules in separated files.
-    public func build_external_modules(list: BuildModulesList, to folder_url: URL, option: ExternalExportOption)
+    public func export_modules(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
+        if option == .internal_modules { make_internal_modules(list: list, to: folder_url) }
+        
         DispatchQueue.global(qos: .background).async
         {
             self.set_build_info(list: list, as_internal: false)
@@ -349,7 +351,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    private func build_modules_files(list: BuildModulesList, to folder_url: URL, option: ExternalExportOption)
+    private func build_modules_files(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
         // Store compilation kit for external modules build
         internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
@@ -394,7 +396,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_external_module_file(module: part_module, to: folder_url, option: option) // Create changer module package
+                build_external_module_file(module: part_module, to: folder_url, option: option) // Create part module package
                 //self.build_progress += 1
             }
             else
@@ -421,9 +423,9 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    public var scene_wrapper: FileWrapper?
+    public var entities_wrapper: FileWrapper?
     
-    private func build_external_module_file(module: IndustrialModule, to folder_url: URL, option: ExternalExportOption)
+    private func build_external_module_file(module: IndustrialModule, to folder_url: URL, option: ModuleExportOption)
     {
         if option == .build_from_projects || option == .projects_to_programs { return } // Skip modules files build for only compilation/conversion export type
         
@@ -455,9 +457,16 @@ public class StandardTemplateConstruct: ObservableObject
             return
         }
         
+        func make_info_file(url: URL) throws // For external module
+        {
+            let info_data = module.json_data()
+            let info_url = url.appendingPathComponent("Info")
+            try info_data.write(to: info_url)
+        }
+        
         func make_code_folder(url: URL) throws
         {
-            guard (module is RobotModule) || (module is ToolModule) else { return } // Changer module has no external code...
+            guard module is RobotModule || module is ToolModule else { return } // Tool, changer and part module has no external code...
             
             let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
             
@@ -484,10 +493,10 @@ public class StandardTemplateConstruct: ObservableObject
                 entity_items.first(where: { $0.name == entity_file_name })
             else { return }
             
-            guard let scene_files = scene_wrapper?.fileWrappers else { return } //Cannot find 'scene_wrapper' in scope
+            guard let scene_files = entities_wrapper?.fileWrappers else { return }
             
             let destination_url = url.appendingPathComponent("Scene.usdz")
-
+            
             if let source_url = entity_file_item.source_url
             {
                 try FileManager.default.copyItem(at: source_url, to: destination_url) // External imported
@@ -529,13 +538,6 @@ public class StandardTemplateConstruct: ObservableObject
             }*/
         }
         
-        func make_info_file(url: URL) throws // For external module
-        {
-            let info_data = module.json_data()
-            let info_url = url.appendingPathComponent("Info")
-            try info_data.write(to: info_url)
-        }
-        
         func make_module_folder(_ folder_name: String, module_url: URL, module_name: String) throws -> URL
         {
             let folder_url = module_url.appendingPathComponent(folder_name)
@@ -564,7 +566,7 @@ public class StandardTemplateConstruct: ObservableObject
     #if os(macOS)
     private var compilation_process: Process? = nil
     
-    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, option: ExternalExportOption)
+    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, option: ModuleExportOption)
     {
         if option == .no_build { return }
         
@@ -600,6 +602,8 @@ public class StandardTemplateConstruct: ObservableObject
         case .projects_to_programs:
             command_line += "BuildModulePrograms.command --clear "
         case .no_build:
+            return
+        case .internal_modules:
             return
         }
         
@@ -676,9 +680,15 @@ public class StandardTemplateConstruct: ObservableObject
         #endif
     }
     
-    // MARK: - Internal Modules
+    // MARK: - Build Industrial App
     // Builds application project to compile with internal modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
+    {
+        //make_internal_modules(list: list, to: folder_url)
+    }
+    
+    //MARK: Internal Modules Packaging
+    public func make_internal_modules(list: BuildModulesList, to folder_url: URL)
     {
         DispatchQueue.global(qos: .background).async
         {
@@ -702,7 +712,7 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 let package_folder_url = try self.make_folder("Modules", module_url: folder_url)
                 
-                self.build_modules_files(list: list, to: package_folder_url, as_internal: true)
+                self.make_internal_modules_files(list: list, to: package_folder_url)
                 
                 // Make Internal Modules List
                 var list_code = import_text_data(from: "List")
@@ -750,14 +760,8 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // Build modules
-    private func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
+    private func make_internal_modules_files(list: BuildModulesList, to folder_url: URL)
     {
-        // Store compilation kit for external modules build
-        if !as_internal
-        {
-            internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
-        }
-        
         // Builds modules in separated files
         let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
         for robot_module in filtered_robot_modules
@@ -779,6 +783,20 @@ public class StandardTemplateConstruct: ObservableObject
             if !compilation_cancelled
             {
                 build_module_file(module: tool_module, to: folder_url) // Create tool module package
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        for part_module in filtered_part_modules
+        {
+            if !compilation_cancelled
+            {
+                build_module_file(module: part_module, to: folder_url) // Create part module package
                 //self.build_progress += 1
             }
             else
@@ -819,22 +837,10 @@ public class StandardTemplateConstruct: ObservableObject
             let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
             
             // Info file store
-            try make_module_code(url: module_url)
+            try make_info_file(url: module_url)
             
             // Code folder store
-            let code_url = try make_module_folder("Code", module_url: module_url, module_name: module.name)
-            
-            /*if as_internal
-            {
-                if module is RobotModule || module is ToolModule || module is ChangerModule
-                {
-                    try code_files_store_internal(code_items: module.code_items, to: code_url)
-                }
-            }
-            else
-            {
-                try code_files_store_external(code_items: module.code_items, to: code_url)
-            }*/
+            try make_code_folder(url: module_url)
             
             // Resources folder store
             try make_resources_folder(url: module_url)
@@ -845,7 +851,7 @@ public class StandardTemplateConstruct: ObservableObject
             return
         }
         
-        func make_module_code(url: URL) throws // For internal module
+        func make_info_file(url: URL) throws
         {
             let code_item_url = url.appendingPathComponent("\(module.name)_Module.swift")
             
@@ -896,27 +902,63 @@ public class StandardTemplateConstruct: ObservableObject
             try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
         }
         
-        func make_resources_folder(url: URL) throws
+        func make_code_folder(url: URL) throws
         {
-            guard !(module is ChangerModule) else { return } // Changer module has no visual resources...
+            guard module is RobotModule || module is ToolModule || module is ChangerModule else { return } // Part module has no external code...
             
-            let resources_url = try make_module_folder("Resources.scnassets", module_url: url, module_name: module.name)
+            let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
             
-            /*if let resources_names = module.resources_names
+            /*var updated_code_items = module.code_items
+            
+            // Inject parameters in code items
+            if module is RobotModule || module is ToolModule
             {
-                for resource_name in resources_names
-                {
-                    let resource_url = resources_url.appendingPathComponent(resource_name)
-                    try resource_data(resource_name)?.write(to: resource_url)
-                }
-            }*/
+                inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
+                inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
+            }
+            
+            updated_code_items = updated_code_items.reduce(into: [String: String]())
+            { result, entry in
+                result["\(module.name)_\(entry.key)"] = entry.value
+            }
+            
+            try code_files_store(code_items: updated_code_items, to: code_url)*/
         }
         
-        func make_info_file(url: URL) throws // For external module
+        func make_resources_folder(url: URL) throws
         {
-            let info_data = module.json_data()
-            let info_url = url.appendingPathComponent("Info")
-            try info_data.write(to: info_url)
+            guard let entity_file_name =
+                (module as? RobotModule)?.entity_file_name ??
+                (module as? ToolModule)?.entity_file_name ??
+                (module as? PartModule)?.entity_file_name
+            else { return }
+            
+            guard let entity_file_item =
+                entity_items.first(where: { $0.name == entity_file_name })
+            else { return }
+            
+            guard let scene_files = entities_wrapper?.fileWrappers else { return }
+            
+            let destination_url = url.appendingPathComponent("\(module.name).\(module.extension_name).Scene.usdz")
+            
+            if let source_url = entity_file_item.source_url
+            {
+                try FileManager.default.copyItem(at: source_url, to: destination_url) // External imported
+            }
+            else
+            {
+                let wrapper_key = entity_file_item.name.hasSuffix(".usdz") ? entity_file_item.name : entity_file_item.name + ".usdz"
+                
+                if let wrapper = scene_files[wrapper_key],
+                   let data = wrapper.regularFileContents
+                {
+                    try data.write(to: destination_url) // From STC package
+                }
+                else
+                {
+                    print("Warning: entity \(entity_file_item.name) not found in Resources and has no source_url")
+                }
+            }
         }
         
         func make_module_folder(_ folder_name: String, module_url: URL, module_name: String) throws -> URL
@@ -941,24 +983,11 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        // Store internal code items to lisitngs
-        func code_files_store_internal(code_items: [String: String], to code_url: URL) throws
+        // MARK: OLD
+        // Store external code items for subsequent compilation
+        func code_files_store_external(code_items: [String: String], to code_url: URL) throws
         {
-            /*var updated_code_items = module.code_items
-            
-            // Inject parameters in code items
-            if module is RobotModule || module is ToolModule
-            {
-                inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
-                inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
-            }
-            
-            updated_code_items = updated_code_items.reduce(into: [String: String]())
-            { result, entry in
-                result["\(module.name)_\(entry.key)"] = entry.value
-            }
-            
-            try code_files_store(code_items: updated_code_items, to: code_url)*/
+            //try code_files_store(code_items: module.code_items, to: code_url)
         }
         
         func inject_controller_parameters(code: inout String?, module: IndustrialModule) // Inject model controller parameters (nodes names) to internal code file
@@ -995,138 +1024,104 @@ public class StandardTemplateConstruct: ObservableObject
             code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
         }
         
-        // Store external code items for subsequent compilation
-        func code_files_store_external(code_items: [String: String], to code_url: URL) throws
+        // Module code (for internal)
+        
+        func robot_module_code(_ module: RobotModule) -> String
         {
-            //try code_files_store(code_items: module.code_items, to: code_url)
+            var code = import_text_data(from: "Robot Module")
+            
+            // Naming
+            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+            
+            // Origin Shift
+            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
+            
+            /*// Components
+            if !(module.code_items["Controller"]?.isEmpty ?? false)
+            {
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+            }
+            
+            if !(module.code_items["Connector"]?.isEmpty ?? false)
+            {
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+            }
+            
+            // Main Nodes
+            //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+            
+            // Connected nodes names
+            let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
+            code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)*/
+            
+            return code
         }
         
-        // Resources store
-        func resource_data(_ name: String) -> Data? // Store visual data
+        func tool_module_code(_ module: ToolModule) -> String
         {
-            var data: Data? = nil
+            var code = import_text_data(from: "Tool Module")
             
-            let file_extension = (name as NSString).pathExtension.lowercased()
+            // Naming
+            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
             
-            if file_extension == "scn"
+            // Components
+            /*if !(module.code_items["Controller"]?.isEmpty ?? false)
             {
-                /*if let scene_index = scenes_files_names.firstIndex(of: name)
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+            }
+            
+            if !(module.code_items["Connector"]?.isEmpty ?? false)
+            {
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+            }*/
+            
+            // Main scene
+            //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+            
+            // Operation codes
+            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
+            
+            return code
+            
+            func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
+            {
+                return """
+                \(data.map
                 {
-                    data = try? NSKeyedArchiver.archivedData(withRootObject: entities[scene_index], requiringSecureCoding: false)
-                    // Replace to copy
-                }*/
+                    ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol_name)\", info: \"\($0.description)\")"
+                }
+                .joined(separator: ",\n        "))
+                """
             }
-            else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
-            {
-                data = image_items
-                    .first(where: { $0.name == name })?
-                    .image
-                    .pngData()
-            }
-            else
-            {
-                print("Uncompatible file format – \(file_extension)")
-            }
-
-            return data
-        }
-    }
-    
-    // MARK: Module code (for internal)
-    private func robot_module_code(_ module: RobotModule) -> String
-    {
-        var code = import_text_data(from: "Robot Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        // Origin Shift
-        code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
-        
-        /*// Components
-        if !(module.code_items["Controller"]?.isEmpty ?? false)
-        {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
         }
         
-        if !(module.code_items["Connector"]?.isEmpty ?? false)
+        func part_module_code(_ module: PartModule) -> String
         {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+            var code = import_text_data(from: "Part Module")
+            
+            // Naming
+            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+            
+            // Main scene
+            //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+            
+            return code
         }
         
-        // Main Nodes
-        //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-        
-        // Connected nodes names
-        let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)*/
-        
-        return code
-    }
-    
-    private func tool_module_code(_ module: ToolModule) -> String
-    {
-        var code = import_text_data(from: "Tool Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        // Components
-        /*if !(module.code_items["Controller"]?.isEmpty ?? false)
+        func changer_module_code(_ module: ChangerModule) -> String
         {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+            var code = import_text_data(from: "Changer Module")
+            
+            // Naming
+            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+            
+            return code
         }
-        
-        if !(module.code_items["Connector"]?.isEmpty ?? false)
-        {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-        }*/
-        
-        // Main scene
-        //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-        
-        // Operation codes
-        code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
-        
-        return code
-        
-        func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
-        {
-            return """
-            \(data.map
-            {
-                ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol_name)\", info: \"\($0.description)\")"
-            }
-            .joined(separator: ",\n        "))
-            """
-        }
-    }
-    
-    private func part_module_code(_ module: PartModule) -> String
-    {
-        var code = import_text_data(from: "Part Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        // Main scene
-        //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-        
-        return code
-    }
-    
-    private func changer_module_code(_ module: ChangerModule) -> String
-    {
-        var code = import_text_data(from: "Changer Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        return code
+        // MARK: OLD
     }
     
     private func make_folder(_ folder_name: String, module_url: URL) throws -> URL
@@ -1151,7 +1146,7 @@ public enum InternalExportType: String, Equatable, CaseIterable
     //case xcode_project = "Xcode Project"
 }
 
-public enum ExternalExportOption: String, Equatable, CaseIterable
+public enum ModuleExportOption: String, Equatable, CaseIterable
 {
     case projects_and_programs = "Build To Projects and Programs"
     case programs_only = "Build To Programs Only"
@@ -1159,6 +1154,8 @@ public enum ExternalExportOption: String, Equatable, CaseIterable
     case build_from_projects = "Build Existing Projects To Programs"
     case projects_to_programs = "Turn Existing Projects To Programs"
     case no_build = "No Build (Listings Only)"
+    
+    case internal_modules = "Make Internal for Projects"
 }
 
 public enum PrepareForDevType: String, Equatable, CaseIterable
