@@ -15,11 +15,7 @@ struct ExternalExportTile: View
     
     @State private var external_export_panel_presented = false
     
-    enum DeviceMode: String, CaseIterable
-    {
-        case internal_modules = "Internal Modules"
-        case external_modules = "External Modules"
-    }
+    @State private var external_export_type: ExternalExportOption = .no_build
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
@@ -35,11 +31,11 @@ struct ExternalExportTile: View
             {
                 Menu
                 {
-                    ForEach(ExternalExportType.allCases, id: \.self)
+                    ForEach(ExternalExportOption.allCases, id: \.self)
                     { export_type in
                         Button(export_type.rawValue)
                         {
-                            stc.external_export_type = export_type
+                            external_export_type = export_type
                             external_export_panel_presented = true
                         }
                     }
@@ -89,7 +85,7 @@ struct ExternalExportTile: View
                     case .success(let urls):
                         if let url = urls.first
                         {
-                            stc.build_external_modules(list: stc.package_info.build_modules_list, to: url)
+                            stc.build_external_modules(list: stc.package_info.build_modules_list, to: url, option: external_export_type)
                         }
                     case .failure(let error):
                         print(error.localizedDescription)
@@ -110,6 +106,13 @@ struct ExternalExportTile: View
                     
                     Spacer()
                 }
+            }
+        }
+        .overlay
+        {
+            if stc.on_building_modules
+            {
+                BuildProgressView()
             }
         }
     }

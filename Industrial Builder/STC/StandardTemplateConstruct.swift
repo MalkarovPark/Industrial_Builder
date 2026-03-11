@@ -34,6 +34,7 @@ public class StandardTemplateConstruct: ObservableObject
         self.changer_modules = document.changer_modules
         
         load_all_external_entities()
+        self.scene_wrapper = document.scene_wrapper
         
         func load_all_external_entities(_ completion: @escaping () -> Void = {})
         {
@@ -186,7 +187,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     // MARK: - Process preferences
     @Published var internal_export_type: InternalExportType = .files_only
-    @Published var external_export_type: ExternalExportType = .no_build
+    //@Published var external_export_type: ExternalExportType = .no_build
     
     @Published var prepare_for_dev_type: PrepareForDevType = .from_listing //.blank_project
     
@@ -297,22 +298,14 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: - Modules build functions
+    // MARK: - External Modules
     // Builds modules in separated files.
-    public func build_external_modules(list: BuildModulesList, to folder_url: URL)
+    public func build_external_modules(list: BuildModulesList, to folder_url: URL, option: ExternalExportOption)
     {
         DispatchQueue.global(qos: .background).async
         {
             self.set_build_info(list: list, as_internal: false)
             self.on_building_modules = true
-            
-            //print(self.build_total)
-            
-            /*DispatchQueue.main.async
-            {
-                self.set_build_info(list: list, as_internal: false)
-                self.on_building_modules = true
-            }*/
             
             guard folder_url.startAccessingSecurityScopedResource()
             else
@@ -328,7 +321,7 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 self.build_info = "Building modules files"
             }
-            self.build_modules_files(list: list, to: folder_url, as_internal: false)
+            self.build_modules_files(list: list, to: folder_url, option: option)
             
             folder_url.stopAccessingSecurityScopedResource()
             
@@ -356,6 +349,334 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
+    private func build_modules_files(list: BuildModulesList, to folder_url: URL, option: ExternalExportOption)
+    {
+        // Store compilation kit for external modules build
+        internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
+        
+        // Builds modules in separated files
+        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
+        for robot_module in filtered_robot_modules
+        {
+            if !compilation_cancelled
+            {
+                build_external_module_file(module: robot_module, to: folder_url, option: option) // Create robot module package
+                #if os(macOS)
+                perform_external_compilation(module: robot_module, to: folder_url, option: option) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
+        for tool_module in filtered_tool_modules
+        {
+            if !compilation_cancelled
+            {
+                build_external_module_file(module: tool_module, to: folder_url, option: option) // Create tool module package
+                #if os(macOS)
+                perform_external_compilation(module: tool_module, to: folder_url, option: option) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        for part_module in filtered_part_modules
+        {
+            if !compilation_cancelled
+            {
+                build_external_module_file(module: part_module, to: folder_url, option: option) // Create changer module package
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        for changer_module in filtered_changer_modules
+        {
+            if !compilation_cancelled
+            {
+                build_external_module_file(module: changer_module, to: folder_url, option: option) // Create changer module package
+                #if os(macOS)
+                perform_external_compilation(module: changer_module, to: folder_url, option: option) // Compile programs
+                #endif
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+    }
+    
+    public var scene_wrapper: FileWrapper?
+    
+    private func build_external_module_file(module: IndustrialModule, to folder_url: URL, option: ExternalExportOption)
+    {
+        if option == .build_from_projects || option == .projects_to_programs { return } // Skip modules files build for only compilation/conversion export type
+        
+        do
+        {
+            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
+            
+            // Remove existing file or directory if it already exists
+            if FileManager.default.fileExists(atPath: module_path.path)
+            {
+                try FileManager.default.removeItem(at: module_path)
+            }
+            
+            // Now safely create the folder
+            let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
+            
+            // Info file store
+            try make_info_file(url: module_url)
+            
+            // Code folder store
+            try make_code_folder(url: module_url)
+            
+            // Resources folder store
+            try make_resources_folder(url: module_url)
+        }
+        catch
+        {
+            print(error.localizedDescription)
+            return
+        }
+        
+        func make_code_folder(url: URL) throws
+        {
+            guard (module is RobotModule) || (module is ToolModule) else { return } // Changer module has no external code...
+            
+            let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
+            
+            switch module
+            {
+            case let module as RobotModule:
+                try code_files_store(code_items: ["Connector": module.connector_code], to: code_url)
+            case let module as ToolModule:
+                try code_files_store(code_items: ["Connector": module.connector_code], to: code_url)
+            default:
+                break
+            }
+        }
+        
+        func make_resources_folder(url: URL) throws
+        {
+            guard let entity_file_name =
+                (module as? RobotModule)?.entity_file_name ??
+                (module as? ToolModule)?.entity_file_name ??
+                (module as? PartModule)?.entity_file_name
+            else { return }
+            
+            guard let entity_file_item =
+                entity_items.first(where: { $0.name == entity_file_name })
+            else { return }
+            
+            guard let scene_files = scene_wrapper?.fileWrappers else { return } //Cannot find 'scene_wrapper' in scope
+            
+            let destination_url = url.appendingPathComponent("Scene.usdz")
+
+            if let source_url = entity_file_item.source_url
+            {
+                try FileManager.default.copyItem(at: source_url, to: destination_url) // External imported
+            }
+            else
+            {
+                let wrapper_key = entity_file_item.name.hasSuffix(".usdz") ? entity_file_item.name : entity_file_item.name + ".usdz"
+                
+                if let wrapper = scene_files[wrapper_key],
+                   let data = wrapper.regularFileContents
+                {
+                    try data.write(to: destination_url) // From STC package
+                }
+                else
+                {
+                    print("Warning: entity \(entity_file_item.name) not found in Resources and has no source_url")
+                }
+            }
+            
+            /*let file_name_with_ext =
+                entity_file_item.name.hasSuffix(".usdz")
+                ? entity_file_item.name
+                : entity_file_item.name + ".usdz"
+            
+            let destination_url = url.appendingPathComponent(file_name_with_ext)
+            
+            if let source_url = entity_file_item.source_url
+            {
+                try FileManager.default.copyItem(at: source_url, to: destination_url) // External imorted
+            }
+            else if let wrapper = scene_files[file_name_with_ext],
+                    let data = wrapper.regularFileContents
+            {
+                try data.write(to: destination_url) // From STC package
+            }
+            else
+            {
+                print("Warning: entity \(entity_file_item.name) not found in Resources and has no source_url")
+            }*/
+        }
+        
+        func make_info_file(url: URL) throws // For external module
+        {
+            let info_data = module.json_data()
+            let info_url = url.appendingPathComponent("Info")
+            try info_data.write(to: info_url)
+        }
+        
+        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String) throws -> URL
+        {
+            let folder_url = module_url.appendingPathComponent(folder_name)
+            
+            if FileManager.default.fileExists(atPath: folder_url.path)
+            {
+                try FileManager.default.removeItem(at: folder_url)
+            }
+            try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
+            
+            return folder_url
+        }
+        
+        func code_files_store(code_items: [String: String], to code_url: URL) throws // Store code items to listings
+        {
+            for code_item in code_items // Store external files without parameters inject
+            {
+                let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
+                try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+        }
+    }
+    
+    // MARK: Compilation handling
+    private var compilation_cancelled = false
+    #if os(macOS)
+    private var compilation_process: Process? = nil
+    
+    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, option: ExternalExportOption)
+    {
+        if option == .no_build { return }
+        
+        var command_line = "cd '\(folder_url.path)' && ./"
+        var module_package_name = module.name
+        
+        switch module
+        {
+        case is RobotModule:
+            module_package_name += ".robot"
+        case is ToolModule:
+            module_package_name += ".tool"
+        case is PartModule:
+            module_package_name += ".part"
+        case is ChangerModule:
+            module_package_name += ".changer"
+        default:
+            return
+        }
+        
+        module_package_name = module_package_name.replacingOccurrences(of: " ", with: "\\ ")
+        
+        switch option
+        {
+        case .programs_only:
+            command_line += "BuildModulePrograms.command --programs "
+        case .projects_and_programs:
+            command_line += "BuildModulePrograms.command --projects-programs "
+        case .projects_only:
+            command_line += "BuildModulePrograms.command --projects "
+        case .build_from_projects:
+            command_line += "BuildModulePrograms.command "
+        case .projects_to_programs:
+            command_line += "BuildModulePrograms.command --clear "
+        case .no_build:
+            return
+        }
+        
+        command_line += module_package_name
+        
+        do
+        {
+            self.compilation_cancelled = false
+            
+            let task = Process()
+            let pipe = Pipe()
+            
+            task.standardOutput = pipe
+            task.standardError = pipe
+            task.arguments = ["-c", command_line]
+            task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+            
+            self.compilation_process = task
+            
+            let handle = pipe.fileHandleForReading
+            handle.readabilityHandler =
+            { fileHandle in
+                let data = fileHandle.availableData
+                if data.isEmpty { return }
+                if let output = String(data: data, encoding: .utf8)
+                {
+                    let lines = output.components(separatedBy: .newlines)
+                    if let last_line = lines.last(where: { !$0.isEmpty })
+                    {
+                        DispatchQueue.main.async
+                        {
+                            self.build_info = last_line
+                            self.build_progress += 1
+                            //print("\(self.build_progress) in \(self.build_total)")
+                        }
+                    }
+                }
+            }
+            
+            try task.run()
+            task.waitUntilExit()
+            handle.readabilityHandler = nil
+            self.compilation_process = nil
+            
+            if !self.compilation_cancelled
+            {
+                DispatchQueue.main.async
+                {
+                    self.build_info += "\nExternal code compilation finished."
+                }
+            }
+        }
+        catch
+        {
+            DispatchQueue.main.async
+            {
+                self.build_info += "\nCompilation error: \(error.localizedDescription)"
+            }
+        }
+    }
+    #endif
+    
+    public func cancel_build()
+    {
+        #if os(macOS)
+        if let process = compilation_process
+        {
+            compilation_cancelled = true
+            process.terminate()
+            compilation_process = nil
+        }
+        #else
+        compilation_cancelled = true
+        #endif
+    }
+    
+    // MARK: - Internal Modules
     // Builds application project to compile with internal modules.
     public func build_application_project(list: BuildModulesList, to folder_url: URL)
     {
@@ -443,10 +764,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_module_file(module: robot_module, to: folder_url, as_internal: as_internal) // Create robot module package
-                #if os(macOS)
-                perform_external_compilation(module: robot_module, to: folder_url, type: external_export_type) // Compile programs
-                #endif
+                build_module_file(module: robot_module, to: folder_url) // Create robot module package
                 //self.build_progress += 1
             }
             else
@@ -460,10 +778,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_module_file(module: tool_module, to: folder_url, as_internal: as_internal) // Create tool module package
-                #if os(macOS)
-                perform_external_compilation(module: tool_module, to: folder_url, type: external_export_type) // Compile programs
-                #endif
+                build_module_file(module: tool_module, to: folder_url) // Create tool module package
                 //self.build_progress += 1
             }
             else
@@ -472,32 +787,12 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        /*let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
-        for part_module in filtered_part_modules
-        {
-            if !compilation_cancelled
-            {
-                build_module_file(module: part_module, to: folder_url, as_internal: as_internal) // Create part module package
-                #if os(macOS)
-                perform_external_compilation(module: part_module, to: folder_url, type: external_export_type) // Compile programs
-                #endif
-                //self.build_progress += 1
-            }
-            else
-            {
-                break
-            }
-        }*/
-        
         let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
         for changer_module in filtered_changer_modules
         {
             if !compilation_cancelled
             {
-                build_module_file(module: changer_module, to: folder_url, as_internal: as_internal) // Create changer module package
-                #if os(macOS)
-                perform_external_compilation(module: changer_module, to: folder_url, type: external_export_type) // Compile programs
-                #endif
+                build_module_file(module: changer_module, to: folder_url) // Create changer module package
                 //self.build_progress += 1
             }
             else
@@ -508,13 +803,8 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // MARK: Build module file
-    private func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
+    private func build_module_file(module: IndustrialModule, to folder_url: URL)
     {
-        if !as_internal && (external_export_type == .build_from_projects || external_export_type == .projects_to_programs)
-        {
-            return // Skip modules files build for only compilation/conversion export type
-        }
-        
         do
         {
             let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
@@ -529,17 +819,10 @@ public class StandardTemplateConstruct: ObservableObject
             let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
             
             // Info file store
-            if as_internal
-            {
-                try make_module_code(url: module_url)
-            }
-            else
-            {
-                try make_info_file(url: module_url)
-            }
+            try make_module_code(url: module_url)
             
             // Code folder store
-            let code_url = try make_module_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
+            let code_url = try make_module_folder("Code", module_url: module_url, module_name: module.name)
             
             /*if as_internal
             {
@@ -617,7 +900,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             guard !(module is ChangerModule) else { return } // Changer module has no visual resources...
             
-            let resources_url = try make_module_folder("Resources.scnassets", module_url: url, module_name: module.name, as_internal: as_internal)
+            let resources_url = try make_module_folder("Resources.scnassets", module_url: url, module_name: module.name)
             
             /*if let resources_names = module.resources_names
             {
@@ -636,9 +919,9 @@ public class StandardTemplateConstruct: ObservableObject
             try info_data.write(to: info_url)
         }
         
-        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool) throws -> URL
+        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String) throws -> URL
         {
-            let folder_url = module_url.appendingPathComponent(as_internal ? "\(module_name)_\(folder_name)" : folder_name)
+            let folder_url = module_url.appendingPathComponent("\(module_name)_\(folder_name)")
             
             if FileManager.default.fileExists(atPath: folder_url.path)
             {
@@ -749,7 +1032,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: - Module code (for internal)
+    // MARK: Module code (for internal)
     private func robot_module_code(_ module: RobotModule) -> String
     {
         var code = import_text_data(from: "Robot Module")
@@ -858,123 +1141,6 @@ public class StandardTemplateConstruct: ObservableObject
         
         return folder_url
     }
-    
-    // MARK: Compilation handling (for external program components)
-    private var compilation_cancelled = false
-    #if os(macOS)
-    private var compilation_process: Process? = nil
-    
-    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, type: ExternalExportType)
-    {
-        if type == .no_build { return }
-        
-        var command_line = "cd '\(folder_url.path)' && ./"
-        var module_package_name = module.name
-        
-        switch module
-        {
-        case is RobotModule:
-            module_package_name += ".robot"
-        case is ToolModule:
-            module_package_name += ".tool"
-        case is PartModule:
-            module_package_name += ".part"
-        case is ChangerModule:
-            module_package_name += ".changer"
-        default:
-            return
-        }
-        
-        module_package_name = module_package_name.replacingOccurrences(of: " ", with: "\\ ")
-        
-        switch type
-        {
-        case .programs_only:
-            command_line += "BuildModulePrograms.command --programs "
-        case .projects_and_programs:
-            command_line += "BuildModulePrograms.command --projects-programs "
-        case .projects_only:
-            command_line += "BuildModulePrograms.command --projects "
-        case .build_from_projects:
-            command_line += "BuildModulePrograms.command "
-        case .projects_to_programs:
-            command_line += "BuildModulePrograms.command --clear "
-        case .no_build:
-            return
-        }
-        
-        command_line += module_package_name
-        
-        do
-        {
-            self.compilation_cancelled = false
-            
-            let task = Process()
-            let pipe = Pipe()
-            
-            task.standardOutput = pipe
-            task.standardError = pipe
-            task.arguments = ["-c", command_line]
-            task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-            
-            self.compilation_process = task
-            
-            let handle = pipe.fileHandleForReading
-            handle.readabilityHandler =
-            { fileHandle in
-                let data = fileHandle.availableData
-                if data.isEmpty { return }
-                if let output = String(data: data, encoding: .utf8)
-                {
-                    let lines = output.components(separatedBy: .newlines)
-                    if let last_line = lines.last(where: { !$0.isEmpty })
-                    {
-                        DispatchQueue.main.async
-                        {
-                            self.build_info = last_line
-                            self.build_progress += 1
-                            //print("\(self.build_progress) in \(self.build_total)")
-                        }
-                    }
-                }
-            }
-            
-            try task.run()
-            task.waitUntilExit()
-            handle.readabilityHandler = nil
-            self.compilation_process = nil
-            
-            if !self.compilation_cancelled
-            {
-                DispatchQueue.main.async
-                {
-                    self.build_info += "\nExternal code compilation finished."
-                }
-            }
-        }
-        catch
-        {
-            DispatchQueue.main.async
-            {
-                self.build_info += "\nCompilation error: \(error.localizedDescription)"
-            }
-        }
-    }
-    #endif
-    
-    public func cancel_build()
-    {
-        #if os(macOS)
-        if let process = compilation_process
-        {
-            compilation_cancelled = true
-            process.terminate()
-            compilation_process = nil
-        }
-        #else
-        compilation_cancelled = true
-        #endif
-    }
 }
 
 // MARK: - Enums
@@ -985,7 +1151,7 @@ public enum InternalExportType: String, Equatable, CaseIterable
     //case xcode_project = "Xcode Project"
 }
 
-public enum ExternalExportType: String, Equatable, CaseIterable
+public enum ExternalExportOption: String, Equatable, CaseIterable
 {
     case projects_and_programs = "Build To Projects and Programs"
     case programs_only = "Build To Programs Only"

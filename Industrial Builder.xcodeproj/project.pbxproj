@@ -408,10 +408,10 @@
 			isa = PBXGroup;
 			children = (
 				62C9CEA12F6162F800B3DE41 /* GlassTile.swift */,
-				62C9CEA92F61632400B3DE41 /* AppDevTile.swift */,
-				62C9CEA72F61631700B3DE41 /* ExternalExportTile.swift */,
-				62C9CEA52F61630F00B3DE41 /* ModulesTile.swift */,
 				62C9CEA32F61630500B3DE41 /* DescriptionTile.swift */,
+				62C9CEA52F61630F00B3DE41 /* ModulesTile.swift */,
+				62C9CEA72F61631700B3DE41 /* ExternalExportTile.swift */,
+				62C9CEA92F61632400B3DE41 /* AppDevTile.swift */,
 			);
 			path = Tiles;
 			sourceTree = "<group>";

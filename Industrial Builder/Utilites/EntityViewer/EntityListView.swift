@@ -124,7 +124,7 @@ struct EntityListView: View
             }
             catch
             {
-                print("Drop load error: \(error)")
+                print(error.localizedDescription)
             }
         }
         
@@ -135,7 +135,6 @@ struct EntityListView: View
     {
         try await withCheckedThrowingContinuation
         { continuation in
-            
             provider.loadDataRepresentation(
                 forTypeIdentifier: UTType.fileURL.identifier
             )
