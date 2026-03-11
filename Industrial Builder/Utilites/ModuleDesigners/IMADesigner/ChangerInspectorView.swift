@@ -2,7 +2,7 @@
 //  ChangerInspectorView.swift
 //  Industrial Builder
 //
-//  Created by Artem Malkarov on 01.03.2026.
+//  Created by Artem on 01.03.2026.
 //
 
 import SwiftUI

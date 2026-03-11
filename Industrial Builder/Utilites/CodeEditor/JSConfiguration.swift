@@ -2,7 +2,7 @@
 //  JSConfiguration.swift
 //  Industrial Builder
 //
-//  Created by Artem Malkarov on 02.03.2026.
+//  Created by Artem on 02.03.2026.
 //
 
 import Foundation

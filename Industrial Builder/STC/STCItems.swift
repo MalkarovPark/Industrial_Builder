@@ -2,7 +2,7 @@
 //  STCItems.swift
 //  Industrial Builder
 //
-//  Created by Artem Malkarov on 27.02.2026.
+//  Created by Artem on 27.02.2026.
 //
 
 import Foundation
