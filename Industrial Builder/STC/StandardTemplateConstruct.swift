@@ -302,7 +302,7 @@ public class StandardTemplateConstruct: ObservableObject
     // Builds modules in separated files.
     public func export_modules(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
-        if option == .internal_modules { make_internal_modules(list: list, to: folder_url) }
+        if option == .internal_modules { make_internal_modules(list: list, to: folder_url); return }
         
         DispatchQueue.global(qos: .background).async
         {
@@ -718,16 +718,24 @@ public class StandardTemplateConstruct: ObservableObject
                 var list_code = import_text_data(from: "List")
                 
                 let placeholders = [
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Modules@*//*@END_MENU_TOKEN@*/", list.robot_modules_names, "_RobotModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Modules@*//*@END_MENU_TOKEN@*/", list.tool_modules_names, "_ToolModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Modules@*//*@END_MENU_TOKEN@*/", list.part_modules_names, "_PartModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Modules@*//*@END_MENU_TOKEN@*/", list.changer_modules_names, "_ChangerModule")
                 ]
                 
-                for (placeholder, names) in placeholders
+                for (placeholder, names, suffix) in placeholders
                 {
-                    let formatted_names = names.map { "\($0.code_correct_format)_Module" }.joined(separator: ",\n        ")
-                    list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
+                    let formatted_names = names
+                        .map { "\($0.code_correct_format)\(suffix)" }
+                        .joined(separator: ",\n        ")
+                    
+                    list_code = list_code.replacingOccurrences(
+                        of: placeholder,
+                        with: formatted_names,
+                        options: .literal,
+                        range: nil
+                    )
                 }
                 
                 try list_code.write(to: package_folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
@@ -768,7 +776,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_module_file(module: robot_module, to: folder_url) // Create robot module package
+                make_internal_module_file(module: robot_module, to: folder_url) // Create robot module package
                 //self.build_progress += 1
             }
             else
@@ -782,7 +790,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_module_file(module: tool_module, to: folder_url) // Create tool module package
+                make_internal_module_file(module: tool_module, to: folder_url) // Create tool module package
                 //self.build_progress += 1
             }
             else
@@ -796,7 +804,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_module_file(module: part_module, to: folder_url) // Create part module package
+                make_internal_module_file(module: part_module, to: folder_url) // Create part module package
                 //self.build_progress += 1
             }
             else
@@ -810,7 +818,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                build_module_file(module: changer_module, to: folder_url) // Create changer module package
+                make_internal_module_file(module: changer_module, to: folder_url) // Create changer module package
                 //self.build_progress += 1
             }
             else
@@ -821,7 +829,7 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // MARK: Build module file
-    private func build_module_file(module: IndustrialModule, to folder_url: URL)
+    private func make_internal_module_file(module: IndustrialModule, to folder_url: URL)
     {
         do
         {
@@ -900,6 +908,102 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            
+            func robot_module_code(_ module: RobotModule) -> String
+            {
+                var code = import_text_data(from: "Robot Module")
+                
+                // Naming
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Origin Shift
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
+                
+                /*// Components
+                if !(module.code_items["Controller"]?.isEmpty ?? false)
+                {
+                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+                }
+                
+                if !(module.code_items["Connector"]?.isEmpty ?? false)
+                {
+                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+                }
+                
+                // Main Nodes
+                //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+                
+                // Connected nodes names
+                let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
+                code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)*/
+                
+                return code
+            }
+            
+            func tool_module_code(_ module: ToolModule) -> String
+            {
+                var code = import_text_data(from: "Tool Module")
+                
+                // Naming
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Components
+                /*if !(module.code_items["Controller"]?.isEmpty ?? false)
+                {
+                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
+                }
+                
+                if !(module.code_items["Connector"]?.isEmpty ?? false)
+                {
+                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
+                }*/
+                
+                // Main scene
+                //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+                
+                // Operation codes
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
+                
+                return code
+                
+                func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
+                {
+                    return """
+                    \(data.map
+                    {
+                        ".init(value: \($0.value), name: \"\($0.name)\", symbol_name: \"\($0.symbol_name)\", description: \"\($0.description)\")"
+                    }
+                    .joined(separator: ",\n        "))
+                    """
+                }
+            }
+            
+            func part_module_code(_ module: PartModule) -> String
+            {
+                var code = import_text_data(from: "Part Module")
+                
+                // Naming
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Main scene
+                //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
+                
+                return code
+            }
+            
+            func changer_module_code(_ module: ChangerModule) -> String
+            {
+                var code = import_text_data(from: "Changer Module")
+                
+                // Naming
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                return code
+            }
         }
         
         func make_code_folder(url: URL) throws
@@ -907,6 +1011,46 @@ public class StandardTemplateConstruct: ObservableObject
             guard module is RobotModule || module is ToolModule || module is ChangerModule else { return } // Part module has no external code...
             
             let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
+            
+            switch module
+            {
+            case let module as RobotModule:
+                try make_code_files(module: module, to: code_url)
+            case let module as ToolModule:
+                try make_code_files(module: module, to: code_url)
+            //case let module as PartModule:
+                //try make_code_files(module: module, to: code_url)
+            case let module as ChangerModule:
+                try make_code_files(module: module, to: code_url)
+            default:
+                break
+            }
+            
+            func make_code_files(module: RobotModule, to url: URL) throws
+            {
+                
+            }
+            
+            func make_code_files(module: ToolModule, to url: URL) throws
+            {
+                
+            }
+            
+            /*func make_code_files(module: PartModule, to url: URL) throws
+            {
+                
+            }*/
+            
+            func make_code_files(module: ChangerModule, to url: URL) throws
+            {
+                var code = import_text_data(from: "Internal Change")
+                
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code)
+                
+                try code_files_store(code_items: ["\(module.name)_Module" : code], to: url)
+            }
             
             /*var updated_code_items = module.code_items
             
@@ -984,12 +1128,6 @@ public class StandardTemplateConstruct: ObservableObject
         }
         
         // MARK: OLD
-        // Store external code items for subsequent compilation
-        func code_files_store_external(code_items: [String: String], to code_url: URL) throws
-        {
-            //try code_files_store(code_items: module.code_items, to: code_url)
-        }
-        
         func inject_controller_parameters(code: inout String?, module: IndustrialModule) // Inject model controller parameters (nodes names) to internal code file
         {
             var nodes_names = String()
@@ -1026,101 +1164,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         // Module code (for internal)
         
-        func robot_module_code(_ module: RobotModule) -> String
-        {
-            var code = import_text_data(from: "Robot Module")
-            
-            // Naming
-            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-            
-            // Origin Shift
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
-            
-            /*// Components
-            if !(module.code_items["Controller"]?.isEmpty ?? false)
-            {
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
-            }
-            
-            if !(module.code_items["Connector"]?.isEmpty ?? false)
-            {
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-            }
-            
-            // Main Nodes
-            //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-            
-            // Connected nodes names
-            let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-            code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)*/
-            
-            return code
-        }
         
-        func tool_module_code(_ module: ToolModule) -> String
-        {
-            var code = import_text_data(from: "Tool Module")
-            
-            // Naming
-            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-            
-            // Components
-            /*if !(module.code_items["Controller"]?.isEmpty ?? false)
-            {
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
-            }
-            
-            if !(module.code_items["Connector"]?.isEmpty ?? false)
-            {
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-            }*/
-            
-            // Main scene
-            //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-            
-            // Operation codes
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
-            
-            return code
-            
-            func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
-            {
-                return """
-                \(data.map
-                {
-                    ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol_name)\", info: \"\($0.description)\")"
-                }
-                .joined(separator: ",\n        "))
-                """
-            }
-        }
-        
-        func part_module_code(_ module: PartModule) -> String
-        {
-            var code = import_text_data(from: "Part Module")
-            
-            // Naming
-            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-            
-            // Main scene
-            //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-            
-            return code
-        }
-        
-        func changer_module_code(_ module: ChangerModule) -> String
-        {
-            var code = import_text_data(from: "Changer Module")
-            
-            // Naming
-            code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-            code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-            
-            return code
-        }
         // MARK: OLD
     }
     

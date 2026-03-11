@@ -180,7 +180,7 @@ struct PartModuleCard: View
     private func delete_module(_ module: PartModule)
     {
         base_stc.part_modules.removeAll { $0 == module }
-        document_handler.document_update_ima()
+        document_handler.document_update_parts()
     }
 }
 
