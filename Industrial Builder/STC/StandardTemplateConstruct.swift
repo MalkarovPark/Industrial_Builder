@@ -897,19 +897,21 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 let code_item_url = url.appendingPathComponent("\(module.name)_PartModule.swift")
                 
-                var module_code = String()
+                var code = import_text_data(from: "InternalPartModuleDeclaration")
                 
-                try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Set module name
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
             
             func make_module_listing(by module: ChangerModule, to: URL) throws
             {
                 let code_item_url = url.appendingPathComponent("\(module.name)_ChangerModule.swift")
                 
-                var code = import_text_data(from: "External Changer Module Declaration")
+                var code = import_text_data(from: "ExternalChangerModuleDeclaration")
                 
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Naming
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code) //
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Set module name
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code) // Set function code
                 
                 try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
