@@ -1,5 +1,5 @@
 //
-// <#Name#> Changer
+// <#ModuleName#> Changer
 // External Module Declaration
 //
 
@@ -7,7 +7,7 @@ import Foundation
 import IndustrialKit
 
 public let <#Name#>_ChangerModule = ChangerModule(
-    name: "<#Name#>",
+    name: "<#ModuleName#>",
     
     changer_function_code: changer_function_code
 )

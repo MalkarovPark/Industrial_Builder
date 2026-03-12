@@ -1,5 +1,5 @@
 //
-// <#Name#> Changer
+// <#ModuleName#> Changer
 // Internal Module Declaration
 //
 
@@ -7,7 +7,7 @@ import Foundation
 import IndustrialKit
 
 public let <#Name#>_ChangerModule = ChangerModule(
-    name: "<#Name#>",
+    name: "<#ModuleName#>",
     
     change_func: change
 )

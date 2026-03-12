@@ -888,9 +888,33 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 let code_item_url = url.appendingPathComponent("\(module.name)_ToolModule.swift")
                 
-                var module_code = String()
+                var code = import_text_data(from: "ExternalToolModuleDeclaration")
                 
-                try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Operation codes
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
+                func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
+                {
+                    return """
+                    \(data.map
+                    {
+                        ".init(value: \($0.value), name: \"\($0.name)\", symbol_name: \"\($0.symbol_name)\", description: \"\($0.description)\")"
+                    }
+                    .joined(separator: ",\n        "))
+                    """
+                }
+                
+                // Connected nodes names
+                let nodes_names = module.entity_names.map { "    \"\($0)\"" }.joined(separator: ",\n")
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
+                
+                // Set function code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.model_controller_code)
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
             
             func make_module_listing(by module: PartModule, to: URL) throws
@@ -899,7 +923,9 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 var code = import_text_data(from: "InternalPartModuleDeclaration")
                 
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Set module name
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
                 
                 try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
@@ -910,8 +936,12 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 var code = import_text_data(from: "ExternalChangerModuleDeclaration")
                 
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Set module name
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code) // Set function code
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Set function code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code)
                 
                 try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
@@ -952,62 +982,11 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 var code = import_text_data(from: "Tool Module")
                 
-                // Naming
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-                
                 // Components
-                /*if !(module.code_items["Controller"]?.isEmpty ?? false)
-                {
-                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
-                }
-                
-                if !(module.code_items["Connector"]?.isEmpty ?? false)
+                /*if !(module.code_items["Connector"]?.isEmpty ?? false)
                 {
                     code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
                 }*/
-                
-                // Main scene
-                //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-                
-                // Operation codes
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
-                
-                return code
-                
-                func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
-                {
-                    return """
-                    \(data.map
-                    {
-                        ".init(value: \($0.value), name: \"\($0.name)\", symbol_name: \"\($0.symbol_name)\", description: \"\($0.description)\")"
-                    }
-                    .joined(separator: ",\n        "))
-                    """
-                }
-            }
-            
-            func part_module_code(_ module: PartModule) -> String
-            {
-                var code = import_text_data(from: "Part Module")
-                
-                // Naming
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-                
-                // Main scene
-                //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-                
-                return code
-            }
-            
-            func changer_module_code(_ module: ChangerModule) -> String
-            {
-                var code = import_text_data(from: "Changer Module")
-                
-                // Naming
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
                 
                 return code
             }
@@ -1040,7 +1019,12 @@ public class StandardTemplateConstruct: ObservableObject
             
             func make_code_files(module: ToolModule, to url: URL) throws
             {
+                /*var code = import_text_data(from: "ExternalToolController")
                 
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Set module name
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.model_controller_code) // Set model controller code
+                
+                try code.write(to: url.appendingPathComponent("\(module.name)_ToolController.swift"), atomically: true, encoding: .utf8)*/
             }
             
             /*func make_code_files(module: PartModule, to url: URL) throws
@@ -1048,16 +1032,10 @@ public class StandardTemplateConstruct: ObservableObject
                 
             }*/
             
-            func make_code_files(module: ChangerModule, to url: URL) throws
+            /*func make_code_files(module: ChangerModule, to url: URL) throws
             {
-                var code = import_text_data(from: "Internal Change")
                 
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code)
-                
-                try code_files_store(code_items: ["\(module.name)_Module" : code], to: url)
-            }
+            }*/
             
             /*var updated_code_items = module.code_items
             
