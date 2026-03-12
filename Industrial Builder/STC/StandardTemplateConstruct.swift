@@ -879,9 +879,29 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 let code_item_url = url.appendingPathComponent("\(module.name)_RobotModule.swift")
                 
-                var module_code = String()
+                var code = import_text_data(from: "ExternalRobotModuleDeclaration")
                 
-                try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Default Origin Position
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)@*/(0, 0, 0, 0, 0, 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.default_origin_position.x), y: \(module.default_origin_position.y), z: \(module.default_origin_position.z), r: \(module.default_origin_position.r), p: \(module.default_origin_position.p), w: \(module.default_origin_position.w))")
+                
+                // Origin Shift
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float)@*/(0, 0, 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
+                
+                // End Entity Name
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=String@*/String()/*@END_MENU_TOKEN@*/", with: "\(module.end_entity_name.isEmpty ? "String()" : module.end_entity_name)")
+                
+                // Connected nodes names
+                let nodes_names = module.entity_names.map { "    \"\($0)\"" }.joined(separator: ",\n")
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
+                
+                // Set function code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.model_controller_code)
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
             
             func make_module_listing(by module: ToolModule, to: URL) throws
@@ -945,51 +965,6 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
-            
-            func robot_module_code(_ module: RobotModule) -> String
-            {
-                var code = import_text_data(from: "Robot Module")
-                
-                // Naming
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-                
-                // Origin Shift
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
-                
-                /*// Components
-                if !(module.code_items["Controller"]?.isEmpty ?? false)
-                {
-                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
-                }
-                
-                if !(module.code_items["Connector"]?.isEmpty ?? false)
-                {
-                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-                }
-                
-                // Main Nodes
-                //code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-                
-                // Connected nodes names
-                let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-                code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)*/
-                
-                return code
-            }
-            
-            func tool_module_code(_ module: ToolModule) -> String
-            {
-                var code = import_text_data(from: "Tool Module")
-                
-                // Components
-                /*if !(module.code_items["Connector"]?.isEmpty ?? false)
-                {
-                    code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-                }*/
-                
-                return code
-            }
         }
         
         func make_code_folder(url: URL) throws
@@ -1019,12 +994,7 @@ public class StandardTemplateConstruct: ObservableObject
             
             func make_code_files(module: ToolModule, to url: URL) throws
             {
-                /*var code = import_text_data(from: "ExternalToolController")
                 
-                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Set module name
-                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.model_controller_code) // Set model controller code
-                
-                try code.write(to: url.appendingPathComponent("\(module.name)_ToolController.swift"), atomically: true, encoding: .utf8)*/
             }
             
             /*func make_code_files(module: PartModule, to url: URL) throws
