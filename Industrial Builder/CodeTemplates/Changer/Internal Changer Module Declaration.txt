@@ -1,0 +1,18 @@
+//
+// <#Name#> Changer
+// Internal Module Declaration
+//
+
+import Foundation
+import IndustrialKit
+
+public let <#Name#>_ChangerModule = ChangerModule(
+    name: "<#Name#>",
+    
+    change_func: change
+)
+
+private func change(registers: inout [Float])
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+}

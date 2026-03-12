@@ -1,0 +1,18 @@
+//
+// <#Name#> Changer
+// External Module Declaration
+//
+
+import Foundation
+import IndustrialKit
+
+public let <#Name#>_ChangerModule = ChangerModule(
+    name: "<#Name#>",
+    
+    changer_function_code: changer_function_code
+)
+
+private var changer_function_code: String =
+"""
+/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+"""

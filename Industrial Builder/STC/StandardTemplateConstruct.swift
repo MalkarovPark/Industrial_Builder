@@ -861,53 +861,58 @@ public class StandardTemplateConstruct: ObservableObject
         
         func make_info_file(url: URL) throws
         {
-            let code_item_url = url.appendingPathComponent("\(module.name)_Module.swift")
-            
-            var module_code = String()
-
             switch module
             {
-            case is RobotModule:
-                if let robot = module as? RobotModule
-                {
-                    module_code = robot_module_code(robot)
-                }
-                else
-                {
-                    break
-                }
-            case is ToolModule:
-                if let tool = module as? ToolModule
-                {
-                    module_code = tool_module_code(tool)
-                }
-                else
-                {
-                    break
-                }
-            case is PartModule:
-                if let part = module as? PartModule
-                {
-                    module_code = part_module_code(part)
-                }
-                else
-                {
-                    break
-                }
-            case is ChangerModule:
-                if let changer = module as? ChangerModule
-                {
-                    module_code = changer_module_code(changer)
-                }
-                else
-                {
-                    break
-                }
+            case let module as RobotModule:
+                try make_module_listing(by: module, to: url)
+            case let module as ToolModule:
+                try make_module_listing(by: module, to: url)
+            case let module as PartModule:
+                try make_module_listing(by: module, to: url)
+            case let module as ChangerModule:
+                try make_module_listing(by: module, to: url)
             default:
                 break
             }
             
-            try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            func make_module_listing(by module: RobotModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_RobotModule.swift")
+                
+                var module_code = String()
+                
+                try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            func make_module_listing(by module: ToolModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_ToolModule.swift")
+                
+                var module_code = String()
+                
+                try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            func make_module_listing(by module: PartModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_PartModule.swift")
+                
+                var module_code = String()
+                
+                try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            func make_module_listing(by module: ChangerModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_ChangerModule.swift")
+                
+                var code = import_text_data(from: "External Changer Module Declaration")
+                
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format) // Naming
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code) //
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
             
             func robot_module_code(_ module: RobotModule) -> String
             {
@@ -1008,7 +1013,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         func make_code_folder(url: URL) throws
         {
-            guard module is RobotModule || module is ToolModule || module is ChangerModule else { return } // Part module has no external code...
+            guard module is RobotModule || module is ToolModule else { return } // Part and Changer module has no external code...
             
             let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
             
@@ -1020,8 +1025,8 @@ public class StandardTemplateConstruct: ObservableObject
                 try make_code_files(module: module, to: code_url)
             //case let module as PartModule:
                 //try make_code_files(module: module, to: code_url)
-            case let module as ChangerModule:
-                try make_code_files(module: module, to: code_url)
+            //case let module as ChangerModule:
+                //try make_code_files(module: module, to: code_url)
             default:
                 break
             }

@@ -1,8 +1,0 @@
-import Foundation
-import IndustrialKit
-
-public let <#Name#>_ChangerModule = ChangerModule(
-    name: "<#ModuleName#>",
-    
-    change_func: <#Name#>_Change
-)

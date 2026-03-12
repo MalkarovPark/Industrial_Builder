@@ -66,7 +66,7 @@ struct ChangerModulesView: View
                 {
                     AddNewView(is_presented: $new_module_view_presented, names: base_stc.changer_modules_names)
                     { new_name in
-                        base_stc.changer_modules.append(ChangerModule(new_name: new_name))
+                        base_stc.changer_modules.append(ChangerModule(external_name: new_name))
                         document_handler.document_update_ima()
                     }
                 }
