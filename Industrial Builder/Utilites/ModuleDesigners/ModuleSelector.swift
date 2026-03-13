@@ -21,11 +21,9 @@ struct ModuleSelector: View
     @State private var new_panel_presented = false
     
     #if os(macOS)
-    let column_count: Int = 4
-    let grid_spacing: CGFloat = 40
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     #else
-    let column_count: Int = 6
-    let grid_spacing: CGFloat = 16
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 16)]
     #endif
     
     public init(
@@ -52,7 +50,7 @@ struct ModuleSelector: View
                         Text("Robot")
                             .font(.title2)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
                             ForEach (stc.robot_modules)
                             { module in
@@ -74,7 +72,7 @@ struct ModuleSelector: View
                         Text("Tool")
                             .font(.title2)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
                             ForEach (stc.tool_modules)
                             { module in
@@ -96,9 +94,9 @@ struct ModuleSelector: View
                         Text("Part")
                             .font(.title2)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
-                            ForEach (stc.robot_modules)
+                            ForEach (stc.part_modules)
                             { module in
                                 ModuleSelectionCard(
                                     module: module,
@@ -118,7 +116,7 @@ struct ModuleSelector: View
                         Text("Changer")
                             .font(.title2)
                         
-                        LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
+                        LazyVGrid(columns: columns, spacing: 16)
                         {
                             ForEach (stc.changer_modules)
                             { module in
