@@ -1,5 +1,5 @@
 //
-//  ExternalExportTile.swift
+//  ModulesExportTile.swift
 //  Industrial Builder
 //
 //  Created by Artem on 11.03.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExternalExportTile: View
+struct ModulesExportTile: View
 {
     @ObservedObject var stc: StandardTemplateConstruct
     
@@ -16,6 +16,8 @@ struct ExternalExportTile: View
     @State private var file_exporter_presented = false
     
     @State private var external_export_option: ModuleExportOption = .no_build
+    
+    @State private var hovered = false
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
@@ -39,13 +41,6 @@ struct ExternalExportTile: View
                             file_exporter_presented = true
                         }
                     }
-                    
-                    /*Divider()
-                    
-                    Button("For Project Import")
-                    {
-                        
-                    }*/
                 }
                 label:
                 {
@@ -72,10 +67,20 @@ struct ExternalExportTile: View
                         }
                         .overlay(alignment: .bottomTrailing)
                         {
-                            Image(systemName: "chevron.down")
-                                .foregroundStyle(.secondary)
-                                .font(.system(size: 12))
-                                .padding(8)
+                            if hovered
+                            {
+                                Image(systemName: "chevron.down")
+                                    .foregroundStyle(.secondary)
+                                    .font(.system(size: 12))
+                                    .padding(8)
+                            }
+                        }
+                    }
+                    .onHover
+                    { hovered in
+                        withAnimation(.easeInOut(duration: 0.2))
+                        {
+                            self.hovered = hovered
                         }
                     }
                 }
@@ -173,8 +178,8 @@ struct BuildProgressView: View
 
 #Preview
 {
-    ExternalExportTile(stc: StandardTemplateConstruct())
-        .frame(width: 320, height: 192)
+    ModulesExportTile(stc: StandardTemplateConstruct())
+        .frame(width: 320, height: 224)
         .padding(32)
 }
 

@@ -26,16 +26,16 @@ struct InfoView: View
             LazyVGrid(columns: columns, spacing: 24)
             {
                 DescriptionTile(stc: stc, on_update: { document_handler.document_update_info() })
-                    .frame(height: 256)
+                    .frame(height: 224)
                 
                 ModulesTile(stc: stc, on_update: { document_handler.document_update_info() })
-                    .frame(height: 256)
+                    .frame(height: 224)
                 
-                ExternalExportTile(stc: stc)
-                    .frame(height: 256)
+                ModulesExportTile(stc: stc)
+                    .frame(height: 224)
                 
                 AppDevTile(stc: stc)
-                    .frame(height: 256)
+                    .frame(height: 224)
             }
             .padding(20)
         }

@@ -185,12 +185,6 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: - Process preferences
-    @Published var internal_export_type: InternalExportType = .files_only
-    //@Published var external_export_type: ExternalExportType = .no_build
-    
-    @Published var prepare_for_dev_type: PrepareForDevType = .from_listing //.blank_project
-    
     // MARK: - Code generation functions
     public func misc_code_process(type: MiscCodeGenerationFunction, input: String = String()) -> String
     {
@@ -212,7 +206,7 @@ public class StandardTemplateConstruct: ObservableObject
         #endif
     }
     
-    // MARK: - Prepare for Dev functions
+    // MARK: - MBK
     // Makes a Swift package project with IndustrialKit framework import (blank project)
     public func make_industrial_app_project(name: String, to url: URL, remove_tmp_from: URL?)
     {
@@ -242,6 +236,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         catch
         {
+            print(error.localizedDescription)
             /*DispatchQueue.main.async
             {
                 self.build_info += "\nError during external compilation: \(error.localizedDescription)"
@@ -298,12 +293,15 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: - Modules Export
+    // MARK: - Export Modules
     // Builds modules in separated files.
     public func export_modules(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
+        // No-build options
         if option == .internal_modules { make_internal_modules(list: list, to: folder_url); return }
+        if option == .mbk_only { store_mbk(to: folder_url); return }
         
+        // Build external modules
         DispatchQueue.global(qos: .background).async
         {
             self.set_build_info(list: list, as_internal: false)
@@ -601,9 +599,7 @@ public class StandardTemplateConstruct: ObservableObject
             command_line += "BuildModulePrograms.command "
         case .projects_to_programs:
             command_line += "BuildModulePrograms.command --clear "
-        case .no_build:
-            return
-        case .internal_modules:
+        default:
             return
         }
         
@@ -682,7 +678,7 @@ public class StandardTemplateConstruct: ObservableObject
     
     // MARK: - Build Industrial App
     // Builds application project to compile with internal modules.
-    public func build_application_project(list: BuildModulesList, to folder_url: URL)
+    public func make_industrial_project(list: BuildModulesList, to folder_url: URL, option: ProjectExportOption)
     {
         //make_internal_modules(list: list, to: folder_url)
     }
@@ -1138,11 +1134,10 @@ public class StandardTemplateConstruct: ObservableObject
 }
 
 // MARK: - Enums
-public enum InternalExportType: String, Equatable, CaseIterable
+public enum ProjectExportOption: String, Equatable, CaseIterable
 {
-    case files_only = "Files Only"
-    //case swift_playground = "Swift Playground"
-    //case xcode_project = "Xcode Project"
+    case swift_playground = "Swift Playground"
+    case xcode_project = "Xcode Project"
 }
 
 public enum ModuleExportOption: String, Equatable, CaseIterable
@@ -1155,11 +1150,6 @@ public enum ModuleExportOption: String, Equatable, CaseIterable
     case no_build = "No Build (Listings Only)"
     
     case internal_modules = "Make Internal for Projects"
-}
-
-public enum PrepareForDevType: String, Equatable, CaseIterable
-{
-    case from_listing = "From Selected Code Template"
     case mbk_only = "Module Building Kit Only"
 }
 

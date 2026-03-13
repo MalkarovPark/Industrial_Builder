@@ -72,6 +72,6 @@ struct ModulesTile: View
 #Preview
 {
     ModulesTile(stc: StandardTemplateConstruct(), on_update: {})
-        .frame(width: 320, height: 192)
+        .frame(width: 320, height: 224)
         .padding(32)
 }

@@ -16,10 +16,12 @@ struct AppDevTile: View
     
     @State private var code_template_view_presented = false
     @State private var store_listing_panel_presented = false
-    @State private var store_mbk_panel_presented = false
     @State private var passed_listing_text = String()
     
     @State private var project_export_panel_presented = false
+    @State private var project_export_option: ProjectExportOption = .swift_playground
+    
+    @State private var hovered = false
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 16)]
@@ -29,256 +31,198 @@ struct AppDevTile: View
     
     var body: some View
     {
-        GlassTile(color: Color(hex: "13C5B5"))
+        GlassTile(color: Color(hex: "6F7AB9"))
         {
-            HStack(spacing: 18)
+            HStack(spacing: 0)
             {
-                Menu
+                ZStack
                 {
-                    ForEach(PrepareForDevType.allCases, id: \.self)
-                    { export_type in
-                        Button(export_type.rawValue)
+                    Rectangle()
+                        .fill(Color(hex: "6F7AB9"))
+                    
+                    Button
+                    {
+                        code_template_view_presented = true
+                    }
+                    label:
+                    {
+                        IconView
                         {
-                            stc.prepare_for_dev_type = export_type
-                            switch export_type
+                            ZStack
                             {
-                            case .from_listing: code_template_view_presented = true
-                            case .mbk_only: store_mbk_panel_presented = true
+                                Rectangle()
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            gradient: Gradient(stops: [
+                                                Gradient.Stop(color: Color(hex: "2E2E2E"), location: 0.0),
+                                                Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
+                                            ]),
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+                                    .scaledToFill()
+                                
+                                Image(systemName: "terminal")
+                                    .foregroundStyle(.white)
+                                    .font(.system(size: 30))
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .fileExporter(
+                        isPresented: $store_listing_panel_presented,
+                        document: SwiftSourceDocument(content: passed_listing_text),
+                        contentType: .swiftSource,
+                        defaultFilename: "Listing"
+                    )
+                    { result in
+                        switch result
+                        {
+                        case .success(let url):
+                            let file_name = url.lastPathComponent
+                            let folder_url = url.deletingLastPathComponent()
+                            
+                            stc.make_industrial_app_project(from: file_name, to: folder_url)
+                            passed_listing_text = String()
+                            
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                            break
+                        }
+                    }
+                    .sheet(isPresented: $code_template_view_presented)
+                    {
+                        CodeSelectorView(
+                            is_presented: $code_template_view_presented,
+                            avaliable_template_names: external_app_code_templates
+                        )
+                        { output in
+                            passed_listing_text = output
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+                            {
+                                store_listing_panel_presented = true
                             }
                         }
                     }
                 }
-                label:
+                .overlay(alignment: .bottom)
                 {
-                    IconView
-                    {
-                        ZStack
-                        {
-                            Rectangle()
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: Color(hex: "2E2E2E"), location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "262626"), location: 1.0)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .scaledToFill()
-                            
-                            Image(systemName: "terminal")
-                                .foregroundStyle(.white)
-                                .font(.system(size: 30))
-                        }
-                        .overlay(alignment: .bottomTrailing)
-                        {
-                            Image(systemName: "chevron.down")
-                                .foregroundStyle(.white.opacity(0.75))
-                                .font(.system(size: 12))
-                                .padding(8)
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
-                .fileExporter(
-                    isPresented: $store_listing_panel_presented,
-                    document: SwiftSourceDocument(content: passed_listing_text),
-                    contentType: .swiftSource,
-                    defaultFilename: "Listing"
-                )
-                { result in
-                    switch result
-                    {
-                    case .success(let url):
-                        let file_name = url.lastPathComponent
-                        let folder_url = url.deletingLastPathComponent()
-                        
-                        stc.make_industrial_app_project(from: file_name, to: folder_url)
-                        passed_listing_text = String()
-                        
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                        break
-                    }
-                }
-                .fileImporter(
-                    isPresented: $store_mbk_panel_presented,
-                    allowedContentTypes: [.folder],
-                    allowsMultipleSelection: false
-                )
-                { result in
-                    switch result
-                    {
-                    case .success(let urls):
-                        if let url = urls.first
-                        {
-                            stc.store_mbk(to: url)
-                        }
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                        break
-                    }
-                }
-                .sheet(isPresented: $code_template_view_presented)
-                {
-                    CodeSelectorView(
-                        is_presented: $code_template_view_presented,
-                        avaliable_template_names: external_app_code_templates
-                    )
-                    { output in
-                        passed_listing_text = output
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
-                        {
-                            store_listing_panel_presented = true
-                        }
-                    }
-                }
-                
-                Button
-                {
-                    project_export_panel_presented = true
-                }
-                label:
-                {
-                    IconView
-                    {
-                        ZStack
-                        {
-                            Rectangle()
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: .white, location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .scaledToFill()
-                            
-                            Image(systemName: "app.fill")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: Color(hex: "0FC1FB"), location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "1F74FF"), location: 1.0)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .font(.system(size: 50))
-                            
-                            Image(systemName: "hammer.fill")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: Color(hex: "70727E"), location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "16181B"), location: 1.0)
-                                        ]),
-                                        startPoint: .topTrailing,
-                                        endPoint: .bottomLeading
-                                    )
-                                )
-                                .font(.system(size: 25))
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
-                /*.fileImporter(
-                    isPresented: $project_export_panel_presented,
-                    allowedContentTypes: [.folder],
-                    allowsMultipleSelection: false
-                )
-                { result in
-                    switch result
-                    {
-                    case .success(let urls):
-                        if let url = urls.first
-                        {
-                            stc.build_application_project(list: stc.package_info.build_modules_list, to: url)
-                        }
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                        break
-                    }
-                }*/
-                
-                /*Button
-                {
-                    
-                }
-                label:
-                {
-                    IconView
-                    {
-                        ZStack
-                        {
-                            Rectangle()
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: Color(hex: "FFAD5A"), location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "DD3D4D"), location: 1.0)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .scaledToFill()
-                            
-                            Image(systemName: "swift")
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: .white, location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .font(.system(size: 40))
-                                .offset(x: -2, y: -2)
-                        }
-                    }
-                }
-                .buttonStyle(.plain)
-                .fileImporter(
-                    isPresented: $external_export_panel_presented,
-                    allowedContentTypes: [.folder],
-                    allowsMultipleSelection: false
-                )
-                { result in
-                    switch result
-                    {
-                    case .success(let urls):
-                        if let url = urls.first
-                        {
-                            stc.build_external_modules(list: stc.package_info.build_modules_list, to: url)
-                        }
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                        break
-                    }
-                }*/
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .bottom)
-            {
-                HStack
-                {
-                    Text("Industrial App")
+                    Text("Terinal App")
                         .font(.system(size: 18, design: .rounded))
                         .foregroundStyle(.white)
-                        .padding(.vertical, 12)
-                        .padding(.leading, 16)
+                        .padding(.bottom, 12)
+                }
+                
+                ZStack
+                {
+                    Rectangle()
+                        .fill(Color(hex: "3671D9"))
                     
-                    Spacer()
+                    Menu
+                    {
+                        ForEach(ProjectExportOption.allCases, id: \.self)
+                        { export_type in
+                            Button(export_type.rawValue)
+                            {
+                                project_export_option = export_type
+                                project_export_panel_presented = true
+                            }
+                        }
+                    }
+                    label:
+                    {
+                        IconView
+                        {
+                            ZStack
+                            {
+                                Rectangle()
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            gradient: Gradient(stops: [
+                                                Gradient.Stop(color: .white, location: 0.0),
+                                                Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                                            ]),
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+                                    .scaledToFill()
+                                
+                                Image(systemName: "app.fill")
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            gradient: Gradient(stops: [
+                                                Gradient.Stop(color: Color(hex: "0FC1FB"), location: 0.0),
+                                                Gradient.Stop(color: Color(hex: "1F74FF"), location: 1.0)
+                                            ]),
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+                                    .font(.system(size: 50))
+                                
+                                Image(systemName: "hammer.fill")
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            gradient: Gradient(stops: [
+                                                Gradient.Stop(color: Color(hex: "70727E"), location: 0.0),
+                                                Gradient.Stop(color: Color(hex: "16181B"), location: 1.0)
+                                            ]),
+                                            startPoint: .topTrailing,
+                                            endPoint: .bottomLeading
+                                        )
+                                    )
+                                    .font(.system(size: 25))
+                            }
+                            .overlay(alignment: .bottomTrailing)
+                            {
+                                if hovered
+                                {
+                                    Image(systemName: "chevron.down")
+                                        .foregroundStyle(.secondary)
+                                        .font(.system(size: 12))
+                                        .padding(8)
+                                }
+                            }
+                        }
+                        .onHover
+                        { hovered in
+                            withAnimation(.easeInOut(duration: 0.2))
+                            {
+                                self.hovered = hovered
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .fileImporter(
+                        isPresented: $project_export_panel_presented,
+                        allowedContentTypes: [.folder],
+                        allowsMultipleSelection: false
+                    )
+                    { result in
+                        switch result
+                        {
+                        case .success(let urls):
+                            if let url = urls.first
+                            {
+                                stc.make_industrial_project(list: stc.package_info.build_modules_list, to: url, option: project_export_option)
+                            }
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                            break
+                        }
+                    }
+                }
+                .overlay(alignment: .bottom)
+                {
+                    Text("Industrial Project")
+                        .font(.system(size: 18, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.bottom, 12)
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
@@ -337,6 +281,6 @@ struct RawFileDocument: FileDocument
 #Preview
 {
     AppDevTile(stc: StandardTemplateConstruct())
-        .frame(width: 320, height: 192)
+        .frame(width: 320, height: 224)
         .padding(32)
 }

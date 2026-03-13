@@ -6,7 +6,10 @@
 //
 
 import SwiftUI
+import RealityKit
+
 import IndustrialKit
+import IndustrialKitUI
 
 struct ModuleSelector: View
 {
@@ -19,7 +22,7 @@ struct ModuleSelector: View
     
     #if os(macOS)
     let column_count: Int = 4
-    let grid_spacing: CGFloat = 10
+    let grid_spacing: CGFloat = 40
     #else
     let column_count: Int = 6
     let grid_spacing: CGFloat = 16
@@ -51,12 +54,11 @@ struct ModuleSelector: View
                         
                         LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (stc.robot_modules_names, id: \.self)
-                            { name in
-                                ModuleTileView(
-                                    name: name,
-                                    image_name: "r.square", color: Color(hex: "13C5B5"),
-                                    is_selected: is_module_selected(name: name, type: .robot),
+                            ForEach (stc.robot_modules)
+                            { module in
+                                ModuleSelectionCard(
+                                    module: module,
+                                    is_selected: is_module_selected(module),
                                     on_update: on_update
                                 )
                             }
@@ -74,16 +76,14 @@ struct ModuleSelector: View
                         
                         LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (stc.tool_modules_names, id: \.self)
-                            { name in
-                                ModuleTileView(
-                                    name: name,
-                                    image_name: "hammer", color: Color(hex: "6CC0FF"),
-                                    is_selected: is_module_selected(name: name, type: .tool),
+                            ForEach (stc.tool_modules)
+                            { module in
+                                ModuleSelectionCard(
+                                    module: module,
+                                    is_selected: is_module_selected(module),
                                     on_update: on_update
                                 )
                             }
-                            .aspectRatio(1, contentMode: .fit)
                         }
                     }
                     .padding(.bottom, 16)
@@ -98,16 +98,14 @@ struct ModuleSelector: View
                         
                         LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (stc.part_modules_names, id: \.self)
-                            { name in
-                                ModuleTileView(
-                                    name: name,
-                                    image_name: "shippingbox", color: Color(hex: "6965F0"),
-                                    is_selected: is_module_selected(name: name, type: .part),
+                            ForEach (stc.robot_modules)
+                            { module in
+                                ModuleSelectionCard(
+                                    module: module,
+                                    is_selected: is_module_selected(module),
                                     on_update: on_update
                                 )
                             }
-                            .aspectRatio(1, contentMode: .fit)
                         }
                     }
                     .padding(.bottom, 16)
@@ -122,16 +120,14 @@ struct ModuleSelector: View
                         
                         LazyVGrid(columns: Array(repeating: .init(.flexible(), spacing: grid_spacing), count: column_count), spacing: grid_spacing)
                         {
-                            ForEach (stc.changer_modules_names, id: \.self)
-                            { name in
-                                ModuleTileView(
-                                    name: name,
-                                    image_name: "wand.and.rays", color: Color(hex: "F350B3"),
-                                    is_selected: is_module_selected(name: name, type: .changer),
+                            ForEach (stc.changer_modules)
+                            { module in
+                                ModuleSelectionCard(
+                                    module: module,
+                                    is_selected: is_module_selected(module),
                                     on_update: on_update
                                 )
                             }
-                            .aspectRatio(1, contentMode: .fit)
                         }
                     }
                 }
@@ -142,63 +138,62 @@ struct ModuleSelector: View
     }
     
     // MARK: Module names handling
-    private func is_module_selected(name: String, type: ModuleType) -> Binding<Bool>
+    private func is_module_selected(_ module: IndustrialModule) -> Binding<Bool>
     {
         Binding(
             get:
                 {
-                    is_listed(name: name, type: type)
+                    is_listed(module: module)
                 },
             set:
             { is_selected in
-                var names = get_module_names(for: type)
+                var names = get_module_names(for: module)
                 if is_selected
                 {
-                    names.append(name)
+                    names.append(module.name)
                 }
                 else
                 {
-                    names.removeAll { $0 == name }
+                    names.removeAll { $0 == module.name }
                 }
                 
-                set_module_names(names, for: type)
+                set_module_names(names, for: module)
             }
         )
     }
     
-    private func is_listed(name: String, type: ModuleType) -> Bool
+    private func is_listed(module: IndustrialModule) -> Bool
     {
-        get_module_names(for: type).contains(name)
+        get_module_names(for: module).contains(module.name)
     }
     
-    private func get_module_names(for type: ModuleType) -> [String]
+    private func get_module_names(for module: IndustrialModule) -> [String]
     {
         let list = stc.package_info.build_modules_list
-        switch type
+        switch module
         {
-        case .robot:
-            return list.robot_modules_names
-        case .tool:
-            return list.tool_modules_names
-        case .part:
-            return list.part_modules_names
-        case .changer:
-            return list.changer_modules_names
+        case is RobotModule: return list.robot_modules_names
+        case is ToolModule: return list.tool_modules_names
+        case is PartModule: return list.part_modules_names
+        case is ChangerModule: return list.changer_modules_names
+        default: return []
         }
     }
     
-    private func set_module_names(_ names: [String], for type: ModuleType)
+    private func set_module_names(_ names: [String], for module: IndustrialModule)
     {
-        switch type
+        switch module
         {
-        case .robot:
+        case is RobotModule:
             stc.package_info.build_modules_list.robot_modules_names = names
-        case .tool:
+        case is ToolModule:
             stc.package_info.build_modules_list.tool_modules_names = names
-        case .part:
+        case is PartModule:
             stc.package_info.build_modules_list.part_modules_names = names
-        case .changer:
+        case is ChangerModule:
             stc.package_info.build_modules_list.changer_modules_names = names
+        default:
+            break
         }
     }
     
@@ -221,122 +216,166 @@ struct ModuleSelector: View
     }
 }
 
-struct ModuleTileView: View
+public struct ModuleSelectionCard: View
 {
-    let name: String
-    let image_name: String
-    let color: Color
+    @ObservedObject var module: IndustrialModule
     
     @Binding var is_selected: Bool
     
     public let on_update: () -> Void
     
+    @State private var to_rename = false
+    @State private var preview_entity: Entity?
+    @State private var symbol_name = String()
+    
+    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var document_handler: DocumentUpdateHandler
+    
+    @State private var view_id = UUID()
+    
     public init(
-        name: String,
-        image_name: String,
-        color: Color,
+        module: IndustrialModule,
         is_selected: Binding<Bool>,
         
         on_update: @escaping () -> Void
     )
     {
-        self.name = name
-        self.image_name = image_name
-        self.color = color
+        self.module = module
         self._is_selected = is_selected
         
         self.on_update = on_update
     }
     
-    var body: some View
+    public var body: some View
     {
-        ZStack
+        Button
         {
-            Rectangle()
-                .foregroundStyle(color)
-                .overlay//(alignment: .trailing)
-                {
-                    Image(systemName: image_name)
-                        .fontWeight(.bold)
-                        //.font(.system(size: 32))
-                        .font(.system(size: 48))
-                        .foregroundStyle(.quaternary.opacity(0.5))
-                        .padding()
-                    #if os(macOS)
-                        .offset(x: -20, y: 20)
-                    #else
-                        .offset(x: -25, y: 25)
-                    #endif
-                }
-                .overlay(alignment: .topLeading)
-                {
-                    VStack(spacing: 0)
-                    {
-                        Text(name)
-                        #if os(macOS)
-                            .font(.system(size: 12))
-                        #else
-                            .font(.system(size: 16))
-                        #endif
-                            .foregroundColor(.white)
-                            .padding(4)
-                    }
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .shadow(color: color.opacity(0.2), radius: is_selected ? 8 : 0)
-        }
-        .overlay(alignment: .bottomTrailing)
-        {
-            if is_selected
+            withAnimation(.easeInOut(duration: 0.2))
             {
-                ZStack
-                {
-                    Image(systemName: "checkmark")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 10, height: 10)
-                        .foregroundStyle(.primary)
-                }
-                #if os(macOS)
-                .frame(width: 20, height: 20)
-                #else
-                .frame(width: 24, height: 24)
-                #endif
-                .background(.ultraThinMaterial)
-                .clipShape(Circle())
-                .padding(6)
+                is_selected.toggle()
             }
-        }
-        .scaleEffect(is_selected ? 1 : 0.95)
-        .onTapGesture
-        {
-            is_selected.toggle()
+            
             on_update()
         }
-        .animation(.easeInOut(duration: 0.2), value: is_selected)
-        .aspectRatio(1, contentMode: .fit)
-    }
-}
-
-private enum ModuleType: String, Equatable, CaseIterable
-{
-    case robot = "Robot"
-    case tool = "Tool"
-    case part = "Part"
-    case changer = "Changer"
-    
-    var image_name: String
-    {
-        switch self
+        label:
         {
-        case .robot:
-            return "r.square"
-        case .tool:
-            return "hammer"
-        case .part:
-            return "shippingbox"
-        case .changer:
-            return "wand.and.rays"
+            if preview_entity != nil
+            {
+                GlassBoxCard(
+                    title: module.name,
+                    entity: preview_entity,
+                    vertical_repostion: true
+                )
+                {
+                    if is_selected
+                    {
+                        ZStack(alignment: .bottomTrailing)
+                        {
+                            Rectangle()
+                                .fill(.clear)
+                            
+                            ZStack
+                            {
+                                Image(systemName: "checkmark")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(.primary)
+                            }
+                            #if os(macOS)
+                            .frame(width: 40, height: 40)
+                            #else
+                            .frame(width: 48, height: 48)
+                            #endif
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .padding(6)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+                .frame(width: 128, height: 128)
+                .scaleEffect(0.5)
+            }
+            else
+            {
+                GlassBoxCard(
+                    title: module.name,
+                    symbol_name: symbol_name,
+                    symbol_size: 48,
+                    symbol_weight: .regular
+                )
+                {
+                    if is_selected
+                    {
+                        ZStack(alignment: .bottomTrailing)
+                        {
+                            Rectangle()
+                                .fill(.clear)
+                            
+                            ZStack
+                            {
+                                Image(systemName: "checkmark")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(.primary)
+                            }
+                            #if os(macOS)
+                            .frame(width: 40, height: 40)
+                            #else
+                            .frame(width: 48, height: 48)
+                            #endif
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .padding(6)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                }
+                .frame(width: 128, height: 128)
+                .scaleEffect(0.5)
+            }
+        }
+        .buttonStyle(.plain)
+        .id(view_id)
+        .frame(width: 64, height: 64)
+        //.frame(width: 128, height: 128)
+        //.scaleEffect(0.5)
+        .onAppear
+        {
+            load_entity()
+        }
+        .onDisappear
+        {
+            preview_entity = nil
+        }
+    }
+    
+    private func load_entity()
+    {
+        switch module
+        {
+        case is RobotModule: symbol_name = "r.square"
+        case is ToolModule: symbol_name = "hammer"
+        case is PartModule: symbol_name = "shippingbox"
+        case is ChangerModule: symbol_name = "wand.and.rays"
+        default: break
+        }
+        
+        guard let entity_file_name =
+            (module as? RobotModule)?.entity_file_name ??
+            (module as? ToolModule)?.entity_file_name ??
+            (module as? PartModule)?.entity_file_name
+        else { return }
+        
+        if let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
+        {
+            preview_entity = entity_file_item.entity.clone(recursive: true)
+        }
+        else
+        {
+            preview_entity = nil
         }
     }
 }
