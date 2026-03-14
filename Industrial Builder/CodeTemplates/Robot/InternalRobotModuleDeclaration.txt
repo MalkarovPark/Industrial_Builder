@@ -9,9 +9,9 @@ import IndustrialKit
 public let <#Name#>_RobotModule = RobotModule(
     name: "<#ModuleName#>",
     
-    origin_shift: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float)@*/(0, 0, 0)/*@END_MENU_TOKEN@*/,
     default_origin_position: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)@*/(0, 0, 0, 0, 0, 0)/*@END_MENU_TOKEN@*/,
     
+    origin_shift: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float)@*/(0, 0, 0)/*@END_MENU_TOKEN@*/,
     end_entity_name: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=String@*/String()/*@END_MENU_TOKEN@*/,
     
     model_controller: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController@*/RobotModelController()/*@END_MENU_TOKEN@*/,
