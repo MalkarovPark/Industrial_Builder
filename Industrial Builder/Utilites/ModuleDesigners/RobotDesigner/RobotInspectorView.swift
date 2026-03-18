@@ -276,7 +276,7 @@ struct RobotInspectorView: View
         
         previewed_robot.origin_shift = module.origin_shift
         previewed_robot.origin_position = module.default_origin_position
-        previewed_robot.update_position()
+        previewed_robot.update_model()
     }
 }
 
