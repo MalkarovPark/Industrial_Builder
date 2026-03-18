@@ -23,7 +23,7 @@ struct RobotModuleDesigner: View
     @State private var entity_selector_presented = false
     @State private var is_pan = false
     
-    @State private var device_state_presented = false
+    @State private var device_output_presented = false
     
     @ObservedObject private var workspace = Workspace()
     @StateObject private var previewed_robot = Robot(
@@ -133,14 +133,14 @@ struct RobotModuleDesigner: View
             {
                 ControlGroup
                 {
-                    Button(action: { device_state_presented = true })
+                    Button(action: { device_output_presented = true })
                     {
                         Label("State", systemImage: "chart.pie")
                     }
-                    .sheet(isPresented: $device_state_presented)
+                    .sheet(isPresented: $device_output_presented)
                     {
-                        DeviceStateView(object: previewed_robot)
-                            .modifier(SheetCaption(is_presented: $device_state_presented, label: "Device State", plain: false, clear_background: true))
+                        DeviceOutputView(object: previewed_robot)
+                            .modifier(SheetCaption(is_presented: $device_output_presented, label: "Device State", plain: false, clear_background: true))
                     }
                 }
             }
