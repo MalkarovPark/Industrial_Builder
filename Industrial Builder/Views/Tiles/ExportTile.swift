@@ -1,5 +1,5 @@
 //
-//  ModulesExportTile.swift
+//  ExportTile.swift
 //  Industrial Builder
 //
 //  Created by Artem on 11.03.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ModulesExportTile: View
+struct ExportTile: View
 {
     @ObservedObject var stc: StandardTemplateConstruct
     
@@ -110,7 +110,7 @@ struct ModulesExportTile: View
             {
                 HStack
                 {
-                    Text("Export Modules")
+                    Text("Export Files")
                         .font(.system(size: 18, design: .rounded))
                         .foregroundStyle(.white)
                         .padding(.vertical, 12)
@@ -149,7 +149,7 @@ struct BuildProgressView: View
                     total: base_stc.build_total,
                     label:
                     {
-                        Text("Modules build")
+                        Text("Modules Build")
                     },
                     currentValueLabel:
                     {
@@ -178,7 +178,7 @@ struct BuildProgressView: View
 
 #Preview
 {
-    ModulesExportTile(stc: StandardTemplateConstruct())
+    ExportTile(stc: StandardTemplateConstruct())
         .frame(width: 320, height: 224)
         .padding(32)
 }

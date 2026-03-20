@@ -31,7 +31,7 @@ struct InfoView: View
                 ModulesTile(stc: stc, on_update: { document_handler.document_update_info() })
                     .frame(height: 224)
                 
-                ModulesExportTile(stc: stc)
+                ExportTile(stc: stc)
                     .frame(height: 224)
                 
                 AppDevTile(stc: stc)
