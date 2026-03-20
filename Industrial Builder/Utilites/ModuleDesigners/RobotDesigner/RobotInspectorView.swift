@@ -22,6 +22,10 @@ struct RobotInspectorView: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
+    #endif
+    
     var body: some View
     {
         ScrollView
@@ -129,7 +133,11 @@ struct RobotInspectorView: View
                     update_model_controller()
                 }
                 
+                #if os(macOS) || os(visionOS)
                 ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update)
+                #else
+                ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update, is_compact: horizontal_size_class == .compact)
+                #endif
                 
                 InspectorItem(label: "End Point Entity", is_expanded: false)
                 {

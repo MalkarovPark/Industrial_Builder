@@ -17,7 +17,11 @@ struct InfoView: View
     @EnvironmentObject var stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
+    #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 24)]
+    #else
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 320, maximum: .infinity), spacing: 24)]
+    #endif
     
     var body: some View
     {

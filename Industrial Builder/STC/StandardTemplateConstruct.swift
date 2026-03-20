@@ -425,7 +425,9 @@ public class StandardTemplateConstruct: ObservableObject
     
     private func build_external_module_file(module: IndustrialModule, to folder_url: URL, option: ModuleExportOption)
     {
+        #if os(macOS)
         if option == .build_from_projects || option == .projects_to_programs { return } // Skip modules files build for only compilation/conversion export type
+        #endif
         
         do
         {
@@ -1142,11 +1144,13 @@ public enum ProjectExportOption: String, Equatable, CaseIterable
 
 public enum ModuleExportOption: String, Equatable, CaseIterable
 {
+    #if os(macOS)
     case projects_and_programs = "Build To Projects and Programs"
     case programs_only = "Build To Programs Only"
     case projects_only = "Build To Projects Only"
     case build_from_projects = "Build Existing Projects To Programs"
     case projects_to_programs = "Turn Existing Projects To Programs"
+    #endif
     case no_build = "No Build (Listings Only)"
     
     case internal_modules = "Make Internal for Projects"

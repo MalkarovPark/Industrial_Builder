@@ -86,7 +86,6 @@ struct ListingListView: View
             #endif
             .sheet(isPresented: $new_code_view_presented)
             {
-                #if os(macOS)
                 CodeSelectorView(is_presented: $new_code_view_presented, avaliable_template_names: all_code_templates)
                 { output in
                     if new_listing_name.isEmpty
@@ -114,30 +113,6 @@ struct ListingListView: View
                         #endif
                     }
                 }
-                #else
-                CodeSelectorView(is_presented: $new_code_view_presented,
-                                avaliable_templates_names: all_code_templates,
-                                bottom_view:
-                                    TextField("Name", text: $new_listing_name)
-                                        .padding(.trailing)
-                                        .frame(minWidth: 128, maxWidth: 256)
-                                        .frame(idealWidth: 256)
-                                        .textFieldStyle(.roundedBorder)
-                )
-                { output in
-                    if new_listing_name.isEmpty
-                    {
-                        new_listing_name = "Name"
-                    }
-                    
-                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listing_items.map(\.name))
-                    
-                    base_stc.listing_items.append(ListingItem(name: new_listing_name, text: output))
-                    new_listing_name = ""
-                    
-                    document_handler.document_update_listings()
-                }
-                #endif
             }
             
             Button(action: { load_panel_presented = true })

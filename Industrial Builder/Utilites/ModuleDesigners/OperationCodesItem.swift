@@ -23,8 +23,13 @@ struct OperationCodesItem: View
         GridItem(.flexible(), spacing: 6)
     ]
     
+    #if os(iOS)
+    private let is_compact: Bool
+    #endif
+    
     @State private var new_code_value = 0
     
+    #if os(macOS) || os(visionOS)
     public init
     (
         operations: Binding<[OperationCodeInfo]>,
@@ -38,6 +43,25 @@ struct OperationCodesItem: View
         
         new_code_value = avaliable_opcode_value
     }
+    #else
+    public init
+    (
+        operations: Binding<[OperationCodeInfo]>,
+        
+        on_update: @escaping () -> Void,
+        
+        is_compact: Bool
+    )
+    {
+        self._operations = operations
+        
+        self.on_update = on_update
+        
+        self.is_compact = is_compact
+        
+        new_code_value = avaliable_opcode_value
+    }
+    #endif
     
     public var body: some View
     {
@@ -51,6 +75,7 @@ struct OperationCodesItem: View
                     {
                         ForEach(operations)
                         { operation in
+                            #if os(macOS) || os(visionOS)
                             OperationCodeEditor(operation: operation, operations: operations)
                             {
                                 on_update()
@@ -66,6 +91,20 @@ struct OperationCodesItem: View
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
+                            #else
+                            OperationCodeEditor(operation: operation, operations: operations, on_update: on_update, is_compact: is_compact)
+                            .contextMenu
+                            {
+                                Button(role: .destructive)
+                                {
+                                    delete_operation(at: operation)
+                                }
+                                label:
+                                {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+                            #endif
                         }
                         
                         Button
@@ -78,8 +117,13 @@ struct OperationCodesItem: View
                             Image(systemName: "plus")
                                 .frame(width: 16, height: 16)
                         }
+                        #if os(macOS)
                         .frame(width: 28)
+                        #else
+                        .frame(width: 40)
+                        #endif
                         .buttonStyle(.bordered)
+                        .buttonBorderShape(.roundedRectangle)
                     }
                     .padding(8)
                 }
@@ -116,10 +160,16 @@ private struct OperationCodeEditor: View
     
     let on_update: () -> ()
     
+    #if os(iOS)
+    let is_compact: Bool
+    #endif
+    
     @State private var editor_is_presented: Bool = false
     
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) public var horizontal_size_class // Horizontal window size handler
+    #if os(macOS) || os(visionOS)
+    private let preffered_arrow_edge: Edge = .leading
+    #else
+    private let preffered_arrow_edge: Edge = .trailing
     #endif
     
     var body: some View
@@ -156,12 +206,13 @@ private struct OperationCodeEditor: View
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
-        .popover(isPresented: $editor_is_presented, arrowEdge: .leading)
+        .buttonBorderShape(.roundedRectangle)
+        .popover(isPresented: $editor_is_presented, arrowEdge: preffered_arrow_edge)
         {
             VStack(spacing: 16)
             {
                 #if os(iOS)
-                if horizontal_size_class == .compact
+                if is_compact
                 {
                     HStack
                     {
@@ -172,7 +223,7 @@ private struct OperationCodeEditor: View
                         
                         Button
                         {
-                            position_item_view_presented = false
+                            editor_is_presented = false
                         }
                         label:
                         {
@@ -281,7 +332,12 @@ private struct OperationCodeEditor: View
                         .textFieldStyle(.roundedBorder)
                 }
             }
+            #if os(macOS) || os(visionOS)
             .frame(minWidth: 160)
+            #else
+            .frame(minWidth: 240)
+            .presentationDetents([.height(400)])
+            #endif
             .padding()
         }
     }

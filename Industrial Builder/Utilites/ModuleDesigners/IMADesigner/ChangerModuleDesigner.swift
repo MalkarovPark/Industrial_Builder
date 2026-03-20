@@ -68,14 +68,14 @@ struct ChangerModuleDesigner: View
             #else
             if horizontal_size_class != .compact
             {
-                InspectorView(changer_module: changer_module)
+                ChangerInspectorView(module: module)
                 {
                     document_handler.document_update_ima()
                 }
             }
             else
             {
-                InspectorView(changer_module: changer_module)
+                ChangerInspectorView(module: module)
                 {
                     document_handler.document_update_ima()
                 }
@@ -91,7 +91,7 @@ struct ChangerModuleDesigner: View
             ToolbarSpacer()
             #endif
             
-            ToolbarItemGroup(placement: .confirmationAction)
+            ToolbarItemGroup(placement: .primaryAction)
             {
                 Button(action: clear_registers)
                 {
@@ -111,7 +111,7 @@ struct ChangerModuleDesigner: View
                 }
             }
             
-            ToolbarItem(placement: .confirmationAction)
+            ToolbarItem(placement: .primaryAction)
             {
                 ControlGroup
                 {

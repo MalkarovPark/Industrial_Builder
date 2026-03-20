@@ -23,8 +23,13 @@ struct ConnectionParametersItem: View
         GridItem(.flexible(), spacing: 6)
     ]
     
+    #if os(iOS)
+    private let is_compact: Bool
+    #endif
+    
     @State private var new_code_value = 0
     
+    #if os(macOS) || os(visionOS)
     public init
     (
         parameters: Binding<[ConnectionParameter]>,
@@ -38,6 +43,22 @@ struct ConnectionParametersItem: View
         
         //new_code_value = avaliable_opcode_value
     }
+    #else
+    public init
+    (
+        parameters: Binding<[ConnectionParameter]>,
+        
+        on_update: @escaping () -> Void,
+        is_compact: Bool
+    )
+    {
+        self._parameters = parameters
+        
+        self.on_update = on_update
+        
+        self.is_compact = is_compact
+    }
+    #endif
     
     public var body: some View
     {
@@ -51,6 +72,7 @@ struct ConnectionParametersItem: View
                     {
                         ForEach(parameters)
                         { parameter in
+                            #if os(macOS) || os(visionOS)
                             ConnectionParameterEditor(parameter: parameter, parameters: parameters)
                             {
                                 on_update()
@@ -66,6 +88,20 @@ struct ConnectionParametersItem: View
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
+                            #else
+                            ConnectionParameterEditor(parameter: parameter, parameters: parameters, on_update: on_update, is_compact: is_compact)
+                            .contextMenu
+                            {
+                                Button(role: .destructive)
+                                {
+                                    delete_parameter(at: parameter)
+                                }
+                                label:
+                                {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+                            #endif
                         }
                         
                         Menu
@@ -94,8 +130,13 @@ struct ConnectionParametersItem: View
                         {
                             Image(systemName: "plus")
                         }
-                        .frame(width: 48) //.frame(width: 64)
+                        #if os(macOS)
+                        .frame(width: 48)
+                        #else
+                        .frame(width: 42)
+                        #endif
                         .buttonStyle(.bordered)
+                        .buttonBorderShape(.roundedRectangle)
                     }
                     .padding(8)
                 }
@@ -129,10 +170,16 @@ private struct ConnectionParameterEditor: View
     
     let on_update: () -> ()
     
+    #if os(iOS)
+    let is_compact: Bool
+    #endif
+    
     @State private var editor_is_presented: Bool = false
     
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) public var horizontal_size_class // Horizontal window size handler
+    #if os(macOS) || os(visionOS)
+    private let preffered_arrow_edge: Edge = .leading
+    #else
+    private let preffered_arrow_edge: Edge = .trailing
     #endif
     
     var body: some View
@@ -169,12 +216,13 @@ private struct ConnectionParameterEditor: View
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
-        .popover(isPresented: $editor_is_presented, arrowEdge: .leading)
+        .buttonBorderShape(.roundedRectangle)
+        .popover(isPresented: $editor_is_presented, arrowEdge: preffered_arrow_edge)
         {
             VStack(spacing: 16)
             {
                 #if os(iOS)
-                if horizontal_size_class == .compact
+                if is_compact
                 {
                     HStack
                     {
@@ -185,7 +233,7 @@ private struct ConnectionParameterEditor: View
                         
                         Button
                         {
-                            position_item_view_presented = false
+                            editor_is_presented = false
                         }
                         label:
                         {
@@ -298,8 +346,20 @@ private struct ConnectionParameterEditor: View
                         .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
                         .frame(minHeight: 80)
                 }*/
+                
+                #if os(iOS)
+                if is_compact
+                {
+                    Spacer()
+                }
+                #endif
             }
+            #if os(macOS) || os(visionOS)
             .frame(minWidth: 160)
+            #else
+            .frame(minWidth: 240)
+            .presentationDetents([.height(260)])
+            #endif
             .padding()
         }
     }

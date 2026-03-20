@@ -69,12 +69,14 @@ struct EntitySelectorView: View
             }
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: "Select Entity", plain: false))
-    #if os(macOS)
+        #if os(macOS)
         .frame(minWidth: 420, maxWidth: 600, minHeight: 480, maxHeight: 600)
         //.frame(width: 420, height: 480)
-    #elseif os(visionOS)
+        #elseif os(iOS)
+        .background(.white)
+        #elseif os(visionOS)
         .frame(width: 600, height: 600)
-    #endif
+        #endif
     }
 }
 

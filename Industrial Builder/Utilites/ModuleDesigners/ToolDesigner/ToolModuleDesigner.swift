@@ -63,6 +63,10 @@ struct ToolModuleDesigner: View
                     {
                         entity_selector_presented = true
                     }
+                    #if !os(macOS)
+                    .buttonStyle(.bordered)
+                    .padding(4)
+                    #endif
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -98,14 +102,22 @@ struct ToolModuleDesigner: View
             #else
             if horizontal_size_class != .compact
             {
-                InspectorView(module: module)
+                ToolInspectorView(
+                    module: module,
+                    entity_selector_presented: $entity_selector_presented,
+                    previewed_tool: previewed_tool
+                )
                 {
                     document_handler.document_update_tools()
                 }
             }
             else
             {
-                InspectorView(module: module)
+                ToolInspectorView(
+                    module: module,
+                    entity_selector_presented: $entity_selector_presented,
+                    previewed_tool: previewed_tool
+                )
                 {
                     document_handler.document_update_tools()
                 }
@@ -137,7 +149,7 @@ struct ToolModuleDesigner: View
                 }
             }
             
-            ToolbarItem(placement: .confirmationAction)
+            ToolbarItem(placement: .primaryAction)
             {
                 Button(action: { is_pan.toggle() })
                 {

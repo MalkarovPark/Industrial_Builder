@@ -147,6 +147,8 @@ struct CodeSelectorView: View
         .modifier(SheetCaption(is_presented: $is_presented, label: "Select Code", plain: false))
         #if os(macOS)
         .frame(minWidth: 420, maxWidth: 600, minHeight: 480, maxHeight: 512)
+        #elseif os(iOS)
+        .background(.white)
         #elseif os(visionOS)
         .frame(width: 600, height: 600)
         #endif

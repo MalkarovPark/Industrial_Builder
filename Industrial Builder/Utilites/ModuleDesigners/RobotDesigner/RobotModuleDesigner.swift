@@ -63,6 +63,10 @@ struct RobotModuleDesigner: View
                     {
                         entity_selector_presented = true
                     }
+                    #if !os(macOS)
+                    .buttonStyle(.bordered)
+                    .padding(4)
+                    #endif
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -145,7 +149,7 @@ struct RobotModuleDesigner: View
                 }
             }
             
-            ToolbarItem(placement: .confirmationAction)
+            ToolbarItem(placement: .primaryAction)
             {
                 Button(action: { is_pan.toggle() })
                 {

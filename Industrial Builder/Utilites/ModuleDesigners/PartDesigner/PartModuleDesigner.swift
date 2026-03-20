@@ -8,6 +8,10 @@
 import SwiftUI
 import IndustrialKit
 
+#if os(iOS)
+import IndustrialKitUI
+#endif
+
 struct PartModuleDesigner: View
 {
     @ObservedObject var module: PartModule
@@ -45,6 +49,10 @@ struct PartModuleDesigner: View
                     {
                         entity_selector_presented = true
                     }
+                    #if !os(macOS)
+                    .buttonStyle(.bordered)
+                    .padding(4)
+                    #endif
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -76,20 +84,20 @@ struct PartModuleDesigner: View
             #else
             if horizontal_size_class != .compact
             {
-                InspectorView(module: module)
+                PartInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
                 {
                     document_handler.document_update_parts()
                 }
             }
             else
             {
-                InspectorView(module: module)
+                PartInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
                 {
                     document_handler.document_update_parts()
                 }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
-                .modifier(SheetCaption(is_presented: $inspector_presented, label: "Part"/*object_type_name*/))
+                .modifier(SheetCaption(is_presented: $entity_selector_presented, label: "Part"/*object_type_name*/))
             }
             #endif
         }
@@ -99,7 +107,7 @@ struct PartModuleDesigner: View
             ToolbarSpacer()
             #endif
             
-            ToolbarItem(placement: .confirmationAction)
+            ToolbarItem(placement: .primaryAction)
             {
                 Button(action: { is_pan.toggle() })
                 {

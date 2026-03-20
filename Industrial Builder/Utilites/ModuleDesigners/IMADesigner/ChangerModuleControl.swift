@@ -63,7 +63,11 @@ public struct ChangerModuleControl: View
                         .padding(10)
                     }
                     .background(.clear)
+                    #if os(macOS)
                     .frame(width: 120)
+                    #else
+                    .frame(width: 160)
+                    #endif
                     .overlay(alignment: .topTrailing)
                     {
                         if process_error != nil
@@ -86,6 +90,9 @@ public struct ChangerModuleControl: View
                     .matchedGeometryEffect(id: "glass", in: pane_glass)
                     .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     .scaleEffect(is_central_pressed ? 0.95 : 1)
+                    #if os(iOS)
+                    .padding(.vertical, 10)
+                    #endif
                     .animation(
                         .interactiveSpring(response: 0.35, dampingFraction: 0.6, blendDuration: 0),
                         value: is_central_pressed
@@ -253,7 +260,6 @@ public struct ChangerModuleControl: View
         }
         .sheet(isPresented: $new_code_view_presented)
         {
-            #if os(macOS)
             CodeSelectorView(
                 is_presented: $new_code_view_presented,
                 avaliable_template_names: all_code_templates
@@ -262,22 +268,6 @@ public struct ChangerModuleControl: View
                 module.changer_function_code = output
                 on_update()
             }
-            #else
-            CodeSelectorView(
-                is_presented: $new_code_view_presented,
-                avaliable_templates_names: all_code_templates,
-                bottom_view:
-                    TextField("Name", text: $new_listing_name)
-                        .padding(.trailing)
-                        .frame(minWidth: 128, maxWidth: 256)
-                        .frame(idealWidth: 256)
-                        .textFieldStyle(.roundedBorder)
-            )
-            { output in
-                module.changer_function_code = output
-                on_update()
-            }
-            #endif
         }
     }
     

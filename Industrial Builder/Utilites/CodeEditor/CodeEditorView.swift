@@ -26,7 +26,7 @@ struct CodeEditorView: View
     
     var body: some View
     {
-        #if os(macOS) || os(visionOS)
+        //#if os(macOS) || os(visionOS)
         VStack(spacing: 0)
         {
             HStack(spacing: 0)
@@ -83,8 +83,13 @@ struct CodeEditorView: View
             CodeView(text: $text, language: .javascript())
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: label, plain: false, clear_background: true))
+        #if os(macOS)
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
-        #else
+        #endif
+        #if os(iOS)
+        .background(.white)
+        #endif
+        /*#else
         if horizontal_size_class != .compact
         {
             VStack(spacing: 0)
@@ -103,7 +108,7 @@ struct CodeEditorView: View
             .modifier(SheetCaption(is_presented: $is_presented, label: listing_item.name))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        #endif
+        #endif*/
     }
 }
 

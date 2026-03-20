@@ -21,6 +21,10 @@ struct ToolInspectorView: View
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
+    #endif
+    
     var body: some View
     {
         ScrollView
@@ -62,12 +66,20 @@ struct ToolInspectorView: View
                         .frame(minHeight: 80, maxHeight: 160)
                 }
                 
+                #if os(macOS) || os(visionOS)
                 OperationCodesItem(operations: $module.codes)
                 {
                     on_update()
                     
                     previewed_tool.codes = module.codes
                 }
+                #else
+                OperationCodesItem(operations: $module.codes, on_update: {
+                    on_update()
+                    
+                    previewed_tool.codes = module.codes
+                }, is_compact: horizontal_size_class == .compact)
+                #endif
                 
                 InspectorItem(label: "Entity", is_expanded: true)
                 {
@@ -114,7 +126,11 @@ struct ToolInspectorView: View
                     update_model_controller()
                 }
                 
+                #if os(macOS) || os(visionOS)
                 ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update)
+                #else
+                ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update, is_compact: horizontal_size_class == .compact)
+                #endif
                 
                 InspectorItem(label: "Code", is_expanded: false)
                 {
