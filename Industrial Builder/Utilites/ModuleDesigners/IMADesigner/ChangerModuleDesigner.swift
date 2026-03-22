@@ -39,7 +39,7 @@ struct ChangerModuleDesigner: View
                 {
                     ChangerModuleControl(module: module, registers: $registers)
                     {
-                        document_handler.document_update_ima()
+                        document_handler.document_update_changers()
                     }
                 }
                 #if os(macOS) || os(iOS)
@@ -63,21 +63,21 @@ struct ChangerModuleDesigner: View
             #if os(macOS) || os(visionOS)
             ChangerInspectorView(module: module)
             {
-                document_handler.document_update_ima()
+                document_handler.document_update_changers()
             }
             #else
             if horizontal_size_class != .compact
             {
                 ChangerInspectorView(module: module)
                 {
-                    document_handler.document_update_ima()
+                    document_handler.document_update_changers()
                 }
             }
             else
             {
                 ChangerInspectorView(module: module)
                 {
-                    document_handler.document_update_ima()
+                    document_handler.document_update_changers()
                 }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)

@@ -111,7 +111,7 @@ struct ImageListView: View
                             
                             base_stc.image_items.append(ImageItem(name: file_name, image: image))
                             
-                            document_handler.drop_document_update_images()
+                            document_handler.drop_document_update_changersges()
                         }
                     }
                 }
@@ -137,7 +137,7 @@ struct ImageListView: View
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
-                document_handler.document_update_images()
+                document_handler.document_update_changersges()
             }
             catch
             {

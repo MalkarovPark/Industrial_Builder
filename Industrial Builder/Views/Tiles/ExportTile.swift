@@ -35,11 +35,26 @@ struct ExportTile: View
                 {
                     ForEach(ModuleExportOption.allCases, id: \.self)
                     { export_type in
+                        #if os(macOS)
+                        if export_type != .divider
+                        {
+                            Button(export_type.rawValue)
+                            {
+                                external_export_option = export_type
+                                file_exporter_presented = true
+                            }
+                        }
+                        else
+                        {
+                            Divider()
+                        }
+                        #else
                         Button(export_type.rawValue)
                         {
                             external_export_option = export_type
                             file_exporter_presented = true
                         }
+                        #endif
                     }
                 }
                 label:

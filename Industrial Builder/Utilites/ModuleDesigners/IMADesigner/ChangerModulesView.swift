@@ -58,17 +58,14 @@ struct ChangerModulesView: View
         {
             ToolbarItem(id: "Add Module", placement: trailing_placement)
             {
-                Button(action: { new_module_view_presented = true })
+                Button
+                {
+                    base_stc.changer_modules.append(ChangerModule(external_name: unique_name(for: "Changer", in: base_stc.changer_module_names)))
+                    document_handler.document_update_changers()
+                }
+                label:
                 {
                     Label("Add Object", systemImage: "plus")
-                }
-                .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    AddNewView(is_presented: $new_module_view_presented, names: base_stc.changer_modules_names)
-                    { new_name in
-                        base_stc.changer_modules.append(ChangerModule(external_name: new_name))
-                        document_handler.document_update_ima()
-                    }
                 }
             }
         }
@@ -85,7 +82,7 @@ struct ChangerModuleCard: View
 {
     @ObservedObject var module: ChangerModule
     
-    @State private var to_rename = false
+    @State private var is_renaming = false
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -99,12 +96,12 @@ struct ChangerModuleCard: View
                 symbol_name: "wand.and.rays",
                 symbol_size: 64,
                 symbol_weight: .regular,
-                to_rename: $to_rename,
-                edited_name: $module.name,
+                is_renaming: $is_renaming,
                 on_rename:
-                    {
-                        document_handler.document_update_ima()
-                        to_rename = false
+                    { new_name in
+                        module.name = unique_name(for: new_name, in: base_stc.changer_module_names)
+                        document_handler.document_update_changers()
+                        is_renaming = false
                     }
             )
         }
@@ -113,12 +110,12 @@ struct ChangerModuleCard: View
         {
             RenameButton()
                 .renameAction
-            {
-                withAnimation
                 {
-                    to_rename = true
+                    withAnimation
+                    {
+                        is_renaming = true
+                    }
                 }
-            }
             
             Button(role: .destructive, action: { delete_module(module) })
             {
@@ -130,7 +127,7 @@ struct ChangerModuleCard: View
     private func delete_module(_ module: ChangerModule)
     {
         base_stc.changer_modules.removeAll { $0 == module }
-        document_handler.document_update_ima()
+        document_handler.document_update_changers()
     }
 }
 

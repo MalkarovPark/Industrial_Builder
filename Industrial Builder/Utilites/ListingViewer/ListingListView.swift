@@ -93,7 +93,7 @@ struct ListingListView: View
                         new_listing_name = "Name"
                     }
                     
-                    new_listing_name = mismatched_name(name: new_listing_name, names: base_stc.listing_items.map(\.name))
+                    new_listing_name = unique_name(for: new_listing_name, in: base_stc.listing_items.map(\.name))
                     
                     base_stc.listing_items.append(ListingItem(name: new_listing_name, text: output))
                     new_listing_name = ""

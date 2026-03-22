@@ -170,10 +170,10 @@ struct ModuleSelector: View
         let list = stc.package_info.build_modules_list
         switch module
         {
-        case is RobotModule: return list.robot_modules_names
-        case is ToolModule: return list.tool_modules_names
-        case is PartModule: return list.part_modules_names
-        case is ChangerModule: return list.changer_modules_names
+        case is RobotModule: return list.robot_module_names
+        case is ToolModule: return list.tool_module_names
+        case is PartModule: return list.part_module_names
+        case is ChangerModule: return list.changer_module_names
         default: return []
         }
     }
@@ -183,13 +183,13 @@ struct ModuleSelector: View
         switch module
         {
         case is RobotModule:
-            stc.package_info.build_modules_list.robot_modules_names = names
+            stc.package_info.build_modules_list.robot_module_names = names
         case is ToolModule:
-            stc.package_info.build_modules_list.tool_modules_names = names
+            stc.package_info.build_modules_list.tool_module_names = names
         case is PartModule:
-            stc.package_info.build_modules_list.part_modules_names = names
+            stc.package_info.build_modules_list.part_module_names = names
         case is ChangerModule:
-            stc.package_info.build_modules_list.changer_modules_names = names
+            stc.package_info.build_modules_list.changer_module_names = names
         default:
             break
         }
@@ -222,7 +222,7 @@ public struct ModuleSelectionCard: View
     
     public let on_update: () -> Void
     
-    @State private var to_rename = false
+    @State private var is_renaming = false
     @State private var preview_entity: Entity?
     @State private var symbol_name = String()
     

@@ -92,7 +92,7 @@ struct ImageCard<Content: View>: View
     func delete_image()
     {
         base_stc.image_items.removeAll { $0 == image_item }
-        document_handler.document_update_images()
+        document_handler.document_update_changersges()
     }
 }
 

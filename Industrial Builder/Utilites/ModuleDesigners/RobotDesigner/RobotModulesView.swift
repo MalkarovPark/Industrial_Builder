@@ -59,17 +59,14 @@ struct RobotModulesView: View
         {
             ToolbarItem(id: "Add Module", placement: trailing_placement)
             {
-                Button(action: { new_module_view_presented = true })
+                Button
+                {
+                    base_stc.robot_modules.append(RobotModule(new_name: unique_name(for: "Robot", in: base_stc.robot_module_names)))
+                    document_handler.document_update_robots()
+                }
+                label:
                 {
                     Label("Add Object", systemImage: "plus")
-                }
-                .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    AddNewView(is_presented: $new_module_view_presented, names: base_stc.robot_modules_names)
-                    { new_name in
-                        base_stc.robot_modules.append(RobotModule(new_name: new_name))
-                        document_handler.document_update_robots()
-                    }
                 }
             }
         }
@@ -86,7 +83,7 @@ struct RobotModuleCard: View
 {
     @ObservedObject var module: RobotModule
     
-    @State private var to_rename = false
+    @State private var is_renaming = false
     @State private var preview_entity: Entity?
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
@@ -104,12 +101,12 @@ struct RobotModuleCard: View
                     title: module.name,
                     entity: preview_entity,
                     vertical_repostion: true,
-                    to_rename: $to_rename,
-                    edited_name: $module.name,
+                    is_renaming: $is_renaming,
                     on_rename:
-                        {
+                        { new_name in
+                            module.name = unique_name(for: new_name, in: base_stc.robot_module_names)
                             document_handler.document_update_robots()
-                            to_rename = false
+                            is_renaming = false
                         }
                 )
             }
@@ -120,12 +117,12 @@ struct RobotModuleCard: View
                     symbol_name: "r.square",
                     symbol_size: 64,
                     symbol_weight: .regular,
-                    to_rename: $to_rename,
-                    edited_name: $module.name,
+                    is_renaming: $is_renaming,
                     on_rename:
-                        {
+                        { new_name in
+                            module.name = unique_name(for: new_name, in: base_stc.robot_module_names)
                             document_handler.document_update_robots()
-                            to_rename = false
+                            is_renaming = false
                         }
                 )
             }
@@ -139,7 +136,7 @@ struct RobotModuleCard: View
             {
                 withAnimation
                 {
-                    to_rename = true
+                    is_renaming = true
                 }
             }
             
@@ -180,7 +177,7 @@ struct RobotModuleCard: View
     private func delete_module(_ module: RobotModule)
     {
         base_stc.robot_modules.removeAll { $0 == module }
-        document_handler.document_update_ima()
+        document_handler.document_update_robots()
     }
 }
 

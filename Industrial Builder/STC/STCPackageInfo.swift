@@ -30,9 +30,9 @@ public struct STCPackageInfo: Codable
 
 public struct BuildModulesList: Codable, Hashable
 {
-    var robot_modules_names = [String]()
-    var tool_modules_names = [String]()
-    var part_modules_names = [String]()
+    var robot_module_names = [String]()
+    var tool_module_names = [String]()
+    var part_module_names = [String]()
     
-    var changer_modules_names = [String]()
+    var changer_module_names = [String]()
 }

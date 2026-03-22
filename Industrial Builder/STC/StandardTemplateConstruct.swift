@@ -92,7 +92,7 @@ public class StandardTemplateConstruct: ObservableObject
     // MARK: Robot modules
     @Published var robot_modules = [RobotModule]()
     
-    public var robot_modules_names: [String]
+    public var robot_module_names: [String]
     {
         get
         {
@@ -109,7 +109,7 @@ public class StandardTemplateConstruct: ObservableObject
     // MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
     
-    public var tool_modules_names: [String]
+    public var tool_module_names: [String]
     {
         get
         {
@@ -126,7 +126,7 @@ public class StandardTemplateConstruct: ObservableObject
     // MARK: Part modules
     @Published var part_modules = [PartModule]()
     
-    public var part_modules_names: [String]
+    public var part_module_names: [String]
     {
         get
         {
@@ -144,7 +144,7 @@ public class StandardTemplateConstruct: ObservableObject
     // MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
     
-    public var changer_modules_names: [String]
+    public var changer_module_names: [String]
     {
         get
         {
@@ -178,10 +178,10 @@ public class StandardTemplateConstruct: ObservableObject
         }
         else
         {
-            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * 3
-            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * 3
-            //build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * 0
-            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count) * 2
+            build_total += Float(robot_modules.filter { list.robot_module_names.contains($0.name) }.count) * 3
+            build_total += Float(tool_modules.filter { list.tool_module_names.contains($0.name) }.count) * 3
+            //build_total += Float(part_modules.filter { list.part_module_names.contains($0.name) }.count) * 0
+            build_total += Float(changer_modules.filter { list.changer_module_names.contains($0.name) }.count) * 2
         }
     }
     
@@ -355,7 +355,7 @@ public class StandardTemplateConstruct: ObservableObject
         internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
         
         // Builds modules in separated files
-        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
+        let filtered_robot_modules = robot_modules.filter { list.robot_module_names.contains($0.name) }
         for robot_module in filtered_robot_modules
         {
             if !compilation_cancelled
@@ -372,7 +372,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
+        let filtered_tool_modules = tool_modules.filter { list.tool_module_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
             if !compilation_cancelled
@@ -389,7 +389,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        let filtered_part_modules = part_modules.filter { list.part_module_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
             if !compilation_cancelled
@@ -403,7 +403,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        let filtered_changer_modules = changer_modules.filter { list.changer_module_names.contains($0.name) }
         for changer_module in filtered_changer_modules
         {
             if !compilation_cancelled
@@ -716,10 +716,10 @@ public class StandardTemplateConstruct: ObservableObject
                 var list_code = import_text_data(from: "List")
                 
                 let placeholders = [
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Modules@*//*@END_MENU_TOKEN@*/", list.robot_modules_names, "_RobotModule"),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Modules@*//*@END_MENU_TOKEN@*/", list.tool_modules_names, "_ToolModule"),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Modules@*//*@END_MENU_TOKEN@*/", list.part_modules_names, "_PartModule"),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Modules@*//*@END_MENU_TOKEN@*/", list.changer_modules_names, "_ChangerModule")
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Modules@*//*@END_MENU_TOKEN@*/", list.robot_module_names, "_RobotModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Modules@*//*@END_MENU_TOKEN@*/", list.tool_module_names, "_ToolModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Modules@*//*@END_MENU_TOKEN@*/", list.part_module_names, "_PartModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Modules@*//*@END_MENU_TOKEN@*/", list.changer_module_names, "_ChangerModule")
                 ]
                 
                 for (placeholder, names, suffix) in placeholders
@@ -769,7 +769,7 @@ public class StandardTemplateConstruct: ObservableObject
     private func make_internal_modules_files(list: BuildModulesList, to folder_url: URL)
     {
         // Builds modules in separated files
-        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
+        let filtered_robot_modules = robot_modules.filter { list.robot_module_names.contains($0.name) }
         for robot_module in filtered_robot_modules
         {
             if !compilation_cancelled
@@ -783,7 +783,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
+        let filtered_tool_modules = tool_modules.filter { list.tool_module_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
             if !compilation_cancelled
@@ -797,7 +797,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        let filtered_part_modules = part_modules.filter { list.part_module_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
             if !compilation_cancelled
@@ -811,7 +811,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        let filtered_changer_modules = changer_modules.filter { list.changer_module_names.contains($0.name) }
         for changer_module in filtered_changer_modules
         {
             if !compilation_cancelled
@@ -1150,6 +1150,8 @@ public enum ModuleExportOption: String, Equatable, CaseIterable
     case projects_only = "Build To Projects Only"
     case build_from_projects = "Build Existing Projects To Programs"
     case projects_to_programs = "Turn Existing Projects To Programs"
+    
+    case divider = "_"
     #endif
     case no_build = "No Build (Listings Only)"
     

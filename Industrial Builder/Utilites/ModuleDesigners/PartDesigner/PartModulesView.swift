@@ -59,17 +59,14 @@ struct PartModulesView: View
         {
             ToolbarItem(id: "Add Module", placement: trailing_placement)
             {
-                Button(action: { new_module_view_presented = true })
+                Button
+                {
+                    base_stc.part_modules.append(PartModule(new_name: unique_name(for: "Part", in: base_stc.part_module_names)))
+                    document_handler.document_update_parts()
+                }
+                label:
                 {
                     Label("Add Object", systemImage: "plus")
-                }
-                .popover(isPresented: $new_module_view_presented, arrowEdge: default_popover_edge_inverted)
-                {
-                    AddNewView(is_presented: $new_module_view_presented, names: base_stc.part_modules_names)
-                    { new_name in
-                        base_stc.part_modules.append(PartModule(new_name: new_name))
-                        document_handler.document_update_parts()
-                    }
                 }
             }
         }
@@ -86,7 +83,7 @@ struct PartModuleCard: View
 {
     @ObservedObject var module: PartModule
     
-    @State private var to_rename = false
+    @State private var is_renaming = false
     @State private var preview_entity: Entity?
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
@@ -104,12 +101,12 @@ struct PartModuleCard: View
                     title: module.name,
                     entity: preview_entity,
                     vertical_repostion: true,
-                    to_rename: $to_rename,
-                    edited_name: $module.name,
+                    is_renaming: $is_renaming,
                     on_rename:
-                        {
+                        { new_name in
+                            module.name = unique_name(for: new_name, in: base_stc.part_module_names)
                             document_handler.document_update_parts()
-                            to_rename = false
+                            is_renaming = false
                         }
                 )
             }
@@ -120,12 +117,12 @@ struct PartModuleCard: View
                     symbol_name: "shippingbox",
                     symbol_size: 64,
                     symbol_weight: .regular,
-                    to_rename: $to_rename,
-                    edited_name: $module.name,
+                    is_renaming: $is_renaming,
                     on_rename:
-                        {
+                        { new_name in
+                            module.name = unique_name(for: new_name, in: base_stc.part_module_names)
                             document_handler.document_update_parts()
-                            to_rename = false
+                            is_renaming = false
                         }
                 )
             }
@@ -139,7 +136,7 @@ struct PartModuleCard: View
             {
                 withAnimation
                 {
-                    to_rename = true
+                    is_renaming = true
                 }
             }
             

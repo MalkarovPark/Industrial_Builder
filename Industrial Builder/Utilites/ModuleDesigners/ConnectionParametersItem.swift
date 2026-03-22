@@ -157,7 +157,7 @@ struct ConnectionParametersItem: View
     private func add_paramter(value: Any)
     {
         let name = "Nameless"
-        parameters.append(ConnectionParameter(name: mismatched_name(name: name, names: parameters.map { $0.name }), value: value))
+        parameters.append(ConnectionParameter(name: unique_name(for: name, in: parameters.map { $0.name }), value: value))
         on_update()
     }
 }
@@ -251,9 +251,9 @@ private struct ConnectionParameterEditor: View
                         get: { parameter.name },
                         set:
                             { new_value in
-                                parameter.name = mismatched_name(
-                                    name: new_value,
-                                    names: parameters
+                                parameter.name = unique_name(
+                                    for: new_value,
+                                    in: parameters
                                         .filter { $0.name != parameter.name }
                                         .map { $0.name }
                                 )
