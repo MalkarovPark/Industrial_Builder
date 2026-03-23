@@ -143,7 +143,7 @@ struct ToolModuleDesigner: View
                     }
                     .sheet(isPresented: $device_output_presented)
                     {
-                        DeviceOutputView(object: previewed_tool)
+                        DeviceOutputView(object: previewed_tool, shows_output_indices: true)
                             .modifier(SheetCaption(is_presented: $device_output_presented, label: "Device State", plain: false, clear_background: true))
                     }
                 }

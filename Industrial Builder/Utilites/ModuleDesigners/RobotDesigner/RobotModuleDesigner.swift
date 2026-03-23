@@ -143,7 +143,7 @@ struct RobotModuleDesigner: View
                     }
                     .sheet(isPresented: $device_output_presented)
                     {
-                        DeviceOutputView(object: previewed_robot)
+                        DeviceOutputView(object: previewed_robot, shows_output_indices: true)
                             .modifier(SheetCaption(is_presented: $device_output_presented, label: "Device State", plain: false, clear_background: true))
                     }
                 }
