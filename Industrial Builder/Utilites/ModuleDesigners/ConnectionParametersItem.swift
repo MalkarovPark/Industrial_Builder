@@ -68,79 +68,90 @@ struct ConnectionParametersItem: View
             {
                 ScrollView
                 {
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 6)
-                    {
-                        ForEach(parameters)
-                        { parameter in
-                            #if os(macOS) || os(visionOS)
-                            ConnectionParameterEditor(parameter: parameter, parameters: parameters)
-                            {
-                                on_update()
-                            }
-                            .contextMenu
-                            {
-                                Button(role: .destructive)
+                    ScrollViewReader
+                    { proxy in
+                        LazyVGrid(columns: columns, alignment: .leading, spacing: 6)
+                        {
+                            ForEach(parameters)
+                            { parameter in
+                                #if os(macOS) || os(visionOS)
+                                ConnectionParameterEditor(parameter: parameter, parameters: parameters)
                                 {
-                                    delete_parameter(at: parameter)
+                                    on_update()
                                 }
-                                label:
+                                .contextMenu
                                 {
-                                    Label("Delete", systemImage: "trash")
+                                    Button(role: .destructive)
+                                    {
+                                        delete_parameter(at: parameter)
+                                    }
+                                    label:
+                                    {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                #else
+                                ConnectionParameterEditor(parameter: parameter, parameters: parameters, on_update: on_update, is_compact: is_compact)
+                                .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_parameter(at: parameter)
+                                    }
+                                    label:
+                                    {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                #endif
+                            }
+                            
+                            Menu
+                            {
+                                Button("String", systemImage: "text.justify")
+                                {
+                                    add_paramter(value: "String")
+                                }
+                                
+                                Button("Int", systemImage: "number")
+                                {
+                                    add_paramter(value: 0)
+                                }
+                                
+                                Button("Float", systemImage: "percent")
+                                {
+                                    add_paramter(value: Float(0.0))
+                                }
+                                
+                                Button("Bool", systemImage: "switch.2")
+                                {
+                                    add_paramter(value: false)
                                 }
                             }
+                            label:
+                            {
+                                Image(systemName: "plus")
+                            }
+                            #if os(macOS)
+                            .frame(width: 48)
                             #else
-                            ConnectionParameterEditor(parameter: parameter, parameters: parameters, on_update: on_update, is_compact: is_compact)
-                            .contextMenu
-                            {
-                                Button(role: .destructive)
-                                {
-                                    delete_parameter(at: parameter)
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                            .frame(width: 42)
                             #endif
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.roundedRectangle)
+                            .id("new_connection_parameter_menu")
                         }
-                        
-                        Menu
+                        .padding(8)
+                        .onChange(of: parameters.count)
                         {
-                            Button("String", systemImage: "text.justify")
+                            withAnimation
                             {
-                                add_paramter(value: "String")
-                            }
-                            
-                            Button("Int", systemImage: "number")
-                            {
-                                add_paramter(value: 0)
-                            }
-                            
-                            Button("Float", systemImage: "percent")
-                            {
-                                add_paramter(value: Float(0.0))
-                            }
-                            
-                            Button("Bool", systemImage: "switch.2")
-                            {
-                                add_paramter(value: false)
+                                proxy.scrollTo("new_connection_parameter_menu", anchor: .bottom)
                             }
                         }
-                        label:
-                        {
-                            Image(systemName: "plus")
-                        }
-                        #if os(macOS)
-                        .frame(width: 48)
-                        #else
-                        .frame(width: 42)
-                        #endif
-                        .buttonStyle(.bordered)
-                        .buttonBorderShape(.roundedRectangle)
+                        .animation(.spring(), value: parameters)
                     }
-                    .padding(8)
                 }
-                .animation(.spring(), value: parameters)
             }
             .background(.quinary)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))

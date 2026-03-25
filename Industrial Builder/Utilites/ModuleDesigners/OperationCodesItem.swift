@@ -71,63 +71,74 @@ struct OperationCodesItem: View
             {
                 ScrollView
                 {
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 6)
-                    {
-                        ForEach(operations)
-                        { operation in
-                            #if os(macOS) || os(visionOS)
-                            OperationCodeEditor(operation: operation, operations: operations)
+                    ScrollViewReader
+                    { proxy in
+                        LazyVGrid(columns: columns, alignment: .leading, spacing: 6)
+                        {
+                            ForEach(operations)
+                            { operation in
+                                #if os(macOS) || os(visionOS)
+                                OperationCodeEditor(operation: operation, operations: operations)
+                                {
+                                    on_update()
+                                }
+                                .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_operation(at: operation)
+                                    }
+                                    label:
+                                    {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                #else
+                                OperationCodeEditor(operation: operation, operations: operations, on_update: on_update, is_compact: is_compact)
+                                .contextMenu
+                                {
+                                    Button(role: .destructive)
+                                    {
+                                        delete_operation(at: operation)
+                                    }
+                                    label:
+                                    {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                #endif
+                            }
+                            
+                            Button
                             {
+                                operations.append(OperationCodeInfo(value: avaliable_opcode_value))
                                 on_update()
                             }
-                            .contextMenu
+                            label:
                             {
-                                Button(role: .destructive)
-                                {
-                                    delete_operation(at: operation)
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
+                                Image(systemName: "plus")
+                                    .frame(width: 16, height: 16)
                             }
+                            #if os(macOS)
+                            .frame(width: 28)
                             #else
-                            OperationCodeEditor(operation: operation, operations: operations, on_update: on_update, is_compact: is_compact)
-                            .contextMenu
-                            {
-                                Button(role: .destructive)
-                                {
-                                    delete_operation(at: operation)
-                                }
-                                label:
-                                {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                            .frame(width: 40)
                             #endif
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.roundedRectangle)
+                            .id("new_operation_code_menu")
                         }
-                        
-                        Button
+                        .padding(8)
+                        .onChange(of: operations.count)
                         {
-                            operations.append(OperationCodeInfo(value: avaliable_opcode_value))
-                            on_update()
+                            withAnimation
+                            {
+                                proxy.scrollTo("new_operation_code_menu", anchor: .bottom)
+                            }
                         }
-                        label:
-                        {
-                            Image(systemName: "plus")
-                                .frame(width: 16, height: 16)
-                        }
-                        #if os(macOS)
-                        .frame(width: 28)
-                        #else
-                        .frame(width: 40)
-                        #endif
-                        .buttonStyle(.bordered)
-                        .buttonBorderShape(.roundedRectangle)
+                        .animation(.spring(), value: operations)
                     }
-                    .padding(8)
                 }
-                .animation(.spring(), value: operations)
             }
             .background(.quinary)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))

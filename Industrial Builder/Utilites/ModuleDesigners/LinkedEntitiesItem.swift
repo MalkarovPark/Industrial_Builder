@@ -38,74 +38,85 @@ public struct LinkedEntitiesItem: View
         {
             VStack(spacing: 4)
             {
-                List
-                {
-                    ForEach(entity_names.indices, id: \.self)
-                    { index in
-                        TextField("Name", text: $entity_names[index])
-                        {
-                            on_update()
-                        }
-                        .contextMenu
-                        {
-                            Button(role: .destructive)
+                ScrollViewReader
+                { proxy in
+                    List
+                    {
+                        ForEach(entity_names.indices, id: \.self)
+                        { index in
+                            TextField("Name", text: $entity_names[index])
                             {
-                                delete_items(at: IndexSet(integer: index))
+                                on_update()
+                            }
+                            .contextMenu
+                            {
+                                Button(role: .destructive)
+                                {
+                                    delete_items(at: IndexSet(integer: index))
+                                }
+                                label:
+                                {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+                            .listRowInsets(.vertical, 8)
+                            .textFieldStyle(.plain)
+                        }
+                        .onDelete(perform: delete_items)
+                        
+                        HStack
+                        {
+                            Spacer()
+                            
+                            Button
+                            {
+                                entity_names.append(String())
+                                on_update()
                             }
                             label:
                             {
-                                Label("Delete", systemImage: "trash")
+                                Image(systemName: "plus")
                             }
-                        }
-                        .listRowInsets(.vertical, 8)
-                        .textFieldStyle(.plain)
-                    }
-                    .onDelete(perform: delete_items)
-                    
-                    HStack
-                    {
-                        Spacer()
-                        
-                        Button
-                        {
-                            entity_names.append(String())
-                            on_update()
-                        }
-                        label:
-                        {
-                            Image(systemName: "plus")
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Menu
-                        {
-                            if nested_entity_names.count > 0
+                            .buttonStyle(.plain)
+                            
+                            Menu
                             {
-                                ForEach(nested_entity_names, id: \.self)
-                                { name in
-                                    Button(name)
-                                    {
-                                        entity_names.append(name)
-                                        on_update()
+                                if nested_entity_names.count > 0
+                                {
+                                    ForEach(nested_entity_names, id: \.self)
+                                    { name in
+                                        Button(name)
+                                        {
+                                            entity_names.append(name)
+                                            on_update()
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    Text("None")
+                                        .disabled(true)
+                                }
                             }
-                            else
+                            label:
                             {
-                                Text("None")
-                                    .disabled(true)
+                                Image(systemName: "chevron.down")
+                                    .padding(4)
                             }
+                            .buttonStyle(.plain)
                         }
-                        label:
-                        {
-                            Image(systemName: "chevron.down")
-                                .padding(4)
-                        }
-                        .buttonStyle(.plain)
+                        .id("new_linked_entity_menu")
+                        .listRowInsets(.vertical, 8)
                     }
-                    .listRowInsets(.vertical, 8)
+                    .listStyle(.plain)
+                    .onChange(of: entity_names.count)
+                    {
+                        withAnimation
+                        {
+                            proxy.scrollTo("new_linked_entity_menu", anchor: .bottom)
+                        }
+                    }
                 }
-                .listStyle(.plain)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .frame(minHeight: 160)
