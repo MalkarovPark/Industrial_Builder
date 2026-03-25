@@ -22,8 +22,10 @@ struct ModuleSelector: View
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
+    private let row_spacing: CGFloat = 16
     #else
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 16)]
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 48)]
+    private let row_spacing: CGFloat = 64
     #endif
     
     public init(
@@ -45,12 +47,12 @@ struct ModuleSelector: View
             {
                 if stc.robot_modules.count > 0
                 {
-                    VStack(alignment: .leading, spacing: 8)
+                    VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Robot")
                             .font(.title2)
                         
-                        LazyVGrid(columns: columns, spacing: 16)
+                        LazyVGrid(columns: columns, spacing: row_spacing)
                         {
                             ForEach (stc.robot_modules)
                             { module in
@@ -67,12 +69,12 @@ struct ModuleSelector: View
                 
                 if stc.tool_modules.count > 0
                 {
-                    VStack(alignment: .leading, spacing: 8)
+                    VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Tool")
                             .font(.title2)
                         
-                        LazyVGrid(columns: columns, spacing: 16)
+                        LazyVGrid(columns: columns, spacing: row_spacing)
                         {
                             ForEach (stc.tool_modules)
                             { module in
@@ -89,12 +91,12 @@ struct ModuleSelector: View
                 
                 if stc.part_modules.count > 0
                 {
-                    VStack(alignment: .leading, spacing: 8)
+                    VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Part")
                             .font(.title2)
                         
-                        LazyVGrid(columns: columns, spacing: 16)
+                        LazyVGrid(columns: columns, spacing: row_spacing)
                         {
                             ForEach (stc.part_modules)
                             { module in
@@ -111,12 +113,12 @@ struct ModuleSelector: View
                 
                 if stc.changer_modules.count > 0
                 {
-                    VStack(alignment: .leading, spacing: 8)
+                    VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Changer")
                             .font(.title2)
                         
-                        LazyVGrid(columns: columns, spacing: 16)
+                        LazyVGrid(columns: columns, spacing: row_spacing)
                         {
                             ForEach (stc.changer_modules)
                             { module in
@@ -248,7 +250,7 @@ public struct ModuleSelectionCard: View
     {
         Button
         {
-            withAnimation(.easeInOut(duration: 0.2))
+            withAnimation(.easeInOut(duration: 0.1))
             {
                 is_selected.toggle()
             }
@@ -277,23 +279,27 @@ public struct ModuleSelectionCard: View
                                 Image(systemName: "checkmark")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 15, height: 15)
                                     .foregroundStyle(.primary)
                             }
                             #if os(macOS)
-                            .frame(width: 40, height: 40)
+                            .frame(width: 30, height: 30)
                             #else
-                            .frame(width: 48, height: 48)
+                            .frame(width: 36, height: 36)
                             #endif
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
-                            .padding(6)
+                            .padding(8)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
                 .frame(width: 128, height: 128)
+                #if os(macOS)
                 .scaleEffect(0.5)
+                #else
+                .scaleEffect(0.75)
+                #endif
             }
             else
             {
@@ -316,30 +322,32 @@ public struct ModuleSelectionCard: View
                                 Image(systemName: "checkmark")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 15, height: 15)
                                     .foregroundStyle(.primary)
                             }
                             #if os(macOS)
-                            .frame(width: 40, height: 40)
+                            .frame(width: 30, height: 30)
                             #else
-                            .frame(width: 48, height: 48)
+                            .frame(width: 36, height: 36)
                             #endif
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
-                            .padding(6)
+                            .padding(8)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                 }
                 .frame(width: 128, height: 128)
+                #if os(macOS)
                 .scaleEffect(0.5)
+                #else
+                .scaleEffect(0.75)
+                #endif
             }
         }
         .buttonStyle(.plain)
         .id(view_id)
         .frame(width: 64, height: 64)
-        //.frame(width: 128, height: 128)
-        //.scaleEffect(0.5)
         .onAppear
         {
             load_entity()

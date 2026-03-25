@@ -141,7 +141,7 @@ struct RobotInspectorView: View
                 
                 InspectorItem(label: "End Point Entity", is_expanded: false)
                 {
-                    Menu(module.end_entity_name)
+                    Menu(module.end_entity_name.isEmpty ? "None" : module.end_entity_name)
                     {
                         if nested_entity_names.count > 0
                         {
