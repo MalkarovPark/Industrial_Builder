@@ -40,6 +40,9 @@ struct EntityFileView: View
         {
             preview_entity = nil
         }
+        #if os(iOS)
+        .background(.white)
+        #endif
     }
 }
 
