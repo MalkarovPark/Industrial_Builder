@@ -80,82 +80,31 @@ public class StandardTemplateConstruct: ObservableObject
     // MARK: - Components handling
     // Imported files
     @Published var image_items = [ImageItem]()
+    public var image_item_names: [String] { image_items.map { $0.name } }
+    
     @Published var listing_items = [ListingItem]()
+    public var listing_item_names: [String] { listing_items.map { $0.name } }
+    
     @Published var entity_items = [EntityItem]()
+    public var entity_item_names: [String] { entity_items.map { $0.name } }
+    
+    // MARK: - Modules handling
+    // Robot modules
+    @Published var robot_modules = [RobotModule]()
+    public var robot_module_names: [String] { robot_modules.map { $0.name } }
+    
+    @Published var tool_modules = [ToolModule]()
+    public var tool_module_names: [String] { tool_modules.map { $0.name } }
+    
+    @Published var part_modules = [PartModule]()
+    public var part_module_names: [String] { part_modules.map { $0.name } }
+    
+    @Published var changer_modules = [ChangerModule]()
+    public var changer_module_names: [String] { changer_modules.map { $0.name } }
     
     public var any_modules_avaliable: Bool
     {
         return !(robot_modules.isEmpty && tool_modules.isEmpty && part_modules.isEmpty && changer_modules.isEmpty)
-    }
-    
-    // MARK: - Modules handling
-    // MARK: Robot modules
-    @Published var robot_modules = [RobotModule]()
-    
-    public var robot_module_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for robot_module in robot_modules
-            {
-                names.append(robot_module.name)
-            }
-            
-            return names
-        }
-    }
-    
-    // MARK: Tool modules
-    @Published var tool_modules = [ToolModule]()
-    
-    public var tool_module_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for tool_module in tool_modules
-            {
-                names.append(tool_module.name)
-            }
-            
-            return names
-        }
-    }
-    
-    // MARK: Part modules
-    @Published var part_modules = [PartModule]()
-    
-    public var part_module_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for part_module in part_modules
-            {
-                names.append(part_module.name)
-            }
-            
-            return names
-        }
-    }
-    
-    
-    // MARK: Changer modules
-    @Published var changer_modules = [ChangerModule]()
-    
-    public var changer_module_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for changer_module in changer_modules
-            {
-                names.append(changer_module.name)
-            }
-            
-            return names
-        }
     }
     
     // MARK: - UI Info

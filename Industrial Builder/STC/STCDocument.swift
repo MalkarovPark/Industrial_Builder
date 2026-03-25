@@ -448,8 +448,8 @@ struct STCDocument: FileDocument
         }
         
         // MARK: KinematicGroups
-        file_wrappers["KinematicGroups"] =
-        FileWrapper(directoryWithFileWrappers: [:])
+        //file_wrappers["KinematicGroups"] =
+        //FileWrapper(directoryWithFileWrappers: [:])
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
     }

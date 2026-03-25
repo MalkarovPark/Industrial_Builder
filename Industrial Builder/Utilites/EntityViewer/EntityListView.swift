@@ -35,7 +35,7 @@ struct EntityListView: View
                     {
                         ForEach(base_stc.entity_items)
                         { item in
-                            SceneCard(entity_item: item)
+                            EntityCard(entity_item: item)
                             { is_presented in
                                 EntityFileView(entity: item.entity)
                                     .frame(minWidth: 320, idealWidth: 640, maxWidth: 800,
@@ -172,7 +172,7 @@ struct EntityListView: View
         
         await MainActor.run
         {
-            document_handler.document_update_scenes()
+            document_handler.document_update_entities()
         }
     }
     
@@ -193,7 +193,7 @@ struct EntityListView: View
             await MainActor.run
             {
                 base_stc.entity_items.append(item)
-                document_handler.document_update_scenes()
+                document_handler.document_update_entities()
             }
         }
         catch

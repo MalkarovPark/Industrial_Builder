@@ -137,7 +137,7 @@ struct ImageListView: View
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
-                document_handler.document_update_changersges()
+                document_handler.document_update_images()
             }
             catch
             {

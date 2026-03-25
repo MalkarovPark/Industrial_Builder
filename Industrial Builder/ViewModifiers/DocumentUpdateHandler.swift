@@ -15,7 +15,7 @@ class DocumentUpdateHandler: ObservableObject
     // MARK: Update notifies
     @Published var update_info_document_notify = true
     
-    @Published var update_scenes_document_notify = true
+    @Published var update_entities_document_notify = true
     @Published var update_images_document_notify = true
     @Published var update_listings_document_notify = true
     
@@ -32,8 +32,8 @@ class DocumentUpdateHandler: ObservableObject
     // MARK: Update functions
     public func document_update_info() { update_info_document_notify.toggle() }
     
-    public func document_update_scenes() { update_scenes_document_notify.toggle() }
-    public func document_update_changersges() { update_images_document_notify.toggle() }
+    public func document_update_entities() { update_entities_document_notify.toggle() }
+    public func document_update_images() { update_images_document_notify.toggle() }
     public func document_update_listings() { update_listings_document_notify.toggle() }
     
     public func document_update_robots() { update_robots_document_notify.toggle() }
@@ -66,7 +66,7 @@ struct DocumentUpdateModifier: ViewModifier
             }
             
             // Resources
-            .onChange(of: document_handler.update_scenes_document_notify)
+            .onChange(of: document_handler.update_entities_document_notify)
             { _, _ in
                 update_deferred_import()
             }

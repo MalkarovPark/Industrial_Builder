@@ -79,7 +79,7 @@ struct ToolModulesView: View
     #endif
 }
 
-struct ToolModuleCard: View
+private struct ToolModuleCard: View
 {
     @ObservedObject var module: ToolModule
     
@@ -102,12 +102,7 @@ struct ToolModuleCard: View
                     entity: preview_entity,
                     vertical_repostion: true,
                     is_renaming: $is_renaming,
-                    on_rename:
-                        { new_name in
-                            module.name = unique_name(for: new_name, in: base_stc.tool_module_names)
-                            document_handler.document_update_tools()
-                            is_renaming = false
-                        }
+                    on_rename: { new_name in on_rename(new_name) }
                 )
             }
             else
@@ -118,12 +113,7 @@ struct ToolModuleCard: View
                     symbol_size: 64,
                     symbol_weight: .regular,
                     is_renaming: $is_renaming,
-                    on_rename:
-                        { new_name in
-                            module.name = unique_name(for: new_name, in: base_stc.tool_module_names)
-                            document_handler.document_update_tools()
-                            is_renaming = false
-                        }
+                    on_rename: { new_name in on_rename(new_name) }
                 )
             }
         }
@@ -172,6 +162,22 @@ struct ToolModuleCard: View
     {
         view_id = UUID()
         load_entity()
+    }
+    
+    private func on_rename(_ new_name: String)
+    {
+        if !new_name.isEmpty
+        {
+            let unique_name = unique_name(for: new_name, in: base_stc.tool_module_names.filter { $0 != module.name })
+            
+            if module.name != unique_name
+            {
+                module.name = unique_name
+                document_handler.document_update_tools()
+            }
+        }
+        
+        is_renaming = false
     }
     
     private func delete_module(_ module: ToolModule)

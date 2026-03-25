@@ -45,7 +45,7 @@
 		628BB4192ADD403200825BBF /* StandardTemplateConstruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */; };
 		628E14522AD73C0400BC8FD9 /* IndustrialKit in Frameworks */ = {isa = PBXBuildFile; productRef = 628E14512AD73C0400BC8FD9 /* IndustrialKit */; };
 		628E3A7E2BED86B10005A929 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628E3A7D2BED86B10005A929 /* InfoView.swift */; };
-		6296D28A2AEC55580094FB19 /* SceneCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2892AEC55580094FB19 /* SceneCard.swift */; };
+		6296D28A2AEC55580094FB19 /* EntityCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2892AEC55580094FB19 /* EntityCard.swift */; };
 		6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296D2A92AED6E290094FB19 /* AppState.swift */; };
 		62988BD82BD0600100371AFE /* PartModulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62988BD72BD0600100371AFE /* PartModulesView.swift */; };
 		629AABC42BC8561500720386 /* STCPackageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629AABC32BC8561500720386 /* STCPackageInfo.swift */; };
@@ -115,7 +115,7 @@
 		628E14572AD8ADCC00BC8FD9 /* RobotModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModulesView.swift; sourceTree = "<group>"; };
 		628E14592AD8ADE100BC8FD9 /* ToolModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolModulesView.swift; sourceTree = "<group>"; };
 		628E3A7D2BED86B10005A929 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
-		6296D2892AEC55580094FB19 /* SceneCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneCard.swift; sourceTree = "<group>"; };
+		6296D2892AEC55580094FB19 /* EntityCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityCard.swift; sourceTree = "<group>"; };
 		6296D2A92AED6E290094FB19 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		62988BD72BD0600100371AFE /* PartModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModulesView.swift; sourceTree = "<group>"; };
 		629AABC32BC8561500720386 /* STCPackageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STCPackageInfo.swift; sourceTree = "<group>"; };
@@ -378,7 +378,7 @@
 			isa = PBXGroup;
 			children = (
 				629B526B2AF69056003F45D2 /* EntityListView.swift */,
-				6296D2892AEC55580094FB19 /* SceneCard.swift */,
+				6296D2892AEC55580094FB19 /* EntityCard.swift */,
 				623D72472ADAFD8500927DEA /* EntityFileView.swift */,
 				629B52692AF68902003F45D2 /* EntitySelectorView.swift */,
 			);
@@ -512,7 +512,7 @@
 				6265AB192F55D951004AA44C /* PartModelView.swift in Sources */,
 				6289FCC92AD0398100BB7F5E /* ContentView.swift in Sources */,
 				62CA56A42F549A8A0040CB77 /* PartInspectorView.swift in Sources */,
-				6296D28A2AEC55580094FB19 /* SceneCard.swift in Sources */,
+				6296D28A2AEC55580094FB19 /* EntityCard.swift in Sources */,
 				62CA56CB2F54DE200040CB77 /* ChangerInspectorView.swift in Sources */,
 				62C9CEA62F61630F00B3DE41 /* ModulesTile.swift in Sources */,
 				6279E20A2F518EBB00A2419F /* STCItems.swift in Sources */,
