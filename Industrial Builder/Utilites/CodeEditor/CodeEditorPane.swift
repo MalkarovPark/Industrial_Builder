@@ -88,10 +88,9 @@ public struct CodeEditorPane: View
         .sheet(isPresented: $code_editor_presented)
         {
             CodeEditorView(is_presented: $code_editor_presented, text: $code, label: label)
-                .onDisappear
-                {
-                    on_update(code)
-                }
+            {
+                on_update(code)
+            }
         }
     }
 }

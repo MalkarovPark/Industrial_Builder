@@ -45,8 +45,8 @@ public struct CodeView: View
                           CodeEditor.LayoutConfiguration(showMinimap: show_minimap, wrapText: wrap_text))
         #else
         TextEditor(text: $text)
-        .textFieldStyle(.plain)
-        .font(.custom("Menlo", size: 16))
+            .textFieldStyle(.plain)
+            .font(.custom("Menlo", size: 16))
         #endif
         
         /*if !code_plain_text_representation

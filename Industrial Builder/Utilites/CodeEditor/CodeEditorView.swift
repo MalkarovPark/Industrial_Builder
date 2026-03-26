@@ -18,14 +18,41 @@ struct CodeEditorView: View
     
     let label: String
     
+    let on_update: () -> ()
+    
     @State private var new_code_view_presented = false
     
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
     #endif
     
+    init(
+        is_presented: Binding<Bool>,
+        text: Binding<String>,
+        label: String,
+        
+        on_update: @escaping () -> Void = {}
+    )
+    {
+        self._is_presented = is_presented
+        self._text = text
+        self.label = label
+        self.on_update = on_update
+        self.new_code_view_presented = new_code_view_presented
+    }
+    
     var body: some View
     {
+        let code_text = Binding(
+            get: { text },
+            set:
+                { new_value in
+                    text = new_value
+                    
+                    on_update()
+                }
+        )
+        
         //#if os(macOS) || os(visionOS)
         VStack(spacing: 0)
         {
@@ -42,7 +69,7 @@ struct CodeEditorView: View
                     Image(systemName: "square.and.arrow.down")
                     #if !os(macOS)
                         .imageScale(.large)
-                    #if !os(visionOS)
+                    #if os(iOS)
                         .frame(width: 16, height: 16)
                         .foregroundStyle(.black)
                     #else
@@ -80,7 +107,7 @@ struct CodeEditorView: View
                 }
             }
             
-            CodeView(text: $text, language: .javascript())
+            CodeView(text: code_text, language: .javascript())
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: label, plain: false, clear_background: true))
         #if os(macOS)
