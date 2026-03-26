@@ -22,7 +22,7 @@ struct ModuleSelector: View
     
     #if os(macOS)
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
-    private let row_spacing: CGFloat = 16
+    private let row_spacing: CGFloat = 32
     #else
     private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 48)]
     private let row_spacing: CGFloat = 64
@@ -216,7 +216,7 @@ struct ModuleSelector: View
     }
 }
 
-public struct ModuleSelectionCard: View
+private struct ModuleSelectionCard: View
 {
     @ObservedObject var module: IndustrialModule
     
@@ -296,7 +296,7 @@ public struct ModuleSelectionCard: View
                 }
                 .frame(width: 128, height: 128)
                 #if os(macOS)
-                .scaleEffect(0.5)
+                .scaleEffect(0.6)
                 #else
                 .scaleEffect(0.75)
                 #endif
@@ -339,7 +339,7 @@ public struct ModuleSelectionCard: View
                 }
                 .frame(width: 128, height: 128)
                 #if os(macOS)
-                .scaleEffect(0.5)
+                .scaleEffect(0.6)
                 #else
                 .scaleEffect(0.75)
                 #endif
@@ -350,6 +350,11 @@ public struct ModuleSelectionCard: View
         .frame(width: 64, height: 64)
         .onAppear
         {
+            load_entity()
+        }
+        .onChange(of: base_stc.entities_loaded)
+        {
+            view_id = UUID()
             load_entity()
         }
         .onDisappear

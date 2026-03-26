@@ -15,6 +15,8 @@ public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package_info = STCPackageInfo()
     
+    @Published var entities_loaded = false
+    
     init()
     {
         // make_preview()
@@ -33,7 +35,11 @@ public class StandardTemplateConstruct: ObservableObject
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
         
-        load_all_external_entities()
+        load_all_external_entities
+        {
+            self.entities_loaded = true
+        }
+        
         self.entities_wrapper = document.entities_wrapper
         
         func load_all_external_entities(_ completion: @escaping () -> Void = {})

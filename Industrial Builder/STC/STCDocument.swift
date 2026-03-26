@@ -180,7 +180,7 @@ struct STCDocument: FileDocument
                     guard let file_wrappers = wrapper.fileWrappers else { return }
                     
                     entities_wrapper = wrapper
-                    scenes_files_names.removeAll()
+                    entity_file_names.removeAll()
                     
                     for (_, file_wrapper) in file_wrappers
                     {
@@ -189,7 +189,7 @@ struct STCDocument: FileDocument
                         // MARK: USDZ
                         if filename.lowercased().hasSuffix(".usdz")
                         {
-                            scenes_files_names.append(URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent)
+                            entity_file_names.append(URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent)
                         }
                         
                         // MARK: Images
@@ -306,9 +306,9 @@ struct STCDocument: FileDocument
         return entity_items
     }
     
-    var scenes_files_names = [String]() // For deferred import
+    var entity_file_names = [String]() // For deferred import
     
-    var listings_files_names = [String]()
+    var listing_file_names = [String]()
     
     // MARK: - Export
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper

@@ -63,7 +63,7 @@ struct ImageListView: View
                 }
                 .background(.thinMaterial)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+                .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }
         .onDrop(of: [.image], isTargeted: $is_targeted)

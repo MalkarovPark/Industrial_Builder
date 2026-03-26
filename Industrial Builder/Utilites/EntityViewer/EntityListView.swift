@@ -72,7 +72,7 @@ struct EntityListView: View
             Task
             {
                 let urls = await extract_urls(from: providers)
-                await load_scenes(from: urls)
+                await load_entities(from: urls)
             }
             
             return true
@@ -94,7 +94,7 @@ struct EntityListView: View
                     
                     Task
                     {
-                        await load_scenes(from: urls)
+                        await load_entities(from: urls)
                     }
                     
                 case .failure(let error):
@@ -163,7 +163,7 @@ struct EntityListView: View
         }
     }
     
-    private func load_scenes(from urls: [URL]) async
+    private func load_entities(from urls: [URL]) async
     {
         for url in urls
         {
