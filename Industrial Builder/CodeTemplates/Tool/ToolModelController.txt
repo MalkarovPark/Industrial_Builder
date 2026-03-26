@@ -1,0 +1,56 @@
+//
+// Tool Model Controller
+//
+
+function entity_animations(code) {
+    switch(code) {
+        /*case 0:
+            return JSON.stringify([
+                {
+                    "entity_name": "jaw",
+                    "location": [20000, 0, 0],
+                    "rotation": [0, 0, 0],
+                    "scale": [1, 1, 1],
+                    "duration": 0.2,
+                    "delay": 0,
+                    "speed": 1,
+                    "repeat_count": 1
+                },
+                {
+                    "entity_name": "jaw2",
+                    "location": [-20000, 0, 0],
+                    "rotation": [0, 0, 0],
+                    "scale": [1, 1, 1],
+                    "duration": 0.2,
+                    "delay": 0,
+                    "speed": 1,
+                    "repeat_count": 1
+                }
+            ]);
+        case 1:
+            return JSON.stringify([
+                {
+                    "entity_name": "jaw",
+                    "location": [46000, 0, 0],
+                    "rotation": [0, 0, 0],
+                    "scale": [1, 1, 1],
+                    "duration": 0.2,
+                    "delay": 0,
+                    "speed": 1,
+                    "repeat_count": 1
+                },
+                {
+                    "entity_name": "jaw2",
+                    "location": [-46000, 0, 0],
+                    "rotation": [0, 0, 0],
+                    "scale": [1, 1, 1],
+                    "duration": 0.2,
+                    "delay": 0,
+                    "speed": 1,
+                    "repeat_count": 1
+                }
+            ]);*/
+        default:
+            return JSON.stringify([]);
+    }
+}

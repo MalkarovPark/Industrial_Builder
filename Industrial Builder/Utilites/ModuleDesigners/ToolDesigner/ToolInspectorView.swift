@@ -141,7 +141,10 @@ struct ToolInspectorView: View
                         
                         CodeEditorPane(
                             label: "Model Controller Code",
-                            code: module.model_controller_code
+                            code: module.model_controller_code,
+                            avaliable_template_names: [
+                                "ToolModelController"
+                            ]
                         )
                         { new_value in
                             on_update()
@@ -154,7 +157,11 @@ struct ToolInspectorView: View
                         
                         CodeEditorPane(
                             label: "Connector Code",
-                            code: module.connector_code
+                            code: module.connector_code,
+                            avaliable_template_names: [
+                                "InternalToolConnector",
+                                "ExternalToolConnector"
+                            ]
                         )
                         { new_value in
                             on_update()

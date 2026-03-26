@@ -392,31 +392,33 @@ private struct ModuleSelectionCard: View
 }
 
 public var all_code_templates: [String] = [
+    // Project
     "List",
-    "Internal 6DOF Controller",
-    "Internal Portal Controller",
-    "External Robot Connector",
-    "External Robot Controller",
-    "Internal Robot Connector",
-    "Internal Robot Controller",
-    "Robot Module",
-    "External Tool Connector",
-    "External Tool Controller",
-    "Internal Tool Connector",
-    "Internal Tool Controller",
-    "Tool Module",
-    "Part Module",
-    "External Change",
-    "Internal Change",
-    "Changer Module"
-]
-
-public var external_app_code_templates: [String] = [
-    "External Robot Connector",
-    "External Robot Controller",
-    "External Tool Connector",
-    "External Tool Controller",
-    "External Change"
+    
+    // Robot
+    "ExternalRobotConnector",
+    "ExternalRobotModuleDeclaration",
+    "InternalRobotConnector",
+    "InternalRobotModelController",
+    "InternalRobotModuleDeclaration",
+    "RobotModelController",
+    
+    // Tool
+    "ExternalToolConnector",
+    "ExternalToolModuleDeclaration",
+    "InternalToolConnector",
+    "InternalToolModelController",
+    "InternalToolModuleDeclaration",
+    "ToolModelController",
+    
+    // Part
+    "InternalPartModuleDeclaration",
+    
+    // Changer
+    "ChangerFunction",
+    "ExternalChangerModuleDeclaration",
+    "InternalChangerFunction",
+    "InternalChangerModuleDeclaration"
 ]
 
 #Preview

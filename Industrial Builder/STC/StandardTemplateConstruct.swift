@@ -1110,7 +1110,7 @@ public enum ModuleExportOption: String, Equatable, CaseIterable
     #endif
     case no_build = "No Build (Listings Only)"
     
-    case internal_modules = "Make Internal for Projects"
+    case internal_modules = "Make Internal for Project"
     case mbk_only = "Module Building Kit Only"
 }
 

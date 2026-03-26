@@ -95,7 +95,10 @@ struct AppDevTile: View
                     {
                         CodeSelectorView(
                             is_presented: $code_template_view_presented,
-                            avaliable_template_names: external_app_code_templates
+                            avaliable_template_names: [
+                                "ExternalRobotConnector",
+                                "ExternalToolConnector"
+                            ]
                         )
                         { output in
                             passed_listing_text = output
@@ -108,7 +111,7 @@ struct AppDevTile: View
                 }
                 .overlay(alignment: .bottom)
                 {
-                    Text("Terinal App")
+                    Text("Terminal App")
                         .font(.system(size: 18, design: .rounded))
                         .foregroundStyle(.white)
                         .padding(.bottom, 12)

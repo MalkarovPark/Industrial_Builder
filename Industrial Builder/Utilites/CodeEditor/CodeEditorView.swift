@@ -14,9 +14,9 @@ struct CodeEditorView: View
 {
     @Binding var is_presented: Bool
     
-    @Binding var text: String
-    
     let label: String
+    @Binding var text: String
+    let avaliable_template_names: [String]
     
     let on_update: () -> ()
     
@@ -28,17 +28,21 @@ struct CodeEditorView: View
     
     init(
         is_presented: Binding<Bool>,
-        text: Binding<String>,
         label: String,
+        
+        text: Binding<String>,
+        avaliable_template_names: [String] = [],
         
         on_update: @escaping () -> Void = {}
     )
     {
+        self.label = label
         self._is_presented = is_presented
         self._text = text
-        self.label = label
+        
+        self.avaliable_template_names = avaliable_template_names
+        
         self.on_update = on_update
-        self.new_code_view_presented = new_code_view_presented
     }
     
     var body: some View
@@ -100,7 +104,7 @@ struct CodeEditorView: View
             {
                 CodeSelectorView(
                     is_presented: $new_code_view_presented,
-                    avaliable_template_names: all_code_templates
+                    avaliable_template_names: avaliable_template_names
                 )
                 { output in
                     text = output
@@ -142,5 +146,5 @@ struct CodeEditorView: View
 #Preview
 {
     @Previewable @State var code = "print(output)"
-    CodeEditorView(is_presented: .constant(true), text: $code, label: "Code")
+    CodeEditorView(is_presented: .constant(true), label: "Code", text: $code)
 }

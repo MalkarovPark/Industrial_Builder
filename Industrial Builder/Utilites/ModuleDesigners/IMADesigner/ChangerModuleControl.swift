@@ -206,6 +206,8 @@ public struct ChangerModuleControl: View
                             }
                             
                             Button("Import...", action: { new_code_view_presented = true })
+                                .buttonStyle(.bordered)
+                                .buttonBorderShape(.roundedRectangle)
                             #if os(iOS)
                                 .padding(.vertical, 4)
                             #endif
@@ -262,7 +264,9 @@ public struct ChangerModuleControl: View
         {
             CodeSelectorView(
                 is_presented: $new_code_view_presented,
-                avaliable_template_names: all_code_templates
+                avaliable_template_names: [
+                    "ChangerFunction"
+                ]
             )
             { output in
                 module.changer_function_code = output

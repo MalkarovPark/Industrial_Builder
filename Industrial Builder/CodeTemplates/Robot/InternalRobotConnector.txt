@@ -5,50 +5,54 @@
 import Foundation
 import IndustrialKit
 
-nonisolated class <#Name#>_Connector: RobotConnector, @unchecked Sendable
+class <#Name#>_Connector: RobotConnector, @unchecked Sendable
 {
     // MARK: - Connection
-    override var parameters: [ConnectionParameter]
+    override var default_parameters: [ConnectionParameter]
     {
-        [
-            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/
-        ]
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [ConnectionParameter]()@*/return [ConnectionParameter]()/*@END_MENU_TOKEN@*/
     }
     
     override func connection_process() async -> Bool
     {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return false@*/return false/*@END_MENU_TOKEN@*/
+        sleep(1)
+        
+        connection_output_string = "Connected"
+        //connection_error = NSError(domain: "Connection Failed", code: 0, userInfo: nil)
+        
+        return true //false
     }
     
     override func disconnection_process()
     {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+        
     }
     
     // MARK: - Performing
-    override func move_to(point: PositionPoint)
+    private var performing_task: Task<Void, Never>?
+    private var current_performing_state: PerformingState = .none
+    
+    private var current_pointer_position = EntityPositionData()
+    
+    open override func start_process(point: PositionPoint)
     {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+        performing_task = Task
+        {
+            current_performing_state = .processing
+            
+            sleep(1)
+            
+            current_performing_state = .completed
+        }
     }
     
-    // MARK: - Statistics
-    override func initial_charts_data() -> [WorkspaceObjectChart]
+    open override func reset_device()
     {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
+        performing_task?.cancel()
     }
     
-    override func updated_charts_data() -> [WorkspaceObjectChart]?
+    open override var current_device_state: RobotState?
     {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [WorkspaceObjectChart]()@*/return [WorkspaceObjectChart]()/*@END_MENU_TOKEN@*/
-    }
-    
-    override func initial_states_data() -> [StateItem]
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
-    }
-    
-    override func updated_states_data() -> [StateItem]?
-    {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [StateItem]()@*/return [StateItem]()/*@END_MENU_TOKEN@*/
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return RobotState()@*/return RobotState()/*@END_MENU_TOKEN@*/
     }
 }
