@@ -73,7 +73,6 @@ struct AppDevTile: View
                     .fileExporter(
                         isPresented: $store_listing_panel_presented,
                         document: ProjectDocument(content: passed_listing_text),
-                        //contentType: .swiftSource,
                         defaultFilename: "App"
                     )
                     { result in
@@ -202,23 +201,25 @@ struct AppDevTile: View
                         }
                     }
                     .buttonStyle(.plain)
-                    .fileImporter(
+                    .fileExporter(
                         isPresented: $project_export_panel_presented,
-                        allowedContentTypes: [.folder],
-                        allowsMultipleSelection: false
+                        document: ProjectDocument(content: String()),
+                        defaultFilename: "Industrial App"
                     )
                     { result in
                         switch result
                         {
-                        case .success(let urls):
-                            if let url = urls.first
-                            {
-                                stc.make_industrial_project(
-                                    list: stc.package_info.build_modules_list,
-                                    to: url,
-                                    option: project_export_option
-                                )
-                            }
+                        case .success(let url):
+                            let file_name = url.lastPathComponent
+                            let folder_url = url.deletingLastPathComponent()
+                            
+                            stc.make_industrial_project(
+                                name: file_name,
+                                list: stc.package_info.build_modules_list,
+                                to: folder_url,
+                                option: project_export_option
+                            )
+                            
                         case .failure(let error):
                             print(error.localizedDescription)
                             break
@@ -255,57 +256,6 @@ struct ProjectDocument: FileDocument
     init(content: String = "")
     {
         
-    }
-}
-
-/*struct SwiftSourceDocument: FileDocument
-{
-    static var readableContentTypes = [UTType.swiftSource]
-    
-    var text = ""
-    
-    init(configuration: ReadConfiguration) throws
-    {
-        if let data = configuration.file.regularFileContents
-        {
-            text = String(data: data, encoding: .utf8) ?? ""
-        }
-        else
-        {
-            throw CocoaError(.fileReadCorruptFile)
-        }
-    }
-    
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
-    {
-        let data = text.data(using: .utf8)!
-        return .init(regularFileWithContents: data)
-    }
-    
-    init(content: String = "")
-    {
-        text = content
-    }
-}*/
-
-struct RawFileDocument: FileDocument
-{
-    static var readableContentTypes: [UTType] { [.data] }
-    var data: Data
-    
-    init(data: Data)
-    {
-        self.data = data
-    }
-    
-    init(configuration: ReadConfiguration) throws
-    {
-        self.data = configuration.file.regularFileContents ?? Data()
-    }
-    
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
-    {
-        return FileWrapper(regularFileWithContents: data)
     }
 }
 

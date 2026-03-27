@@ -7,26 +7,17 @@
 
 import Foundation
 
-/*public var swift_playground_pattern: FilesPattern = .init(
-    name: "Industrial App.swiftpm",
-    children: [
-        ContentView_file_pattern,
-        MyApp_file_pattern,
-        Package_file_pattern
-    ]
-)*/
-
 public func swift_playground_pattern(
     name: String,
     modules_func: @escaping (URL) -> Void
 ) -> FilesPattern
 {
     .init(
-        name: "Industrial App.swiftpm",
+        name: "\(name).swiftpm",
         children: [
             ContentView_file_pattern,
             MyApp_file_pattern,
-            Package_file_pattern,
+            Package_file_pattern(name: name),
             .init(writing_func: modules_func)
         ]
     )
@@ -78,9 +69,11 @@ struct MyApp: App
 """
 )
 
-private var Package_file_pattern: FilesPattern = .init(
-    name: "Package.swift",
-    data:
+private func Package_file_pattern(name: String) -> FilesPattern
+{
+    .init(
+        name: "Package.swift",
+        data:
 """
 // swift-tools-version: 6.2
 
@@ -92,13 +85,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "Industrial App",
+    name: "\(name)",
     platforms: [
         .iOS("26.0")
     ],
     products: [
         .iOSApplication(
-            name: "Industrial App",
+            name: "\(name)",
             targets: ["AppModule"],
             displayVersion: "1.0",
             bundleVersion: "1",
@@ -130,4 +123,5 @@ let package = Package(
     ]
 )
 """
-)
+    )
+}

@@ -36,7 +36,7 @@ public func app_package_pattern(
         )
 }
 
-public func Package_file_pattern(
+private func Package_file_pattern(
     name: String
 ) -> FilesPattern
 {
@@ -51,7 +51,7 @@ public func Package_file_pattern(
 import PackageDescription
 
 let package = Package(
-    name: "<#Name#>",
+    name: "\(name)",
     platforms: [
         .iOS("26.0"),
         .macOS("26.0"),
@@ -62,7 +62,7 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "<#Name#>",
+            name: "\(name)",
             dependencies: [
                 .product(name: "IndustrialKit", package: "IndustrialKit"),
             ],
@@ -70,6 +70,6 @@ let package = Package(
         ),
     ]
 )
-""".replacingOccurrences(of: "<#Name#>", with: name)
+"""
     )
 }

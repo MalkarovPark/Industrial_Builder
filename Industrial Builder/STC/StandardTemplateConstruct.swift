@@ -202,7 +202,7 @@ public class StandardTemplateConstruct: ObservableObject
     // Makes a Swift package project with IndustrialKit framework import (from file)
     public func make_simple_app(name: String, data: String, to url: URL)
     {
-        remove_file(at: url.appendingPathComponent(name))
+        remove_file(at: url.appendingPathComponent(name)) // Remove empty project target file
         
         make_files(
             by: app_package_pattern(
@@ -247,7 +247,15 @@ public class StandardTemplateConstruct: ObservableObject
     // Store the Modules Building Kit
     public func store_mbk(to url: URL)
     {
-        internal_files_store(["MakeIndustrialApp.command", "ListingToProject.command", "ProjectToProgram.command", "BuildModuleProgram.command"], to: url)
+        internal_files_store(
+            [
+                "MakeIndustrialApp.command",
+                "ListingToProject.command",
+                "ProjectToProgram.command",
+                "BuildModuleProgram.command"
+            ],
+            to: url
+        )
     }
     
     // Store text files from the app itself to external files
@@ -337,7 +345,14 @@ public class StandardTemplateConstruct: ObservableObject
     private func build_modules_files(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
         // Store compilation kit for external modules build
-        internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
+        internal_files_store(
+            [
+                "ListingToProject.command",
+                "ProjectToProgram.command",
+                "BuildModulePrograms.command"
+            ],
+            to: folder_url
+        )
         
         // Builds modules in separated files
         let filtered_robot_modules = robot_modules.filter { list.robot_module_names.contains($0.name) }
@@ -665,15 +680,21 @@ public class StandardTemplateConstruct: ObservableObject
     
     // MARK: - Build Industrial App
     // Builds application project to compile with internal modules.
-    public func make_industrial_project(list: BuildModulesList, to folder_url: URL, option: ProjectExportOption)
+    public func make_industrial_project(
+        name: String,
+        list: BuildModulesList,
+        to folder_url: URL,
+        option: ProjectExportOption
+    )
     {
-        //make_internal_modules(list: list, to: folder_url)
+        remove_file(at: folder_url.appendingPathComponent(name)) // Remove empty project target file
+        
         switch option
         {
         case .swift_playground:
             make_files(
                 by: swift_playground_pattern(
-                    name: "Modules",
+                    name: name,
                     modules_func:
                         { url in
                             self.make_internal_modules(
@@ -687,7 +708,7 @@ public class StandardTemplateConstruct: ObservableObject
         case .xcode_project:
             make_files(
                 by: xcode_project_pattern(
-                    name: "Modules",
+                    name: name,
                     modules_func:
                         { url in
                             self.make_internal_modules(

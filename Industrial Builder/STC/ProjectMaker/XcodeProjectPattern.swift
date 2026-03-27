@@ -7,48 +7,27 @@
 
 import Foundation
 
-/*public var xcode_project_pattern: FilesPattern = .init(
-    name: "Industrial App",
-    children: [
-        .init(
-            name: "Industrial App",
-            children: [
-                .init(name: "Assets.xcassets"),
-                ContentView_file_pattern,
-                Industrial_AppApp_file_pattern
-            ]
-        ),
-        .init(
-            name: "Industrial App.xcodeproj",
-            children: [
-                project_file_pattern//,
-                //.init(name: "Project.xcworkspace"),
-            ]
-        )
-    ]
-)*/
-
 public func xcode_project_pattern(
     name: String,
     modules_func: @escaping (URL) -> Void
 ) -> FilesPattern
 {
     .init(
-        name: "Industrial App",
+        name: name,
         children: [
             .init(
-                name: "Industrial App",
+                name: name,
                 children: [
                     .init(name: "Assets.xcassets"),
                     ContentView_file_pattern,
-                    Industrial_AppApp_file_pattern,
+                    App_file_pattern(name: name),
                     .init(writing_func: modules_func)
                 ]
             ),
             .init(
-                name: "Industrial App.xcodeproj",
+                name: "\(name).xcodeproj",
                 children: [
-                    project_file_pattern//,
+                    project_file_pattern(name: name)//,
                     //.init(name: "Project.xcworkspace"),
                 ]
             )
@@ -82,19 +61,23 @@ struct ContentView: View
 """
 )
 
-private var Industrial_AppApp_file_pattern: FilesPattern = .init(
-    name: "Industrial_AppApp.swift",
-    data:
+public func App_file_pattern(name: String) -> FilesPattern
+{
+    let name_coded = name.code_correct_format
+    
+    return .init(
+        name: "\(name_coded)App.swift",
+        data:
 """
 //
-//  Industrial_AppApp.swift
-//  Industrial App
+//  \(name_coded)App.swift
+//  \(name)
 //
 
 import SwiftUI
 
 @main
-struct Industrial_AppApp: App
+struct \(name_coded)App: App
 {
     var body: some Scene
     {
@@ -105,11 +88,14 @@ struct Industrial_AppApp: App
     }
 }
 """
-)
+    )
+}
 
-private var project_file_pattern: FilesPattern = .init(
-    name: "project.pbxproj",
-    data:
+private func project_file_pattern(name: String) -> FilesPattern
+{
+    .init(
+        name: "project.pbxproj",
+        data:
 """
 // !$*UTF8*$!
 {
@@ -125,13 +111,13 @@ private var project_file_pattern: FilesPattern = .init(
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-        62FE5A042F76B3CD003BF06E /* Industrial App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Industrial App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+        62FE5A042F76B3CD003BF06E /* \(name).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "\(name).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-        62FE5A062F76B3CD003BF06E /* Industrial App */ = {
+        62FE5A062F76B3CD003BF06E /* \(name) */ = {
             isa = PBXFileSystemSynchronizedRootGroup;
-            path = "Industrial App";
+            path = "\(name)";
             sourceTree = "<group>";
         };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -152,7 +138,7 @@ private var project_file_pattern: FilesPattern = .init(
         62FE59FB2F76B3CD003BF06E = {
             isa = PBXGroup;
             children = (
-                62FE5A062F76B3CD003BF06E /* Industrial App */,
+                62FE5A062F76B3CD003BF06E /* \(name) */,
                 62FE5A052F76B3CD003BF06E /* Products */,
             );
             sourceTree = "<group>";
@@ -160,7 +146,7 @@ private var project_file_pattern: FilesPattern = .init(
         62FE5A052F76B3CD003BF06E /* Products */ = {
             isa = PBXGroup;
             children = (
-                62FE5A042F76B3CD003BF06E /* Industrial App.app */,
+                62FE5A042F76B3CD003BF06E /* \(name).app */,
             );
             name = Products;
             sourceTree = "<group>";
@@ -168,9 +154,9 @@ private var project_file_pattern: FilesPattern = .init(
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-        62FE5A032F76B3CD003BF06E /* Industrial App */ = {
+        62FE5A032F76B3CD003BF06E /* \(name) */ = {
             isa = PBXNativeTarget;
-            buildConfigurationList = 62FE5A0F2F76B3CF003BF06E /* Build configuration list for PBXNativeTarget "Industrial App" */;
+            buildConfigurationList = 62FE5A0F2F76B3CF003BF06E /* Build configuration list for PBXNativeTarget "\(name)" */;
             buildPhases = (
                 62FE5A002F76B3CD003BF06E /* Sources */,
                 62FE5A012F76B3CD003BF06E /* Frameworks */,
@@ -181,15 +167,15 @@ private var project_file_pattern: FilesPattern = .init(
             dependencies = (
             );
             fileSystemSynchronizedGroups = (
-                62FE5A062F76B3CD003BF06E /* Industrial App */,
+                62FE5A062F76B3CD003BF06E /* \(name) */,
             );
-            name = "Industrial App";
+            name = "\(name)";
             packageProductDependencies = (
                 62FE5A192F76B5D5003BF06E /* IndustrialKit */,
                 62FE5A1B2F76B5D5003BF06E /* IndustrialKitUI */,
             );
-            productName = "Industrial App";
-            productReference = 62FE5A042F76B3CD003BF06E /* Industrial App.app */;
+            productName = "\(name)";
+            productReference = 62FE5A042F76B3CD003BF06E /* \(name).app */;
             productType = "com.apple.product-type.application";
         };
 /* End PBXNativeTarget section */
@@ -207,7 +193,7 @@ private var project_file_pattern: FilesPattern = .init(
                     };
                 };
             };
-            buildConfigurationList = 62FE59FF2F76B3CD003BF06E /* Build configuration list for PBXProject "Industrial App" */;
+            buildConfigurationList = 62FE59FF2F76B3CD003BF06E /* Build configuration list for PBXProject "\(name)" */;
             developmentRegion = en;
             hasScannedForEncodings = 0;
             knownRegions = (
@@ -224,7 +210,7 @@ private var project_file_pattern: FilesPattern = .init(
             projectDirPath = "";
             projectRoot = "";
             targets = (
-                62FE5A032F76B3CD003BF06E /* Industrial App */,
+                62FE5A032F76B3CD003BF06E /* \(name) */,
             );
         };
 /* End PBXProject section */
@@ -450,7 +436,7 @@ private var project_file_pattern: FilesPattern = .init(
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-        62FE59FF2F76B3CD003BF06E /* Build configuration list for PBXProject "Industrial App" */ = {
+        62FE59FF2F76B3CD003BF06E /* Build configuration list for PBXProject "\(name)" */ = {
             isa = XCConfigurationList;
             buildConfigurations = (
                 62FE5A0D2F76B3CF003BF06E /* Debug */,
@@ -459,7 +445,7 @@ private var project_file_pattern: FilesPattern = .init(
             defaultConfigurationIsVisible = 0;
             defaultConfigurationName = Release;
         };
-        62FE5A0F2F76B3CF003BF06E /* Build configuration list for PBXNativeTarget "Industrial App" */ = {
+        62FE5A0F2F76B3CF003BF06E /* Build configuration list for PBXNativeTarget "\(name)" */ = {
             isa = XCConfigurationList;
             buildConfigurations = (
                 62FE5A102F76B3CF003BF06E /* Debug */,
@@ -497,4 +483,5 @@ private var project_file_pattern: FilesPattern = .init(
     rootObject = 62FE59FC2F76B3CD003BF06E /* Project object */;
 }
 """
-)
+    )
+}
