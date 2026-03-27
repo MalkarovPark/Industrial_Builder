@@ -57,7 +57,7 @@ cd "$PACKAGE_DIR" || exit
 
 # Define the Package.swift content with full references and targets
 PACKAGE_SWIFT_CONTENT='
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription

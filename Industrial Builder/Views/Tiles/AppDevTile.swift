@@ -72,9 +72,9 @@ struct AppDevTile: View
                     .buttonStyle(.plain)
                     .fileExporter(
                         isPresented: $store_listing_panel_presented,
-                        document: SwiftSourceDocument(content: passed_listing_text),
-                        contentType: .swiftSource,
-                        defaultFilename: "Listing"
+                        document: ProjectDocument(content: passed_listing_text),
+                        //contentType: .swiftSource,
+                        defaultFilename: "App"
                     )
                     { result in
                         switch result
@@ -83,7 +83,11 @@ struct AppDevTile: View
                             let file_name = url.lastPathComponent
                             let folder_url = url.deletingLastPathComponent()
                             
-                            stc.make_industrial_app_project(from: file_name, to: folder_url)
+                            stc.make_simple_app(
+                                name: file_name,
+                                data: passed_listing_text,
+                                to: folder_url
+                            )
                             passed_listing_text = String()
                             
                         case .failure(let error):
@@ -234,7 +238,27 @@ struct AppDevTile: View
     }
 }
 
-struct SwiftSourceDocument: FileDocument
+struct ProjectDocument: FileDocument
+{
+    static var readableContentTypes = [UTType.bundle]
+    
+    init(configuration: ReadConfiguration) throws
+    {
+        
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
+    {
+        return .init()
+    }
+    
+    init(content: String = "")
+    {
+        
+    }
+}
+
+/*struct SwiftSourceDocument: FileDocument
 {
     static var readableContentTypes = [UTType.swiftSource]
     
@@ -262,7 +286,7 @@ struct SwiftSourceDocument: FileDocument
     {
         text = content
     }
-}
+}*/
 
 struct RawFileDocument: FileDocument
 {

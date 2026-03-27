@@ -200,9 +200,19 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // Makes a Swift package project with IndustrialKit framework import (from file)
-    public func make_industrial_app_project(from file_name: String, to url: URL)
+    public func make_simple_app(name: String, data: String, to url: URL)
     {
-        internal_files_store(["MakeIndustrialApp.command"], to: url)
+        remove_file(at: url.appendingPathComponent(name))
+        
+        make_files(
+            by: app_package_pattern(
+                name: URL(fileURLWithPath: name).deletingPathExtension().lastPathComponent,
+                data: data
+            ),
+            to: url
+        )
+        
+        /*internal_files_store(["MakeIndustrialApp.command"], to: url)
         
         #if os(macOS)
         do
@@ -213,7 +223,25 @@ public class StandardTemplateConstruct: ObservableObject
         {
             
         }
-        #endif
+        #endif*/
+    }
+    
+    private func remove_file(at url: URL)
+    {
+        guard url.startAccessingSecurityScopedResource() else { return }
+        defer { url.stopAccessingSecurityScopedResource() }
+        
+        if FileManager.default.fileExists(atPath: url.path)
+        {
+            do
+            {
+                try FileManager.default.removeItem(at: url)
+            }
+            catch
+            {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     // Store the Modules Building Kit
@@ -1151,7 +1179,7 @@ public enum ModuleExportOption: String, Equatable, CaseIterable
     #endif
     case no_build = "No Build (Listings Only)"
     
-    case internal_modules = "Make Internal for Project"
+    case internal_modules = "Make Internal Modules for Project"
     case mbk_only = "Module Building Kit Only"
 }
 
