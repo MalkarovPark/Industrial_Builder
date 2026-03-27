@@ -376,6 +376,7 @@
 				628BB4182ADD403200825BBF /* StandardTemplateConstruct.swift */,
 				629AABC32BC8561500720386 /* STCPackageInfo.swift */,
 				6279E2092F518EBB00A2419F /* STCItems.swift */,
+				62FE59F62F76A96F003BF06E /* ProjectMaker */,
 			);
 			path = STC;
 			sourceTree = "<group>";
@@ -399,7 +400,6 @@
 				626872402BC1A3A6005F8B3C /* ListingViewer */,
 				6255B9222B9D26AA002B575C /* ModuleDesigners */,
 				626450B92DC289A7001101A5 /* CodeEditor */,
-				62FE59F62F76A96F003BF06E /* ProjectMaker */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";

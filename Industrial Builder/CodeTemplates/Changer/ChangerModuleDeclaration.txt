@@ -14,5 +14,5 @@ public let <#Name#>_ChangerModule = ChangerModule(
 
 private var changer_function_code: String =
 """
-/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
+/*@START_MENU_TOKEN@*//*@PLACEHOLDER=changer_function_code@*//*@END_MENU_TOKEN@*/
 """

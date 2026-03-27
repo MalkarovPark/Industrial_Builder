@@ -1,0 +1,37 @@
+//
+// <#ModuleName#> Tool
+// External Module Declaration
+//
+
+import Foundation
+import RealityKit
+import IndustrialKit
+
+// MARK: - Declaration
+let <#Name#>_ToolModule = ToolModule(
+    name: "<#ModuleName#>",
+    
+    operation_codes: [
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/
+    ],
+    
+    model_controller: <#Name#>_ToolModelController,
+    connector: <#Name#>_ToolConnector()
+)
+
+// MARK: - Model Controller
+var <#Name#>_ToolModelController = ExternalToolModelController(
+    entity_names: [
+/*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/
+    ],
+    code:
+"""
+/*@START_MENU_TOKEN@*//*@PLACEHOLDER=model_controller_code@*//*@END_MENU_TOKEN@*/
+"""
+)
+
+// MARK: - Connector
+nonisolated class <#Name#>_ToolConnector: ToolConnector, @unchecked Sendable
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=connector_code@*//*@END_MENU_TOKEN@*/
+}

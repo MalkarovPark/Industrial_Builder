@@ -4,9 +4,11 @@
 //
 
 import Foundation
+import RealityKit
 import IndustrialKit
 
-public let <#Name#>_RobotModule = RobotModule(
+// MARK: - Declaration
+let <#Name#>_RobotModule = RobotModule(
     name: "<#ModuleName#>",
     
     default_origin_position: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)@*/(0, 0, 0, 0, 0, 0)/*@END_MENU_TOKEN@*/,
@@ -14,18 +16,23 @@ public let <#Name#>_RobotModule = RobotModule(
     origin_shift: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float)@*/(0, 0, 0)/*@END_MENU_TOKEN@*/,
     end_entity_name: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=String@*/String()/*@END_MENU_TOKEN@*/,
     
-    model_controller: ExternalRobotModelController(
-        entity_names: entity_names,
-        code: code
-    ),
-    connector: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector@*/RobotConnector()/*@END_MENU_TOKEN@*/
+    model_controller: <#Name#>_RobotModelController,
+    connector: <#Name#>_RobotConnector()
 )
 
-private var entity_names = [
+// MARK: - Model Controller
+var <#Name#>_RobotModelController = ExternalRobotModelController(
+    entity_names: [
 /*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/
-]
+    ],
+    code:
+"""
+/*@START_MENU_TOKEN@*//*@PLACEHOLDER=model_controller_code@*//*@END_MENU_TOKEN@*/
+"""
+)
 
-private var code: String =
-"""
-/*@START_MENU_TOKEN@*//*@PLACEHOLDER=code@*//*@END_MENU_TOKEN@*/
-"""
+// MARK: - Connector
+nonisolated class <#Name#>_RobotConnector: RobotConnector, @unchecked Sendable
+{
+    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=connector_code@*//*@END_MENU_TOKEN@*/
+}
