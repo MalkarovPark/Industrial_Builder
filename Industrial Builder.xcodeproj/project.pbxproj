@@ -73,6 +73,9 @@
 		62D3118E2CE2905C002A39B8 /* List.txt in Resources */ = {isa = PBXBuildFile; fileRef = 62D3118D2CE2905C002A39B8 /* List.txt */; };
 		62D4304F2CE7E9E900894BEC /* ConnectionParametersItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4304E2CE7E9E900894BEC /* ConnectionParametersItem.swift */; };
 		62E79B322F57987200D03018 /* InspectorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E79B312F57987100D03018 /* InspectorItem.swift */; };
+		62FE59F52F769161003BF06E /* FilesPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F42F769161003BF06E /* FilesPattern.swift */; };
+		62FE59F82F76A99D003BF06E /* SwiftPlaygroundPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */; };
+		62FE59FA2F76A9FD003BF06E /* XcodeProjectPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,6 +144,9 @@
 		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesView.swift; sourceTree = "<group>"; };
 		62E79B312F57987100D03018 /* InspectorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorItem.swift; sourceTree = "<group>"; };
 		62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModuleDesigner.swift; sourceTree = "<group>"; };
+		62FE59F42F769161003BF06E /* FilesPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesPattern.swift; sourceTree = "<group>"; };
+		62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPlaygroundPattern.swift; sourceTree = "<group>"; };
+		62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjectPattern.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -393,6 +399,7 @@
 				626872402BC1A3A6005F8B3C /* ListingViewer */,
 				6255B9222B9D26AA002B575C /* ModuleDesigners */,
 				626450B92DC289A7001101A5 /* CodeEditor */,
+				62FE59F62F76A96F003BF06E /* ProjectMaker */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -414,6 +421,16 @@
 				62C9CEA92F61632400B3DE41 /* AppDevTile.swift */,
 			);
 			path = Tiles;
+			sourceTree = "<group>";
+		};
+		62FE59F62F76A96F003BF06E /* ProjectMaker */ = {
+			isa = PBXGroup;
+			children = (
+				62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */,
+				62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */,
+				62FE59F42F769161003BF06E /* FilesPattern.swift */,
+			);
+			path = ProjectMaker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -537,6 +554,7 @@
 				6257C6442F5C4AE900C6174E /* LinkedEntitiesItem.swift in Sources */,
 				62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */,
 				62C9CEA42F61630500B3DE41 /* DescriptionTile.swift in Sources */,
+				62FE59F52F769161003BF06E /* FilesPattern.swift in Sources */,
 				623D72482ADAFD8500927DEA /* EntityFileView.swift in Sources */,
 				62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */,
 				62C9CEA82F61631700B3DE41 /* ExportTile.swift in Sources */,
@@ -544,6 +562,7 @@
 				6255B9242B9E0DD4002B575C /* DocumentUpdateHandler.swift in Sources */,
 				6265AB072F55CC4A004AA44C /* RobotModuleDesigner.swift in Sources */,
 				6265AB082F55CC4A004AA44C /* ToolModulesView.swift in Sources */,
+				62FE59F82F76A99D003BF06E /* SwiftPlaygroundPattern.swift in Sources */,
 				6265AB092F55CC4A004AA44C /* RobotModulesView.swift in Sources */,
 				6265AB0A2F55CC4A004AA44C /* OperationCodesItem.swift in Sources */,
 				6265AB132F55D8DC004AA44C /* RobotModelView.swift in Sources */,
@@ -561,6 +580,7 @@
 				6268723F2BC18D21005F8B3C /* ModulesView.swift in Sources */,
 				620AA44C2CDF92C9008C2918 /* CodeSelectorView.swift in Sources */,
 				622C88A22BB71C7200A53213 /* ImageListView.swift in Sources */,
+				62FE59FA2F76A9FD003BF06E /* XcodeProjectPattern.swift in Sources */,
 				62C9CEAF2F616B4700B3DE41 /* ImageCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

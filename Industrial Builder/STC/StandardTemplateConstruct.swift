@@ -294,11 +294,13 @@ public class StandardTemplateConstruct: ObservableObject
             
             let work_item = DispatchWorkItem
             {
-                DispatchQueue.main.async
+                if self.compilation_cancelled { self.compilation_cancelled = false }
+                self.on_building_modules = false
+                /*DispatchQueue.main.async
                 {
                     if self.compilation_cancelled { self.compilation_cancelled = false }
                     self.on_building_modules = false
-                }
+                }*/
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
         }
@@ -638,6 +640,13 @@ public class StandardTemplateConstruct: ObservableObject
     public func make_industrial_project(list: BuildModulesList, to folder_url: URL, option: ProjectExportOption)
     {
         //make_internal_modules(list: list, to: folder_url)
+        switch option
+        {
+        case .swift_playground:
+            make_files(by: swift_playground_pattern, to: folder_url)
+        case .xcode_project:
+            make_files(by: xcode_project_pattern, to: folder_url)
+        }
     }
     
     //MARK: Internal Modules Packaging

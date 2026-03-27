@@ -209,7 +209,11 @@ struct AppDevTile: View
                         case .success(let urls):
                             if let url = urls.first
                             {
-                                stc.make_industrial_project(list: stc.package_info.build_modules_list, to: url, option: project_export_option)
+                                stc.make_industrial_project(
+                                    list: stc.package_info.build_modules_list,
+                                    to: url,
+                                    option: project_export_option
+                                )
                             }
                         case .failure(let error):
                             print(error.localizedDescription)
