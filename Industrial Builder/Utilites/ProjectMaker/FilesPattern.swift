@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - Template
+// MARK: - Storage
 public class FilesPattern: Hashable, Identifiable
 {
     public static func == (lhs: FilesPattern, rhs: FilesPattern) -> Bool
@@ -27,7 +27,7 @@ public class FilesPattern: Hashable, Identifiable
     
     public var children: [FilesPattern]?
     
-    public var write_func: ((String, URL) -> ())?
+    public var writing_func: ((URL) -> ())?
     
     public init(
         name: String,
@@ -40,18 +40,16 @@ public class FilesPattern: Hashable, Identifiable
         self.data = data
         
         self.children = children
-        self.write_func = nil
+        self.writing_func = nil
     }
     
     public init(
-        name: String,
-        
-        write_func: @escaping (String, URL) -> ()
+        writing_func: @escaping (URL) -> ()
     )
     {
-        self.name = name
+        self.name = String()
         
-        self.write_func = write_func
+        self.writing_func = writing_func
     }
 }
 
@@ -87,7 +85,7 @@ private func create_node(_ node: FilesPattern, at url: URL) throws
     let node_url = url.appendingPathComponent(node.name)
     
     // Folder
-    if node.children != nil || (node.children == nil && node.data == nil && node.write_func == nil)
+    if node.children != nil || (node.children == nil && node.data == nil && node.writing_func == nil)
     {
         if FileManager.default.fileExists(atPath: node_url.path)
         {
@@ -129,43 +127,9 @@ private func create_node(_ node: FilesPattern, at url: URL) throws
     }
     
     // Custom file writer
-    if let write_func = node.write_func
+    if let writing_func = node.writing_func
     {
-        if FileManager.default.fileExists(atPath: node_url.path)
-        {
-            try FileManager.default.removeItem(at: node_url)
-        }
-        
-        write_func(node.data ?? "", node_url)
+        writing_func(node_url)
         return
     }
 }
-
-// Init Samples
-/*let file = FilesPattern(
-    name: "File",
-    data: """
-Simple Text Data
-"""
-)
-
-let file_with_custom_write_func = FilesPattern(
-    name: "Custom",
-    write_func:
-        {
-            print("Writing: \($0) to: \($1.path)")
-        }
-)
-
-let empty_folder = FilesPattern(
-    name: "Empty Folder"
-)
-
-let folder = FilesPattern(
-    name: "Folder",
-    children: [
-        file,
-        file_with_custom_write_func,
-        empty_folder
-    ]
-)*/

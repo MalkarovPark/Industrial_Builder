@@ -35,4 +35,12 @@ public struct BuildModulesList: Codable, Hashable
     var part_module_names = [String]()
     
     var changer_module_names = [String]()
+    
+    var is_empty: Bool
+    {
+        return robot_module_names.isEmpty &&
+        tool_module_names.isEmpty &&
+        part_module_names.isEmpty &&
+        changer_module_names.isEmpty
+    }
 }

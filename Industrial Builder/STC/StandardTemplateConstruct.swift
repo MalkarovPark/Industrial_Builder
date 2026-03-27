@@ -643,15 +643,41 @@ public class StandardTemplateConstruct: ObservableObject
         switch option
         {
         case .swift_playground:
-            make_files(by: swift_playground_pattern, to: folder_url)
+            make_files(
+                by: swift_playground_pattern(
+                    name: "Modules",
+                    modules_func:
+                        { url in
+                            self.make_internal_modules(
+                                list: self.package_info.build_modules_list,
+                                to: url
+                            )
+                        }
+                ),
+                to: folder_url
+            )
         case .xcode_project:
-            make_files(by: xcode_project_pattern, to: folder_url)
+            make_files(
+                by: xcode_project_pattern(
+                    name: "Modules",
+                    modules_func:
+                        { url in
+                            self.make_internal_modules(
+                                list: self.package_info.build_modules_list,
+                                to: url
+                            )
+                        }
+                ),
+                to: folder_url
+            )
         }
     }
     
     //MARK: Internal Modules Packaging
     public func make_internal_modules(list: BuildModulesList, to folder_url: URL)
     {
+        guard !list.is_empty else { return }
+        
         DispatchQueue.global(qos: .background).async
         {
             DispatchQueue.main.async

@@ -5,14 +5,32 @@
 //  Created by Artem on 27.03.2026.
 //
 
-public var swift_playground_pattern: FilesPattern = .init(
+import Foundation
+
+/*public var swift_playground_pattern: FilesPattern = .init(
     name: "Industrial App.swiftpm",
     children: [
         ContentView_file_pattern,
         MyApp_file_pattern,
         Package_file_pattern
     ]
-)
+)*/
+
+public func swift_playground_pattern(
+    name: String,
+    modules_func: @escaping (URL) -> Void
+) -> FilesPattern
+{
+    .init(
+        name: "Industrial App.swiftpm",
+        children: [
+            ContentView_file_pattern,
+            MyApp_file_pattern,
+            Package_file_pattern,
+            .init(writing_func: modules_func)
+        ]
+    )
+}
 
 private var ContentView_file_pattern: FilesPattern = .init(
     name: "ContentView.swift",
@@ -85,7 +103,6 @@ let package = Package(
             displayVersion: "1.0",
             bundleVersion: "1",
             appIcon: .asset("AppIcon"),
-            accentColor: .presetColor(.mint),
             supportedDeviceFamilies: [
                 .pad,
                 .phone

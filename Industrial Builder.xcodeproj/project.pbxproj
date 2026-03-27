@@ -426,9 +426,9 @@
 		62FE59F62F76A96F003BF06E /* ProjectMaker */ = {
 			isa = PBXGroup;
 			children = (
+				62FE59F42F769161003BF06E /* FilesPattern.swift */,
 				62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */,
 				62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */,
-				62FE59F42F769161003BF06E /* FilesPattern.swift */,
 			);
 			path = ProjectMaker;
 			sourceTree = "<group>";

@@ -5,7 +5,9 @@
 //  Created by Artem on 27.03.2026.
 //
 
-public var xcode_project_pattern: FilesPattern = .init(
+import Foundation
+
+/*public var xcode_project_pattern: FilesPattern = .init(
     name: "Industrial App",
     children: [
         .init(
@@ -24,7 +26,35 @@ public var xcode_project_pattern: FilesPattern = .init(
             ]
         )
     ]
-)
+)*/
+
+public func xcode_project_pattern(
+    name: String,
+    modules_func: @escaping (URL) -> Void
+) -> FilesPattern
+{
+    .init(
+        name: "Industrial App",
+        children: [
+            .init(
+                name: "Industrial App",
+                children: [
+                    .init(name: "Assets.xcassets"),
+                    ContentView_file_pattern,
+                    Industrial_AppApp_file_pattern,
+                    .init(writing_func: modules_func)
+                ]
+            ),
+            .init(
+                name: "Industrial App.xcodeproj",
+                children: [
+                    project_file_pattern//,
+                    //.init(name: "Project.xcworkspace"),
+                ]
+            )
+        ]
+    )
+}
 
 private var ContentView_file_pattern: FilesPattern = .init(
     name: "ContentView.swift",
