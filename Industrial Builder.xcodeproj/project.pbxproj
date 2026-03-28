@@ -73,7 +73,7 @@
 		62D3118E2CE2905C002A39B8 /* List.txt in Resources */ = {isa = PBXBuildFile; fileRef = 62D3118D2CE2905C002A39B8 /* List.txt */; };
 		62D4304F2CE7E9E900894BEC /* ConnectionParametersItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D4304E2CE7E9E900894BEC /* ConnectionParametersItem.swift */; };
 		62E79B322F57987200D03018 /* InspectorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E79B312F57987100D03018 /* InspectorItem.swift */; };
-		62FE59F52F769161003BF06E /* FilesPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F42F769161003BF06E /* FilesPattern.swift */; };
+		62FE59F52F769161003BF06E /* FilePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F42F769161003BF06E /* FilePattern.swift */; };
 		62FE59F82F76A99D003BF06E /* SwiftPlaygroundPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */; };
 		62FE59FA2F76A9FD003BF06E /* XcodeProjectPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */; };
 		62FE5A862F772470003BF06E /* AppPackagePattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FE5A852F772470003BF06E /* AppPackagePattern.swift */; };
@@ -145,7 +145,7 @@
 		62D5A0FE2BD1BF9500356FD2 /* ChangerModulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangerModulesView.swift; sourceTree = "<group>"; };
 		62E79B312F57987100D03018 /* InspectorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorItem.swift; sourceTree = "<group>"; };
 		62F1AC4B2C2C702800C0B8E6 /* RobotModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotModuleDesigner.swift; sourceTree = "<group>"; };
-		62FE59F42F769161003BF06E /* FilesPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesPattern.swift; sourceTree = "<group>"; };
+		62FE59F42F769161003BF06E /* FilePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePattern.swift; sourceTree = "<group>"; };
 		62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPlaygroundPattern.swift; sourceTree = "<group>"; };
 		62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodeProjectPattern.swift; sourceTree = "<group>"; };
 		62FE5A852F772470003BF06E /* AppPackagePattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPackagePattern.swift; sourceTree = "<group>"; };
@@ -428,7 +428,7 @@
 		62FE59F62F76A96F003BF06E /* ProjectMaker */ = {
 			isa = PBXGroup;
 			children = (
-				62FE59F42F769161003BF06E /* FilesPattern.swift */,
+				62FE59F42F769161003BF06E /* FilePattern.swift */,
 				62FE59F72F76A99D003BF06E /* SwiftPlaygroundPattern.swift */,
 				62FE59F92F76A9FD003BF06E /* XcodeProjectPattern.swift */,
 				62FE5A852F772470003BF06E /* AppPackagePattern.swift */,
@@ -557,7 +557,7 @@
 				6257C6442F5C4AE900C6174E /* LinkedEntitiesItem.swift in Sources */,
 				62BAE7792BD71DE5000972EA /* ChangerModulesView.swift in Sources */,
 				62C9CEA42F61630500B3DE41 /* DescriptionTile.swift in Sources */,
-				62FE59F52F769161003BF06E /* FilesPattern.swift in Sources */,
+				62FE59F52F769161003BF06E /* FilePattern.swift in Sources */,
 				623D72482ADAFD8500927DEA /* EntityFileView.swift in Sources */,
 				62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */,
 				62C9CEA82F61631700B3DE41 /* ExportTile.swift in Sources */,

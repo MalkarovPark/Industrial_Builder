@@ -10,7 +10,7 @@ import Foundation
 public func swift_playground_pattern(
     name: String,
     modules_func: @escaping (URL) -> Void
-) -> FilesPattern
+) -> FilePattern
 {
     .init(
         name: "\(name).swiftpm",
@@ -23,7 +23,7 @@ public func swift_playground_pattern(
     )
 }
 
-private var ContentView_file_pattern: FilesPattern = .init(
+private var ContentView_file_pattern: FilePattern = .init(
     name: "ContentView.swift",
     data:
 """
@@ -49,7 +49,7 @@ struct ContentView: View
 """
 )
 
-private var MyApp_file_pattern: FilesPattern = .init(
+private var MyApp_file_pattern: FilePattern = .init(
     name: "MyApp.swift",
     data:
 """
@@ -69,7 +69,7 @@ struct MyApp: App
 """
 )
 
-private func Package_file_pattern(name: String) -> FilesPattern
+private func Package_file_pattern(name: String) -> FilePattern
 {
     .init(
         name: "Package.swift",

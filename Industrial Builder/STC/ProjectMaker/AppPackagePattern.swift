@@ -10,7 +10,7 @@ import Foundation
 public func app_package_pattern(
     name: String,
     data: String
-) -> FilesPattern
+) -> FilePattern
 {
     let listing_name = name.code_correct_format
     return
@@ -38,7 +38,7 @@ public func app_package_pattern(
 
 private func Package_file_pattern(
     name: String
-) -> FilesPattern
+) -> FilePattern
 {
     .init(
         name: "Package.swift",

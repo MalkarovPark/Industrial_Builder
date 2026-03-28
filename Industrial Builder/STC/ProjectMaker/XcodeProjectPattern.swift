@@ -10,7 +10,7 @@ import Foundation
 public func xcode_project_pattern(
     name: String,
     modules_func: @escaping (URL) -> Void
-) -> FilesPattern
+) -> FilePattern
 {
     .init(
         name: name,
@@ -35,7 +35,7 @@ public func xcode_project_pattern(
     )
 }
 
-private var ContentView_file_pattern: FilesPattern = .init(
+private var ContentView_file_pattern: FilePattern = .init(
     name: "ContentView.swift",
     data:
 """
@@ -61,7 +61,7 @@ struct ContentView: View
 """
 )
 
-public func App_file_pattern(name: String) -> FilesPattern
+public func App_file_pattern(name: String) -> FilePattern
 {
     let name_coded = name.code_correct_format
     
@@ -91,7 +91,7 @@ struct \(name_coded)App: App
     )
 }
 
-private func project_file_pattern(name: String) -> FilesPattern
+private func project_file_pattern(name: String) -> FilePattern
 {
     .init(
         name: "project.pbxproj",
