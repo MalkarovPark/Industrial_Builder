@@ -431,7 +431,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         do
         {
-            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
+            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.file_extension_name)")
             
             // Remove existing file or directory if it already exists
             if FileManager.default.fileExists(atPath: module_path.path)
@@ -440,7 +440,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             // Now safely create the folder
-            let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
+            let module_url = try make_folder("\(module.name).\(module.file_extension_name)", module_url: folder_url)
             
             // Info file store
             try make_info_file(url: module_url)
@@ -870,7 +870,7 @@ public class StandardTemplateConstruct: ObservableObject
     {
         do
         {
-            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
+            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.file_extension_name)")
             
             // Remove existing file or directory if it already exists
             if FileManager.default.fileExists(atPath: module_path.path)
@@ -879,7 +879,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             // Now safely create the folder
-            let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
+            let module_url = try make_folder("\(module.name).\(module.file_extension_name)", module_url: folder_url)
             
             // Info file store
             try make_info_file(url: module_url)
@@ -1024,7 +1024,7 @@ public class StandardTemplateConstruct: ObservableObject
             
             guard let scene_files = entities_wrapper?.fileWrappers else { return }
             
-            let destination_url = url.appendingPathComponent("\(module.name).\(module.extension_name).Scene.usdz")
+            let destination_url = url.appendingPathComponent("\(module.name).\(module.file_extension_name).Scene.usdz")
             
             if let source_url = entity_file_item.source_url
             {
