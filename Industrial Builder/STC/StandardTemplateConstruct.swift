@@ -468,14 +468,14 @@ public class StandardTemplateConstruct: ObservableObject
         {
             guard module is RobotModule || module is ToolModule else { return } // Tool, changer and part module has no external code...
             
-            let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
+            //let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
             
             switch module
             {
             case let module as RobotModule:
-                try code_files_store(code_items: ["Connector": module.connector_code], to: code_url)
+                try code_files_store(code_items: ["Connector": module.connector_code], to: url)
             case let module as ToolModule:
-                try code_files_store(code_items: ["Connector": module.connector_code], to: code_url)
+                try code_files_store(code_items: ["Connector": module.connector_code], to: url)
             default:
                 break
             }
@@ -1008,63 +1008,6 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 try code.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
-        }
-        
-        func make_code_folder(url: URL) throws
-        {
-            guard module is RobotModule || module is ToolModule else { return } // Part and Changer module has no external code...
-            
-            let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
-            
-            switch module
-            {
-            case let module as RobotModule:
-                try make_code_files(module: module, to: code_url)
-            case let module as ToolModule:
-                try make_code_files(module: module, to: code_url)
-            //case let module as PartModule:
-                //try make_code_files(module: module, to: code_url)
-            //case let module as ChangerModule:
-                //try make_code_files(module: module, to: code_url)
-            default:
-                break
-            }
-            
-            func make_code_files(module: RobotModule, to url: URL) throws
-            {
-                
-            }
-            
-            func make_code_files(module: ToolModule, to url: URL) throws
-            {
-                
-            }
-            
-            /*func make_code_files(module: PartModule, to url: URL) throws
-            {
-                
-            }*/
-            
-            /*func make_code_files(module: ChangerModule, to url: URL) throws
-            {
-                
-            }*/
-            
-            /*var updated_code_items = module.code_items
-            
-            // Inject parameters in code items
-            if module is RobotModule || module is ToolModule
-            {
-                inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
-                inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
-            }
-            
-            updated_code_items = updated_code_items.reduce(into: [String: String]())
-            { result, entry in
-                result["\(module.name)_\(entry.key)"] = entry.value
-            }
-            
-            try code_files_store(code_items: updated_code_items, to: code_url)*/
         }
         
         func make_resources_folder(url: URL) throws

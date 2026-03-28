@@ -68,15 +68,15 @@ for dir in "${dirs[@]}"; do
         continue
     fi
     
-    CODE_DIR="$dir/Code"
+    CODE_DIR="$dir"
     if [ ! -d "$CODE_DIR" ]; then
-        echo "No 'Code' directory in: $dir"
+        echo "Directory does not exist: $dir"
         continue
     fi
     
     # echo "Code Folder: $CODE_DIR"
     # echo "Processing ${dir##*.} Module – $(basename "${dir%.*}")"
-    echo "Start processing "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module"
+    echo "Processing "$(basename "${dir%.*}")" $(basename "${dir##*.}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}') Module"
     
     shopt -s nullglob
     
