@@ -34,7 +34,7 @@ struct ToolModelView: View
                 scene_content = content
                 scene_content?.camera = .virtual
                 
-                workspace.place_entity(to: content)
+                workspace.place_entity(in: content)
                 workspace.add_tool(previewed_tool)
                 
                 place_entity(entity)

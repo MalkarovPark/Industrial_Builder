@@ -34,7 +34,7 @@ struct RobotModelView: View
                 scene_content = content
                 scene_content?.camera = .virtual
                 
-                workspace.place_entity(to: content)
+                workspace.place_entity(in: content)
                 workspace.add_robot(previewed_robot)
                 
                 place_entity(entity)

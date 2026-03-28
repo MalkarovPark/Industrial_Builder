@@ -33,7 +33,7 @@ struct PartModelView: View
                 scene_content = content
                 scene_content?.camera = .virtual
                 
-                workspace.place_entity(to: content)
+                workspace.place_entity(in: content)
                 workspace.add_part(previewed_part)
                 
                 place_entity(entity)
