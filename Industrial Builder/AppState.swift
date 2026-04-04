@@ -28,7 +28,7 @@ class AppState : ObservableObject
     // Other
     @Published var get_scene_image = false // Flag for getting a snapshot of the scene view
     
-    public var previewed_object: WorkspaceObject? // Part for preview view
+    public var previewed_object: ProductionObject? // Part for preview view
     public var preview_update_scene = false // Flag for update previewed part node in scene
     public var object_view_was_open = false // Flag for provide model controller for model in scene
     
