@@ -20,6 +20,8 @@ struct PartModulesView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
+    @State private var search_text: String = String()
+    
     var body: some View
     {
         NavigationStack
@@ -30,7 +32,7 @@ struct PartModulesView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.part_modules)
+                        ForEach(filtered_modules)
                         { module in
                             PartModuleCard(module: module)
                         }
@@ -38,7 +40,8 @@ struct PartModulesView: View
                     }
                     .padding(20)
                 }
-                .animation(.spring(), value: base_stc.part_modules)
+                .animation(.spring(), value: filtered_modules)
+                .searchable(text: $search_text)
             }
             else
             {
@@ -53,6 +56,7 @@ struct PartModulesView: View
                          """)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .searchable(text: $search_text)
             }
         }
         .toolbar
@@ -69,6 +73,19 @@ struct PartModulesView: View
                     Label("Add Object", systemImage: "plus")
                 }
             }
+        }
+    }
+    
+    private var filtered_modules: [PartModule]
+    {
+        if search_text.isEmpty
+        {
+            return base_stc.part_modules
+        }
+        
+        return base_stc.part_modules.filter
+        {
+            $0.name.localizedCaseInsensitiveContains(search_text)
         }
     }
     

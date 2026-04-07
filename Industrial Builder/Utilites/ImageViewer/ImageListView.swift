@@ -20,6 +20,8 @@ struct ImageListView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
+    @State private var search_text: String = String()
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -30,7 +32,7 @@ struct ImageListView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.image_items)
+                        ForEach(filtered_items)
                         { item in
                             ImageCard(image_item: item)
                             { is_presented in
@@ -41,7 +43,7 @@ struct ImageListView: View
                     }
                     .padding(20)
                 }
-                .animation(.spring(), value: base_stc.image_items)
+                .animation(.spring(), value: filtered_items)
             }
             else
             {
@@ -62,6 +64,7 @@ struct ImageListView: View
                         .padding()
                 }
                 .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
@@ -87,9 +90,10 @@ struct ImageListView: View
                 onCompletion: import_images
             )
         }
+        .searchable(text: $search_text)
     }
     
-    func perform_drop(providers: [NSItemProvider]) -> Bool
+    private func perform_drop(providers: [NSItemProvider]) -> Bool
     {
         for provider in providers
         {
@@ -117,10 +121,11 @@ struct ImageListView: View
                 }
             }
         }
+        
         return true
     }
     
-    func import_images(_ res: Result<[URL], Error>)
+    private func import_images(_ res: Result<[URL], Error>)
     {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
@@ -143,6 +148,19 @@ struct ImageListView: View
             {
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    private var filtered_items: [ImageItem]
+    {
+        if search_text.isEmpty
+        {
+            return base_stc.image_items
+        }
+        
+        return base_stc.image_items.filter
+        {
+            $0.name.localizedCaseInsensitiveContains(search_text)
         }
     }
 }

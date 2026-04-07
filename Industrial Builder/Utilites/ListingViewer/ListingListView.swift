@@ -24,6 +24,8 @@ struct ListingListView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
+    @State private var search_text: String = String()
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -34,7 +36,7 @@ struct ListingListView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.listing_items)
+                        ForEach(filtered_items)
                         { item in
                             ListingCard(listing_item: item)
                             { is_presented in
@@ -44,7 +46,7 @@ struct ListingListView: View
                     }
                     .padding(20)
                 }
-                .animation(.spring(), value: base_stc.listing_items)
+                .animation(.spring(), value: filtered_items)
             }
             else
             {
@@ -67,7 +69,7 @@ struct ListingListView: View
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+                .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }
         .onDrop(of: [.swiftSource], isTargeted: $is_targeted)
@@ -122,9 +124,14 @@ struct ListingListView: View
             #if os(visionOS)
             .buttonBorderShape(.circle)
             #endif
-            .fileImporter(isPresented: $load_panel_presented,
-                                  allowedContentTypes: [.swiftSource], allowsMultipleSelection: true, onCompletion: import_listings)
+            .fileImporter(
+                isPresented: $load_panel_presented,
+                allowedContentTypes: [.swiftSource],
+                allowsMultipleSelection: true,
+                onCompletion: import_listings
+            )
         }
+        .searchable(text: $search_text)
     }
     
     func perform_drop(providers: [NSItemProvider]) -> Bool
@@ -182,6 +189,19 @@ struct ListingListView: View
             {
                 print(error.localizedDescription)
             }
+        }
+    }
+    
+    private var filtered_items: [ListingItem]
+    {
+        if search_text.isEmpty
+        {
+            return base_stc.listing_items
+        }
+        
+        return base_stc.listing_items.filter
+        {
+            $0.name.localizedCaseInsensitiveContains(search_text)
         }
     }
 }

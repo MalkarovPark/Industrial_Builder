@@ -20,6 +20,8 @@ struct RobotModulesView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
+    @State private var search_text: String = String()
+    
     var body: some View
     {
         NavigationStack
@@ -30,7 +32,7 @@ struct RobotModulesView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.robot_modules)
+                        ForEach(filtered_modules)
                         { module in
                             RobotModuleCard(module: module)
                         }
@@ -38,7 +40,8 @@ struct RobotModulesView: View
                     }
                     .padding(20)
                 }
-                .animation(.spring(), value: base_stc.robot_modules)
+                .animation(.spring(), value: filtered_modules)
+                .searchable(text: $search_text)
             }
             else
             {
@@ -53,6 +56,7 @@ struct RobotModulesView: View
                          """)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .searchable(text: $search_text)
             }
         }
         .toolbar
@@ -69,6 +73,19 @@ struct RobotModulesView: View
                     Label("Add Object", systemImage: "plus")
                 }
             }
+        }
+    }
+    
+    private var filtered_modules: [RobotModule]
+    {
+        if search_text.isEmpty
+        {
+            return base_stc.robot_modules
+        }
+        
+        return base_stc.robot_modules.filter
+        {
+            $0.name.localizedCaseInsensitiveContains(search_text)
         }
     }
     

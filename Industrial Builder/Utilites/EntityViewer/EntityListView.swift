@@ -23,6 +23,8 @@ struct EntityListView: View
     
     private let columns: [GridItem] = [.init(.adaptive(minimum: 160, maximum: .infinity), spacing: 24)]
     
+    @State private var search_text: String = String()
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -33,7 +35,7 @@ struct EntityListView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        ForEach(base_stc.entity_items)
+                        ForEach(filtered_items)
                         { item in
                             EntityCard(entity_item: item)
                             { is_presented in
@@ -46,7 +48,7 @@ struct EntityListView: View
                     }
                     .padding(20)
                 }
-                .animation(.spring(), value: base_stc.entity_items)
+                .animation(.spring(), value: filtered_items)
             }
             else
             {
@@ -61,9 +63,13 @@ struct EntityListView: View
             if is_targeted
             {
                 VStack
-                { Text("Drop scenes here").foregroundColor(.secondary).padding() }
-                    .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                {
+                    Text("Drop scenes here").foregroundColor(.secondary).padding()
+                }
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }
         .onDrop(of: [UTType.fileURL], isTargeted: $is_targeted)
@@ -102,6 +108,7 @@ struct EntityListView: View
                 }
             }
         }
+        .searchable(text: $search_text)
     }
     
     private func extract_urls(from providers: [NSItemProvider]) async -> [URL]
@@ -199,6 +206,19 @@ struct EntityListView: View
         catch
         {
             print(error.localizedDescription)
+        }
+    }
+    
+    private var filtered_items: [EntityItem]
+    {
+        if search_text.isEmpty
+        {
+            return base_stc.entity_items
+        }
+        
+        return base_stc.entity_items.filter
+        {
+            $0.name.localizedCaseInsensitiveContains(search_text)
         }
     }
 }
