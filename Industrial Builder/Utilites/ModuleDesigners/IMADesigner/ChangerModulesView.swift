@@ -64,7 +64,7 @@ struct ChangerModulesView: View
                 Button
                 {
                     base_stc.changer_modules.append(ChangerModule(external_name: unique_name(for: "Changer", in: base_stc.changer_module_names)))
-                    document_handler.document_update_changers()
+                    document_handler.update_changers()
                 }
                 label:
                 {
@@ -144,7 +144,7 @@ private struct ChangerModuleCard: View
             if module.name != unique_name
             {
                 module.name = unique_name
-                document_handler.document_update_changers()
+                document_handler.update_changers()
             }
         }
         
@@ -154,7 +154,7 @@ private struct ChangerModuleCard: View
     private func delete_module(_ module: ChangerModule)
     {
         base_stc.changer_modules.removeAll { $0 == module }
-        document_handler.document_update_changers()
+        document_handler.update_changers()
     }
 }
 

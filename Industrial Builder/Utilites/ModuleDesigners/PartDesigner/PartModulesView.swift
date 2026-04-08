@@ -66,7 +66,7 @@ struct PartModulesView: View
                 Button
                 {
                     base_stc.part_modules.append(PartModule(new_name: unique_name(for: "Part", in: base_stc.part_module_names)))
-                    document_handler.document_update_parts()
+                    document_handler.update_parts()
                 }
                 label:
                 {
@@ -190,7 +190,7 @@ private struct PartModuleCard: View
             if module.name != unique_name
             {
                 module.name = unique_name
-                document_handler.document_update_parts()
+                document_handler.update_parts()
             }
         }
         
@@ -200,7 +200,7 @@ private struct PartModuleCard: View
     private func delete_module(_ module: PartModule)
     {
         base_stc.part_modules.removeAll { $0 == module }
-        document_handler.document_update_parts()
+        document_handler.update_parts()
     }
 }
 

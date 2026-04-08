@@ -85,7 +85,7 @@ struct ToolModuleDesigner: View
             EntitySelectorView(is_presented: $entity_selector_presented)
             { entity_file_name in
                 module.entity_file_name = entity_file_name
-                document_handler.document_update_tools()
+                document_handler.update_tools()
             }
         }
         .inspector(isPresented: $inspector_presented)
@@ -97,7 +97,7 @@ struct ToolModuleDesigner: View
                 previewed_tool: previewed_tool
             )
             {
-                document_handler.document_update_tools()
+                document_handler.update_tools()
             }
             #else
             if horizontal_size_class != .compact
@@ -108,7 +108,7 @@ struct ToolModuleDesigner: View
                     previewed_tool: previewed_tool
                 )
                 {
-                    document_handler.document_update_tools()
+                    document_handler.update_tools()
                 }
             }
             else
@@ -119,7 +119,7 @@ struct ToolModuleDesigner: View
                     previewed_tool: previewed_tool
                 )
                 {
-                    document_handler.document_update_tools()
+                    document_handler.update_tools()
                 }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)

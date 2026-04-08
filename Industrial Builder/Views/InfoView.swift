@@ -29,10 +29,10 @@ struct InfoView: View
         {
             LazyVGrid(columns: columns, spacing: 24)
             {
-                DescriptionTile(stc: stc, on_update: { document_handler.document_update_info() })
+                DescriptionTile(stc: stc, on_update: { document_handler.update_info() })
                     .frame(height: 224)
                 
-                ModulesTile(stc: stc, on_update: { document_handler.document_update_info() })
+                ModulesTile(stc: stc, on_update: { document_handler.update_info() })
                     .frame(height: 224)
                 
                 ExportTile(stc: stc)

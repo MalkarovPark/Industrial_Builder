@@ -83,7 +83,7 @@ struct EntityCard<Content: View>: View
     private func delete_scene()
     {
         base_stc.entity_items.removeAll { $0 == entity_item }
-        document_handler.document_update_entities()
+        document_handler.update_entities()
     }
 }
 

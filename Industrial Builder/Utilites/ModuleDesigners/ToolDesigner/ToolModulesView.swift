@@ -66,7 +66,7 @@ struct ToolModulesView: View
                 Button
                 {
                     base_stc.tool_modules.append(ToolModule(new_name: unique_name(for: "Tool", in: base_stc.tool_module_names)))
-                    document_handler.document_update_tools()
+                    document_handler.update_tools()
                 }
                 label:
                 {
@@ -190,7 +190,7 @@ private struct ToolModuleCard: View
             if module.name != unique_name
             {
                 module.name = unique_name
-                document_handler.document_update_tools()
+                document_handler.update_tools()
             }
         }
         
@@ -200,7 +200,7 @@ private struct ToolModuleCard: View
     private func delete_module(_ module: ToolModule)
     {
         base_stc.tool_modules.removeAll { $0 == module }
-        document_handler.document_update_tools()
+        document_handler.update_tools()
     }
 }
 

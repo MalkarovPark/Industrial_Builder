@@ -179,7 +179,7 @@ struct EntityListView: View
         
         await MainActor.run
         {
-            document_handler.document_update_entities()
+            document_handler.update_entities()
         }
     }
     
@@ -200,7 +200,7 @@ struct EntityListView: View
             await MainActor.run
             {
                 base_stc.entity_items.append(item)
-                document_handler.document_update_entities()
+                document_handler.update_entities()
             }
         }
         catch

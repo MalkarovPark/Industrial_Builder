@@ -194,7 +194,7 @@ struct ImageCard<Content: View>: View
             if image_item.name != "\(unique_name).\(ext)"
             {
                 image_item.name = "\(unique_name).\(ext)"
-                document_handler.document_update_images()
+                document_handler.update_images()
             }
         }
         
@@ -217,7 +217,7 @@ struct ImageCard<Content: View>: View
     private func delete_image()
     {
         base_stc.image_items.removeAll { $0 == image_item }
-        document_handler.document_update_images()
+        document_handler.update_images()
     }
 }
 

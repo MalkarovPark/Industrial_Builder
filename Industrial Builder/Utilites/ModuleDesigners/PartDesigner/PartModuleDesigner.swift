@@ -71,7 +71,7 @@ struct PartModuleDesigner: View
             EntitySelectorView(is_presented: $entity_selector_presented)
             { entity_file_name in
                 module.entity_file_name = entity_file_name
-                document_handler.document_update_parts()
+                document_handler.update_parts()
             }
         }
         .inspector(isPresented: $inspector_presented)
@@ -79,21 +79,21 @@ struct PartModuleDesigner: View
             #if os(macOS) || os(visionOS)
             PartInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
             {
-                document_handler.document_update_parts()
+                document_handler.update_parts()
             }
             #else
             if horizontal_size_class != .compact
             {
                 PartInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
                 {
-                    document_handler.document_update_parts()
+                    document_handler.update_parts()
                 }
             }
             else
             {
                 PartInspectorView(module: module, entity_selector_presented: $entity_selector_presented)
                 {
-                    document_handler.document_update_parts()
+                    document_handler.update_parts()
                 }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)

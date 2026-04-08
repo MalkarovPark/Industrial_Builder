@@ -85,7 +85,7 @@ struct RobotModuleDesigner: View
             EntitySelectorView(is_presented: $entity_selector_presented)
             { entity_file_name in
                 module.entity_file_name = entity_file_name
-                document_handler.document_update_robots()
+                document_handler.update_robots()
             }
         }
         .inspector(isPresented: $inspector_presented)
@@ -97,7 +97,7 @@ struct RobotModuleDesigner: View
                 previewed_robot: previewed_robot
             )
             {
-                document_handler.document_update_robots()
+                document_handler.update_robots()
             }
             #else
             if horizontal_size_class != .compact
@@ -108,7 +108,7 @@ struct RobotModuleDesigner: View
                     previewed_robot: previewed_robot
                 )
                 {
-                    document_handler.document_update_robots()
+                    document_handler.update_robots()
                 }
             }
             else
@@ -119,7 +119,7 @@ struct RobotModuleDesigner: View
                     previewed_robot: previewed_robot
                 )
                 {
-                    document_handler.document_update_robots()
+                    document_handler.update_robots()
                 }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)

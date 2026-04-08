@@ -30,7 +30,7 @@ struct ListingView: View
                 { new_value in
                     listing_item.text = new_value
                     
-                    document_handler.document_update_listings()//on_update()
+                    document_handler.update_listings()//on_update()
                 }
         )
         

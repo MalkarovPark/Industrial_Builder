@@ -100,7 +100,7 @@ struct ListingListView: View
                     base_stc.listing_items.append(ListingItem(name: new_listing_name, text: output))
                     new_listing_name = ""
                     
-                    document_handler.document_update_listings()
+                    document_handler.update_listings()
                 }
                 .toolbar
                 {
@@ -155,7 +155,7 @@ struct ListingListView: View
                             }
                             base_stc.listing_items.append(ListingItem(name: String(file_name.split(separator: ".").first!), text: text))
                             
-                            document_handler.drop_document_update_listings()
+                            document_handler.drop_update_listings()
                         }
                     }
                 }
@@ -183,7 +183,7 @@ struct ListingListView: View
                     }
                     url.stopAccessingSecurityScopedResource()
                 }
-                document_handler.document_update_listings()
+                document_handler.update_listings()
             }
             catch
             {

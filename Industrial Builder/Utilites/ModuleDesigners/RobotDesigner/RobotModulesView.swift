@@ -66,7 +66,7 @@ struct RobotModulesView: View
                 Button
                 {
                     base_stc.robot_modules.append(RobotModule(new_name: unique_name(for: "Robot", in: base_stc.robot_module_names)))
-                    document_handler.document_update_robots()
+                    document_handler.update_robots()
                 }
                 label:
                 {
@@ -189,7 +189,7 @@ private struct RobotModuleCard: View
             if module.name != unique_name
             {
                 module.name = unique_name
-                document_handler.document_update_robots()
+                document_handler.update_robots()
             }
         }
         
@@ -199,7 +199,7 @@ private struct RobotModuleCard: View
     private func delete_module(_ module: RobotModule)
     {
         base_stc.robot_modules.removeAll { $0 == module }
-        document_handler.document_update_robots()
+        document_handler.update_robots()
     }
 }
 

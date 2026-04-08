@@ -186,7 +186,7 @@ struct ListingCard<Content: View>: View
             if listing_item.name != unique_name
             {
                 listing_item.name = unique_name
-                document_handler.document_update_listings()
+                document_handler.update_listings()
             }
         }
         
@@ -196,7 +196,7 @@ struct ListingCard<Content: View>: View
     func delete_listing()
     {
         base_stc.listing_items.removeAll { $0 == listing_item }
-        document_handler.document_update_listings()
+        document_handler.update_listings()
     }
 }
 
