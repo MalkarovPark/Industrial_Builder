@@ -6,7 +6,7 @@ import Foundation
 import RealityKit
 import IndustrialKit
 
-class <#Name#>_Controller: ToolModelController, @unchecked Sendable
+nonisolated class <#Name#>_Controller: ToolModelController, @unchecked Sendable
 {
     // MARK: - Parameters
     override var entity_names: [String]

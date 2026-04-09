@@ -6,13 +6,13 @@
 import Foundation
 import IndustrialKit
 
-public let <#Name#>_ChangerModule = ChangerModule(
+@MainActor public let <#Name#>_ChangerModule = ChangerModule(
     name: "<#ModuleName#>",
     
     changer_function_code: changer_function_code
 )
 
-private var changer_function_code: String =
+private let changer_function_code: String =
 """
 /*@START_MENU_TOKEN@*//*@PLACEHOLDER=changer_function_code@*//*@END_MENU_TOKEN@*/
 """

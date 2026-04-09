@@ -6,6 +6,6 @@
 import Foundation
 import IndustrialKit
 
-public let <#Name#>_PartModule = PartModule(
+@MainActor public let <#Name#>_PartModule = PartModule(
     name: "<#ModuleName#>"
 )

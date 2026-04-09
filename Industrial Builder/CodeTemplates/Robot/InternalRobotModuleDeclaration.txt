@@ -6,7 +6,7 @@
 import Foundation
 import IndustrialKit
 
-public let <#Name#>_RobotModule = RobotModule(
+@MainActor let <#Name#>_RobotModule = RobotModule(
     name: "<#ModuleName#>",
     
     default_origin_position: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)@*/(0, 0, 0, 0, 0, 0)/*@END_MENU_TOKEN@*/,

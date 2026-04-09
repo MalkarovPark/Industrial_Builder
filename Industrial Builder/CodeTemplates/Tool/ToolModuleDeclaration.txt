@@ -8,7 +8,7 @@ import RealityKit
 import IndustrialKit
 
 // MARK: - Declaration
-let <#Name#>_ToolModule = ToolModule(
+@MainActor let <#Name#>_ToolModule = ToolModule(
     name: "<#ModuleName#>",
     
     operation_codes: [
@@ -20,7 +20,7 @@ let <#Name#>_ToolModule = ToolModule(
 )
 
 // MARK: - Model Controller
-var <#Name#>_ToolModelController = ExternalToolModelController(
+let <#Name#>_ToolModelController = ExternalToolModelController(
     entity_names: [
 /*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/
     ],

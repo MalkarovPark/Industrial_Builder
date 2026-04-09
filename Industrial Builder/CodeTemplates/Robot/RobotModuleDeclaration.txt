@@ -8,7 +8,7 @@ import RealityKit
 import IndustrialKit
 
 // MARK: - Declaration
-let <#Name#>_RobotModule = RobotModule(
+@MainActor let <#Name#>_RobotModule = RobotModule(
     name: "<#ModuleName#>",
     
     default_origin_position: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)@*/(0, 0, 0, 0, 0, 0)/*@END_MENU_TOKEN@*/,
@@ -21,7 +21,7 @@ let <#Name#>_RobotModule = RobotModule(
 )
 
 // MARK: - Model Controller
-var <#Name#>_RobotModelController = ExternalRobotModelController(
+let <#Name#>_RobotModelController = ExternalRobotModelController(
     entity_names: [
 /*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/
     ],

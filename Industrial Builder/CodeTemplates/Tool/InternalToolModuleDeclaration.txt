@@ -6,7 +6,7 @@
 import Foundation
 import IndustrialKit
 
-public let <#Name#>_ToolModule = ToolModule(
+@MainActor let <#Name#>_ToolModule = ToolModule(
     name: "<#ModuleName#>",
     
     operation_codes: [
