@@ -10,7 +10,7 @@ import SwiftUI
 
 import IndustrialKit
 
-final class DocumentUpdateHandler: ObservableObject
+/*final class DocumentUpdateHandler: ObservableObject
 {
     @Published var info_version: Int = 0
     
@@ -129,9 +129,9 @@ struct DocumentUpdateModifier: ViewModifier
         document.image_items = base_stc.image_items
         document.entity_items = base_stc.entity_items
     }
-}
+}*/
 
-/*class DocumentUpdateHandler: ObservableObject
+class DocumentUpdateHandler: ObservableObject
 {
     // MARK: Update notifies
     @Published var update_info_document_notify = true
@@ -252,4 +252,4 @@ struct DocumentUpdateModifier: ViewModifier
         //STCDocument.new_scenes_names = base_stc.entities.map { $0.name } // If that data was deferred imported
         document.entity_items = base_stc.entity_items//.map { $0.entity } // document.entities = base_stc.entities.map(\.entity)
     }
-}*/
+}
