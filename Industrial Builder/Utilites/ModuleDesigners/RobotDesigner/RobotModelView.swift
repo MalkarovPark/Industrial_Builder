@@ -63,7 +63,8 @@ struct RobotModelView: View
                 }
                 .padding(8)
             }
-            .padding(10)
+            .padding(7.8)
+            .ignoresSafeArea(edges: .bottom)
         }
         .onChange(of: entity)
         { old_value, new_value in

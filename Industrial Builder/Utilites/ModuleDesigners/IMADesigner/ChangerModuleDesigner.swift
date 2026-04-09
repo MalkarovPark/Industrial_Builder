@@ -48,7 +48,8 @@ struct ChangerModuleDesigner: View
                 .padding(.leading, 16)
                 #endif
             }
-            .padding()
+            .padding(7.8)
+            .ignoresSafeArea(edges: .bottom)
         }
         .onAppear
         {
