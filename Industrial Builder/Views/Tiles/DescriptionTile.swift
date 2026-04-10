@@ -31,7 +31,7 @@ struct DescriptionTile: View
                 
                 TextEditor(text: description)
                     .textEditorStyle(.plain)
-                    .font(.title3)
+                    .font(.system(size: 16))
                     .frame(maxHeight: .infinity)
                     .foregroundStyle(.white)
                 

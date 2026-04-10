@@ -24,8 +24,8 @@ struct ModuleSelector: View
     private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
     private let row_spacing: CGFloat = 32
     #else
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 48)]
-    private let row_spacing: CGFloat = 64
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 16)]
+    private let row_spacing: CGFloat = 32
     #endif
     
     public init(
@@ -50,11 +50,16 @@ struct ModuleSelector: View
                     VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Robot")
+                        #if os(macOS)
                             .font(.title2)
+                        #else
+                            .font(.system(size: 18))
+                        #endif
+                            .padding(.bottom, 2)
                         
                         LazyVGrid(columns: columns, spacing: row_spacing)
                         {
-                            ForEach (stc.robot_modules)
+                            ForEach(stc.robot_modules.sorted { $0.name < $1.name })
                             { module in
                                 ModuleSelectionCard(
                                     module: module,
@@ -64,7 +69,7 @@ struct ModuleSelector: View
                             }
                         }
                     }
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 32)
                 }
                 
                 if stc.tool_modules.count > 0
@@ -72,11 +77,16 @@ struct ModuleSelector: View
                     VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Tool")
+                        #if os(macOS)
                             .font(.title2)
+                        #else
+                            .font(.system(size: 18))
+                        #endif
+                            .padding(.bottom, 2)
                         
                         LazyVGrid(columns: columns, spacing: row_spacing)
                         {
-                            ForEach (stc.tool_modules)
+                            ForEach(stc.tool_modules.sorted { $0.name < $1.name })
                             { module in
                                 ModuleSelectionCard(
                                     module: module,
@@ -86,7 +96,7 @@ struct ModuleSelector: View
                             }
                         }
                     }
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 32)
                 }
                 
                 if stc.part_modules.count > 0
@@ -94,11 +104,16 @@ struct ModuleSelector: View
                     VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Part")
+                        #if os(macOS)
                             .font(.title2)
+                        #else
+                            .font(.system(size: 18))
+                        #endif
+                            .padding(.bottom, 2)
                         
                         LazyVGrid(columns: columns, spacing: row_spacing)
                         {
-                            ForEach (stc.part_modules)
+                            ForEach(stc.part_modules.sorted { $0.name < $1.name })
                             { module in
                                 ModuleSelectionCard(
                                     module: module,
@@ -108,7 +123,7 @@ struct ModuleSelector: View
                             }
                         }
                     }
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 32)
                 }
                 
                 if stc.changer_modules.count > 0
@@ -116,11 +131,16 @@ struct ModuleSelector: View
                     VStack(alignment: .leading, spacing: row_spacing / 2)
                     {
                         Text("Changer")
+                        #if os(macOS)
                             .font(.title2)
+                        #else
+                            .font(.system(size: 18))
+                        #endif
+                            .padding(.bottom, 2)
                         
                         LazyVGrid(columns: columns, spacing: row_spacing)
                         {
-                            ForEach (stc.changer_modules)
+                            ForEach(stc.changer_modules.sorted { $0.name < $1.name })
                             { module in
                                 ModuleSelectionCard(
                                     module: module,
@@ -295,11 +315,7 @@ private struct ModuleSelectionCard: View
                     }
                 }
                 .frame(width: 128, height: 128)
-                #if os(macOS)
                 .scaleEffect(0.6)
-                #else
-                .scaleEffect(0.75)
-                #endif
             }
             else
             {
@@ -338,11 +354,7 @@ private struct ModuleSelectionCard: View
                     }
                 }
                 .frame(width: 128, height: 128)
-                #if os(macOS)
                 .scaleEffect(0.6)
-                #else
-                .scaleEffect(0.75)
-                #endif
             }
         }
         .buttonStyle(.plain)
