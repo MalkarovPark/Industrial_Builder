@@ -125,7 +125,7 @@ struct ExportTile: View
             {
                 HStack
                 {
-                    Text("Export Files")
+                    Text("File Export")
                         .font(.system(size: 18, design: .rounded))
                         .foregroundStyle(.white)
                         .padding(.vertical, 12)
