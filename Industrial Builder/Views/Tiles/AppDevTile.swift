@@ -31,14 +31,14 @@ struct AppDevTile: View
     
     var body: some View
     {
-        GlassTile(color: Color(hex: "6F7AB9"))
+        GlassTile(color: Color(hex: "7886C7"))
         {
             HStack(spacing: 0)
             {
                 ZStack
                 {
                     Rectangle()
-                        .fill(Color(hex: "6F7AB9"))
+                        .fill(Color(hex: "7886C7"))
                     
                     Button
                     {
@@ -123,7 +123,7 @@ struct AppDevTile: View
                 ZStack
                 {
                     Rectangle()
-                        .fill(Color(hex: "3671D9"))
+                        .fill(Color(hex: "3F4896"))
                     
                     Menu
                     {

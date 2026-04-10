@@ -15,7 +15,7 @@ struct DescriptionTile: View
     
     var body: some View
     {
-        GlassTile(color: .accentColor)
+        GlassTile(color: Color(hex: "8E75DE"))//"A393EB"))//"7A57D1"))
         {
             ScrollView
             {

@@ -1133,11 +1133,11 @@ public enum ProjectExportOption: String, Equatable, CaseIterable
 public enum ModuleExportOption: String, Equatable, CaseIterable
 {
     #if os(macOS)
-    case projects_and_programs = "Build To Projects and Programs"
-    case programs_only = "Build To Programs Only"
-    case projects_only = "Build To Projects Only"
-    case build_from_projects = "Build Existing Projects To Programs"
-    case projects_to_programs = "Turn Existing Projects To Programs"
+    case projects_and_programs = "Build to Projects and Programs"
+    case programs_only = "Build to Programs Only"
+    case projects_only = "Build to Projects Only"
+    case build_from_projects = "Build Existing Projects to Programs"
+    case projects_to_programs = "Turn Existing Projects to Programs"
     
     case divider = "_"
     #endif
