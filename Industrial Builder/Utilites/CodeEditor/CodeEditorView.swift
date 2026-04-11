@@ -146,5 +146,5 @@ struct CodeEditorView: View
 #Preview
 {
     @Previewable @State var code = "print(output)"
-    CodeEditorView(is_presented: .constant(true), label: "Code", text: $code)
+    CodeEditorView(is_presented: .constant(true), label: "Sources", text: $code)
 }

@@ -71,7 +71,7 @@ struct DocumentUpdateModifier: ViewModifier
             update_deferred_import()
         }
         
-        // Resources
+        // Assets
         .onChange(of: document_handler.entities_version)
         { _, _ in
             update_deferred_import()
@@ -186,7 +186,7 @@ struct DocumentUpdateModifier: ViewModifier
                 update_deferred_import()
             }
             
-            // Resources
+            // Assets
             .onChange(of: document_handler.update_entities_document_notify)
             { _, _ in
                 update_deferred_import()

@@ -132,7 +132,7 @@ struct ToolInspectorView: View
                 ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update, is_compact: horizontal_size_class == .compact)
                 #endif
                 
-                InspectorItem(label: "Code", is_expanded: false)
+                InspectorItem(label: "Sources", is_expanded: false)
                 {
                     VStack(alignment: .leading)
                     {

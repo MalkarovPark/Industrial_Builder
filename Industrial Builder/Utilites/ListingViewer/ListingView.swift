@@ -66,5 +66,5 @@ struct ListingView: View
 
 #Preview
 {
-    ListingView(is_presented: .constant(true), listing_item: ListingItem(name: "Code", text: "import Foundation"))
+    ListingView(is_presented: .constant(true), listing_item: ListingItem(name: "Sources", text: "import Foundation"))
 }

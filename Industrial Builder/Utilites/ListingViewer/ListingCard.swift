@@ -202,7 +202,7 @@ struct ListingCard<Content: View>: View
 
 #Preview
 {
-    ListingCard(listing_item: ListingItem(name: "Code", text: ""))
+    ListingCard(listing_item: ListingItem(name: "Sources", text: ""))
     { _ in
         EmptyView()
     }

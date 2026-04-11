@@ -103,5 +103,5 @@ public struct CodeEditorPane: View
 
 #Preview
 {
-    CodeEditorPane(label: "Code", code: "import IndustrialKit")
+    CodeEditorPane(label: "Sources", code: "import IndustrialKit")
 }

@@ -177,7 +177,7 @@ struct RobotInspectorView: View
                     .padding(.top, 5)
                 }
                 
-                InspectorItem(label: "Code", is_expanded: false)
+                InspectorItem(label: "Sources", is_expanded: false)
                 {
                     VStack(alignment: .leading)
                     {

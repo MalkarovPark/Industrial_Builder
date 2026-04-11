@@ -165,9 +165,9 @@ struct STCDocument: FileDocument
                     {
                         switch file_wrapper.filename
                         {
-                        case "Resources":
-                            resources_process(file_wrapper)
-                        case "Code":
+                        case "Assets":
+                            assets_process(file_wrapper)
+                        case "Sources":
                             codes_process(file_wrapper)
                         default:
                             break
@@ -175,7 +175,7 @@ struct STCDocument: FileDocument
                     }
                 }
                 
-                func resources_process(_ wrapper: FileWrapper)
+                func assets_process(_ wrapper: FileWrapper)
                 {
                     guard let file_wrappers = wrapper.fileWrappers else { return }
                     
@@ -273,7 +273,7 @@ struct STCDocument: FileDocument
                         {
                             let scene_url = folder_url
                                 .appendingPathComponent("Components")
-                                .appendingPathComponent("Resources")
+                                .appendingPathComponent("Assets")
                                 .appendingPathComponent(filename)
                             
                             let entity = try await Entity(contentsOf: scene_url)
@@ -367,10 +367,10 @@ struct STCDocument: FileDocument
     {
         var file_wrappers = [String: FileWrapper]()
         
-        // MARK: Resources
-        file_wrappers["Resources"] = prepare_resources_wrappers()
+        // MARK: Assets
+        file_wrappers["Assets"] = prepare_assets_wrappers()
         
-        func prepare_resources_wrappers() -> FileWrapper
+        func prepare_assets_wrappers() -> FileWrapper
         {
             var file_wrappers = [String: FileWrapper]()
             
@@ -403,7 +403,7 @@ struct STCDocument: FileDocument
                 }
                 else
                 {
-                    print("Warning: entity \(entity_item.name) not found in Resources and has no source_url")
+                    print("Warning: entity \(entity_item.name) not found in Assets and has no source_url")
                 }
             }
             
@@ -424,7 +424,7 @@ struct STCDocument: FileDocument
         }
         
         // MARK: Code
-        file_wrappers["Code"] = prepare_listings_wrappers()
+        file_wrappers["Sources"] = prepare_listings_wrappers()
         func prepare_listings_wrappers() -> FileWrapper
         {
             var file_wrappers = [String: FileWrapper]()

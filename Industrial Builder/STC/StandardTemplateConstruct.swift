@@ -448,8 +448,8 @@ public class StandardTemplateConstruct: ObservableObject
             // Code folder store
             try make_code_folder(url: module_url)
             
-            // Resources folder store
-            try make_resources_folder(url: module_url)
+            // Assets folder store
+            try make_assets_folder(url: module_url)
         }
         catch
         {
@@ -468,7 +468,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             guard module is RobotModule || module is ToolModule else { return } // Tool, changer and part module has no external code...
             
-            //let code_url = try make_module_folder("Code", module_url: url, module_name: module.name)
+            //let code_url = try make_module_folder("Sources", module_url: url, module_name: module.name)
             
             switch module
             {
@@ -481,7 +481,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        func make_resources_folder(url: URL) throws
+        func make_assets_folder(url: URL) throws
         {
             guard let entity_file_name =
                 (module as? RobotModule)?.entity_file_name ??
@@ -512,7 +512,7 @@ public class StandardTemplateConstruct: ObservableObject
                 }
                 else
                 {
-                    print("Warning: entity \(entity_file_item.name) not found in Resources and has no source_url")
+                    print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
                 }
             }
             
@@ -534,7 +534,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             else
             {
-                print("Warning: entity \(entity_file_item.name) not found in Resources and has no source_url")
+                print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
             }*/
         }
         
@@ -884,8 +884,8 @@ public class StandardTemplateConstruct: ObservableObject
             // Info file store
             try make_info_file(url: module_url)
             
-            // Resources folder store
-            try make_resources_folder(url: module_url)
+            // Assets folder store
+            try make_assets_folder(url: module_url)
         }
         catch
         {
@@ -1010,7 +1010,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        func make_resources_folder(url: URL) throws
+        func make_assets_folder(url: URL) throws
         {
             guard let entity_file_name =
                 (module as? RobotModule)?.entity_file_name ??
@@ -1041,7 +1041,7 @@ public class StandardTemplateConstruct: ObservableObject
                 }
                 else
                 {
-                    print("Warning: entity \(entity_file_item.name) not found in Resources and has no source_url")
+                    print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
                 }
             }
         }
