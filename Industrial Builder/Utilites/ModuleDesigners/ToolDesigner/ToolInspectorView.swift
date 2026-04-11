@@ -136,7 +136,7 @@ struct ToolInspectorView: View
                 {
                     VStack(alignment: .leading)
                     {
-                        Text("Model Controller")
+                        Text("Model Controller (JS)")
                             .font(.system(size: 13))
                         
                         CodeEditorPane(
@@ -152,7 +152,7 @@ struct ToolInspectorView: View
                             update_model_controller()
                         }
                         
-                        Text("Connector")
+                        Text("Connector (Swift)")
                             .font(.system(size: 13))
                         
                         CodeEditorPane(
