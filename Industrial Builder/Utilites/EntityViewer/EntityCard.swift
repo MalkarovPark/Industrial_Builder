@@ -29,7 +29,7 @@ struct EntityCard<Content: View>: View
         Button(action: { is_presented = true })
         {
             GlassBoxCard(
-                title: entity_item.name,
+                title: URL(fileURLWithPath: entity_item.name).deletingPathExtension().lastPathComponent,
                 entity: entity_item.entity,
                 vertical_repostion: true//,
                 //is_renaming: $is_renaming,

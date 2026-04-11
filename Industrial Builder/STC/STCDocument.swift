@@ -260,7 +260,6 @@ struct STCDocument: FileDocument
         
         await withTaskGroup(of: EntityItem?.self)
         { group in
-            
             for (_, file_wrapper) in file_wrappers
             {
                 if let filename = file_wrapper.filename,
@@ -280,7 +279,6 @@ struct STCDocument: FileDocument
                             let entity = try await Entity(contentsOf: scene_url)
                             
                             let name = URL(fileURLWithPath: filename)
-                                .deletingPathExtension()
                                 .lastPathComponent
                             
                             return EntityItem(name: name, entity: entity)
