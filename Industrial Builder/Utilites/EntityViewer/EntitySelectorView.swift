@@ -43,7 +43,7 @@ struct EntitySelectorView: View
                         ForEach(base_stc.entity_items)
                         { item in
                             GlassBoxCard(
-                                title: item.name,
+                                title: URL(fileURLWithPath: item.name).deletingPathExtension().lastPathComponent,
                                 entity: item.entity.clone(recursive: true),
                                 vertical_repostion: true,
                             )

@@ -110,8 +110,8 @@ while performed
                 output = disconnect()
                 
             case "move_to":
-                output = move_to(
-                    point: string_to_codable(from: input[1]) ?? PositionPoint(x: 0, y: 0, z: 0),
+                output = move(
+                    to: string_to_codable(from: input[1]) ?? PositionPoint(x: 0, y: 0, z: 0),
                     origin_position: (
                         Float(input[2]) ?? 0, Float(input[3]) ?? 0, Float(input[4]) ?? 0,
                         Float(input[5]) ?? 0, Float(input[6]) ?? 0, Float(input[7]) ?? 0
@@ -175,8 +175,8 @@ while performed
 }
 
 // MARK: - Performing
-func move_to(
-    point: PositionPoint,
+func move(
+    to point: PositionPoint,
     origin_position: (
         x: Float, y: Float, z: Float,
         r: Float, p: Float, w: Float
