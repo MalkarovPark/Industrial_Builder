@@ -104,7 +104,7 @@ struct EntityListView: View
                     }
                     
                 case .failure(let error):
-                    //print("Import error:", error.localizedDescription)
+                    break //print("Import error:", error.localizedDescription)
                 }
             }
         }
