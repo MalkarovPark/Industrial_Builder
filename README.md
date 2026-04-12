@@ -23,7 +23,7 @@ Industrial Builder is a multifunctional environment for production deployment. E
 
 # Requirements <a name="requirements"></a>
 
-The application codebase supports macOS, iOS/iPadOS, visionOS and requires Xcode 16.0 or newer. The Industrial Builder application has a Base SDK version of 26.0.
+The application codebase supports macOS, iOS/iPadOS, visionOS and requires Xcode 26.0 or newer. The Industrial Builder application has a Base SDK version of 26.0.
 
 # Getting Started <a name="getting-started"></a>
 
