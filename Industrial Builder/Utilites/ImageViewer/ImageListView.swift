@@ -146,7 +146,7 @@ struct ImageListView: View
             }
             catch
             {
-                print(error.localizedDescription)
+                //print(error.localizedDescription)
             }
         }
     }

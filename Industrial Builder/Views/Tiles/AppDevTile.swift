@@ -90,7 +90,7 @@ struct AppDevTile: View
                             passed_listing_text = String()
                             
                         case .failure(let error):
-                            print(error.localizedDescription)
+                            //print(error.localizedDescription)
                             break
                         }
                     }
@@ -221,7 +221,7 @@ struct AppDevTile: View
                             )
                             
                         case .failure(let error):
-                            print(error.localizedDescription)
+                            //print(error.localizedDescription)
                             break
                         }
                     }

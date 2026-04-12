@@ -70,5 +70,5 @@ public struct CodeView: View
 
 #Preview
 {
-    CodeView(text: .constant("\"print(\"UwU\")"))
+    CodeView(text: .constant("\"print(\"output\")"))
 }

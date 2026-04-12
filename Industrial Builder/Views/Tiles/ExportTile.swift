@@ -115,7 +115,7 @@ struct ExportTile: View
                             stc.export_modules(list: stc.package_info.build_modules_list, to: url, option: external_export_option)
                         }
                     case .failure(let error):
-                        print(error.localizedDescription)
+                        //print(error.localizedDescription)
                         break
                     }
                 }

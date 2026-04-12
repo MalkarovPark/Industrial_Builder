@@ -78,7 +78,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
             return nil
         }
     }
@@ -185,13 +185,13 @@ public class StandardTemplateConstruct: ObservableObject
                 }
                 catch
                 {
-                    print(error.localizedDescription)
+                    //print(error.localizedDescription)
                 }
             }
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
             /*DispatchQueue.main.async
             {
                 self.build_info += "\nError during external compilation: \(error.localizedDescription)"
@@ -239,7 +239,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             catch
             {
-                print(error.localizedDescription)
+                //print(error.localizedDescription)
             }
         }
     }
@@ -279,7 +279,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             catch
             {
-                print("Failed to copy \(file_name): \(error.localizedDescription)")
+                //print("Failed to copy \(file_name): \(error.localizedDescription)")
             }
         }
     }
@@ -453,7 +453,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
             return
         }
         
@@ -512,7 +512,7 @@ public class StandardTemplateConstruct: ObservableObject
                 }
                 else
                 {
-                    print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
+                    //print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
                 }
             }
             
@@ -534,7 +534,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             else
             {
-                print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
+                //print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
             }*/
         }
         
@@ -795,7 +795,7 @@ public class StandardTemplateConstruct: ObservableObject
             }
             catch
             {
-                print(error.localizedDescription)
+                //print(error.localizedDescription)
                 DispatchQueue.main.async
                 {
                     self.on_building_modules = false
@@ -889,7 +889,7 @@ public class StandardTemplateConstruct: ObservableObject
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
             return
         }
         
@@ -1041,7 +1041,7 @@ public class StandardTemplateConstruct: ObservableObject
                 }
                 else
                 {
-                    print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
+                    //print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
                 }
             }
         }

@@ -187,7 +187,7 @@ struct ListingListView: View
             }
             catch
             {
-                print(error.localizedDescription)
+                //print(error.localizedDescription)
             }
         }
     }

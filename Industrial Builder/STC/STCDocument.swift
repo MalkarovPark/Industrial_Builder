@@ -100,7 +100,7 @@ struct STCDocument: FileDocument
                 }
                 catch
                 {
-                    print(error.localizedDescription)
+                    //print(error.localizedDescription)
                 }
                 
                 return data
@@ -285,7 +285,7 @@ struct STCDocument: FileDocument
                         }
                         catch
                         {
-                            print("\(filename): \(error)")
+                            //print("\(filename): \(error)")
                             return nil
                         }
                     }
@@ -393,7 +393,7 @@ struct STCDocument: FileDocument
                     }
                     catch
                     {
-                        print("Failed to include new entity \(entity_item.name): \(error)")
+                        //print("Failed to include new entity \(entity_item.name): \(error)")
                     }
                 }
                 else if let wrapper = scene_files[file_name_with_ext]
@@ -403,7 +403,7 @@ struct STCDocument: FileDocument
                 }
                 else
                 {
-                    print("Warning: entity \(entity_item.name) not found in Assets and has no source_url")
+                    //print("Warning: entity \(entity_item.name) not found in Assets and has no source_url")
                 }
             }
             

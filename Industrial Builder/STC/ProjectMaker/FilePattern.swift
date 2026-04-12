@@ -74,7 +74,7 @@ public func make_files(by pattern: FilePattern, to folder_url: URL)
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
         }
     }
 }

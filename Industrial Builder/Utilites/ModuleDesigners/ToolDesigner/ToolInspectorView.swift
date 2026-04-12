@@ -291,7 +291,7 @@ struct ToolInspectorView: View
             guard let json_data = json_string.data(using: .utf8)
             else
             {
-                print("Failed to convert JS output to Data: \(json_string)")
+                //print("Failed to convert JS output to Data: \(json_string)")
                 return nil
             }
             
@@ -300,7 +300,7 @@ struct ToolInspectorView: View
         }
         catch
         {
-            print("JS current_device_output error: \(error.localizedDescription)")
+            //print("JS current_device_output error: \(error.localizedDescription)")
             return nil
         }
     }
@@ -316,7 +316,7 @@ struct ToolInspectorView: View
             guard let json_data = json_string.data(using: .utf8)
             else
             {
-                print("Failed to convert JS output to Data: \(json_string)")
+                //print("Failed to convert JS output to Data: \(json_string)")
                 return nil
             }
             
@@ -325,7 +325,7 @@ struct ToolInspectorView: View
         }
         catch
         {
-            print("JS initial_device_output error: \(error.localizedDescription)")
+            //print("JS initial_device_output error: \(error.localizedDescription)")
             return nil
         }
     }

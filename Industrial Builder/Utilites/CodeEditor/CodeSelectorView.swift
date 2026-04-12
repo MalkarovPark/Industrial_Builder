@@ -24,7 +24,7 @@ struct CodeSelectorView: View
     
     #if !os(visionOS)
     private let top_spacing: CGFloat = 48
-    private let bottom_spacing: CGFloat = 0//40
+    private let bottom_spacing: CGFloat = 0
     #else
     private let top_spacing: CGFloat = 96
     private let bottom_spacing: CGFloat = 44
@@ -138,7 +138,6 @@ struct CodeSelectorView: View
                                 .aspectRatio(1, contentMode: .fit)
                             }
                         }
-                        //.padding(.bottom, 16)
                     }
                 }
                 .padding()
@@ -312,6 +311,6 @@ struct BottomToolbarModifier: ViewModifier
 {
     ZStack
     {
-        CodeTileView(name: "UwU", symbol_name: "text.justify.left") {}
+        CodeTileView(name: "Listing", symbol_name: "text.justify.left") {}
     }
 }
