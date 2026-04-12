@@ -461,8 +461,8 @@ private func project_file_pattern(name: String) -> FilePattern
             isa = XCRemoteSwiftPackageReference;
             repositoryURL = "https://github.com/MalkarovPark/IndustrialKit";
             requirement = {
-                kind = upToNextMajorVersion;
-                minimumVersion = 5.1.0;
+                kind = upToNextMinorVersion;
+                minimumVersion = 26.0.0;
             };
         };
 /* End XCRemoteSwiftPackageReference section */

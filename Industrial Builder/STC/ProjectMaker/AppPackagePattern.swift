@@ -58,8 +58,8 @@ let package = Package(
         .visionOS("26.0")
     ],
     dependencies: [
-        //.package(url: "https://github.com/MalkarovPark/IndustrialKit", "26.0.0"..<"26.1.0"),
-        .package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "development"),
+        .package(url: "https://github.com/MalkarovPark/IndustrialKit", "26.0.0"..<"26.1.0"),
+        //.package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "development"),
     ],
     targets: [
         .executableTarget(

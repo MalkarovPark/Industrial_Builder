@@ -109,8 +109,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "development"),
-        //.package(url: "https://github.com/MalkarovPark/IndustrialKit", "5.1.0"..<"6.0.0")
+        .package(url: "https://github.com/MalkarovPark/IndustrialKit", "26.0.0"..<"26.1.0"),
+        //.package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "development"),
     ],
     targets: [
         .executableTarget(
