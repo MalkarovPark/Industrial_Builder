@@ -9,21 +9,39 @@
     {
       "layers" : [
         {
-          "glass" : false,
-          "image-name" : "icon_item.png",
-          "name" : "icon_item"
+          "image-name" : "ib_icon_front2.png",
+          "name" : "ib_icon_front2"
         },
         {
-          "glass" : false,
+          "image-name" : "ib_icon_front.png",
+          "name" : "ib_icon_front"
+        },
+        {
+          "image-name" : "ib_icon_middle.png",
+          "name" : "ib_icon_middle"
+        },
+        {
+          "hidden-specializations" : [
+            {
+              "value" : true
+            },
+            {
+              "appearance" : "dark",
+              "value" : false
+            }
+          ],
+          "image-name" : "ib_icon_back2.png",
+          "name" : "ib_icon_back2"
+        },
+        {
           "hidden-specializations" : [
             {
               "appearance" : "dark",
               "value" : true
             }
           ],
-          "image-name" : "icon_background.png",
-          "name" : "icon_background",
-          "opacity" : 1
+          "image-name" : "ib_icon_back.png",
+          "name" : "ib_icon_back"
         }
       ],
       "shadow" : {

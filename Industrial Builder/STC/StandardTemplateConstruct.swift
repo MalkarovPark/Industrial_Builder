@@ -7,12 +7,15 @@
 
 import Foundation
 import SwiftUI
-import SceneKit
+import RealityKit
+
 import IndustrialKit
 
 public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package_info = STCPackageInfo()
+    
+    @Published var entities_loaded = false
     
     init()
     {
@@ -20,38 +23,42 @@ public class StandardTemplateConstruct: ObservableObject
         // make_contents()
     }
     
-    func document_view(_ info: STCPackageInfo, images: [UIImage], changer_modules: [ChangerModule], tool_modules: [ToolModule], scenes: [SCNScene], kinematic_groups: [KinematicGroup])
-    {
-        self.package_info = info
-        
-        self.images = images
-        self.scenes = scenes
-        self.kinematic_groups = kinematic_groups
-        
-        self.changer_modules = changer_modules
-        self.tool_modules = tool_modules
-    }
-    
     func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
     {
         self.package_info = document.package_info
         
-        self.images = document.images
-        self.listings = document.listings
-        self.listings_files_names = document.listings_files_names
-        self.kinematic_groups = document.kinematic_groups
+        self.image_items = document.image_items
+        self.listing_items = document.listing_items
         
         self.robot_modules = document.robot_modules
         self.tool_modules = document.tool_modules
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
         
-        // Deferred import for scenes
-        if let folder_bookmark = get_bookmark(url: bookmark_url) // self.scenes = document.scenes
+        load_all_external_entities
         {
-            let scene_file_data = document.deferred_scene_view(folder_bookmark: folder_bookmark)
-            self.scenes = scene_file_data.scenes
-            self.scenes_files_names = scene_file_data.names
+            self.entities_loaded = true
+        }
+        
+        self.entities_wrapper = document.entities_wrapper
+        
+        func load_all_external_entities(_ completion: @escaping () -> Void = {})
+        {
+            Task
+            {
+                if let folder_bookmark = get_bookmark(url: bookmark_url)
+                {
+                    if let loaded_entities = await document.deferred_scene_import(folder_bookmark: folder_bookmark)
+                    {
+                        await MainActor.run
+                        {
+                            self.entity_items = loaded_entities
+                        }
+                    }
+                }
+                
+                completion()
+            }
         }
     }
     
@@ -71,237 +78,39 @@ public class StandardTemplateConstruct: ObservableObject
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
             return nil
         }
     }
     
     // MARK: - Components handling
     // Imported files
-    @Published var images = [UIImage]()
-    @Published var listings = [String]()
-    @Published var scenes = [SCNScene]()
-    @Published var kinematic_groups = [KinematicGroup]()
+    @Published var image_items = [ImageItem]()
+    public var image_item_names: [String] { image_items.map { $0.name } }
     
-    // Imported files names
-    public var scenes_files_names = [String]()
-    public var images_files_names = [String]()
-    public var listings_files_names = [String]()
+    @Published var listing_items = [ListingItem]()
+    public var listing_item_names: [String] { listing_items.map { $0.name } }
     
-    // MARK: Kinematic groups functions
-    // Build separated components by kinematic group
-    public func make_copmponents_from_kinematic(group: KinematicGroup, node: SCNNode, make_controller: Bool, make_model: Bool, is_internal: Bool, listings_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
-    {
-        if make_controller
-        {
-            if let existing_index = listings_files_names.firstIndex(of: group.name)
-            {
-                listings[existing_index] = generate_controller_code(from: group, is_internal: is_internal)
-                listings_files_names[existing_index] = group.name
-            }
-            else
-            {
-                listings.append(generate_controller_code(from: group, is_internal: is_internal))
-                listings_files_names.append(group.name)
-            }
-            
-            listings_update_function()
-        }
-        
-        if make_model
-        {
-            let scene = SCNScene()
-            scene.rootNode.addChildNode(node.clone())
-            
-            if let existing_index = scenes_files_names.firstIndex(of: "\(group.name).scn")
-            {
-                scenes[existing_index] = scene
-                scenes_files_names[existing_index] = "\(group.name).scn"
-            }
-            else
-            {
-                scenes.append(scene)
-                scenes_files_names.append("\(group.name).scn")
-            }
-            
-            scenes_update_function()
-        }
-    }
-    
-    // Build virtual robot components by kinematic group to robot model
-    public func make_copmponents_from_kinematic(group: KinematicGroup, to module_name: String, node: SCNNode, make_controller: Bool, make_model: Bool, is_internal: Bool, robots_update_function: (() -> Void) = {}, scenes_update_function: (() -> Void) = {})
-    {
-        guard let module = robot_modules.first(where: { $0.name == module_name })
-        else
-        {
-            return
-        }
-        
-        if make_controller
-        {
-            module.code_items["Controller"] = generate_controller_code(from: group, name: module.name.code_correct_format, is_internal: is_internal)
-            
-            module.nodes_names = group.type.nodes_names
-            
-            robots_update_function()
-        }
-        
-        if make_model
-        {
-            // Make scene
-            let scene = SCNScene()
-            scene.rootNode.addChildNode(node.clone())
-            
-            // Pass scene to resources
-            let new_scene_name = "\(group.name).scn"
-            
-            if let existing_index = scenes_files_names.firstIndex(of: new_scene_name)
-            {
-                scenes[existing_index] = scene
-                scenes_files_names[existing_index] = new_scene_name
-            }
-            else
-            {
-                scenes.append(scene)
-                scenes_files_names.append(new_scene_name)
-            }
-            
-            // Connect scene to module
-            if module.resources_names == nil
-            {
-                module.resources_names = [new_scene_name]
-            }
-            else
-            {
-                if module.resources_names?.firstIndex(of: new_scene_name) == nil
-                {
-                    module.resources_names?.append(new_scene_name)
-                }
-            }
-            
-            module.main_scene_name = new_scene_name
-            
-            // Set nodes names connect in scene
-            // module.nodes_names = group.type.nodes_list
-            
-            scenes_update_function()
-        }
-    }
-    
-    private func generate_controller_code(from group: KinematicGroup, name: String = String(), is_internal: Bool) -> String
-    {
-        var controller_code = is_internal ? group.type.internal_listing_template : group.type.external_listing_template
-        
-        var class_name = String()
-        
-        if !name.isEmpty
-        {
-            class_name = name
-        }
-        else
-        {
-            class_name = group.name
-        }
-        
-        controller_code = controller_code.replacingOccurrences(of: "<#Name#>", with: class_name)
-        
-        controller_code = controller_code.replacingOccurrences(of: "<#lengths#>", with: kinematic_data_to_code(group.data))
-        
-        return controller_code
-    }
-    
-    private func kinematic_data_to_code(_ kinematic_data: [KinematicElement]) -> String
-    {
-        var code = String()
-        
-        code = """
-        \(kinematic_data.map { "\($0.value)" }.joined(separator: ",\n        "))
-        """
-        
-        return code
-    }
-    
-    // MARK: Model nodes functions
-    @Published var viewed_model_node = SCNNode()
-    
-    private func make_preview()
-    {
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.green
-        
-        let box = SCNBox(width: 1.0, height: 1.0, length: 1.0, chamferRadius: 0.1)
-        box.materials = [material]
-        viewed_model_node = SCNNode(geometry: box)
-    }
+    @Published var entity_items = [EntityItem]()
+    public var entity_item_names: [String] { entity_items.map { $0.name } }
     
     // MARK: - Modules handling
-    // MARK: Robot modules
+    // Robot modules
     @Published var robot_modules = [RobotModule]()
+    public var robot_module_names: [String] { robot_modules.map { $0.name } }
     
-    public var robot_modules_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for robot_module in robot_modules
-            {
-                names.append(robot_module.name)
-            }
-            
-            return names
-        }
-    }
-    
-    // MARK: Tool modules
     @Published var tool_modules = [ToolModule]()
+    public var tool_module_names: [String] { tool_modules.map { $0.name } }
     
-    public var tool_modules_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for tool_module in tool_modules
-            {
-                names.append(tool_module.name)
-            }
-            
-            return names
-        }
-    }
-    
-    // MARK: Part modules
     @Published var part_modules = [PartModule]()
+    public var part_module_names: [String] { part_modules.map { $0.name } }
     
-    public var part_modules_names: [String]
-    {
-        get
-        {
-            var names = [String]()
-            for part_module in part_modules
-            {
-                names.append(part_module.name)
-            }
-            
-            return names
-        }
-    }
-    
-    
-    // MARK: Changer modules
     @Published var changer_modules = [ChangerModule]()
+    public var changer_module_names: [String] { changer_modules.map { $0.name } }
     
-    public var changer_modules_names: [String]
+    public var any_modules_avaliable: Bool
     {
-        get
-        {
-            var names = [String]()
-            for changer_module in changer_modules
-            {
-                names.append(changer_module.name)
-            }
-            
-            return names
-        }
+        return !(robot_modules.isEmpty && tool_modules.isEmpty && part_modules.isEmpty && changer_modules.isEmpty)
     }
     
     // MARK: - UI Info
@@ -324,43 +133,12 @@ public class StandardTemplateConstruct: ObservableObject
         }
         else
         {
-            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * 3
-            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * 3
-            //build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * 0
-            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count) * 2
+            build_total += Float(robot_modules.filter { list.robot_module_names.contains($0.name) }.count) * 3
+            build_total += Float(tool_modules.filter { list.tool_module_names.contains($0.name) }.count) * 3
+            //build_total += Float(part_modules.filter { list.part_module_names.contains($0.name) }.count) * 0
+            build_total += Float(changer_modules.filter { list.changer_module_names.contains($0.name) }.count) * 2
         }
-        
-        /*if as_internal
-        {
-            // Project creation stages count
-            #if os(macOS)
-            build_total += 5
-            #endif
-        }
-        else
-        {
-            // Compilation stages count
-            #if os(macOS)
-            let robot_module_code_items_count: Float = 2
-            let tool_module_code_items_count: Float = 2
-            // let part_module_code_items_count: Float = 0
-            // let changer_module_code_items_count: Float = 1
-            
-            build_total += Float(robot_modules.filter { list.robot_modules_names.contains($0.name) }.count) * robot_module_code_items_count
-            build_total += Float(tool_modules.filter { list.tool_modules_names.contains($0.name) }.count) * tool_module_code_items_count
-            // build_total += Float(part_modules.filter { list.part_modules_names.contains($0.name) }.count) * part_module_code_items_count
-            build_total += Float(changer_modules.filter { list.changer_modules_names.contains($0.name) }.count)// * changer_module_code_items_count
-            
-            build_total += 2 // Additive terminal output stages
-            #endif
-        }*/
     }
-    
-    // MARK: - Process preferences
-    @Published var internal_export_type: InternalExportType = .files_only
-    @Published var external_export_type: ExternalExportType = .no_build
-    
-    @Published var prepare_for_dev_type: PrepareForDevType = .blank_project
     
     // MARK: - Code generation functions
     public func misc_code_process(type: MiscCodeGenerationFunction, input: String = String()) -> String
@@ -383,7 +161,7 @@ public class StandardTemplateConstruct: ObservableObject
         #endif
     }
     
-    // MARK: - Prepare for Dev functions
+    // MARK: - MBK
     // Makes a Swift package project with IndustrialKit framework import (blank project)
     public func make_industrial_app_project(name: String, to url: URL, remove_tmp_from: URL?)
     {
@@ -393,34 +171,6 @@ public class StandardTemplateConstruct: ObservableObject
         {
             #if os(macOS)
             try perform_terminal_command("cd '\(url.path)' && ./MakeIndustrialApp.command '\(name)'")
-            /*{ output in
-                let lines = output.components(separatedBy: .newlines)
-                
-                // Find the last non-empty line
-                var last_line: String? = nil
-                for line in lines.reversed()
-                {
-                    if !line.isEmpty
-                    {
-                        last_line = line
-                        break
-                    }
-                }
-                
-                if let last_line = last_line
-                {
-                    DispatchQueue.main.async
-                    {
-                        self.build_info = last_line
-                        self.build_progress += 1
-                    }
-                }
-            }
-            
-            DispatchQueue.main.async
-            {
-                self.build_info += "\nProject creation finished."
-            }*/
             #endif
             
             // Remove unused template blank file
@@ -435,12 +185,13 @@ public class StandardTemplateConstruct: ObservableObject
                 }
                 catch
                 {
-                    print(error.localizedDescription)
+                    //print(error.localizedDescription)
                 }
             }
         }
         catch
         {
+            //print(error.localizedDescription)
             /*DispatchQueue.main.async
             {
                 self.build_info += "\nError during external compilation: \(error.localizedDescription)"
@@ -449,9 +200,19 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // Makes a Swift package project with IndustrialKit framework import (from file)
-    public func make_industrial_app_project(from file_name: String, to url: URL)
+    public func make_simple_app(name: String, data: String, to url: URL)
     {
-        internal_files_store(["MakeIndustrialApp.command"], to: url)
+        remove_file(at: url.appendingPathComponent(name)) // Remove empty project target file
+        
+        make_files(
+            by: app_package_pattern(
+                name: URL(fileURLWithPath: name).deletingPathExtension().lastPathComponent,
+                data: data
+            ),
+            to: url
+        )
+        
+        /*internal_files_store(["MakeIndustrialApp.command"], to: url)
         
         #if os(macOS)
         do
@@ -462,13 +223,39 @@ public class StandardTemplateConstruct: ObservableObject
         {
             
         }
-        #endif
+        #endif*/
+    }
+    
+    private func remove_file(at url: URL)
+    {
+        guard url.startAccessingSecurityScopedResource() else { return }
+        defer { url.stopAccessingSecurityScopedResource() }
+        
+        if FileManager.default.fileExists(atPath: url.path)
+        {
+            do
+            {
+                try FileManager.default.removeItem(at: url)
+            }
+            catch
+            {
+                //print(error.localizedDescription)
+            }
+        }
     }
     
     // Store the Modules Building Kit
     public func store_mbk(to url: URL)
     {
-        internal_files_store(["MakeIndustrialApp.command", "ListingToProject.command", "ProjectToProgram.command", "BuildModuleProgram.command"], to: url)
+        internal_files_store(
+            [
+                "MakeIndustrialApp.command",
+                "ListingToProject.command",
+                "ProjectToProgram.command",
+                "BuildModuleProgram.command"
+            ],
+            to: url
+        )
     }
     
     // Store text files from the app itself to external files
@@ -492,45 +279,24 @@ public class StandardTemplateConstruct: ObservableObject
             }
             catch
             {
-                print("Failed to copy \(file_name): \(error.localizedDescription)")
+                //print("Failed to copy \(file_name): \(error.localizedDescription)")
             }
         }
-        
-        /*for file_name in file_names
-        {
-            guard let file_url = Bundle.main.url(forResource: file_name, withExtension: nil) else { return }
-            let destination_url = folder_url.appendingPathComponent(file_name)
-            
-            do
-            {
-                if FileManager.default.fileExists(atPath: file_url.path)
-                {
-                    try FileManager.default.copyItem(at: file_url, to: destination_url)
-                }
-            }
-            catch
-            {
-                print(error.localizedDescription)
-            }
-        }*/
     }
     
-    // MARK: - Modules build functions
+    // MARK: - Export Modules
     // Builds modules in separated files.
-    public func build_external_modules(list: BuildModulesList, to folder_url: URL)
+    public func export_modules(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
+        // No-build options
+        if option == .internal_modules { make_internal_modules(list: list, to: folder_url); return }
+        if option == .mbk_only { store_mbk(to: folder_url); return }
+        
+        // Build external modules
         DispatchQueue.global(qos: .background).async
         {
             self.set_build_info(list: list, as_internal: false)
             self.on_building_modules = true
-            
-            //print(self.build_total)
-            
-            /*DispatchQueue.main.async
-            {
-                self.set_build_info(list: list, as_internal: false)
-                self.on_building_modules = true
-            }*/
             
             guard folder_url.startAccessingSecurityScopedResource()
             else
@@ -546,7 +312,7 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 self.build_info = "Building modules files"
             }
-            self.build_modules_files(list: list, to: folder_url, as_internal: false)
+            self.build_modules_files(list: list, to: folder_url, option: option)
             
             folder_url.stopAccessingSecurityScopedResource()
             
@@ -564,106 +330,39 @@ public class StandardTemplateConstruct: ObservableObject
             
             let work_item = DispatchWorkItem
             {
-                DispatchQueue.main.async
+                if self.compilation_cancelled { self.compilation_cancelled = false }
+                self.on_building_modules = false
+                /*DispatchQueue.main.async
                 {
                     if self.compilation_cancelled { self.compilation_cancelled = false }
                     self.on_building_modules = false
-                }
+                }*/
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
         }
     }
     
-    // Builds application project to compile with internal modules.
-    public func build_application_project(list: BuildModulesList, to folder_url: URL)
-    {
-        DispatchQueue.global(qos: .background).async
-        {
-            DispatchQueue.main.async
-            {
-                self.set_build_info(list: list, as_internal: true)
-                self.on_building_modules = true
-            }
-            
-            do
-            {
-                // Internal modules folder
-                guard folder_url.startAccessingSecurityScopedResource() else
-                {
-                    DispatchQueue.main.async
-                    {
-                        self.on_building_modules = false
-                    }
-                    return
-                }
-                
-                let package_folder_url = try self.make_folder("Modules", module_url: folder_url)
-                
-                self.build_modules_files(list: list, to: package_folder_url, as_internal: true)
-                
-                // Make Internal Modules List
-                var list_code = import_text_data(from: "List")
-                
-                let placeholders = [
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/", list.robot_modules_names),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/", list.tool_modules_names),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/", list.part_modules_names),
-                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/", list.changer_modules_names)
-                ]
-                
-                for (placeholder, names) in placeholders
-                {
-                    let formatted_names = names.map { "\($0.code_correct_format)_Module" }.joined(separator: ",\n        ")
-                    list_code = list_code.replacingOccurrences(of: placeholder, with: formatted_names, options: .literal, range: nil)
-                }
-                
-                try list_code.write(to: package_folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
-                
-                folder_url.stopAccessingSecurityScopedResource()
-                
-                DispatchQueue.main.async
-                {
-                    self.build_info = "Finished"
-                }
-                
-                let work_item = DispatchWorkItem
-                {
-                    DispatchQueue.main.async
-                    {
-                        self.on_building_modules = false
-                    }
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
-            }
-            catch
-            {
-                print(error.localizedDescription)
-                DispatchQueue.main.async
-                {
-                    self.on_building_modules = false
-                }
-            }
-        }
-    }
-    
-    // Build modules
-    private func build_modules_files(list: BuildModulesList, to folder_url: URL, as_internal: Bool = false)
+    private func build_modules_files(list: BuildModulesList, to folder_url: URL, option: ModuleExportOption)
     {
         // Store compilation kit for external modules build
-        if !as_internal
-        {
-            internal_files_store(["ListingToProject.command", "ProjectToProgram.command", "BuildModulePrograms.command"], to: folder_url)
-        }
+        internal_files_store(
+            [
+                "ListingToProject.command",
+                "ProjectToProgram.command",
+                "BuildModulePrograms.command"
+            ],
+            to: folder_url
+        )
         
         // Builds modules in separated files
-        let filtered_robot_modules = robot_modules.filter { list.robot_modules_names.contains($0.name) }
+        let filtered_robot_modules = robot_modules.filter { list.robot_module_names.contains($0.name) }
         for robot_module in filtered_robot_modules
         {
             if !compilation_cancelled
             {
-                build_module_file(module: robot_module, to: folder_url, as_internal: as_internal) // Create robot module package
+                build_external_module_file(module: robot_module, to: folder_url, option: option) // Create robot module package
                 #if os(macOS)
-                perform_external_compilation(module: robot_module, to: folder_url, type: external_export_type) // Compile programs
+                perform_external_compilation(module: robot_module, to: folder_url, option: option) // Compile programs
                 #endif
                 //self.build_progress += 1
             }
@@ -673,14 +372,14 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        let filtered_tool_modules = tool_modules.filter { list.tool_modules_names.contains($0.name) }
+        let filtered_tool_modules = tool_modules.filter { list.tool_module_names.contains($0.name) }
         for tool_module in filtered_tool_modules
         {
             if !compilation_cancelled
             {
-                build_module_file(module: tool_module, to: folder_url, as_internal: as_internal) // Create tool module package
+                build_external_module_file(module: tool_module, to: folder_url, option: option) // Create tool module package
                 #if os(macOS)
-                perform_external_compilation(module: tool_module, to: folder_url, type: external_export_type) // Compile programs
+                perform_external_compilation(module: tool_module, to: folder_url, option: option) // Compile programs
                 #endif
                 //self.build_progress += 1
             }
@@ -690,31 +389,28 @@ public class StandardTemplateConstruct: ObservableObject
             }
         }
         
-        /*let filtered_part_modules = part_modules.filter { list.part_modules_names.contains($0.name) }
+        let filtered_part_modules = part_modules.filter { list.part_module_names.contains($0.name) }
         for part_module in filtered_part_modules
         {
             if !compilation_cancelled
             {
-                build_module_file(module: part_module, to: folder_url, as_internal: as_internal) // Create part module package
-                #if os(macOS)
-                perform_external_compilation(module: part_module, to: folder_url, type: external_export_type) // Compile programs
-                #endif
+                build_external_module_file(module: part_module, to: folder_url, option: option) // Create part module package
                 //self.build_progress += 1
             }
             else
             {
                 break
             }
-        }*/
+        }
         
-        let filtered_changer_modules = changer_modules.filter { list.changer_modules_names.contains($0.name) }
+        let filtered_changer_modules = changer_modules.filter { list.changer_module_names.contains($0.name) }
         for changer_module in filtered_changer_modules
         {
             if !compilation_cancelled
             {
-                build_module_file(module: changer_module, to: folder_url, as_internal: as_internal) // Create changer module package
+                build_external_module_file(module: changer_module, to: folder_url, option: option) // Create changer module package
                 #if os(macOS)
-                perform_external_compilation(module: changer_module, to: folder_url, type: external_export_type) // Compile programs
+                perform_external_compilation(module: changer_module, to: folder_url, option: option) // Compile programs
                 #endif
                 //self.build_progress += 1
             }
@@ -725,17 +421,17 @@ public class StandardTemplateConstruct: ObservableObject
         }
     }
     
-    // MARK: Build module file
-    private func build_module_file(module: IndustrialModule, to folder_url: URL, as_internal: Bool = true)
+    public var entities_wrapper: FileWrapper?
+    
+    private func build_external_module_file(module: IndustrialModule, to folder_url: URL, option: ModuleExportOption)
     {
-        if !as_internal && (external_export_type == .build_from_projects || external_export_type == .projects_to_programs)
-        {
-            return // Skip modules files build for only compilation/conversion export type
-        }
+        #if os(macOS)
+        if option == .build_from_projects || option == .projects_to_programs { return } // Skip modules files build for only compilation/conversion export type
+        #endif
         
         do
         {
-            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.extension_name)")
+            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.file_extension_name)")
             
             // Remove existing file or directory if it already exists
             if FileManager.default.fileExists(atPath: module_path.path)
@@ -744,79 +440,21 @@ public class StandardTemplateConstruct: ObservableObject
             }
             
             // Now safely create the folder
-            let module_url = try make_folder("\(module.name).\(module.extension_name)", module_url: folder_url)
+            let module_url = try make_folder("\(module.name).\(module.file_extension_name)", module_url: folder_url)
             
             // Info file store
-            if as_internal
-            {
-                try make_module_code(url: module_url)
-            }
-            else
-            {
-                try make_info_file(url: module_url)
-            }
+            try make_info_file(url: module_url)
             
             // Code folder store
-            let code_url = try make_module_folder("Code", module_url: module_url, module_name: module.name, as_internal: as_internal)
+            try make_code_folder(url: module_url)
             
-            if as_internal
-            {
-                if module is RobotModule || module is ToolModule || module is ChangerModule
-                {
-                    try code_files_store_internal(code_items: module.code_items, to: code_url)
-                }
-            }
-            else
-            {
-                try code_files_store_external(code_items: module.code_items, to: code_url)
-            }
-            
-            // Resources folder store
-            try make_resources_folder(url: module_url)
+            // Assets folder store
+            try make_assets_folder(url: module_url)
         }
         catch
         {
-            print(error.localizedDescription)
+            //print(error.localizedDescription)
             return
-        }
-        
-        func make_module_code(url: URL) throws // For internal module
-        {
-            let code_item_url = url.appendingPathComponent("\(module.name)_Module.swift")
-            
-            var module_code = String()
-
-            switch module
-            {
-            case is RobotModule:
-                module_code = robot_module_code(module as? RobotModule ?? RobotModule())
-            case is ToolModule:
-                module_code = tool_module_code(module as? ToolModule ?? ToolModule())
-            case is PartModule:
-                module_code = part_module_code(module as? PartModule ?? PartModule())
-            case is ChangerModule:
-                module_code = changer_module_code(module as? ChangerModule ?? ChangerModule())
-            default:
-                break
-            }
-            
-            try module_code.write(to: code_item_url, atomically: true, encoding: .utf8)
-        }
-        
-        func make_resources_folder(url: URL) throws
-        {
-            guard !(module is ChangerModule) else { return } // Changer module has no visual resources...
-            
-            let resources_url = try make_module_folder("Resources.scnassets", module_url: url, module_name: module.name, as_internal: as_internal)
-            
-            if let resources_names = module.resources_names
-            {
-                for resource_name in resources_names
-                {
-                    let resource_url = resources_url.appendingPathComponent(resource_name)
-                    try resource_data(resource_name)?.write(to: resource_url)
-                }
-            }
         }
         
         func make_info_file(url: URL) throws // For external module
@@ -826,9 +464,83 @@ public class StandardTemplateConstruct: ObservableObject
             try info_data.write(to: info_url)
         }
         
-        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String, as_internal: Bool) throws -> URL
+        func make_code_folder(url: URL) throws
         {
-            let folder_url = module_url.appendingPathComponent(as_internal ? "\(module_name)_\(folder_name)" : folder_name)
+            guard module is RobotModule || module is ToolModule else { return } // Tool, changer and part module has no external code...
+            
+            //let code_url = try make_module_folder("Sources", module_url: url, module_name: module.name)
+            
+            switch module
+            {
+            case let module as RobotModule:
+                try code_files_store(code_items: ["Connector": module.connector_code], to: url)
+            case let module as ToolModule:
+                try code_files_store(code_items: ["Connector": module.connector_code], to: url)
+            default:
+                break
+            }
+        }
+        
+        func make_assets_folder(url: URL) throws
+        {
+            guard let entity_file_name =
+                (module as? RobotModule)?.entity_file_name ??
+                (module as? ToolModule)?.entity_file_name ??
+                (module as? PartModule)?.entity_file_name
+            else { return }
+            
+            guard let entity_file_item =
+                entity_items.first(where: { $0.name == entity_file_name })
+            else { return }
+            
+            guard let scene_files = entities_wrapper?.fileWrappers else { return }
+            
+            let destination_url = url.appendingPathComponent("Scene.usdz")
+            
+            if let source_url = entity_file_item.source_url
+            {
+                try FileManager.default.copyItem(at: source_url, to: destination_url) // External imported
+            }
+            else
+            {
+                let wrapper_key = entity_file_item.name.hasSuffix(".usdz") ? entity_file_item.name : entity_file_item.name + ".usdz"
+                
+                if let wrapper = scene_files[wrapper_key],
+                   let data = wrapper.regularFileContents
+                {
+                    try data.write(to: destination_url) // From STC package
+                }
+                else
+                {
+                    //print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
+                }
+            }
+            
+            /*let file_name_with_ext =
+                entity_file_item.name.hasSuffix(".usdz")
+                ? entity_file_item.name
+                : entity_file_item.name + ".usdz"
+            
+            let destination_url = url.appendingPathComponent(file_name_with_ext)
+            
+            if let source_url = entity_file_item.source_url
+            {
+                try FileManager.default.copyItem(at: source_url, to: destination_url) // External imorted
+            }
+            else if let wrapper = scene_files[file_name_with_ext],
+                    let data = wrapper.regularFileContents
+            {
+                try data.write(to: destination_url) // From STC package
+            }
+            else
+            {
+                //print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
+            }*/
+        }
+        
+        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String) throws -> URL
+        {
+            let folder_url = module_url.appendingPathComponent(folder_name)
             
             if FileManager.default.fileExists(atPath: folder_url.path)
             {
@@ -845,224 +557,18 @@ public class StandardTemplateConstruct: ObservableObject
             {
                 let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
                 try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
-                
-                //let updated_code_item = code_item.value.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-                //try updated_code_item.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
-        }
-        
-        // Store internal code items to lisitngs
-        func code_files_store_internal(code_items: [String: String], to code_url: URL) throws
-        {
-            var updated_code_items = module.code_items
-            
-            // Inject parameters in code items
-            if module is RobotModule || module is ToolModule
-            {
-                inject_controller_parameters(code: &updated_code_items["Controller"], module: module)
-                inject_connector_parameters(code: &updated_code_items["Connector"], module: module)
-            }
-            
-            updated_code_items = updated_code_items.reduce(into: [String: String]())
-            { result, entry in
-                result["\(module.name)_\(entry.key)"] = entry.value
-            }
-            
-            try code_files_store(code_items: updated_code_items, to: code_url)
-        }
-        
-        func inject_controller_parameters(code: inout String?, module: IndustrialModule) // Inject model controller parameters (nodes names) to internal code file
-        {
-            var nodes_names = String()
-            
-            if let robot_module = module as? RobotModule
-            {
-                nodes_names = robot_module.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
-            }
-            
-            if let tool_odule = module as? ToolModule
-            {
-                nodes_names = tool_odule.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
-            }
-            
-            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
-        }
-        
-        func inject_connector_parameters(code: inout String?, module: IndustrialModule) // Inject model connection parameters to internal code file
-        {
-            var connection_parameters = String()
-            
-            if let robot_module = module as? RobotModule
-            {
-                connection_parameters = robot_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
-            }
-            
-            if let tool_module = module as? ToolModule
-            {
-                connection_parameters = tool_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
-            }
-            
-            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
-        }
-        
-        // Store external code items for subsequent compilation
-        func code_files_store_external(code_items: [String: String], to code_url: URL) throws
-        {
-            try code_files_store(code_items: module.code_items, to: code_url)
-        }
-        
-        // Resources store
-        func resource_data(_ name: String) -> Data? // Store visual data
-        {
-            var data: Data? = nil
-            
-            let file_extension = (name as NSString).pathExtension.lowercased()
-            
-            if file_extension == "scn"
-            {
-                if let scene_index = scenes_files_names.firstIndex(of: name)
-                {
-                    data = try? NSKeyedArchiver.archivedData(withRootObject: scenes[scene_index], requiringSecureCoding: false)
-                }
-            }
-            else if ["png", "jpg", "jpeg", "gif", "bmp"].contains(file_extension)
-            {
-                if let image_index = images_files_names.firstIndex(of: name)
-                {
-                    guard let image_data = images[image_index].pngData() else
-                    {
-                        return nil
-                    }
-                    data = image_data
-                }
-            }
-            else
-            {
-                print("Uncompatible file format – \(file_extension)")
-            }
-
-            return data
         }
     }
     
-    // MARK: - Module code (for internal)
-    private func robot_module_code(_ module: RobotModule) -> String
-    {
-        var code = import_text_data(from: "Robot Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        // Origin Shift
-        code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: 0, y: 0, z: 0)@*/(x: 0, y: 0, z: 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
-        
-        // Components
-        if !(module.code_items["Controller"]?.isEmpty ?? false)
-        {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotModelController()@*/RobotModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
-        }
-        
-        if !(module.code_items["Connector"]?.isEmpty ?? false)
-        {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=RobotConnector()@*/RobotConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-        }
-        
-        // Main Nodes
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-        
-        // Connected nodes names
-        let nodes_names = "[" + module.nodes_names.map { "\"\($0)\"" }.joined(separator: ", ") + "]"
-        code = code.replacingOccurrences(of: "<#nodes_names#>", with: nodes_names)
-        
-        return code
-    }
-    
-    private func tool_module_code(_ module: ToolModule) -> String
-    {
-        var code = import_text_data(from: "Tool Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        // Components
-        if !(module.code_items["Controller"]?.isEmpty ?? false)
-        {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolModelController()@*/ToolModelController()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Controller()")
-        }
-        
-        if !(module.code_items["Connector"]?.isEmpty ?? false)
-        {
-            code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=ToolConnector()@*/ToolConnector()/*@END_MENU_TOKEN@*/", with: "\(module.name.code_correct_format)_Connector()")
-        }
-        
-        // Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-        
-        // Operation codes
-        code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
-        
-        return code
-        
-        func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
-        {
-            return """
-            \(data.map
-            {
-                ".init(value: \($0.value), name: \"\($0.name)\", symbol: \"\($0.symbol)\", info: \"\($0.info)\")"
-            }
-            .joined(separator: ",\n        "))
-            """
-        }
-    }
-    
-    private func part_module_code(_ module: PartModule) -> String
-    {
-        var code = import_text_data(from: "Part Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        // Main scene
-        code = code.replacingOccurrences(of: "<#main_scene_name#>", with: module.scene_code_name)
-        
-        return code
-    }
-    
-    private func changer_module_code(_ module: ChangerModule) -> String
-    {
-        var code = import_text_data(from: "Changer Module")
-        
-        // Naming
-        code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
-        code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
-        
-        return code
-    }
-    
-    private func make_folder(_ folder_name: String, module_url: URL) throws -> URL
-    {
-        let folder_url = module_url.appendingPathComponent(folder_name)
-        
-        if FileManager.default.fileExists(atPath: folder_url.path)
-        {
-            try FileManager.default.removeItem(at: folder_url)
-        }
-        try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
-        
-        return folder_url
-    }
-    
-    // MARK: Compilation handling (for external program components)
+    // MARK: Compilation handling
     private var compilation_cancelled = false
     #if os(macOS)
     private var compilation_process: Process? = nil
     
-    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, type: ExternalExportType)
+    private func perform_external_compilation(module: IndustrialModule, to folder_url: URL, option: ModuleExportOption)
     {
-        if type == .no_build { return }
+        if option == .no_build { return }
         
         var command_line = "cd '\(folder_url.path)' && ./"
         var module_package_name = module.name
@@ -1083,7 +589,7 @@ public class StandardTemplateConstruct: ObservableObject
         
         module_package_name = module_package_name.replacingOccurrences(of: " ", with: "\\ ")
         
-        switch type
+        switch option
         {
         case .programs_only:
             command_line += "BuildModulePrograms.command --programs "
@@ -1095,7 +601,7 @@ public class StandardTemplateConstruct: ObservableObject
             command_line += "BuildModulePrograms.command "
         case .projects_to_programs:
             command_line += "BuildModulePrograms.command --clear "
-        case .no_build:
+        default:
             return
         }
         
@@ -1171,31 +677,474 @@ public class StandardTemplateConstruct: ObservableObject
         compilation_cancelled = true
         #endif
     }
+    
+    // MARK: - Build Industrial App
+    // Builds application project to compile with internal modules.
+    public func make_industrial_project(
+        name: String,
+        list: BuildModulesList,
+        to folder_url: URL,
+        option: ProjectExportOption
+    )
+    {
+        remove_file(at: folder_url.appendingPathComponent(name)) // Remove empty project target file
+        
+        switch option
+        {
+        case .swift_playground:
+            make_files(
+                by: swift_playground_pattern(
+                    name: name,
+                    modules_func:
+                        { url in
+                            self.make_internal_modules(
+                                list: self.package_info.build_modules_list,
+                                to: url
+                            )
+                        }
+                ),
+                to: folder_url
+            )
+        case .xcode_project:
+            make_files(
+                by: xcode_project_pattern(
+                    name: name,
+                    modules_func:
+                        { url in
+                            self.make_internal_modules(
+                                list: self.package_info.build_modules_list,
+                                to: url
+                            )
+                        }
+                ),
+                to: folder_url
+            )
+        }
+    }
+    
+    //MARK: Internal Modules Packaging
+    public func make_internal_modules(list: BuildModulesList, to folder_url: URL)
+    {
+        guard !list.is_empty else { return }
+        
+        DispatchQueue.global(qos: .background).async
+        {
+            DispatchQueue.main.async
+            {
+                self.set_build_info(list: list, as_internal: true)
+                self.on_building_modules = true
+            }
+            
+            do
+            {
+                // Internal modules folder
+                guard folder_url.startAccessingSecurityScopedResource() else
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.on_building_modules = false
+                    }
+                    return
+                }
+                
+                let package_folder_url = try self.make_folder("Modules", module_url: folder_url)
+                
+                self.make_internal_modules_files(list: list, to: package_folder_url)
+                
+                // Make Internal Modules List
+                var list_code = import_text_data(from: "List")
+                
+                let placeholders = [
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Modules@*//*@END_MENU_TOKEN@*/", list.robot_module_names, "_RobotModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Modules@*//*@END_MENU_TOKEN@*/", list.tool_module_names, "_ToolModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Modules@*//*@END_MENU_TOKEN@*/", list.part_module_names, "_PartModule"),
+                    ("/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Modules@*//*@END_MENU_TOKEN@*/", list.changer_module_names, "_ChangerModule")
+                ]
+                
+                for (placeholder, names, suffix) in placeholders
+                {
+                    let formatted_names = names
+                        .map { "\($0.code_correct_format)\(suffix)" }
+                        .joined(separator: ",\n        ")
+                    
+                    list_code = list_code.replacingOccurrences(
+                        of: placeholder,
+                        with: formatted_names,
+                        options: .literal,
+                        range: nil
+                    )
+                }
+                
+                try list_code.write(to: package_folder_url.appendingPathComponent("List.swift"), atomically: true, encoding: .utf8)
+                
+                folder_url.stopAccessingSecurityScopedResource()
+                
+                DispatchQueue.main.async
+                {
+                    self.build_info = "Finished"
+                }
+                
+                let work_item = DispatchWorkItem
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.on_building_modules = false
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
+            }
+            catch
+            {
+                //print(error.localizedDescription)
+                DispatchQueue.main.async
+                {
+                    self.on_building_modules = false
+                }
+            }
+        }
+    }
+    
+    // Build modules
+    private func make_internal_modules_files(list: BuildModulesList, to folder_url: URL)
+    {
+        // Builds modules in separated files
+        let filtered_robot_modules = robot_modules.filter { list.robot_module_names.contains($0.name) }
+        for robot_module in filtered_robot_modules
+        {
+            if !compilation_cancelled
+            {
+                make_internal_module_file(module: robot_module, to: folder_url) // Create robot module package
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_tool_modules = tool_modules.filter { list.tool_module_names.contains($0.name) }
+        for tool_module in filtered_tool_modules
+        {
+            if !compilation_cancelled
+            {
+                make_internal_module_file(module: tool_module, to: folder_url) // Create tool module package
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_part_modules = part_modules.filter { list.part_module_names.contains($0.name) }
+        for part_module in filtered_part_modules
+        {
+            if !compilation_cancelled
+            {
+                make_internal_module_file(module: part_module, to: folder_url) // Create part module package
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+        
+        let filtered_changer_modules = changer_modules.filter { list.changer_module_names.contains($0.name) }
+        for changer_module in filtered_changer_modules
+        {
+            if !compilation_cancelled
+            {
+                make_internal_module_file(module: changer_module, to: folder_url) // Create changer module package
+                //self.build_progress += 1
+            }
+            else
+            {
+                break
+            }
+        }
+    }
+    
+    // MARK: Build module file
+    private func make_internal_module_file(module: IndustrialModule, to folder_url: URL)
+    {
+        do
+        {
+            let module_path = folder_url.appendingPathComponent("\(module.name).\(module.file_extension_name)")
+            
+            // Remove existing file or directory if it already exists
+            if FileManager.default.fileExists(atPath: module_path.path)
+            {
+                try FileManager.default.removeItem(at: module_path)
+            }
+            
+            // Now safely create the folder
+            let module_url = try make_folder("\(module.name).\(module.file_extension_name)", module_url: folder_url)
+            
+            // Info file store
+            try make_info_file(url: module_url)
+            
+            // Assets folder store
+            try make_assets_folder(url: module_url)
+        }
+        catch
+        {
+            //print(error.localizedDescription)
+            return
+        }
+        
+        func make_info_file(url: URL) throws
+        {
+            switch module
+            {
+            case let module as RobotModule:
+                try make_module_listing(by: module, to: url)
+            case let module as ToolModule:
+                try make_module_listing(by: module, to: url)
+            case let module as PartModule:
+                try make_module_listing(by: module, to: url)
+            case let module as ChangerModule:
+                try make_module_listing(by: module, to: url)
+            default:
+                break
+            }
+            
+            func make_module_listing(by module: RobotModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_RobotModule.swift")
+                
+                var code = import_text_data(from: "RobotModuleDeclaration")
+                
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Default Origin Position
+                code = code.replacingOccurrences(
+                    of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float, r: Float, p: Float, w: Float)@*/(0, 0, 0, 0, 0, 0)/*@END_MENU_TOKEN@*/",
+                    with: "(x: \(module.default_origin_position.x), y: \(module.default_origin_position.y), z: \(module.default_origin_position.z), r: \(module.default_origin_position.r), p: \(module.default_origin_position.p), w: \(module.default_origin_position.w))"
+                )
+                
+                // Origin Shift
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=(x: Float, y: Float, z: Float)@*/(0, 0, 0)/*@END_MENU_TOKEN@*/", with: "(x: \(module.origin_shift.x), y: \(module.origin_shift.y), z: \(module.origin_shift.z))")
+                
+                // End Entity Name
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=String@*/String()/*@END_MENU_TOKEN@*/", with: "\(module.end_entity_name.isEmpty ? "String()" : module.end_entity_name)")
+                
+                // Connected nodes names
+                let nodes_names = module.entity_names.map { "        \"\($0)\"" }.joined(separator: ",\n")
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
+                
+                // Set model controller code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=model_controller_code@*//*@END_MENU_TOKEN@*/", with: module.model_controller_code)
+                
+                // Set connector code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connector_code@*//*@END_MENU_TOKEN@*/", with: module.connector_code)
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            func make_module_listing(by module: ToolModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_ToolModule.swift")
+                
+                var code = import_text_data(from: "ToolModuleDeclaration")
+                
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Operation codes
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=operation_codes@*//*@END_MENU_TOKEN@*/", with: opcode_data_to_code(module.codes))
+                func opcode_data_to_code(_ data: [OperationCodeInfo]) -> String
+                {
+                    return """
+                    \(data.map
+                    {
+                        ".init(value: \($0.value), name: \"\($0.name)\", symbol_name: \"\($0.symbol_name)\", description: \"\($0.description)\")"
+                    }
+                    .joined(separator: ",\n        "))
+                    """
+                }
+                
+                // Connected nodes names
+                let nodes_names = module.entity_names.map { "        \"\($0)\"" }.joined(separator: ",\n")
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=entity_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
+                
+                // Set model controller code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=model_controller_code@*//*@END_MENU_TOKEN@*/", with: module.model_controller_code)
+                
+                // Set connector code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connector_code@*//*@END_MENU_TOKEN@*/", with: module.connector_code)
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            func make_module_listing(by module: PartModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_PartModule.swift")
+                
+                var code = import_text_data(from: "InternalPartModuleDeclaration")
+                
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+            
+            func make_module_listing(by module: ChangerModule, to: URL) throws
+            {
+                let code_item_url = url.appendingPathComponent("\(module.name)_ChangerModule.swift")
+                
+                var code = import_text_data(from: "ChangerModuleDeclaration")
+                
+                // Set module name
+                code = code.replacingOccurrences(of: "<#Name#>", with: module.name.code_correct_format)
+                code = code.replacingOccurrences(of: "<#ModuleName#>", with: module.name)
+                
+                // Set function code
+                code = code.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=changer_function_code@*//*@END_MENU_TOKEN@*/", with: module.changer_function_code)
+                
+                try code.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+        }
+        
+        func make_assets_folder(url: URL) throws
+        {
+            guard let entity_file_name =
+                (module as? RobotModule)?.entity_file_name ??
+                (module as? ToolModule)?.entity_file_name ??
+                (module as? PartModule)?.entity_file_name
+            else { return }
+            
+            guard let entity_file_item =
+                entity_items.first(where: { $0.name == entity_file_name })
+            else { return }
+            
+            guard let scene_files = entities_wrapper?.fileWrappers else { return }
+            
+            let destination_url = url.appendingPathComponent("\(module.name).\(module.file_extension_name).Scene.usdz")
+            
+            if let source_url = entity_file_item.source_url
+            {
+                try FileManager.default.copyItem(at: source_url, to: destination_url) // External imported
+            }
+            else
+            {
+                let wrapper_key = entity_file_item.name.hasSuffix(".usdz") ? entity_file_item.name : entity_file_item.name + ".usdz"
+                
+                if let wrapper = scene_files[wrapper_key],
+                   let data = wrapper.regularFileContents
+                {
+                    try data.write(to: destination_url) // From STC package
+                }
+                else
+                {
+                    //print("Warning: entity \(entity_file_item.name) not found in Assets and has no source_url")
+                }
+            }
+        }
+        
+        func make_module_folder(_ folder_name: String, module_url: URL, module_name: String) throws -> URL
+        {
+            let folder_url = module_url.appendingPathComponent("\(module_name)_\(folder_name)")
+            
+            if FileManager.default.fileExists(atPath: folder_url.path)
+            {
+                try FileManager.default.removeItem(at: folder_url)
+            }
+            try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
+            
+            return folder_url
+        }
+        
+        func code_files_store(code_items: [String: String], to code_url: URL) throws // Store code items to listings
+        {
+            for code_item in code_items // Store external files without parameters inject
+            {
+                let code_item_url = code_url.appendingPathComponent("\(code_item.key).swift")
+                try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
+            }
+        }
+        
+        // MARK: OLD
+        func inject_controller_parameters(code: inout String?, module: IndustrialModule) // Inject model controller parameters (nodes names) to internal code file
+        {
+            var nodes_names = String()
+            
+            /*if let robot_module = module as? RobotModule
+            {
+                nodes_names = robot_module.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
+            }
+            
+            if let tool_odule = module as? ToolModule
+            {
+                nodes_names = tool_odule.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
+            }*/
+            
+            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
+        }
+        
+        func inject_connector_parameters(code: inout String?, module: IndustrialModule) // Inject model connection parameters to internal code file
+        {
+            var connection_parameters = String()
+            
+            if let robot_module = module as? RobotModule
+            {
+                connection_parameters = robot_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
+            }
+            
+            if let tool_module = module as? ToolModule
+            {
+                connection_parameters = tool_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
+            }
+            
+            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
+        }
+        
+        // Module code (for internal)
+        
+        
+        // MARK: OLD
+    }
+    
+    private func make_folder(_ folder_name: String, module_url: URL) throws -> URL
+    {
+        let folder_url = module_url.appendingPathComponent(folder_name)
+        
+        if FileManager.default.fileExists(atPath: folder_url.path)
+        {
+            try FileManager.default.removeItem(at: folder_url)
+        }
+        try FileManager.default.createDirectory(at: folder_url, withIntermediateDirectories: true, attributes: nil)
+        
+        return folder_url
+    }
 }
 
 // MARK: - Enums
-public enum InternalExportType: String, Equatable, CaseIterable
+public enum ProjectExportOption: String, Equatable, CaseIterable
 {
-    case files_only = "Files Only"
-    //case swift_playground = "Swift Playground"
-    //case xcode_project = "Xcode Project"
+    case swift_playground = "Swift Playground"
+    case xcode_project = "Xcode Project"
 }
 
-public enum ExternalExportType: String, Equatable, CaseIterable
+public enum ModuleExportOption: String, Equatable, CaseIterable
 {
-    case projects_and_programs = "Build To Projects and Programs"
-    case programs_only = "Build To Programs Only"
-    case projects_only = "Build To Projects Only"
-    case build_from_projects = "Build Existing Projects To Programs"
+    #if os(macOS)
+    case projects_and_programs = "Build to Projects and Programs"
+    case programs_only = "Build to Programs Only"
+    case projects_only = "Build to Projects Only"
+    case build_from_projects = "Build Existing Projects to Programs"
     case projects_to_programs = "Turn Existing Projects to Programs"
+    
+    case divider = "_"
+    #endif
     case no_build = "No Build (Listings Only)"
-}
-
-public enum PrepareForDevType: String, Equatable, CaseIterable
-{
-    case blank_project = "Blank Project"
-    case from_listing = "From selected listing"
-    case mbk_only = "Module Building Kit only"
+    
+    case internal_modules = "Make Internal Modules for Project"
+    case mbk_only = "Module Building Kit Only"
 }
 
 public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
@@ -1203,7 +1152,7 @@ public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
     case blank = "Blank"
     case clipboard = "Clipboard"
     
-    var image_name: String
+    var symbol_name: String
     {
         switch self
         {
@@ -1214,25 +1163,6 @@ public enum MiscCodeGenerationFunction: String, Equatable, CaseIterable
         }
     }
 }
-
-// MARK: - Typealiases
-#if os(macOS)
-typealias UIImage = NSImage
-
-// MARK: - Extensions
-extension UIImage
-{
-    func pngData() -> Data?
-    {
-        if let tiffRepresentation = self.tiffRepresentation, let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
-        {
-            return bitmapImage.representation(using: .png, properties: [:])
-        }
-
-        return nil
-    }
-}
-#endif
 
 extension ConnectionParameter
 {

@@ -20,7 +20,7 @@ struct ContentView: View
     
     @ViewBuilder var body: some View
     {
-        Sidebar(document: $document)
+        Sidebar(document: $document, sidebar_selection: $sidebar_selection)
             .environmentObject(base_stc)
         #if os(iOS) || os(visionOS)
             .navigationBarHidden(true)
@@ -28,7 +28,6 @@ struct ContentView: View
             .onAppear
             {
                 base_stc.document_view(document, document_url)
-                base_stc.images_files_names = document.images_files_names
             }
             .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
             .environmentObject(document_handler)
@@ -38,6 +37,7 @@ struct ContentView: View
 struct Sidebar: View
 {
     @Binding var document: STCDocument
+    @Binding var sidebar_selection: navigation_item?
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     
@@ -54,7 +54,7 @@ struct Sidebar: View
         {
             NavigationSplitView
             {
-                List
+                List(selection: $sidebar_selection)
                 {
                     ForEach(navigation_item.allCases)
                     { selection in
@@ -67,7 +67,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ComponentsView().modifier(WindowFramer()))
+                                NavigationLink(value: selection)
                                 {
                                     if !components_section_expanded
                                     {
@@ -101,7 +101,7 @@ struct Sidebar: View
                             }
                             label:
                             {
-                                NavigationLink(destination: ModulesView().modifier(WindowFramer()))
+                                NavigationLink(value: selection)
                                 {
                                     if !objects_section_expanded
                                     {
@@ -128,19 +128,7 @@ struct Sidebar: View
                         }
                         else
                         {
-                            NavigationLink
-                            {
-                                switch selection
-                                {
-                                case .PackageView:
-                                    PackageView(document: $document)
-                                        .modifier(WindowFramer())
-                                default:
-                                    EmptyView()
-                                        .modifier(WindowFramer())
-                                }
-                            }
-                            label:
+                            NavigationLink(value: selection)
                             {
                                 Label(selection.localizedName, systemImage: selection.image_name)
                             }
@@ -150,18 +138,6 @@ struct Sidebar: View
                 #if !os(macOS)
                 .navigationTitle("STC")
                 .navigationBarTitleDisplayMode(.inline)
-                /*.sheet(isPresented: $app_state.settings_view_presented)
-                {
-                    SettingsView(setting_view_presented: $app_state.settings_view_presented)
-                        .environmentObject(app_state)
-                        .onDisappear
-                    {
-                        app_state.settings_view_presented = false
-                    }
-                    #if os(visionOS)
-                    .frame(width: 512, height: 512)
-                    #endif
-                }*/
                 #else
                 .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
                 #endif
@@ -169,22 +145,35 @@ struct Sidebar: View
             }
             detail:
             {
-                Text("Select an item")
-                    .font(.largeTitle)
-                    .modifier(WindowFramer())
+                switch sidebar_selection
+                {
+                case .PackageView:
+                    PackageView(document: $document)
+                        .modifier(WindowFramer())
+                case .ComponentsView:
+                    ComponentsView()
+                        .modifier(WindowFramer())
+                case .ModulesView:
+                    ModulesView()
+                        .modifier(WindowFramer())
+                default:
+                    Text("Select an item")
+                        .font(.largeTitle)
+                        .modifier(WindowFramer())
                 #if os(macOS)
                     .foregroundColor(Color(NSColor.quaternaryLabelColor))
                 #else
                     .foregroundColor(Color(UIColor.quaternaryLabel))
                 #endif
                     .padding(16)
+                }
             }
         }
     }
     
     private var components_count: Int
     {
-        base_stc.scenes.count + base_stc.images.count + base_stc.listings.count + base_stc.kinematic_groups.count
+        base_stc.entity_items.count + base_stc.image_items.count + base_stc.listing_items.count
     }
     
     private var modules_count: Int
@@ -199,28 +188,22 @@ struct ComponentsSidebarGroup: View
     
     var body: some View
     {
-        NavigationLink(destination: ScenesListView().modifier(WindowFramer()))
+        NavigationLink(destination: EntityListView().modifier(WindowFramer()))
         {
-            Label("Scenes", systemImage: "cube")
-                .badge(base_stc.scenes.count)
+            Label("Entities", systemImage: "cube")
+                .badge(base_stc.entity_items.count)
         }
         
-        NavigationLink(destination: ImagesListView().modifier(WindowFramer()))
+        NavigationLink(destination: ImageListView().modifier(WindowFramer()))
         {
             Label("Images", systemImage: "photo")
-                .badge(base_stc.images.count)
+                .badge(base_stc.image_items.count)
         }
         
-        NavigationLink(destination: ListingsListView().modifier(WindowFramer()))
+        NavigationLink(destination: ListingListView().modifier(WindowFramer()))
         {
             Label("Listings", systemImage: "scroll")
-                .badge(base_stc.listings.count)
-        }
-        
-        NavigationLink(destination: KinematicsListView().modifier(WindowFramer()))
-        {
-            Label("Kinematics", systemImage: "point.3.connected.trianglepath.dotted")
-                .badge(base_stc.kinematic_groups.count)
+                .badge(base_stc.listing_items.count)
         }
     }
 }
@@ -284,6 +267,11 @@ enum navigation_item: Int, Hashable, CaseIterable, Identifiable
             "puzzlepiece.extension"
         }
     }
+}
+
+func numeral_endings(_ count: Int, word: String) -> String
+{
+    count == 1 ? "\(count) \(word)" : "\(count) \(word)s"
 }
 
 #Preview

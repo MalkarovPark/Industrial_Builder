@@ -56,7 +56,9 @@ PARENT_DIR=$(dirname "$PACKAGE_DIR")
 swift build --package-path "$PACKAGE_DIR" --configuration release
 
 # Check if the executable exists
-EXECUTABLE_PATH="$PACKAGE_DIR/.build/release/$PACKAGE_NAME_BASE"
+EXECUTABLE_NAME=$(basename "$PACKAGE_NAME_BASE")
+EXECUTABLE_PATH="$PACKAGE_DIR/.build/release/$EXECUTABLE_NAME"
+
 if [ ! -f "$EXECUTABLE_PATH" ]; then
     echo "Error: Build failed. Executable not found at '$EXECUTABLE_PATH'."
     exit 2

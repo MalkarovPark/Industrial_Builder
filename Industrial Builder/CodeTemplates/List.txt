@@ -5,17 +5,17 @@
 import Foundation
 import IndustrialKit
 
-public var internal_modules: (robot: [RobotModule], tool: [ToolModule], part: [PartModule], changer: [ChangerModule]) = (
+@MainActor public var internal_modules: (robot: [RobotModule], tool: [ToolModule], part: [PartModule], changer: [ChangerModule]) = (
     [
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Module@*//*@END_MENU_TOKEN@*/
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Robot Modules@*//*@END_MENU_TOKEN@*/
     ],
     [
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Module@*//*@END_MENU_TOKEN@*/
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Tool Modules@*//*@END_MENU_TOKEN@*/
     ],
     [
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Module@*//*@END_MENU_TOKEN@*/
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Part Modules@*//*@END_MENU_TOKEN@*/
     ],
     [
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Module@*//*@END_MENU_TOKEN@*/
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Changer Modules@*//*@END_MENU_TOKEN@*/
     ]
 )

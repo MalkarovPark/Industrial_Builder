@@ -1,0 +1,58 @@
+//
+// Tool Connector
+//
+
+import Foundation
+import IndustrialKit
+
+nonisolated class <#Name#>_Connector: ToolConnector, @unchecked Sendable
+{
+    // MARK: - Connection
+    override var default_parameters: [ConnectionParameter]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [ConnectionParameter]()@*/return [ConnectionParameter]()/*@END_MENU_TOKEN@*/
+    }
+    
+    override func perform_connection() async -> Bool
+    {
+        sleep(1)
+        
+        connection_output_string = "Connected"
+        //connection_error = NSError(domain: "Connection Failed", code: 0, userInfo: nil)
+        
+        return true //false
+    }
+    
+    override func perform_disconnection()
+    {
+        
+    }
+    
+    // MARK: - Performing
+    private var performing_task: Task<Void, Never>?
+    private var current_performing_state: PerformingState = .none
+    
+    private var current_pointer_position = EntityPositionData()
+    
+    open override func start_process(code: Int)
+    {
+        performing_task = Task
+        {
+            current_performing_state = .processing
+            
+            sleep(1)
+            
+            current_performing_state = .completed
+        }
+    }
+    
+    open override func reset_device()
+    {
+        performing_task?.cancel()
+    }
+    
+    open override var current_device_state: ToolState?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return ToolState()@*/return ToolState()/*@END_MENU_TOKEN@*/
+    }
+}

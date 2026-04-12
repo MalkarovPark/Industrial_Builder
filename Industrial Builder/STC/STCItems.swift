@@ -1,0 +1,115 @@
+//
+//  STCItems.swift
+//  Industrial Builder
+//
+//  Created by Artem on 27.02.2026.
+//
+
+import Foundation
+import RealityKit
+#if !os(macOS)
+import UIKit
+#endif
+
+import IndustrialKit
+
+// MARK: - Scene item wrapper
+public class EntityItem: Identifiable, Equatable, ObservableObject
+{
+    public let id: UUID = UUID()
+    
+    public static func == (lhs: EntityItem, rhs: EntityItem) -> Bool
+    {
+        lhs.id == rhs.id
+    }
+    
+    public var name: String
+    public var entity: Entity
+    
+    public var source_url: URL?
+    
+    public init(
+        name: String,
+        entity: Entity,
+        
+        source_url: URL? = nil
+    )
+    {
+        self.name = name
+        self.entity = entity.clone(recursive: true)
+        
+        self.source_url = source_url
+        
+        //import_entity(self.entity)
+    }
+    
+    public func import_entity(_ model_entity: Entity?)
+    {
+        guard let model_entity = model_entity else { return }
+        
+        model_entity.generateCollisionShapes(recursive: true)
+        /*model_entity.visit
+        { entity in
+            entity.components.set(entity_tag)
+        }*/
+        
+        //model_entity.components.set(InputTargetComponent())
+        
+        /*self.model_entity = model_entity
+        self.entity.addChild(model_entity)*/
+    }
+}
+
+// MARK: - Image item wrapper
+public class ImageItem: Identifiable, Equatable, ObservableObject
+{
+    public let id: UUID = UUID()
+    
+    public static func == (lhs: ImageItem, rhs: ImageItem) -> Bool
+    {
+        lhs.id == rhs.id
+    }
+    
+    public var name: String
+    public var image: UIImage
+    
+    //public var source_url: URL?
+    
+    public init(
+        name: String,
+        image: UIImage,
+        //source_url: URL? = nil
+    )
+    {
+        self.name = name
+        self.image = image
+        //self.source_url = source_url
+    }
+}
+
+// MARK: - Listing item wrapper
+public class ListingItem: Identifiable, Equatable, ObservableObject
+{
+    public let id: UUID = UUID()
+    
+    public static func == (lhs: ListingItem, rhs: ListingItem) -> Bool
+    {
+        lhs.id == rhs.id
+    }
+    
+    public var name: String
+    public var text: String
+    
+    //public var source_url: URL?
+    
+    public init(
+        name: String,
+        text: String,
+        //source_url: URL? = nil
+    )
+    {
+        self.name = name
+        self.text = text
+        //self.source_url = source_url
+    }
+}

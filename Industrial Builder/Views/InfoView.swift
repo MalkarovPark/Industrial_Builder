@@ -6,259 +6,61 @@
 //
 
 import SwiftUI
+
 import IndustrialKit
+import IndustrialKitUI
 
 struct InfoView: View
 {
     @Binding var document: STCDocument
     
-    @EnvironmentObject var base_stc: StandardTemplateConstruct
+    @EnvironmentObject var stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @State private var gallery: [Image] = []
-    
-    var body: some View
-    {
-        #if os(iOS)
-        Divider()
-        #endif
-        
-        HStack(spacing: 0)
-        {
-            TextEditor(text: $base_stc.package_info.description)
-                .textEditorStyle(.plain)
-                .font(.title3)
-                .padding()
-                .frame(maxHeight: .infinity)
-                .onChange(of: base_stc.package_info.description)
-            { _, new_value in
-                document.package_info.description = new_value
-                document_handler.document_update_info()
-            }
-            .frame(maxWidth: .infinity)
-            
-            #if !os(visionOS)
-            Divider()
-            #endif
-            
-            InfoGalleryView(document: $document)
-        }
-        .ignoresSafeArea(.container, edges: .bottom)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        #if !os(macOS)
-        .toolbarBackground(.bar, for: .navigationBar)
-        #endif
-    }
-}
-
-struct InfoGalleryView: View
-{
-    @EnvironmentObject var document_handler: DocumentUpdateHandler
-    
-    @Binding var document: STCDocument
-    
-    @State private var is_targeted = false
-    @State private var load_panel_presented = false
-    
-    @State private var update_toggle = false
+    #if os(macOS)
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 24)]
+    #else
+    private let columns: [GridItem] = [.init(.adaptive(minimum: 320, maximum: .infinity), spacing: 24)]
+    #endif
     
     var body: some View
     {
         ScrollView(.vertical)
         {
-            VStack(spacing: 0)
+            LazyVGrid(columns: columns, spacing: 24)
             {
-                ForEach(0..<document.package_info.gallery.count, id: \.self)
-                { index in
-                    SimpleImageCard(image: document.package_info.gallery[index])
-                    { is_presented in
-                        SimpleImageView(image: document.package_info.gallery[index])
-                            .frame(maxWidth: 320)
-                    }
-                    .contextMenu
-                    {
-                        Button(role: .destructive)
-                        {
-                            delete_image(index: index)
-                        }
-                        label:
-                        {
-                            Label("Delete", systemImage: "trash")
-                        }
-                    }
-                    .transition(.opacity)
-                }
-            }
-            .animation(.easeInOut, value: document.package_info.gallery)
-            .modifier(DoubleModifier(update_toggle: $update_toggle))
-        }
-        .frame(width: 192)
-        .overlay(alignment: .bottom)
-        {
-            #if !os(visionOS)
-            GlassEffectContainer
-            {
-                HStack(spacing: 0)
-                {
-                    Button(action: {
-                        document.package_info.clear_gallery()
-                    })
-                    {
-                        Image(systemName: "trash")
-                            .imageScale(.large)
-                        #if os(macOS)
-                            .frame(width: 16, height: 16)
-                        #else
-                            .frame(width: 24, height: 24)
-                        #endif
-                            .padding(4)
-                    }
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.plain)
-                    .padding(8)
-                    
-                    Button(action: { load_panel_presented.toggle() })
-                    {
-                        Image(systemName: "square.and.arrow.down")
-                            .imageScale(.large)
-                        #if os(macOS)
-                            .frame(width: 16, height: 16)
-                        #else
-                            .frame(width: 24, height: 24)
-                        #endif
-                            .padding(4)
-                    }
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.plain)
-                    .padding(8)
-                    .fileImporter(isPresented: $load_panel_presented, allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
-                }
-                .glassEffect(.regular.interactive())
-                .padding()
-            }
-            #else
-            HStack(spacing: 0)
-            {
-                Button(action: {
-                    document.package_info.clear_gallery()
-                })
-                {
-                    Image(systemName: "trash")
-                        .imageScale(.large)
-                        .frame(width: 24, height: 24)
-                        .padding(4)
-                }
-                .buttonBorderShape(.circle)
-                .buttonStyle(.plain)
-                .padding(8)
+                DescriptionTile(stc: stc, on_update: { document_handler.update_info() })
+                    .frame(height: 224)
                 
-                Button(action: { load_panel_presented.toggle() })
-                {
-                    Image(systemName: "square.and.arrow.down")
-                        .imageScale(.large)
-                        .frame(width: 24, height: 24)
-                        .padding(4)
-                }
-                .buttonBorderShape(.circle)
-                .buttonStyle(.plain)
-                .padding(8)
-                .fileImporter(isPresented: $load_panel_presented, allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: import_images)
-            }
-            .glassBackgroundEffect()
-            .padding()
-            #endif
-        }
-        #if os(visionOS)
-        .background(.thinMaterial)
-        #endif
-        .overlay
-        {
-            if is_targeted
-            {
-                VStack
-                {
-                    Text("Drop images here")
-                        .foregroundColor(.secondary)
-                        .padding()
-                }
-                .background(.thinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
-            }
-        }
-        .onDrop(of: [.image], isTargeted: $is_targeted)
-        { providers in
-            perform_drop(providers: providers)
-        }
-    }
-    
-    func perform_drop(providers: [NSItemProvider]) -> Bool
-    {
-        for provider in providers
-        {
-            DispatchQueue.main.async
-            {
-                provider.loadItem(forTypeIdentifier: "public.image", options: nil)
-                { (item, error) in
-                    if let url = item as? URL
-                    {
-                        if let image_data = try? Data(contentsOf: url)
-                        {
-                            guard let image = UIImage(data: image_data)
-                            else
-                            {
-                                return
-                            }
-                            
-                            document.package_info.gallery.append(image)
-                            document_handler.document_update_info()
-                        }
-                    }
-                }
-            }
-        }
-        return true
-    }
-    
-    func import_images(_ res: Result<[URL], Error>)
-    {
-        document.package_info.clear_gallery()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
-        {
-            do
-            {
-                let urls = try res.get()
+                ModulesTile(stc: stc, on_update: { document_handler.update_info() })
+                    .frame(height: 224)
                 
-                for url in urls
-                {
-                    guard url.startAccessingSecurityScopedResource() else { return }
-                    if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData)
-                    {
-                        document.package_info.gallery.append(image)
-                        document_handler.document_update_info()
-                    }
-                    url.stopAccessingSecurityScopedResource()
-                }
+                ExportTile(stc: stc)
+                    .frame(height: 224)
+                
+                AppDevTile(stc: stc)
+                    .frame(height: 224)
             }
-            catch
-            {
-                print(error.localizedDescription)
-            }
+            .padding(20)
         }
-    }
-    
-    func delete_image(index: Int)
-    {
-        withAnimation
-        {
-            document.package_info.gallery.remove(at: index)
-            document_handler.document_update_info()
-        }
-        update_toggle.toggle()
     }
 }
 
+struct IconView<Content: View>: View
+{
+    let content: () -> Content
+    
+    var body: some View
+    {
+        ZStack
+        {
+            content()
+                .scaledToFit()
+        }
+        .frame(width: 72, height: 72)
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+    }
+}
 
 #Preview
 {

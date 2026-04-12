@@ -1,0 +1,42 @@
+//
+// Robot Model Controller
+//
+
+import Foundation
+import RealityKit
+import IndustrialKit
+
+nonisolated class <#Name#>_Controller: RobotModelController, @unchecked Sendable
+{
+    // MARK: - Parameters
+    override var entity_names: [String]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [String]()@*/return [String]()/*@END_MENU_TOKEN@*/
+    }
+    
+    // MARK: - Performing
+    override open func entity_positions(
+        pointer_position: (
+            x: Float, y: Float, z: Float,
+            r: Float, p: Float, w: Float
+        ),
+        origin_position: (
+            x: Float, y: Float, z: Float,
+            r: Float, p: Float, w: Float
+        )
+    ) throws -> [EntityPositionData]
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [EntityPositionData]()@*/return [EntityPositionData]()/*@END_MENU_TOKEN@*/
+    }
+    
+    // MARK: - Statistics
+    override var current_device_output: DeviceOutputData
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return DeviceOutputData()@*/return DeviceOutputData()/*@END_MENU_TOKEN@*/
+    }
+    
+    override var initial_device_output: DeviceOutputData?
+    {
+        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return DeviceOutputData()@*/return DeviceOutputData()/*@END_MENU_TOKEN@*/
+    }
+}

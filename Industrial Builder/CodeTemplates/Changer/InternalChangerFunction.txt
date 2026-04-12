@@ -1,0 +1,11 @@
+//
+// Changer Function
+//
+
+private func change(registers: inout [Float])
+{
+    for i in 0..<registers.count
+    {
+        //registers[i] = Float(Int.random(in: 0...200))
+    }
+}

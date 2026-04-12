@@ -6,10 +6,11 @@
 //
 
 import Foundation
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
+import RealityKit
+
 import IndustrialKit
-import SceneKit
 
 extension UTType
 {
@@ -19,15 +20,18 @@ extension UTType
 struct STCDocument: FileDocument
 {
     var package_info = STCPackageInfo()
-    var scenes = [SCNScene]()
-    var images = [UIImage]()
-    var listings = [String]()
-    var kinematic_groups = [KinematicGroup]()
+    
+    var entity_items = [EntityItem]()
+    var image_items = [ImageItem]()
+    var listing_items = [ListingItem]()
     
     var robot_modules = [RobotModule]()
     var tool_modules = [ToolModule]()
     var part_modules = [PartModule]()
     var changer_modules = [ChangerModule]()
+    
+    // MARK: Prepared scene cache
+    var scenes_data = [String: Data]()
     
     static var readableContentTypes = [UTType.stc_document]
     
@@ -35,10 +39,10 @@ struct STCDocument: FileDocument
     {
         self.package_info = STCPackageInfo()
         
-        self.package_info.build_modules_lists = [BuildModulesList(name: "internal_modules"), BuildModulesList(name: "external_modules")]
+        self.package_info.build_modules_list = BuildModulesList()
     }
     
-    // MARK: - Import functions
+    // MARK: - Import
     init(configuration: ReadConfiguration) throws
     {
         let wrappers = configuration.file.fileWrappers?.values
@@ -70,7 +74,15 @@ struct STCDocument: FileDocument
                     return
                 }
                 
-                package_info = try! JSONDecoder().decode(STCPackageInfo.self, from: data)
+                do
+                {
+                    package_info = try JSONDecoder().decode(STCPackageInfo.self, from: data)
+                }
+                catch
+                {
+                    package_info = STCPackageInfo()
+                }
+                //package_info = try! JSONDecoder().decode(STCPackageInfo.self, from: data)
             }
             
             func json_decode<T: Decodable>(_ wrapper: FileWrapper, type: T.Type) -> T?
@@ -81,14 +93,14 @@ struct STCDocument: FileDocument
                 {
                     return data
                 }
-
+                
                 do
                 {
                     data = try JSONDecoder().decode(T.self, from: file_data)
                 }
                 catch
                 {
-                    print(error.localizedDescription)
+                    //print(error.localizedDescription)
                 }
                 
                 return data
@@ -127,16 +139,16 @@ struct STCDocument: FileDocument
                             {
                                 switch type
                                 {
-                                    case is RobotModule.Type:
-                                        robot_modules.append(json_decode(fileWrapper, type: RobotModule.self) ?? RobotModule())
-                                    case is ToolModule.Type:
-                                        tool_modules.append(json_decode(fileWrapper, type: ToolModule.self) ?? ToolModule())
-                                    case is PartModule.Type:
-                                        part_modules.append(json_decode(fileWrapper, type: PartModule.self) ?? PartModule())
-                                    case is ChangerModule.Type:
-                                        changer_modules.append(json_decode(fileWrapper, type: ChangerModule.self) ?? ChangerModule())
-                                    default:
-                                        break
+                                case _ where type == RobotModule.self:
+                                    if let data = json_decode(fileWrapper, type: RobotModule.self) { robot_modules.append(data) }
+                                case _ where type == ToolModule.self:
+                                    if let data = json_decode(fileWrapper, type: ToolModule.self) { tool_modules.append(data) }
+                                case _ where type == PartModule.self:
+                                    if let data = json_decode(fileWrapper, type: PartModule.self) { part_modules.append(data) }
+                                case _ where type == ChangerModule.self:
+                                    if let data = json_decode(fileWrapper, type: ChangerModule.self) { changer_modules.append(data) }
+                                default:
+                                    break
                                 }
                             }
                         }
@@ -153,11 +165,9 @@ struct STCDocument: FileDocument
                     {
                         switch file_wrapper.filename
                         {
-                        case "KinematicGroups":
-                            kinematics_process(file_wrapper)
-                        case "Resources":
-                            resources_process(file_wrapper)
-                        case "Code":
+                        case "Assets":
+                            assets_process(file_wrapper)
+                        case "Sources":
                             codes_process(file_wrapper)
                         default:
                             break
@@ -165,43 +175,32 @@ struct STCDocument: FileDocument
                     }
                 }
                 
-                func kinematics_process(_ wrapper: FileWrapper)
+                func assets_process(_ wrapper: FileWrapper)
                 {
-                    if let file_wrappers = wrapper.fileWrappers
+                    guard let file_wrappers = wrapper.fileWrappers else { return }
+                    
+                    entities_wrapper = wrapper
+                    entity_file_names.removeAll()
+                    
+                    for (_, file_wrapper) in file_wrappers
                     {
-                        for (_, file_wrapper) in file_wrappers
+                        guard let filename = file_wrapper.filename else { continue }
+                        
+                        // MARK: USDZ
+                        if filename.lowercased().hasSuffix(".usdz")
                         {
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".json")
-                            {
-                                kinematic_groups.append(json_decode(file_wrapper, type: KinematicGroup.self) ?? KinematicGroup())
-                            }
+                            entity_file_names.append(URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent)
                         }
-                    }
-                }
-                
-                func resources_process(_ wrapper: FileWrapper)
-                {
-                    if let file_wrappers = wrapper.fileWrappers
-                    {
-                        for (_, file_wrapper) in file_wrappers
+                        
+                        // MARK: Images
+                        let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp"]
+                        
+                        if image_extensions.contains(where: filename.lowercased().hasSuffix)
                         {
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
+                            if let data = file_wrapper.regularFileContents,
+                               let image = UIImage(data: data)
                             {
-                                // scenes_process(file_wrapper)
-                                scene_wrapper = wrapper
-                                scene_folder_adress = "Components/Resources/"
-                            }
-                            
-                            if let filename = file_wrapper.filename
-                            {
-                                let image_extensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp"]
-                                if image_extensions.contains(where: filename.lowercased().hasSuffix)
-                                {
-                                    // images_process(file_wrapper)
-                                    images.append(UIImage(data: file_wrapper.regularFileContents ?? Data()) ?? UIImage())
-                                    
-                                    images_files_names.append(URL(fileURLWithPath: filename).lastPathComponent)
-                                }
+                                image_items.append(ImageItem(name: filename, image: image))
                             }
                         }
                     }
@@ -213,10 +212,10 @@ struct STCDocument: FileDocument
                     {
                         for (_, file_wrapper) in file_wrappers
                         {
-                            if let filename = file_wrapper.filename, filename.hasSuffix(".swift"), let listing = String(data: file_wrapper.regularFileContents ?? Data(), encoding: .utf8)
+                            if let filename = file_wrapper.filename, filename.hasSuffix(".swift"),
+                               let listing = String(data: file_wrapper.regularFileContents ?? Data(), encoding: .utf8)
                             {
-                                listings.append(listing)
-                                listings_files_names.append(String(filename.split(separator: ".").first!))
+                                listing_items.append(ListingItem(name: String(filename.split(separator: ".").first!), text: listing))
                             }
                         }
                     }
@@ -226,327 +225,217 @@ struct STCDocument: FileDocument
     }
     
     var scene_folder_adress = String()
-    var scene_wrapper: FileWrapper?
+    var entities_wrapper: FileWrapper?
     
-    var scenes_files_names = [String]()
-    var images_files_names = [String]()
-    var listings_files_names = [String]()
-    
-    public func deferred_scene_view(folder_bookmark: Data) -> (scenes: [SCNScene], names: [String])
+    public func deferred_scene_import(folder_bookmark: Data) async -> [EntityItem]?
     {
-        var scenes = [SCNScene]()
-        var names = [String]()
+        var entity_items = [EntityItem]()
         
-        guard let file_wrappers = scene_wrapper?.fileWrappers
+        guard let file_wrappers = entities_wrapper?.fileWrappers else
+        {
+            return nil
+        }
+        
+        var is_stale = false
+        guard let folder_url = try? URL(
+            resolvingBookmarkData: folder_bookmark,
+            bookmarkDataIsStale: &is_stale
+        ),
+              !is_stale
         else
         {
-            return (scenes, names)
+            return nil
         }
         
-        for (_, file_wrapper) in file_wrappers
+        guard folder_url.startAccessingSecurityScopedResource()
+        else
         {
-            #if os(macOS)
-            if let filename = file_wrapper.filename, filename.hasSuffix(".scn")
+            return nil
+        }
+        
+        defer
+        {
+            folder_url.stopAccessingSecurityScopedResource()
+        }
+        
+        await withTaskGroup(of: EntityItem?.self)
+        { group in
+            for (_, file_wrapper) in file_wrappers
             {
-                if let scene_data = file_wrapper.regularFileContents
+                if let filename = file_wrapper.filename,
+                   filename.hasSuffix(".usdz")
                 {
-                    let scene_source = SCNSceneSource(data: scene_data, options: nil)
-                    if let scene = scene_source?.scene(options: nil)
+                    //let scene_url = folder_url.appendingPathComponent(filename)
+                    
+                    group.addTask
                     {
-                        scenes.append(scene_view(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
-                        
-                        let filename_no_ext = URL(fileURLWithPath: filename).lastPathComponent
-                        names.append(filename_no_ext)
-                    }
-                    else
-                    {
-                        print("Error load from \(filename)")
+                        do
+                        {
+                            let scene_url = folder_url
+                                .appendingPathComponent("Components")
+                                .appendingPathComponent("Assets")
+                                .appendingPathComponent(filename)
+                            
+                            let entity = try await Entity(contentsOf: scene_url)
+                            
+                            let name = URL(fileURLWithPath: filename)
+                                .lastPathComponent
+                            
+                            return EntityItem(name: name, entity: entity)
+                        }
+                        catch
+                        {
+                            //print("\(filename): \(error)")
+                            return nil
+                        }
                     }
                 }
             }
-            #else
-            if let filename = file_wrapper.filename
+            
+            for await result in group
             {
-                if let scene_data = file_wrapper.regularFileContents
+                if let item = result
                 {
-                    let scene_source = SCNSceneSource(data: scene_data, options: nil)
-                    if let scene = scene_source?.scene(options: nil)
-                    {
-                        scenes.append(scene_view(scene_address: "\(scene_folder_adress)\(filename)", folder_bookmark: folder_bookmark))
-                        
-                        let filename_no_ext = URL(fileURLWithPath: filename).lastPathComponent
-                        names.append(filename_no_ext)
-                    }
-                    else
-                    {
-                        print("Error load from \(filename)")
-                    }
+                    entity_items.append(item)
                 }
             }
-            #endif
         }
         
-        return (scenes, names)
+        return entity_items
     }
     
-    private func scene_view(scene_address: String, folder_bookmark: Data) -> SCNScene
-    {
-        let scene = SCNScene()
-        do
-        {
-            // File access
-            var is_stale = false
-            let url = try URL(resolvingBookmarkData: folder_bookmark, bookmarkDataIsStale: &is_stale)
-            
-            guard !is_stale else
-            {
-                return scene
-            }
-            
-            do
-            {
-                //print(url.absoluteString + "/" + scene_address)
-                let scene = try SCNScene(url: url.appendingPathComponent(scene_address))
-                return scene
-            }
-        }
-        catch
-        {
-            print(error.localizedDescription)
-            return scene
-        }
-    }
+    var entity_file_names = [String]() // For deferred import
     
-    // MARK: - Export functions
+    var listing_file_names = [String]()
+    
+    // MARK: - Export
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper
     {
-        do
-        {
-            // Store package info data
-            let data = try build_document_data()
-            let json_file_wrapper = FileWrapper(regularFileWithContents: data)
-            let package_filename = "PkgInfo"
-            json_file_wrapper.filename = package_filename
-            
-            // Store modules data
-            var app_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
-            app_file_wrapper = try build_modules_file_wrapper()
-            
-            // Store components data
-            var components_file_wrapper = FileWrapper(directoryWithFileWrappers: [String : FileWrapper]())
-            components_file_wrapper = try build_components_file_wrapper()
-            
-            let file_wrapper = FileWrapper(directoryWithFileWrappers: [
-                package_filename: json_file_wrapper,
-                "Modules": app_file_wrapper,
-                "Components": components_file_wrapper
-            ])
-            
-            return file_wrapper
-        }
-        catch
-        {
-            throw error
-        }
+        let data = try build_document_data()
+        let json_file_wrapper = FileWrapper(regularFileWithContents: data)
+        let package_filename = "PkgInfo"
+        json_file_wrapper.filename = package_filename
+        
+        let modules_wrapper = try build_modules_file_wrapper()
+        let components_wrapper = try build_components_file_wrapper()
+        
+        return FileWrapper(directoryWithFileWrappers: [
+            package_filename: json_file_wrapper,
+            "Modules": modules_wrapper,
+            "Components": components_wrapper
+        ])
     }
     
-    // MARK: Document header store
     private func build_document_data() throws -> Data
     {
-        let encoder = JSONEncoder()
-        
-        do
-        {
-            let data = try encoder.encode(package_info)
-            return data
-        }
-        catch
-        {
-            throw error
-        }
+        return try JSONEncoder().encode(package_info)
     }
     
-    // MARK: App modules store
     func build_modules_file_wrapper() throws -> FileWrapper
     {
         var file_wrappers = [String: FileWrapper]()
         
-        // Robot Modules
-        file_wrappers["Robot"] = prepare_robot_modules_wrapper()
-        
-        // Tool Modules
-        file_wrappers["Tool"] = prepare_tool_modules_wrapper()
-        
-        // Part Modules
-        file_wrappers["Part"] = prepare_part_modules_wrapper()
-        
-        // Changer Modules
-        file_wrappers["Changer"] = prepare_changer_modules_wrapper()
+        file_wrappers["Robot"] = make_modules(robot_modules)
+        file_wrappers["Tool"] = make_modules(tool_modules)
+        file_wrappers["Part"] = make_modules(part_modules)
+        file_wrappers["Changer"] = make_modules(changer_modules)
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
-        
-        func prepare_robot_modules_wrapper() -> FileWrapper
-        {
-            var file_wrappers = [String: FileWrapper]()
-            
-            for robot_module in robot_modules
-            {
-                guard let data = try? make_json_data(robot_module) else
-                {
-                    break
-                }
-                
-                let file_name = "\(robot_module.name)"//.json"
-                let file_wrapper = FileWrapper(regularFileWithContents: data)
-                file_wrapper.filename = file_name
-                file_wrapper.preferredFilename = file_name
-                
-                file_wrappers[file_name] = file_wrapper
-            }
-            
-            return FileWrapper(directoryWithFileWrappers: file_wrappers)
-        }
-        
-        func prepare_tool_modules_wrapper() -> FileWrapper
-        {
-            var file_wrappers = [String: FileWrapper]()
-            
-            for tool_module in tool_modules
-            {
-                guard let data = try? make_json_data(tool_module) else
-                {
-                    break
-                }
-                
-                let file_name = "\(tool_module.name)"//.json"
-                let file_wrapper = FileWrapper(regularFileWithContents: data)
-                file_wrapper.filename = file_name
-                file_wrapper.preferredFilename = file_name
-                
-                file_wrappers[file_name] = file_wrapper
-            }
-            
-            return FileWrapper(directoryWithFileWrappers: file_wrappers)
-        }
-        
-        func prepare_part_modules_wrapper() -> FileWrapper
-        {
-            var file_wrappers = [String: FileWrapper]()
-            
-            for part_module in part_modules
-            {
-                guard let data = try? make_json_data(part_module) else
-                {
-                    break
-                }
-                
-                let file_name = "\(part_module.name)"
-                let file_wrapper = FileWrapper(regularFileWithContents: data)
-                file_wrapper.filename = file_name
-                file_wrapper.preferredFilename = file_name
-                
-                file_wrappers[file_name] = file_wrapper
-            }
-            
-            return FileWrapper(directoryWithFileWrappers: file_wrappers)
-        }
-        
-        func prepare_changer_modules_wrapper() -> FileWrapper
-        {
-            var file_wrappers = [String: FileWrapper]()
-            
-            for changer_module in changer_modules
-            {
-                guard let data = try? make_json_data(changer_module) else
-                {
-                    break
-                }
-                
-                let file_name = "\(changer_module.name)" // .json"
-                let file_wrapper = FileWrapper(regularFileWithContents: data)
-                file_wrapper.filename = file_name
-                file_wrapper.preferredFilename = file_name
-                
-                file_wrappers[file_name] = file_wrapper
-            }
-            
-            return FileWrapper(directoryWithFileWrappers: file_wrappers)
-        }
     }
     
-    // MARK: Components store
-    // New files names
-    static var new_scenes_names = [String]()
-    static var new_images_names = [String]()
+    private func make_modules<T: Encodable>(_ modules: [T]) -> FileWrapper
+    {
+        var file_wrappers = [String: FileWrapper]()
+        
+        for module in modules
+        {
+            if let named = module as? IndustrialModule
+            {
+                let file_name = named.name
+                let data = try? JSONEncoder().encode(module)
+                let wrapper = FileWrapper(regularFileWithContents: data ?? Data())
+                wrapper.filename = file_name
+                wrapper.preferredFilename = file_name
+                file_wrappers[file_name] = wrapper
+            }
+        }
+        
+        return FileWrapper(directoryWithFileWrappers: file_wrappers)
+    }
     
     func build_components_file_wrapper() throws -> FileWrapper
     {
         var file_wrappers = [String: FileWrapper]()
         
-        // Resources
-        file_wrappers["Resources"] = prepare_resources_wrappers()
+        // MARK: Assets
+        file_wrappers["Assets"] = prepare_assets_wrappers()
         
-        func prepare_resources_wrappers() -> FileWrapper
+        func prepare_assets_wrappers() -> FileWrapper
         {
-            // Scenes
             var file_wrappers = [String: FileWrapper]()
             
-            var index = 0
-            for scene in scenes
+            guard let scene_files = entities_wrapper?.fileWrappers else { return FileWrapper(directoryWithFileWrappers: [:]) }
+            
+            for entity_item in entity_items
             {
-                let scene_data = try? NSKeyedArchiver.archivedData(withRootObject: scene, requiringSecureCoding: true)
-                guard let data = scene_data else { continue }
+                let file_name_with_ext = entity_item.name.hasSuffix(".usdz") ? entity_item.name : entity_item.name + ".usdz"
                 
-                let file_name = STCDocument.new_scenes_names[index]
-                let file_wrapper = FileWrapper(regularFileWithContents: data)
-                file_wrapper.filename = file_name
-                file_wrapper.preferredFilename = file_name
-                
-                file_wrappers[file_name] = file_wrapper
-                
-                index += 1
+                if let source_url = entity_item.source_url
+                {
+                    // New file to package
+                    do
+                    {
+                        let data = try Data(contentsOf: source_url)
+                        let wrapper = FileWrapper(regularFileWithContents: data)
+                        wrapper.filename = file_name_with_ext
+                        wrapper.preferredFilename = file_name_with_ext
+                        file_wrappers[file_name_with_ext] = wrapper
+                    }
+                    catch
+                    {
+                        //print("Failed to include new entity \(entity_item.name): \(error)")
+                    }
+                }
+                else if let wrapper = scene_files[file_name_with_ext]
+                {
+                    // File from package
+                    file_wrappers[file_name_with_ext] = wrapper
+                }
+                else
+                {
+                    //print("Warning: entity \(entity_item.name) not found in Assets and has no source_url")
+                }
             }
             
             // Images
-            index = 0
-            for image in images
+            for image_item in image_items
             {
-                guard let data = image.pngData() else
-                {
-                    break
-                }
+                guard let data = image_item.image.pngData() else { continue }
                 
-                let file_name = STCDocument.new_images_names[safe: index] ?? "Image \(index).png"
+                let file_name = image_item.name
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
                 
                 file_wrappers[file_name] = file_wrapper
-                index += 1
             }
             
-            print(file_wrappers)
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
         
-        // Listings
-        file_wrappers["Code"] = prepare_listings_wrappers()
-        
+        // MARK: Code
+        file_wrappers["Sources"] = prepare_listings_wrappers()
         func prepare_listings_wrappers() -> FileWrapper
         {
             var file_wrappers = [String: FileWrapper]()
             
-            for (index, listing) in listings.enumerated()
+            for listing_item in listing_items
             {
-                let file_name = "\(listings_files_names[index]).swift"
-                
-                guard let data = listing.data(using: .utf8) else
-                {
-                    break
-                }
+                guard let data = listing_item.text.data(using: .utf8) else { continue }
                 
                 let file_wrapper = FileWrapper(regularFileWithContents: data)
                 
+                let file_name = listing_item.name + ".swift"
                 file_wrapper.filename = file_name
                 file_wrapper.preferredFilename = file_name
                 
@@ -556,46 +445,12 @@ struct STCDocument: FileDocument
             return FileWrapper(directoryWithFileWrappers: file_wrappers)
         }
         
-        // Kinematic groups
-        file_wrappers["KinematicGroups"] = prepare_kinematics_wrappers()
-        
-        func prepare_kinematics_wrappers() -> FileWrapper
-        {
-            var file_wrappers = [String: FileWrapper]()
-            
-            for kinematic_group in kinematic_groups
-            {
-                guard let data = try? make_json_data(kinematic_group) else
-                {
-                    break
-                }
-                
-                let file_name = "\(kinematic_group.name).json"
-                let file_wrapper = FileWrapper(regularFileWithContents: data)
-                file_wrapper.filename = file_name
-                file_wrapper.preferredFilename = file_name
-                
-                file_wrappers[file_name] = file_wrapper
-            }
-            
-            return FileWrapper(directoryWithFileWrappers: file_wrappers)
-        }
+        // MARK: KinematicGroups
+        //file_wrappers["KinematicGroups"] =
+        //FileWrapper(directoryWithFileWrappers: [:])
         
         return FileWrapper(directoryWithFileWrappers: file_wrappers)
     }
     
-    private func make_json_data(_ object: Encodable) throws -> Data
-    {
-        let encoder = JSONEncoder()
-        
-        do
-        {
-            let data = try encoder.encode(object)
-            return data
-        }
-        catch
-        {
-            throw error
-        }
-    }
+    static var new_images_names = [String]()
 }

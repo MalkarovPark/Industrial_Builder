@@ -35,7 +35,7 @@ if [[ "$SWIFT_FILE" != *.swift ]]; then
     exit 1
 fi
 
-# Get the filename without extension to be used as package name
+# Get the file_name without extension to be used as package name
 PACKAGE_NAME=$(basename "$SWIFT_FILE" .swift)
 PACKAGE_NAME_WITH_POSTFIX="${PACKAGE_NAME}_Project" # Add _Project postfix
 
@@ -57,7 +57,7 @@ cd "$PACKAGE_DIR" || exit
 
 # Define the Package.swift content with full references and targets
 PACKAGE_SWIFT_CONTENT='
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -70,7 +70,8 @@ let package = Package(
         .visionOS("26.0")
     ],
     dependencies: [
-        .package(url: "https://github.com/MalkarovPark/IndustrialKit", "5.0.0"..<"6.0.0"),
+        //.package(url: "https://github.com/MalkarovPark/IndustrialKit", "26.0.0"..<"26.1.0"),
+        .package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "development"),
     ],
     targets: [
         .executableTarget(

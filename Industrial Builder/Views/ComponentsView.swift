@@ -25,30 +25,23 @@ struct ComponentsView: View
                 {
                     LazyVGrid(columns: columns, spacing: 24)
                     {
-                        NavigationLink(destination: ScenesListView())
+                        NavigationLink(destination: EntityListView())
                         {
-                            BoxCard(title: "Scenes", subtitle: numeral_endings(base_stc.scenes.count, word: "item"), color: .green, image_name: "cube", image_size: 80)
+                            BoxCard(title: "Entities", subtitle: numeral_endings(base_stc.entity_items.count, word: "item"), color: Color(hex: "4DDD76"), symbol_name: "cube", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
-                        NavigationLink(destination: ImagesListView())
+                        NavigationLink(destination: ImageListView())
                         {
-                            BoxCard(title: "Images", subtitle: numeral_endings(base_stc.images.count, word: "item"), color: .teal, image_name: "photo", image_size: 80)
+                            BoxCard(title: "Images", subtitle: numeral_endings(base_stc.image_items.count, word: "item"), color: Color(hex: "9593FF"), symbol_name: "photo", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
                         
-                        NavigationLink(destination: ListingsListView())
+                        NavigationLink(destination: ListingListView())
                         {
-                            BoxCard(title: "Listings", subtitle: numeral_endings(base_stc.listings.count, word: "item"), color: .indigo, image_name: "scroll", image_size: 80)
-                        }
-                        .buttonStyle(.plain)
-                        .frame(height: 128)
-                        
-                        NavigationLink(destination: KinematicsListView())
-                        {
-                            BoxCard(title: "Kinematics", subtitle: numeral_endings(base_stc.kinematic_groups.count, word: "item"), color: .purple, image_name: "point.3.connected.trianglepath.dotted", image_size: 80)
+                            BoxCard(title: "Listings", subtitle: numeral_endings(base_stc.listing_items.count, word: "item"), color: Color(hex: "FFD070"), symbol_name: "scroll", symbol_size: 80)
                         }
                         .buttonStyle(.plain)
                         .frame(height: 128)
@@ -58,11 +51,6 @@ struct ComponentsView: View
             }
         }
     }
-}
-
-func numeral_endings(_ count: Int, word: String) -> String
-{
-    count == 1 ? "\(count) \(word)" : "\(count) \(word)s"
 }
 
 #Preview

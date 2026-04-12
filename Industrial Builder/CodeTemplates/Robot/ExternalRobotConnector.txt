@@ -1,0 +1,216 @@
+//
+// Robot Connector
+//
+
+import Foundation
+import IndustrialKit
+
+let socket_path: String = {
+    let args = CommandLine.arguments
+    return args.count > 1
+        ? args[1]
+        : "/tmp/robot_connector_socket"
+}()
+
+var performed = true
+
+// Remove old socket if exists
+unlink(socket_path)
+
+// Create socket
+let server_socket = socket(AF_UNIX, SOCK_STREAM, 0)
+guard server_socket >= 0 else
+{
+    fatalError("Failed to create socket")
+}
+
+// Setup socket address
+var addr = sockaddr_un()
+addr.sun_family = sa_family_t(AF_UNIX)
+
+let path_cstring = socket_path.utf8CString
+withUnsafeMutableBytes(of: &addr.sun_path)
+{ buffer in
+    for (i, c) in path_cstring.enumerated()
+    {
+        buffer[i] = UInt8(bitPattern: c)
+    }
+}
+
+let addr_size = socklen_t(MemoryLayout.size(ofValue: addr))
+
+withUnsafePointer(to: &addr)
+{
+    $0.withMemoryRebound(to: sockaddr.self, capacity: 1)
+    { ptr in
+        if bind(server_socket, ptr, addr_size) != 0
+        {
+            fatalError("Failed to bind socket")
+        }
+    }
+}
+
+if listen(server_socket, 5) != 0
+{
+    fatalError("Failed to listen on socket")
+}
+
+print("Robot connector server started on \(socket_path)")
+
+// MARK: - Variables
+nonisolated(unsafe) var performing_task = Task {}
+
+nonisolated(unsafe) var performed_code = 0
+nonisolated(unsafe) var current_performing_state: PerformingState = .completed
+var canceled = false
+
+// Output
+var processing = false
+var completed  = false
+var error = false
+
+nonisolated(unsafe) var position: (
+    x: Float, y: Float, z: Float,
+    r: Float, p: Float, w: Float
+) = (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0)
+
+// MARK: - Accept Loop
+private var moving_task = Task {}
+
+while performed
+{
+    var client_addr = sockaddr()
+    var client_addr_len = socklen_t(MemoryLayout<sockaddr>.size)
+    let client_socket = accept(server_socket, &client_addr, &client_addr_len)
+    
+    guard client_socket >= 0 else
+    {
+        continue
+    }
+    
+    var no_sig_pipe: Int32 = 1
+    setsockopt(client_socket, SOL_SOCKET, SO_NOSIGPIPE, &no_sig_pipe, socklen_t(MemoryLayout.size(ofValue: no_sig_pipe)))
+    var buffer = [UInt8](repeating: 0, count: 1024 * 1024)
+    let bytes_read = read(client_socket, &buffer, buffer.count)
+    
+    if bytes_read > 0
+    {
+        if let command = String(bytes: buffer.prefix(bytes_read), encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        {
+            let parts = command.split(separator: " ").map(String.init) //safe_input_split(command)
+            let input = parts.dropFirst()
+            var output: String?
+            
+            switch parts.first
+            {
+            case "connect":
+                output = connect(parameters: Array(input))
+            case "disconnect":
+                output = disconnect()
+                
+            case "move_to":
+                output = move(
+                    to: string_to_codable(from: input[1]) ?? PositionPoint(x: 0, y: 0, z: 0),
+                    origin_position: (
+                        Float(input[2]) ?? 0, Float(input[3]) ?? 0, Float(input[4]) ?? 0,
+                        Float(input[5]) ?? 0, Float(input[6]) ?? 0, Float(input[7]) ?? 0
+                    )
+                )
+            case "reset_device":
+                output = reset_device()
+                
+            case "current_device_state":
+                output = current_device_state().json_string()
+                
+            case "stop":
+                output = disconnect()
+                performed = false
+            default:
+                output = "Unknown Command"
+            }
+            
+            if let output = output
+            {
+                let result = output + "\n"
+                let data = result.data(using: .utf8)!
+                
+                data.withUnsafeBytes
+                { buffer in
+                    var total_sent = 0
+                    while total_sent < buffer.count
+                    {
+                        let sent = write(client_socket, buffer.baseAddress!.advanced(by: total_sent), buffer.count - total_sent)
+                        if sent <= 0
+                        {
+                            break
+                        }
+                        total_sent += sent
+                    }
+                }
+            }
+        }
+    }
+    
+    close(client_socket)
+}
+
+// MARK: - Connection
+@MainActor func connect(parameters: [String]) -> String
+{
+    guard let address = parameters[safe: 0],
+          let port_string = parameters[safe: 1],
+          let port_value = UInt16(port_string)
+    else
+    {
+        return "<failed: Missing connection address or port>"
+    }
+    
+    return "<done: Connected to address \(address) and port \(port_value).>"
+}
+
+@MainActor func disconnect() -> String
+{
+    return "Disconnected"
+}
+
+// MARK: - Performing
+func move(
+    to point: PositionPoint,
+    origin_position: (
+        x: Float, y: Float, z: Float,
+        r: Float, p: Float, w: Float
+    ) = (x: 0, y: 0, z: 0, r: 0, p: 0, w: 0)) -> String
+{
+    current_performing_state = .processing
+    print("Begin move to target")
+    
+    performing_task = Task
+    {
+        print("Begin task to target")
+        
+        let seconds = 1
+        usleep(UInt32(seconds * 1_000_000))
+        
+        current_performing_state = .completed
+        print("End task to target")
+    }
+    
+    return String()
+}
+
+@MainActor func reset_device() -> String?
+{
+    //canceled = true
+    performing_task.cancel()
+    current_performing_state = .completed
+    
+    return "Reset"
+}
+
+@MainActor func current_device_state() -> ToolState?
+{
+    return ToolState(
+        performing_state: current_performing_state
+    )
+}

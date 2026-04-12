@@ -63,7 +63,7 @@ cd "$PACKAGE_DIR" || exit
 
 # Create Package.swift
 PACKAGE_SWIFT_CONTENT='
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -76,7 +76,8 @@ let package = Package(
         .visionOS("26.0")
     ],
     dependencies: [
-        .package(url: "https://github.com/MalkarovPark/IndustrialKit", "5.0.0"..<"6.0.0"),
+        //.package(url: "https://github.com/MalkarovPark/IndustrialKit", "26.0.0"..<"26.1.0"),
+        .package(url: "https://github.com/MalkarovPark/IndustrialKit", branch: "development"),
     ],
     targets: [
         .executableTarget(

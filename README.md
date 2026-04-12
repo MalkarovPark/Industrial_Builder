@@ -1,5 +1,4 @@
-![ib_caption](https://github.com/user-attachments/assets/a8599d15-563d-40e4-88a3-3ff4ef27f511)
-
+![ib_caption](https://github.com/user-attachments/assets/1e5e351a-76c4-4d5e-bf48-39182197b7f6)
 
 # Industrial Builder
 

@@ -1,0 +1,11 @@
+//
+// <#ModuleName#> Part
+// Internal Module Declaration
+//
+
+import Foundation
+import IndustrialKit
+
+@MainActor public let <#Name#>_PartModule = PartModule(
+    name: "<#ModuleName#>"
+)
