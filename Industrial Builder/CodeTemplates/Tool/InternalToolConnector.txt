@@ -13,7 +13,7 @@ nonisolated class <#Name#>_Connector: ToolConnector, @unchecked Sendable
         /*@START_MENU_TOKEN@*//*@PLACEHOLDER=return [ConnectionParameter]()@*/return [ConnectionParameter]()/*@END_MENU_TOKEN@*/
     }
     
-    override func connection_process() async -> Bool
+    override func perform_connection() async -> Bool
     {
         sleep(1)
         
@@ -23,7 +23,7 @@ nonisolated class <#Name#>_Connector: ToolConnector, @unchecked Sendable
         return true //false
     }
     
-    override func disconnection_process()
+    override func perform_disconnection()
     {
         
     }
