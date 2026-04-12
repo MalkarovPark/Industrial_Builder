@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/-IndustrialKit-05A89D"></a>
 
 Industrial Builder is a multifunctional environment for production deployment. Everything necessary for production is collected in a special package – Standard Template Construct. Processing of such a package allows obtaining various data for designing and forming production depending on the customer's needs.
-
+<!--
 # Table of Contents
 * [Requirements](#requirements)
 * [Getting Started](#getting-started)
@@ -19,7 +19,7 @@ Industrial Builder is a multifunctional environment for production deployment. E
 * [STC Utilizing](#stc-utilizing)
    * [Building Modules](#building-modules)
 * [Getting Help](#getting-help)
-* [License](#license)
+* [License](#license) -->
 
 # Requirements <a name="requirements"></a>
 
@@ -42,7 +42,7 @@ Connect the necessary property list files in the application settings for robots
 
 *iOS & iPadOS*
 
-Official free installation method coming after the world revolution. For now you can install application package by your own developer profile and special installers. Also possible to use the app in application playground format by the [Swift Playgrounds](https://apps.apple.com/us/app/swift-playgrounds/id908519492) (iPadOS only).
+You can install application package by your own developer profile and special installers. Also possible to use the app in application playground format by the [Swift Playgrounds](https://apps.apple.com/us/app/swift-playgrounds/id908519492) (iPadOS only).
 
 ### Project Editing <a name="project-editing"></a>
 
@@ -52,7 +52,7 @@ You may view and edit this application project by two ways:
 
 Open downloaded project in the Xcode and confirm trust.
 
-# Working With Document <a name="working-with-document"></a>
+<!-- # Working With Document <a name="working-with-document"></a>
 
 Industrial Builder is the document based app. Thus, each Standard Template Construct (STC) is a separate document. You can create a new or open an existing document that has a *stc* extension.
 
@@ -76,7 +76,7 @@ A separate, specific type of resource is a kinematic group. It is a named list o
 
 Unlike other resources, which are placed in one way or another in the model module package during layout, kinematics is used to synthesize resources. Kinematics processing is implemented using IndustrialBuilder, which currently supports the synthesis of robots with the 6DOF and Portal kinematics type.
 
-When processing kinematics, based on the processing of its data, the code and scene of the manipulator are synthesized. <!-- The kinematic elements of the 6DOF robot define the lengths of the 6 links and the height of the base of the manipulator. In the Portal robot, the elements define, in addition to the lengths of the links, also the limitations on the displacements. -->
+When processing kinematics, based on the processing of its data, the code and scene of the manipulator are synthesized.
 
 ### Modules <a name="modules">
 
@@ -92,24 +92,11 @@ The current version of Industrial Builder allows you to create and edit modules 
 
 Editing of all module components is performed in Module Designer. The set of components available for editing varies depending on the module type. Model editing is available for robots, tools and parts.
 
-<!--
-Table # – Editable module components
-Robot Tool Part Changer module
-Description + + + +
-Operations - + - -
-Code Controller, Connector Controller, Connector - Change
-Resources + + + -
-Connection Parameters + + - -
-Linked Internal Components + + - -
--->
-
 All used listings can be generated and supplemented by the developer. Please note that depending on how the module will be connected (external or internal), generate for the corresponding type.
 
 For tools, a list of available values ​​of operational codes is additionally specified.
 
 For controlled devices – robots and tools – editing of the list of names of connected model nodes and parameters of connection to real equipment is available.
-
-<!-- This data is stored in arrays of the header file. When assembling internal modules, data is injected into the connector/controller listings, as a result of which the module already has an initialized set of parameters. For external modules, the parameter list is extracted from the module package header file. -->
 
 For objects whose digital entities involve visual modeling (robots, tools, parts), scenes and textures with the models used are specified among those available in the STC package.
 
@@ -135,29 +122,13 @@ There are two types of assembly available – Files for exporting modules as a s
 
 When assembling internal modules, a Modules folder is created with a set of module packages and a List listing file initiating a tuple of arrays of internal modules – internal_modules.
 
-<!-- When creating a module package file, the build_module_file function creates a listing with the _Info postfix, containing the initialization code for the corresponding digitalia - an instance of a module class of a certain type.
-
-Then a function is executed that creates a set of listings in accordance with the name and content of each element in the code_items of the module being processed. For robots and tools, a list of scene nodes is also injected into the ModelController code and connection parameters for WorkspaceObjectConnector. All listing files of one module are placed in the Code folder and receive a prefix of the form <module name>_, which is necessary to ensure correct compilation during further assembly as part of the application project. Then the updated code files are saved using the code_files_store function.
-
-Then the resources are saved to the **Resources.scnassets** folder, similar to when creating an external module package.
-
-The finished Modules folder can be simply placed in the RCWorkspace application project and compiled. -->
-
 Assembling external modules involves saving module data in the Info header file.
 
 Next, as with internal modules, code elements are saved in the corresponding Code folders of the module package file. However, no parameters are injected into the listing code, since the corresponding data (the previously mentioned list of model nodes, connection parameters) are saved in the header file.
 
-The final stage of exporting a module is saving its resources in the **Resources.scnassets** folder of its package <!-- using the make_resources_folder function -->.
+The final stage of exporting a module is saving its resources in the **Resources.scnassets** folder of its package.
 
-After all external modules have been compiled and placed in the export folder, Industrial Builder additionally places a set of scripts in the folder for compiling listings of software components of module components into Unix executable files. In the iOS, iPadOS and visionOS versions, the export of external modules is completed at this stage, since they do not have a terminal. In turn, on macOS, it is possible to launch the compilation directly from Industrial Builder.
-
-<!-- The compilation kit includes the following scripts:
-LtPConvert – converts the specified Swift listing file into a terminal application project package. The Unix executable file compiled by such a project gets the same name as the original listing. The package name consists of the listing name and the _Project postfix. The latest version of the IndustrialKit library is also connected to the project.
-PBuild – compiles the project package into an executable file, which is located in the same directory as the project.
-LCompile – Converts the listing into an executable Unix file. In fact, this script sequentially executes the LtPConvert and PBuild scripts. When called with the -c parameter, after execution it also deletes the original listing and the project package file of the executable file based on it.
-MPCompile – compiles software components of all modules (have extensions .robot, .tool, .part, .changer), located in the same folder as the running script itself. To do this, it finds all swift files and executes the LCompile script for them with the *-c* parameter.
-
-The compilation kit allows you to develop program files of external modules and compile them independently of IndustrialBuilder. For example, a developer can modify the executable file project by adding separate listing files and connecting additional libraries. Also, deferred compilation is necessary when exporting external modules on platforms that do not support the terminal. -->
+After all external modules have been compiled and placed in the export folder, Industrial Builder additionally places a set of scripts in the folder for compiling listings of software components of module components into Unix executable files. In the iOS, iPadOS and visionOS versions, the export of external modules is completed at this stage, since they do not have a terminal. In turn, on macOS, it is possible to launch the compilation directly from Industrial Builder. -->
 
 # Getting Help <a name="getting-help"></a>
 GitHub is our primary forum for RCWorkspace. Feel free to open up issues about questions, problems, or ideas.
