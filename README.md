@@ -27,8 +27,8 @@ The application codebase supports macOS, iOS/iPadOS, visionOS and requires Xcode
 
 # Getting Started <a name="getting-started"></a>
 
-* [Website](https://celadon-production-systems.blogspot.com/)
-* [Documentation](https://celadon-industrial.github.io/IndustrialKit/documentation/rcworkspace/)
+* [Website](https://celadon-production-systems.blogspot.com)
+* [Documentation](https://malkarovpark.github.io/documentation/industrialkit)
 
 ### Application Installation <a name="application-installation"></a>
 
