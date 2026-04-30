@@ -119,7 +119,10 @@ let package = Package(
                 .product(name: "IndustrialKit", package: "industrialkit"),
                 .product(name: "IndustrialKitUI", package: "industrialkit")
             ],
-            path: "."
+            path: ".",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )

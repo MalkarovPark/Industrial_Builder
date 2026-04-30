@@ -35,14 +35,14 @@ public class StandardTemplateConstruct: ObservableObject
         self.part_modules = document.part_modules
         self.changer_modules = document.changer_modules
         
-        load_all_external_entities
+        load_external_entities
         {
             self.entities_loaded = true
         }
         
         self.entities_wrapper = document.entities_wrapper
         
-        func load_all_external_entities(_ completion: @escaping () -> Void = {})
+        func load_external_entities(_ completion: @escaping () -> Void = {})
         {
             Task
             {
@@ -699,7 +699,8 @@ public class StandardTemplateConstruct: ObservableObject
                         { url in
                             self.make_internal_modules(
                                 list: self.package_info.build_modules_list,
-                                to: url
+                                to: url,
+                                separate_assets: true
                             )
                         }
                 ),
@@ -723,7 +724,7 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     //MARK: Internal Modules Packaging
-    public func make_internal_modules(list: BuildModulesList, to folder_url: URL)
+    public func make_internal_modules(list: BuildModulesList, to folder_url: URL, separate_assets: Bool = false)
     {
         guard !list.is_empty else { return }
         
@@ -749,7 +750,7 @@ public class StandardTemplateConstruct: ObservableObject
                 
                 let package_folder_url = try self.make_folder("Modules", module_url: folder_url)
                 
-                self.make_internal_modules_files(list: list, to: package_folder_url)
+                self.make_internal_module_files(list: list, to: package_folder_url, separate_assets: separate_assets)
                 
                 // Make Internal Modules List
                 var list_code = import_text_data(from: "List")
@@ -805,15 +806,28 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // Build modules
-    private func make_internal_modules_files(list: BuildModulesList, to folder_url: URL)
+    private func make_internal_module_files(list: BuildModulesList, to folder_url: URL, separate_assets: Bool = false)
     {
+        // Spearated scenes folder
+        if separate_assets
+        {
+            do
+            {
+                try make_folder("Resources", module_url: folder_url.deletingLastPathComponent())
+            }
+            catch
+            {
+                
+            }
+        }
+        
         // Builds modules in separated files
         let filtered_robot_modules = robot_modules.filter { list.robot_module_names.contains($0.name) }
         for robot_module in filtered_robot_modules
         {
             if !compilation_cancelled
             {
-                make_internal_module_file(module: robot_module, to: folder_url) // Create robot module package
+                make_internal_module_file(module: robot_module, to: folder_url, separate_assets: separate_assets) // Create robot module package
                 //self.build_progress += 1
             }
             else
@@ -827,7 +841,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                make_internal_module_file(module: tool_module, to: folder_url) // Create tool module package
+                make_internal_module_file(module: tool_module, to: folder_url, separate_assets: separate_assets) // Create tool module package
                 //self.build_progress += 1
             }
             else
@@ -841,7 +855,7 @@ public class StandardTemplateConstruct: ObservableObject
         {
             if !compilation_cancelled
             {
-                make_internal_module_file(module: part_module, to: folder_url) // Create part module package
+                make_internal_module_file(module: part_module, to: folder_url, separate_assets: separate_assets) // Create part module package
                 //self.build_progress += 1
             }
             else
@@ -866,7 +880,7 @@ public class StandardTemplateConstruct: ObservableObject
     }
     
     // MARK: Build module file
-    private func make_internal_module_file(module: IndustrialModule, to folder_url: URL)
+    private func make_internal_module_file(module: IndustrialModule, to folder_url: URL, separate_assets: Bool = false)
     {
         do
         {
@@ -885,7 +899,14 @@ public class StandardTemplateConstruct: ObservableObject
             try make_info_file(url: module_url)
             
             // Assets folder store
-            try make_assets_folder(url: module_url)
+            try make_assets_folder(
+                url: !separate_assets
+                ? module_url
+                : module_url
+                    .deletingLastPathComponent()
+                    .deletingLastPathComponent()
+                    .appendingPathComponent("Resources")
+            )
         }
         catch
         {
@@ -1067,46 +1088,6 @@ public class StandardTemplateConstruct: ObservableObject
                 try code_item.value.write(to: code_item_url, atomically: true, encoding: .utf8)
             }
         }
-        
-        // MARK: OLD
-        func inject_controller_parameters(code: inout String?, module: IndustrialModule) // Inject model controller parameters (nodes names) to internal code file
-        {
-            var nodes_names = String()
-            
-            /*if let robot_module = module as? RobotModule
-            {
-                nodes_names = robot_module.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
-            }
-            
-            if let tool_odule = module as? ToolModule
-            {
-                nodes_names = tool_odule.nodes_names.map { "\"\($0)\"" }.joined(separator: ",\n            ")
-            }*/
-            
-            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=nodes_names@*//*@END_MENU_TOKEN@*/", with: nodes_names)
-        }
-        
-        func inject_connector_parameters(code: inout String?, module: IndustrialModule) // Inject model connection parameters to internal code file
-        {
-            var connection_parameters = String()
-            
-            if let robot_module = module as? RobotModule
-            {
-                connection_parameters = robot_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
-            }
-            
-            if let tool_module = module as? ToolModule
-            {
-                connection_parameters = tool_module.connection_parameters.map { "\($0.code_text)" }.joined(separator: ",\n            ")
-            }
-            
-            code = code?.replacingOccurrences(of: "/*@START_MENU_TOKEN@*//*@PLACEHOLDER=connection_parameters@*//*@END_MENU_TOKEN@*/", with: connection_parameters)
-        }
-        
-        // Module code (for internal)
-        
-        
-        // MARK: OLD
     }
     
     private func make_folder(_ folder_name: String, module_url: URL) throws -> URL
