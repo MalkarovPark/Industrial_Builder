@@ -23,7 +23,7 @@ struct EntityFileView: View
             {
                 preview_entity = entity.clone(recursive: true)
             }
-
+            
             if let preview_entity = preview_entity
             {
                 content.add(preview_entity)
