@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MalkarovPark/IndustrialKit",
       "state" : {
-        "revision" : "01272c8f576697364babf6b3751dd6893d0a2acb",
-        "version" : "26.0.3"
+        "branch" : "main",
+        "revision" : "d5a8345702878cb06149396f2c38d807adc39b8e"
       }
     },
     {

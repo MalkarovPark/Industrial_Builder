@@ -134,12 +134,17 @@ public struct ChangerModuleControl: View
                         })
                         {
                             Image(systemName: "chevron.compact.down")
-                            #if !os(macOS)
+                            #if os(iOS)
                                 .font(.system(size: 16))
                                 .frame(width: 32, height: 16)
                             #endif
                         }
+                        #if !os(visionOS)
                         .buttonStyle(.plain)
+                        #else
+                        .buttonStyle(.borderless)
+                        .frame(height: 24)
+                        #endif
                         .padding(.top, 10)
                         .scaleEffect(is_expanded ? 1 : 0.01)
                         .contentShape(Rectangle())
@@ -206,8 +211,7 @@ public struct ChangerModuleControl: View
                             }
                             
                             Button("Import...", action: { new_code_view_presented = true })
-                                .buttonStyle(.bordered)
-                                .buttonBorderShape(.roundedRectangle)
+                                .buttonStyle(.borderless)
                             #if os(iOS)
                                 .padding(.vertical, 4)
                             #endif
@@ -243,18 +247,19 @@ public struct ChangerModuleControl: View
                         .contentTransition(.symbolEffect(.replace.offUp.byLayer))
                         .frame(width: 48, height: 48)
                 }
+                .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                #if os(macOS)
+                .frame(width: 48, height: 48)
+                #elseif os(iOS)
+                .frame(width: 56, height: 56)
+                #elseif os(visionOS)
+                .frame(width: 56, height: 56)
+                #endif
                 .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .buttonStyle(.plain)
-            #if !os(visionOS)
             .glassEffect(.regular.interactive().tint(.pink), in: .rect(cornerRadius: 16, style: .continuous))
-            #else
-            .controlSize(.large)
-            .buttonStyle(.borderless)
-            .glassBackgroundEffect()
-            .frame(depth: 24)
-            #endif
-            #if os(macOS) || os(iOS)
+            #if !os(visionOS)
             .padding(10)
             #else
             .padding(16)
@@ -327,4 +332,22 @@ public struct ChangerModuleControl: View
             }
         }
     }
+}
+
+#Preview
+{
+    @Previewable @State var module = ChangerModule(name: "Module")
+    @Previewable @State var registers = [Float](repeating: 0, count: 16)
+    
+    VStack(spacing: 0)
+    {
+        Spacer()
+        
+        ChangerModuleControl(module: module, registers: $registers, on_update: {})
+            .padding()
+    }
+    #if !os(visionOS)
+    .frame(width: 400, height: 440)
+    #endif
+    .padding()
 }

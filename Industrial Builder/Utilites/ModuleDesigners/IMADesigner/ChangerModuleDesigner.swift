@@ -211,6 +211,10 @@ private struct RegistersCountView: View
 
 #Preview
 {
-    ChangerModuleDesigner(module: ChangerModule())
+    @Previewable @State var module = ChangerModule(name: "Module")
+    
+    ChangerModuleDesigner(module: module)
         .environmentObject(StandardTemplateConstruct())
+        .environmentObject(DocumentUpdateHandler())
+        .frame(width: 800, height: 600)
 }
