@@ -153,7 +153,11 @@ struct ConnectionParametersItem: View
                     }
                 }
             }
+            #if !os(visionOS)
             .background(.quinary)
+            #else
+            .background(.thinMaterial)
+            #endif
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .frame(minHeight: 80, maxHeight: 160)
         }

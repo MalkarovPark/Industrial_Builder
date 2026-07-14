@@ -89,20 +89,18 @@ struct EntityListView: View
             {
                 Image(systemName: "square.and.arrow.down")
             }
-            .fileImporter(isPresented: $load_panel_presented,
-                          allowedContentTypes: [.usdz, .realityFile],
-                          allowsMultipleSelection: true)
+            #if os(visionOS)
+            .buttonBorderShape(.circle)
+            #endif
+            .fileImporter(isPresented: $load_panel_presented, allowedContentTypes: [.usdz, .realityFile], allowsMultipleSelection: true)
             { result in
-                
                 switch result
                 {
                 case .success(let urls):
-                    
                     Task
                     {
                         await load_entities(from: urls)
                     }
-                    
                 case .failure(let error):
                     break //print("Import error:", error.localizedDescription)
                 }

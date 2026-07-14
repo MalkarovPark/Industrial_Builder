@@ -68,7 +68,11 @@ public struct CodeEditorPane: View
                     .foregroundStyle(.secondary)
             }
         }
+        #if !os(visionOS)
         .background(.quinary)
+        #else
+        .background(.thinMaterial)
+        #endif
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .frame(height: 96)
         .overlay(alignment: .bottomTrailing)

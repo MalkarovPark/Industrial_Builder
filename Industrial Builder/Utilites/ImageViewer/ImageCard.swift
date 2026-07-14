@@ -137,12 +137,14 @@ struct ImageCard<Content: View>: View
             }
         }
         .buttonStyle(.plain)
+        #if !os(visionOS)
         .background
         {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .blur(radius: 16)
                 .opacity(0.2)
         }
+        #endif
         .frame(height: 192)
         .onHover
         { hovered in

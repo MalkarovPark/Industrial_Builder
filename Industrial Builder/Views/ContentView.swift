@@ -48,6 +48,10 @@ struct Sidebar: View
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
     #endif
     
+    #if os(visionOS)
+    @Environment(\.dismiss) private var dismiss
+    #endif
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -142,6 +146,31 @@ struct Sidebar: View
                 .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
                 #endif
                 .listStyle(.sidebar)
+                .toolbar(id: "Workspace")
+                {
+                    #if os(visionOS)
+                    ToolbarItem(id: "Documents", placement: .cancellationAction)
+                    {
+                        Button(action: { dismiss() })
+                        {
+                            Label("Documents", systemImage: "chevron.left")
+                        }
+                        .buttonBorderShape(.circle)
+                    }
+                    #endif
+                    /*#if !os(macOS)
+                    ToolbarItem(id: "Settings", placement: .cancellationAction)
+                    {
+                        Button (action: { app_state.settings_view_presented = true })
+                        {
+                            Label("Settings", systemImage: "gear")
+                        }
+                    #if os(visionOS)
+                        .buttonBorderShape(.circle)
+                    #endif
+                    }
+                    #endif*/
+                }
             }
             detail:
             {

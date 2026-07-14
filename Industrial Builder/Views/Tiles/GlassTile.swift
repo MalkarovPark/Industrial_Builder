@@ -41,13 +41,20 @@ public struct GlassTile<Content: View>: View
                         .foregroundStyle(gradient)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                #if !os(visionOS)
                 .shadow(color: color.opacity(0.5), radius: 16)
+                #endif
             }
             else
             {
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
+                #if !os(visionOS)
                     .fill(.white)
                     .shadow(color: .black.opacity(0.1), radius: 16)
+                #else
+                    .fill(.thinMaterial)
+                #endif
+                    //.shadow(color: .black.opacity(0.1), radius: 16)
                 
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(

@@ -113,7 +113,7 @@ struct ChangerModuleDesigner: View
                 {
                     Button(action: { inspector_presented.toggle() })
                     {
-                        #if os(macOS)
+                        #if os(macOS) || os(visionOS)
                         Label("Inspector", systemImage: "sidebar.right")
                         #else
                         Image(systemName: horizontal_size_class != .compact ? "sidebar.right" : "inset.filled.bottomthird.rectangle.portrait")

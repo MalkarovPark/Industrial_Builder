@@ -42,6 +42,7 @@ struct ToolModuleDesigner: View
             if let entity_file_name = module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
+                #if os(macOS) || os(iOS)
                 ToolModelView(
                     entity: entity_file_item.entity,
                     
@@ -50,6 +51,14 @@ struct ToolModuleDesigner: View
                     
                     is_pan: $is_pan
                 )
+                #else
+                ToolModelView(
+                    entity: entity_file_item.entity,
+                    
+                    workspace: workspace,
+                    previewed_tool: previewed_tool
+                )
+                #endif
             }
             else
             {
@@ -166,7 +175,7 @@ struct ToolModuleDesigner: View
                 {
                     Button(action: { inspector_presented.toggle() })
                     {
-                        #if os(macOS)
+                        #if os(macOS) || os(visionOS)
                         Label("Inspector", systemImage: "sidebar.right")
                         #else
                         Image(systemName: horizontal_size_class != .compact ? "sidebar.right" : "inset.filled.bottomthird.rectangle.portrait")

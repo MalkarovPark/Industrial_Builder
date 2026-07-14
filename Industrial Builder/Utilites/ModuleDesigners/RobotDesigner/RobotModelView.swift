@@ -20,6 +20,7 @@ struct RobotModelView: View
     @StateObject var workspace: Workspace
     @StateObject var previewed_robot: Robot
     
+    #if os(macOS) || os(iOS)
     @Binding var is_pan: Bool
     
     @State private var scene_content: RealityViewCameraContent?
@@ -78,6 +79,17 @@ struct RobotModelView: View
             workspace.remove_entity(from: scene_content!)
         }
     }
+    #else
+    @State private var scene_content: RealityViewContent?
+    
+    var body: some View
+    {
+        RealityView
+        { content in
+            
+        }
+    }
+    #endif
     
     private func place_entity(_ new_entity: Entity?)
     {
@@ -88,10 +100,12 @@ struct RobotModelView: View
             previewed_robot.model_entity?.addChild(new_entity)
         }
         
+        #if os(macOS) || os(iOS)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
             workspace.focus(on: previewed_robot.model_entity)
         }
+        #endif
     }
     
     private func update_entity(_ new_entity: Entity?)

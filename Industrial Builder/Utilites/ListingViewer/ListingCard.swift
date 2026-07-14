@@ -41,7 +41,7 @@ struct ListingCard<Content: View>: View
                 #if !os(visionOS)
                     .foregroundStyle(.white)
                 #else
-                    .foregroundStyle(.black.opacity(0.25))
+                    .foregroundStyle(.thinMaterial)//.black.opacity(0.25))
                 #endif
                     .overlay(alignment: .topLeading)
                 {
@@ -141,12 +141,14 @@ struct ListingCard<Content: View>: View
             .offset(y: hovered ? -2 : 0)
         }
         .buttonStyle(.plain)
+        #if !os(visionOS)
         .background
         {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .blur(radius: 16)
                 .opacity(0.2)
         }
+        #endif
         .frame(height: 192)
         .onHover
         { hovered in
@@ -202,8 +204,13 @@ struct ListingCard<Content: View>: View
 
 #Preview
 {
-    ListingCard(listing_item: ListingItem(name: "Sources", text: ""))
+    ListingCard(listing_item: ListingItem(name: "Sources", text: """
+        import Foundation
+        import RealityKit
+        import IndustrialKit
+        """))
     { _ in
         EmptyView()
     }
+    .frame(width: 256)
 }

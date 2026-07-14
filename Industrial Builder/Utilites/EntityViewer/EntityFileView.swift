@@ -35,7 +35,9 @@ struct EntityFileView: View
                 content.add(camera)
             }
         }
+        #if !os(visionOS)
         .realityViewCameraControls(.orbit)
+        #endif
         .onDisappear
         {
             preview_entity = nil

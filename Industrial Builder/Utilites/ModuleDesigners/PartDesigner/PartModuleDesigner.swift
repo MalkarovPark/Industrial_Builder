@@ -35,7 +35,11 @@ struct PartModuleDesigner: View
             if let entity_file_name = module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
+                #if os(macOS) || os(iOS)
                 PartModelView(entity: entity_file_item.entity, is_pan: $is_pan)
+                #else
+                PartModelView(entity: entity_file_item.entity)
+                #endif
             }
             else
             {
@@ -124,7 +128,7 @@ struct PartModuleDesigner: View
                 {
                     Button(action: { inspector_presented.toggle() })
                     {
-                        #if os(macOS)
+                        #if os(macOS) || os(visionOS)
                         Label("Inspector", systemImage: "sidebar.right")
                         #else
                         Image(systemName: horizontal_size_class != .compact ? "sidebar.right" : "inset.filled.bottomthird.rectangle.portrait")

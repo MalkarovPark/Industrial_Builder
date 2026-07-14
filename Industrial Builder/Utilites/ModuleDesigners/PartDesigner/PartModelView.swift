@@ -17,12 +17,13 @@ struct PartModelView: View
     
     @State private var preview_entity: Entity?
     
+    @StateObject var workspace = Workspace()
+    @StateObject var previewed_part = Part(name: "preview", entity: Entity())
+    
+    #if os(macOS) || os(iOS)
     @Binding var is_pan: Bool
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
-    
-    @StateObject var workspace = Workspace()
-    @StateObject var previewed_part = Part(name: "preview", entity: Entity())
     
     var body: some View
     {
@@ -53,6 +54,17 @@ struct PartModelView: View
             update_entity(new_value)
         }
     }
+    #else
+    @State private var scene_content: RealityViewContent?
+    
+    var body: some View
+    {
+        RealityView
+        { content in
+            
+        }
+    }
+    #endif
     
     private func place_entity(_ new_entity: Entity?)
     {
@@ -62,10 +74,12 @@ struct PartModelView: View
             previewed_part.model_entity?.addChild(new_entity)
         }
         
+        #if os(macOS) || os(iOS)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
             workspace.focus(on: previewed_part.model_entity)
         }
+        #endif
     }
     
     private func update_entity(_ new_entity: Entity?)

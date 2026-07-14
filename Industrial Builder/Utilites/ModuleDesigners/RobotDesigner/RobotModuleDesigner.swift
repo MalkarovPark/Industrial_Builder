@@ -42,6 +42,7 @@ struct RobotModuleDesigner: View
             if let entity_file_name = module.entity_file_name,
                let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
             {
+                #if os(macOS) || os(iOS)
                 RobotModelView(
                     entity: entity_file_item.entity,
                     
@@ -50,6 +51,14 @@ struct RobotModuleDesigner: View
                     
                     is_pan: $is_pan
                 )
+                #else
+                RobotModelView(
+                    entity: entity_file_item.entity,
+                    
+                    workspace: workspace,
+                    previewed_robot: previewed_robot
+                )
+                #endif
             }
             else
             {
@@ -166,7 +175,7 @@ struct RobotModuleDesigner: View
                 {
                     Button(action: { inspector_presented.toggle() })
                     {
-                        #if os(macOS)
+                        #if os(macOS) || os(visionOS)
                         Label("Inspector", systemImage: "sidebar.right")
                         #else
                         Image(systemName: horizontal_size_class != .compact ? "sidebar.right" : "inset.filled.bottomthird.rectangle.portrait")
