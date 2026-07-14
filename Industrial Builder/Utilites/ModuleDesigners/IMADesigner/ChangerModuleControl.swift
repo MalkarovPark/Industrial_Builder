@@ -232,6 +232,11 @@ public struct ChangerModuleControl: View
                     #endif
                 }
             }
+            #if !os(visionOS)
+            .padding(.leading, 10)
+            #else
+            .padding(.leading, 16)
+            #endif
             
             Button
             {

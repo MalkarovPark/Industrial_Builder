@@ -42,11 +42,6 @@ struct ChangerModuleDesigner: View
                         document_handler.update_changers()
                     }
                 }
-                #if os(macOS) || os(iOS)
-                .padding(.leading, 10)
-                #else
-                .padding(.leading, 16)
-                #endif
             }
             .padding(7.8)
             .ignoresSafeArea(edges: .bottom)
