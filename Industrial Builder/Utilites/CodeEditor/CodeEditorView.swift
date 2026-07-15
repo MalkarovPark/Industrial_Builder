@@ -57,49 +57,32 @@ struct CodeEditorView: View
                 }
         )
         
-        //#if os(macOS) || os(visionOS)
         VStack(spacing: 0)
         {
             HStack(spacing: 0)
             {
                 Spacer()
                 
-                Button
-                {
-                    new_code_view_presented = true
-                }
-                label:
+                Button(action: { new_code_view_presented = true })
                 {
                     Image(systemName: "square.and.arrow.down")
-                    #if !os(macOS)
-                        .imageScale(.large)
-                    #if os(iOS)
-                        .frame(width: 16, height: 16)
-                        .foregroundStyle(.black)
-                    #else
-                        .foregroundStyle(.white)
-                    #endif
-                    #endif
+                        .modifier(CircleButtonImageFramer())
                 }
-                #if os(macOS)
-                .buttonStyle(.borderless)
-                .padding(11)
+                .keyboardShortcut(.cancelAction)
+                #if !os(visionOS)
+                .modifier(CircleButtonGlassBorderer())
                 #else
                 .buttonBorderShape(.circle)
-                #if !os(visionOS)
-                .padding(15)
+                .controlSize(.large)
+                .buttonStyle(.bordered)
                 #endif
-                #endif
-                #if !os(visionOS)
-                .glassEffect()
+                .keyboardShortcut(.cancelAction)
+                #if os(macOS) || os(iOS)
+                .padding(10)
                 #else
-                .padding(4)
-                .buttonStyle(.borderless)
-                .glassBackgroundEffect()
-                .padding(6)
+                .padding(16)
                 #endif
             }
-            .padding(10)
             .sheet(isPresented: $new_code_view_presented)
             {
                 CodeSelectorView(
@@ -114,32 +97,12 @@ struct CodeEditorView: View
             CodeView(text: code_text, language: .javascript())
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: label, plain: false, clear_background: true))
-        #if os(macOS)
+        #if os(macOS) || os(visionOS)
         .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
         #endif
         #if os(iOS)
         .background(.white)
         #endif
-        /*#else
-        if horizontal_size_class != .compact
-        {
-            VStack(spacing: 0)
-            {
-                CodeView(text: code_text)
-            }
-            .modifier(SheetCaption(is_presented: $is_presented, label: listing_item.name))
-            .frame(minWidth: 640, maxWidth: 800, minHeight: 480, maxHeight: 600)
-        }
-        else
-        {
-            VStack(spacing: 0)
-            {
-                CodeView(text: code_text)
-            }
-            .modifier(SheetCaption(is_presented: $is_presented, label: listing_item.name))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        #endif*/
     }
 }
 

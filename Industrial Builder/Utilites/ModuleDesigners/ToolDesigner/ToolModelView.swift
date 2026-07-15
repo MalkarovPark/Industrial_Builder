@@ -27,6 +27,8 @@ struct ToolModelView: View
     @State private var scene_camera = PerspectiveCamera()
     #endif
     
+    //@State private var scene_content: RealityViewContent?
+    
     var body: some View
     {
         ZStack
@@ -54,11 +56,8 @@ struct ToolModelView: View
             )
             .ignoresSafeArea(.container, edges: .all)
             #else
-            DesignRealityView(entity: entity)
-                .onChange(of: entity)
-                { old_value, new_value in
-                    update_entity(new_value)
-                }
+            DesignRealityView(entity: previewed_tool.model_entity)
+                .onAppear(perform: { place_entity(entity) })
             #endif
             
             FloatingView(alignment: .bottomTrailing)

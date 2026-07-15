@@ -56,11 +56,8 @@ struct RobotModelView: View
             )
             .ignoresSafeArea(.container, edges: .all)
             #else
-            DesignRealityView(entity: entity)
-                .onChange(of: entity)
-                { old_value, new_value in
-                    update_entity(new_value)
-                }
+            DesignRealityView(entity: previewed_robot.model_entity)
+                .onAppear(perform: { place_entity(entity) })
             #endif
             
             FloatingView(alignment: .bottomTrailing)

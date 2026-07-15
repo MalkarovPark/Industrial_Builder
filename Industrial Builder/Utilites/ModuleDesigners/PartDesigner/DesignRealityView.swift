@@ -13,7 +13,6 @@ public struct DesignRealityView: View
     let entity: Entity?
     
     @State private var preview_entity: Entity?
-    @State private var scene_content: RealityViewContent?
     @State private var model_size: SIMD3<Float> = .zero
     @State private var view_size: CGSize = .zero
     @State private var scale: Float = 1
@@ -28,19 +27,12 @@ public struct DesignRealityView: View
         { geometry in
             RealityView
             { content in
-                scene_content = content
-                
-                if preview_entity == nil
+                if let preview_entity = entity
                 {
-                    preview_entity = (entity ?? Entity()).clone(recursive: true)
+                    let bounds = preview_entity.visualBounds(relativeTo: nil)
+                    model_size = bounds.extents
                     
-                    if let preview_entity
-                    {
-                        let bounds = preview_entity.visualBounds(relativeTo: nil)
-                        model_size = bounds.extents
-                        
-                        content.add(preview_entity)
-                    }
+                    content.add(preview_entity)
                 }
             }
             .frame(depth: CGFloat(scale * model_size.x * 1000 + shift))
@@ -58,7 +50,7 @@ public struct DesignRealityView: View
     
     private func update_scale()
     {
-        guard let preview_entity else { return }
+        guard let preview_entity = entity else { return }
         guard model_size != .zero else { return }
         
         let viewWidth = Float(view_size.width) * 0.001
