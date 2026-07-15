@@ -61,7 +61,11 @@ struct PartModelView: View
     {
         RealityView
         { content in
-            
+            content.add(entity ?? Entity())
+        }
+        .onChange(of: entity)
+        { old_value, new_value in
+            update_entity(new_value)
         }
     }
     #endif

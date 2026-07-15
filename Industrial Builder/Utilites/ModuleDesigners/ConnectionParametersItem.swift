@@ -155,10 +155,11 @@ struct ConnectionParametersItem: View
             }
             #if !os(visionOS)
             .background(.quinary)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             #else
             .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             #endif
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .frame(minHeight: 80, maxHeight: 160)
         }
     }
@@ -288,7 +289,7 @@ private struct ConnectionParameterEditor: View
                 
                 Divider()
                 
-                ParameterViewAlt(parameter: parameter, on_update: on_update)
+                ParameterView(parameter: parameter, on_update: on_update)
                 
                 Divider()
                 
@@ -392,7 +393,7 @@ private struct ConnectionParameterEditor: View
     }
 }
 
-private struct ParameterViewAlt: View
+private struct ParameterView: View
 {
     @ObservedObject var parameter: ConnectionParameter
     

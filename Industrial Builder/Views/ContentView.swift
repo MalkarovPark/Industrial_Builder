@@ -146,7 +146,8 @@ struct Sidebar: View
                 .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
                 #endif
                 .listStyle(.sidebar)
-                .toolbar(id: "Workspace")
+                #if os(visionOS)
+                .toolbar(id: "STC")
                 {
                     #if os(visionOS)
                     ToolbarItem(id: "Documents", placement: .cancellationAction)
@@ -171,6 +172,7 @@ struct Sidebar: View
                     }
                     #endif*/
                 }
+                #endif
             }
             detail:
             {

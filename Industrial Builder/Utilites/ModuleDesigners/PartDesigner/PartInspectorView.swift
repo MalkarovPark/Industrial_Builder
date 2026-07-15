@@ -38,24 +38,7 @@ struct PartInspectorView: View
                 
                 Divider()
                 
-                InspectorItem(label: "Description", is_expanded: true)
-                {
-                    let description = Binding(
-                        get: { module.description },
-                        set:
-                            { new_value in
-                                module.description = new_value
-                                
-                                on_update()
-                            }
-                    )
-                    
-                    TextEditor(text: description)
-                        .multilineTextAlignment(.leading)
-                        .textFieldStyle(.roundedBorder)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .frame(minHeight: 80, maxHeight: 160)
-                }
+                DescriptionItem(module: module, on_update: on_update)
                 
                 InspectorItem(label: "Entity", is_expanded: true)
                 {

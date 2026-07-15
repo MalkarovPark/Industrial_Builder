@@ -34,14 +34,17 @@ struct SheetFramer: ViewModifier
     }
 }
 
-struct TextFrame: ViewModifier
+struct TextEditorBorder: ViewModifier
 {
     public func body(content: Content) -> some View
     {
         content
-            .frame(minHeight: 64)
-        #if os(macOS)
-            .shadow(color: .black.opacity(0.2), radius: 1)
+            .textFieldStyle(.roundedBorder)
+        #if !os(visionOS)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        #else
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         #endif
     }
 }

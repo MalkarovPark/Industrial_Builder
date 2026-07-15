@@ -142,10 +142,11 @@ struct OperationCodesItem: View
             }
             #if !os(visionOS)
             .background(.quinary)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             #else
             .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             #endif
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .frame(minHeight: 80, maxHeight: 160)
         }
     }
@@ -160,9 +161,9 @@ struct OperationCodesItem: View
     {
         let existing_values = Set(operations.map { $0.value })
         var new_value = existing_values.min() ?? 0
-
+        
         while existing_values.contains(new_value) { new_value += 1 }
-
+        
         return new_value
     }
 }

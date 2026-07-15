@@ -54,6 +54,7 @@
 		62B0057B2D8EA9F400544A76 /* CodeEditorView in Frameworks */ = {isa = PBXBuildFile; productRef = 62B0057A2D8EA9F400544A76 /* CodeEditorView */; };
 		62B0057D2D8EA9F400544A76 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 62B0057C2D8EA9F400544A76 /* LanguageSupport */; };
 		62B0057F2D8ECAA000544A76 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B0057E2D8ECA9F00544A76 /* CodeView.swift */; };
+		62BA0CA23007A02D000F0005 /* DescriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BA0CA13007A02D000F0005 /* DescriptionItem.swift */; };
 		62BA0F9D2E26FD5500DF0FCC /* IndustrialKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 62BA0F9C2E26FD5500DF0FCC /* IndustrialKitUI */; };
 		62BA0F9F2E28418600DF0FCC /* IndustrialBuilder.icon in Resources */ = {isa = PBXBuildFile; fileRef = 62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */; };
 		62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleDesigner.swift */; };
@@ -127,6 +128,7 @@
 		629B526B2AF69056003F45D2 /* EntityListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityListView.swift; sourceTree = "<group>"; };
 		62AE552F2AE962CA00554A5B /* ComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsView.swift; sourceTree = "<group>"; };
 		62B0057E2D8ECA9F00544A76 /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
+		62BA0CA13007A02D000F0005 /* DescriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionItem.swift; sourceTree = "<group>"; };
 		62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = IndustrialBuilder.icon; sourceTree = "<group>"; };
 		62BAE7762BD71846000972EA /* PartModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleDesigner.swift; sourceTree = "<group>"; };
 		62C9CEA12F6162F800B3DE41 /* GlassTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassTile.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 			children = (
 				626A6C132DBC1B71000395F6 /* ModuleSelector.swift */,
 				62E79B312F57987100D03018 /* InspectorItem.swift */,
+				62BA0CA13007A02D000F0005 /* DescriptionItem.swift */,
 				6257C6432F5C4AE900C6174E /* LinkedEntitiesItem.swift */,
 				62D52D702C37EA91009A3DC7 /* OperationCodesItem.swift */,
 				62D4304E2CE7E9E900894BEC /* ConnectionParametersItem.swift */,
@@ -569,6 +572,7 @@
 				62FE59F82F76A99D003BF06E /* SwiftPlaygroundPattern.swift in Sources */,
 				6265AB092F55CC4A004AA44C /* RobotModulesView.swift in Sources */,
 				6265AB0A2F55CC4A004AA44C /* OperationCodesItem.swift in Sources */,
+				62BA0CA23007A02D000F0005 /* DescriptionItem.swift in Sources */,
 				6265AB132F55D8DC004AA44C /* RobotModelView.swift in Sources */,
 				6265AB0B2F55CC4A004AA44C /* ToolModuleDesigner.swift in Sources */,
 				6289FCC72AD0398100BB7F5E /* Industrial_BuilderApp.swift in Sources */,
