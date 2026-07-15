@@ -54,8 +54,6 @@ struct ToolModuleDesigner: View
                 #else
                 ToolModelView(
                     entity: entity_file_item.entity,
-                    
-                    workspace: workspace,
                     previewed_tool: previewed_tool
                 )
                 #endif

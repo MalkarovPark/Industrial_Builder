@@ -54,8 +54,6 @@ struct RobotModuleDesigner: View
                 #else
                 RobotModelView(
                     entity: entity_file_item.entity,
-                    
-                    workspace: workspace,
                     previewed_robot: previewed_robot
                 )
                 #endif

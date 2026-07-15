@@ -15,16 +15,19 @@ struct RobotModelView: View
 {
     let entity: Entity?
     
-    @State private var previewed_entity: Entity?
-    
-    @StateObject var workspace: Workspace
     @StateObject var previewed_robot: Robot
     
     #if os(macOS) || os(iOS)
+    @State private var previewed_entity: Entity?
+    
+    @StateObject var workspace: Workspace
+    
     @Binding var is_pan: Bool
     
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
+    #else
+    @State private var view_id = UUID()
     #endif
     
     var body: some View
@@ -58,6 +61,7 @@ struct RobotModelView: View
             #else
             DesignRealityView(entity: previewed_robot.model_entity)
                 .onAppear(perform: { place_entity(entity) })
+                .id(view_id)
             #endif
             
             FloatingView(alignment: .bottomTrailing)
@@ -92,8 +96,12 @@ struct RobotModelView: View
     {
         if let new_entity = new_entity?.clone(recursive: true)
         {
+            #if os(macOS) || os(iOS)
             //workspace.select_robot(name: "preview")
             previewed_entity = new_entity
+            #else
+            previewed_robot.model_entity?.children.removeAll()
+            #endif
             previewed_robot.model_entity?.addChild(new_entity)
         }
         
@@ -107,7 +115,12 @@ struct RobotModelView: View
     
     private func update_entity(_ new_entity: Entity?)
     {
+        #if os(macOS) || os(iOS)
         previewed_entity?.removeFromParent()
+        #else
+        previewed_robot.model_entity?.children.removeAll()
+        view_id = UUID()
+        #endif
         
         place_entity(new_entity)
     }

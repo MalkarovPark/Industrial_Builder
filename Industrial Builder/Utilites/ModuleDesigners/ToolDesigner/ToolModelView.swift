@@ -15,16 +15,19 @@ struct ToolModelView: View
 {
     let entity: Entity?
     
-    @State private var previewed_entity: Entity?
-    
-    @StateObject var workspace: Workspace
     @StateObject var previewed_tool: Tool
     
     #if os(macOS) || os(iOS)
+    @State private var previewed_entity: Entity?
+    
+    @StateObject var workspace: Workspace
+    
     @Binding var is_pan: Bool
     
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
+    #else
+    @State private var view_id = UUID()
     #endif
     
     //@State private var scene_content: RealityViewContent?
@@ -58,6 +61,7 @@ struct ToolModelView: View
             #else
             DesignRealityView(entity: previewed_tool.model_entity)
                 .onAppear(perform: { place_entity(entity) })
+                .id(view_id)
             #endif
             
             FloatingView(alignment: .bottomTrailing)
@@ -87,8 +91,12 @@ struct ToolModelView: View
     {
         if let new_entity = new_entity?.clone(recursive: true)
         {
+            #if os(macOS) || os(iOS)
             //workspace.select_tool(name: "preview")
             previewed_entity = new_entity
+            #else
+            previewed_tool.model_entity?.children.removeAll()
+            #endif
             previewed_tool.model_entity?.addChild(new_entity)
         }
         
@@ -102,7 +110,12 @@ struct ToolModelView: View
     
     private func update_entity(_ new_entity: Entity?)
     {
+        #if os(macOS) || os(iOS)
         previewed_entity?.removeFromParent()
+        #else
+        previewed_tool.model_entity?.children.removeAll()
+        view_id = UUID()
+        #endif
         
         place_entity(new_entity)
     }
