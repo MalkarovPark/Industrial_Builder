@@ -55,6 +55,7 @@
 		62B0057D2D8EA9F400544A76 /* LanguageSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 62B0057C2D8EA9F400544A76 /* LanguageSupport */; };
 		62B0057F2D8ECAA000544A76 /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B0057E2D8ECA9F00544A76 /* CodeView.swift */; };
 		62BA0CA23007A02D000F0005 /* DescriptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BA0CA13007A02D000F0005 /* DescriptionItem.swift */; };
+		62BA0CA43007FA71000F0005 /* DesignRealityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BA0CA33007FA71000F0005 /* DesignRealityView.swift */; platformFilters = (xros, ); };
 		62BA0F9D2E26FD5500DF0FCC /* IndustrialKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 62BA0F9C2E26FD5500DF0FCC /* IndustrialKitUI */; };
 		62BA0F9F2E28418600DF0FCC /* IndustrialBuilder.icon in Resources */ = {isa = PBXBuildFile; fileRef = 62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */; };
 		62BAE7772BD71846000972EA /* PartModuleDesigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62BAE7762BD71846000972EA /* PartModuleDesigner.swift */; };
@@ -129,6 +130,7 @@
 		62AE552F2AE962CA00554A5B /* ComponentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsView.swift; sourceTree = "<group>"; };
 		62B0057E2D8ECA9F00544A76 /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
 		62BA0CA13007A02D000F0005 /* DescriptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionItem.swift; sourceTree = "<group>"; };
+		62BA0CA33007FA71000F0005 /* DesignRealityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignRealityView.swift; sourceTree = "<group>"; };
 		62BA0F9E2E28418600DF0FCC /* IndustrialBuilder.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = IndustrialBuilder.icon; sourceTree = "<group>"; };
 		62BAE7762BD71846000972EA /* PartModuleDesigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartModuleDesigner.swift; sourceTree = "<group>"; };
 		62C9CEA12F6162F800B3DE41 /* GlassTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassTile.swift; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 				62BAE7762BD71846000972EA /* PartModuleDesigner.swift */,
 				6265AB182F55D950004AA44C /* PartModelView.swift */,
 				62CA56A32F549A8A0040CB77 /* PartInspectorView.swift */,
+				62BA0CA33007FA71000F0005 /* DesignRealityView.swift */,
 			);
 			path = PartDesigner;
 			sourceTree = "<group>";
@@ -544,6 +547,7 @@
 				62E79B322F57987200D03018 /* InspectorItem.swift in Sources */,
 				626A6C142DBC1B71000395F6 /* ModuleSelector.swift in Sources */,
 				6265AB172F55D93F004AA44C /* ToolModelView.swift in Sources */,
+				62BA0CA43007FA71000F0005 /* DesignRealityView.swift in Sources */,
 				6296D2AA2AED6E290094FB19 /* AppState.swift in Sources */,
 				6265AB0F2F55D123004AA44C /* RobotInspectorView.swift in Sources */,
 				62CA56CD2F550B1C0040CB77 /* JSConfiguration.swift in Sources */,

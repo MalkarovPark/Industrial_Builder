@@ -25,11 +25,13 @@ struct RobotModelView: View
     
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
+    #endif
     
     var body: some View
     {
         ZStack
         {
+            #if os(macOS) || os(iOS)
             RealityView
             { content in
                 scene_content = content
@@ -53,6 +55,13 @@ struct RobotModelView: View
                     }
             )
             .ignoresSafeArea(.container, edges: .all)
+            #else
+            DesignRealityView(entity: entity)
+                .onChange(of: entity)
+                { old_value, new_value in
+                    update_entity(new_value)
+                }
+            #endif
             
             FloatingView(alignment: .bottomTrailing)
             {
@@ -71,6 +80,7 @@ struct RobotModelView: View
         { old_value, new_value in
             update_entity(new_value)
         }
+        #if !os(visionOS)
         .onDisappear
         {
             workspace.delete_robot(name: "preview")
@@ -78,18 +88,8 @@ struct RobotModelView: View
             preview_entity = nil
             workspace.remove_entity(from: scene_content!)
         }
+        #endif
     }
-    #else
-    @State private var scene_content: RealityViewContent?
-    
-    var body: some View
-    {
-        RealityView
-        { content in
-            
-        }
-    }
-    #endif
     
     private func place_entity(_ new_entity: Entity?)
     {

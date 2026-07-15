@@ -12,10 +12,13 @@ struct EntityFileView: View
 {
     let entity: Entity?
     
+    #if os(macOS) || os(iOS)
     @State private var preview_entity: Entity?
+    #endif
 
     var body: some View
     {
+        #if os(macOS) || os(iOS)
         RealityView
         { content in
             // Duplicate entity
@@ -35,15 +38,16 @@ struct EntityFileView: View
                 content.add(camera)
             }
         }
-        #if !os(visionOS)
         .realityViewCameraControls(.orbit)
+        #if os(iOS)
+        .background(.white)
         #endif
         .onDisappear
         {
             preview_entity = nil
         }
-        #if os(iOS)
-        .background(.white)
+        #else
+        DesignRealityView(entity: entity)
         #endif
     }
 }
