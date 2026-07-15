@@ -42,7 +42,11 @@ struct EntityListView: View
                                 EntityFileView(entity: item.entity)
                                     .frame(minWidth: 320, idealWidth: 640, maxWidth: 800,
                                            minHeight: 240, idealHeight: 480, maxHeight: 600)
+                                #if !os(visionOS)
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: false))
+                                #else
+                                    .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: true))
+                                #endif
                             }
                         }
                     }
