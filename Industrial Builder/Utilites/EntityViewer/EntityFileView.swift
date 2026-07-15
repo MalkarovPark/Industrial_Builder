@@ -13,7 +13,7 @@ struct EntityFileView: View
     let entity: Entity?
     
     #if os(macOS) || os(iOS)
-    @State private var preview_entity: Entity?
+    @State private var previewed_entity: Entity?
     #endif
 
     var body: some View
@@ -22,17 +22,17 @@ struct EntityFileView: View
         RealityView
         { content in
             // Duplicate entity
-            if preview_entity == nil, let entity = entity
+            if previewed_entity == nil, let entity = entity
             {
-                preview_entity = entity.clone(recursive: true)
+                previewed_entity = entity.clone(recursive: true)
             }
             
-            if let preview_entity = preview_entity
+            if let previewed_entity = previewed_entity
             {
-                content.add(preview_entity)
+                content.add(previewed_entity)
                 
                 // Camera reposition
-                let bounds = preview_entity.visualBounds(relativeTo: nil).extents
+                let bounds = previewed_entity.visualBounds(relativeTo: nil).extents
                 let camera = PerspectiveCamera()
                 camera.position = [0, bounds.y / 2, bounds.z * 2]
                 content.add(camera)
@@ -44,7 +44,7 @@ struct EntityFileView: View
         #endif
         .onDisappear
         {
-            preview_entity = nil
+            previewed_entity = nil
         }
         #else
         DesignRealityView(entity: entity)

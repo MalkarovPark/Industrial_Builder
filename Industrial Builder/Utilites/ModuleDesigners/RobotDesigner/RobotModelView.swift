@@ -15,7 +15,7 @@ struct RobotModelView: View
 {
     let entity: Entity?
     
-    @State private var preview_entity: Entity?
+    @State private var previewed_entity: Entity?
     
     @StateObject var workspace: Workspace
     @StateObject var previewed_robot: Robot
@@ -81,8 +81,8 @@ struct RobotModelView: View
         .onDisappear
         {
             workspace.delete_robot(name: "preview")
-            preview_entity?.removeFromParent()
-            preview_entity = nil
+            previewed_entity?.removeFromParent()
+            previewed_entity = nil
             workspace.remove_entity(from: scene_content!)
         }
         #endif
@@ -93,7 +93,7 @@ struct RobotModelView: View
         if let new_entity = new_entity?.clone(recursive: true)
         {
             //workspace.select_robot(name: "preview")
-            preview_entity = new_entity
+            previewed_entity = new_entity
             previewed_robot.model_entity?.addChild(new_entity)
         }
         
@@ -107,7 +107,7 @@ struct RobotModelView: View
     
     private func update_entity(_ new_entity: Entity?)
     {
-        preview_entity?.removeFromParent()
+        previewed_entity?.removeFromParent()
         
         place_entity(new_entity)
     }

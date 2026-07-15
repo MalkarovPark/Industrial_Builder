@@ -245,7 +245,7 @@ private struct ModuleSelectionCard: View
     public let on_update: () -> Void
     
     @State private var is_renaming = false
-    @State private var preview_entity: Entity?
+    @State private var previewed_entity: Entity?
     @State private var symbol_name = String()
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
@@ -279,11 +279,11 @@ private struct ModuleSelectionCard: View
         }
         label:
         {
-            if preview_entity != nil
+            if previewed_entity != nil
             {
                 GlassBoxCard(
                     title: module.name,
-                    entity: preview_entity,
+                    entity: previewed_entity,
                     vertical_repostion: true
                 )
                 {
@@ -371,7 +371,7 @@ private struct ModuleSelectionCard: View
         }
         .onDisappear
         {
-            preview_entity = nil
+            previewed_entity = nil
         }
     }
     
@@ -394,11 +394,11 @@ private struct ModuleSelectionCard: View
         
         if let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
         {
-            preview_entity = entity_file_item.entity.clone(recursive: true)
+            previewed_entity = entity_file_item.entity.clone(recursive: true)
         }
         else
         {
-            preview_entity = nil
+            previewed_entity = nil
         }
     }
 }

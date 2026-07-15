@@ -101,7 +101,7 @@ private struct PartModuleCard: View
     @ObservedObject var module: PartModule
     
     @State private var is_renaming = false
-    @State private var preview_entity: Entity?
+    @State private var previewed_entity: Entity?
     
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
@@ -112,11 +112,11 @@ private struct PartModuleCard: View
     {
         NavigationLink(destination: PartModuleDesigner(module: module).onDisappear(perform: reset_card))
         {
-            if preview_entity != nil
+            if previewed_entity != nil
             {
                 GlassBoxCard(
                     title: module.name,
-                    entity: preview_entity,
+                    entity: previewed_entity,
                     vertical_repostion: true,
                     is_renaming: $is_renaming,
                     on_rename: { new_name in on_rename(new_name) }
@@ -158,7 +158,7 @@ private struct PartModuleCard: View
         }
         .onDisappear
         {
-            preview_entity = nil
+            previewed_entity = nil
         }
     }
     
@@ -167,11 +167,11 @@ private struct PartModuleCard: View
         if let entity_file_name = module.entity_file_name,
            let entity_file_item = base_stc.entity_items.first(where: { $0.name == entity_file_name })
         {
-            preview_entity = entity_file_item.entity.clone(recursive: true)
+            previewed_entity = entity_file_item.entity.clone(recursive: true)
         }
         else
         {
-            preview_entity = nil
+            previewed_entity = nil
         }
     }
     
