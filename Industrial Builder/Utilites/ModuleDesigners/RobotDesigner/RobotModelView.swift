@@ -17,17 +17,15 @@ struct RobotModelView: View
     
     @StateObject var previewed_robot: Robot
     
-    #if os(macOS) || os(iOS)
     @State private var previewed_entity: Entity?
     
+    #if os(macOS) || os(iOS)
     @StateObject var workspace: Workspace
     
     @Binding var is_pan: Bool
     
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
-    #else
-    @State private var view_id = UUID()
     #endif
     
     var body: some View
@@ -61,7 +59,6 @@ struct RobotModelView: View
             #else
             DesignRealityView(entity: previewed_robot.model_entity)
                 .onAppear(perform: { place_entity(entity) })
-                .id(view_id)
             #endif
             
             FloatingView(alignment: .bottomTrailing)
@@ -81,27 +78,25 @@ struct RobotModelView: View
         { old_value, new_value in
             update_entity(new_value)
         }
-        #if !os(visionOS)
         .onDisappear
         {
-            workspace.delete_robot(name: "preview")
+            #if !os(visionOS)
+            workspace.delete_tool(name: "preview")
+            #endif
             previewed_entity?.removeFromParent()
             previewed_entity = nil
+            #if !os(visionOS)
             workspace.remove_entity(from: scene_content!)
+            #endif
         }
-        #endif
     }
     
     private func place_entity(_ new_entity: Entity?)
     {
         if let new_entity = new_entity?.clone(recursive: true)
         {
-            #if os(macOS) || os(iOS)
             //workspace.select_robot(name: "preview")
             previewed_entity = new_entity
-            #else
-            previewed_robot.model_entity?.children.removeAll()
-            #endif
             previewed_robot.model_entity?.addChild(new_entity)
         }
         
@@ -115,13 +110,7 @@ struct RobotModelView: View
     
     private func update_entity(_ new_entity: Entity?)
     {
-        #if os(macOS) || os(iOS)
         previewed_entity?.removeFromParent()
-        #else
-        previewed_robot.model_entity?.children.removeAll()
-        view_id = UUID()
-        #endif
-        
         place_entity(new_entity)
     }
 }

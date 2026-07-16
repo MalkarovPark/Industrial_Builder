@@ -46,8 +46,8 @@ struct ToolModuleDesigner: View
                 ToolModelView(
                     entity: entity_file_item.entity,
                     
-                    workspace: workspace,
                     previewed_tool: previewed_tool,
+                    workspace: workspace,
                     
                     is_pan: $is_pan
                 )

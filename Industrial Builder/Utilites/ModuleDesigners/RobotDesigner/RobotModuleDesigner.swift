@@ -46,8 +46,8 @@ struct RobotModuleDesigner: View
                 RobotModelView(
                     entity: entity_file_item.entity,
                     
-                    workspace: workspace,
                     previewed_robot: previewed_robot,
+                    workspace: workspace,
                     
                     is_pan: $is_pan
                 )
