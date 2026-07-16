@@ -56,6 +56,8 @@ struct RobotModuleDesigner: View
                     entity: entity_file_item.entity,
                     previewed_robot: previewed_robot
                 )
+                .opacity(entity_selector_presented ? 0 : 1)
+                .animation(.easeInOut(duration: 0.2), value: entity_selector_presented)
                 #endif
             }
             else

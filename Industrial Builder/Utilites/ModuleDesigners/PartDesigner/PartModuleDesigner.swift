@@ -39,6 +39,8 @@ struct PartModuleDesigner: View
                 PartModelView(entity: entity_file_item.entity, is_pan: $is_pan)
                 #else
                 PartModelView(entity: entity_file_item.entity)
+                    .opacity(entity_selector_presented ? 0 : 1)
+                    .animation(.easeInOut(duration: 0.2), value: entity_selector_presented)
                 #endif
             }
             else

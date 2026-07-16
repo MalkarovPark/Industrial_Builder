@@ -56,6 +56,8 @@ struct ToolModuleDesigner: View
                     entity: entity_file_item.entity,
                     previewed_tool: previewed_tool
                 )
+                .opacity(entity_selector_presented ? 0 : 1)
+                .animation(.easeInOut(duration: 0.2), value: entity_selector_presented)
                 #endif
             }
             else
@@ -190,3 +192,4 @@ struct ToolModuleDesigner: View
     ToolModuleDesigner(module: ToolModule())
         .environmentObject(StandardTemplateConstruct())
 }
+
