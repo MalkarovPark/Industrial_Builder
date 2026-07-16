@@ -103,32 +103,64 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8EB4E02A-63C1-47FD-B9AD-137CB119DB99"
+            uuid = "51BAC18C-8FBF-4C7F-8922-BADF5032301D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/Utilites/ModuleDesigners/ToolDesigner/ToolModelView.swift"
+            filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
-            landmarkName = "place_entity(_:)"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "connect_entities(of:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2DCBF5D0-02C4-4553-AF75-DD1DEB09CA36"
+            uuid = "2967A327-CF92-41D0-839C-1BDB2776E0BC"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Industrial Builder/Utilites/ModuleDesigners/ToolDesigner/ToolModelView.swift"
+            filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "place_entity(_:)"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "connect_entities(of:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F77A4C25-76D6-4BED-8F7B-756D5321CFC9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "connect_entities(of:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DEA140D8-39A8-4293-9744-AA51387404A6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "connect_entities(of:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -98,6 +98,9 @@ struct RobotModelView: View
             //workspace.select_robot(name: "preview")
             previewed_entity = new_entity
             previewed_robot.model_entity?.addChild(new_entity)
+            previewed_robot.model_controller.connect_entities(of: new_entity)
+            
+            previewed_robot.update_model()
         }
         
         #if os(macOS) || os(iOS)

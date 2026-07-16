@@ -93,6 +93,8 @@ struct ToolModelView: View
             //workspace.select_tool(name: "preview")
             previewed_entity = new_entity
             previewed_tool.model_entity?.addChild(new_entity)
+            
+            previewed_tool.model_controller.connect_entities(of: new_entity)
         }
         
         #if os(macOS) || os(iOS)
