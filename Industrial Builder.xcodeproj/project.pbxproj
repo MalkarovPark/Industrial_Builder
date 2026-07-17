@@ -746,7 +746,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 26.0.2;
+				MARKETING_VERSION = 26.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = celadon.IndustrialBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -791,7 +791,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 26.0.2;
+				MARKETING_VERSION = 26.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = celadon.IndustrialBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -832,8 +832,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MalkarovPark/IndustrialKit";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 26.0.0;
+				branch = development;
+				kind = branch;
 			};
 		};
 		62B005792D8EA9F400544A76 /* XCRemoteSwiftPackageReference "CodeEditorView" */ = {

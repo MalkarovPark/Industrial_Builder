@@ -108,7 +108,9 @@ public struct LinkedEntitiesItem: View
                         .id("new_linked_entity_menu")
                         .listRowInsets(.vertical, 8)
                     }
+                    #if !os(visionOS)
                     .listStyle(.plain)
+                    #endif
                     .onChange(of: entity_names.count)
                     {
                         withAnimation

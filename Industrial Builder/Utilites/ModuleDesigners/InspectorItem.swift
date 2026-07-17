@@ -32,9 +32,9 @@ public struct InspectorItem<Content: View>: View
         DisclosureGroup(isExpanded: $is_expanded)
         {
             content
-            #if os(visionOS)
+            /*#if os(visionOS)
                 .frame(width: 320)
-            #endif
+            #endif*/
         }
         label:
         {
@@ -46,5 +46,3 @@ public struct InspectorItem<Content: View>: View
         Divider()
     }
 }
-
-
