@@ -61,6 +61,9 @@ struct ChangerModuleDesigner: View
             {
                 document_handler.update_changers()
             }
+            #if os(visionOS)
+            .frame(width: 320)
+            #endif
             #else
             if horizontal_size_class != .compact
             {

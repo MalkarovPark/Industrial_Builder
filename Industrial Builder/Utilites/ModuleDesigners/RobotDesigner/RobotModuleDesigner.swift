@@ -56,7 +56,7 @@ struct RobotModuleDesigner: View
                     entity: entity_file_item.entity,
                     previewed_robot: previewed_robot
                 )
-                .opacity(entity_selector_presented ? 0 : 1)
+                .opacity(entity_selector_presented ||  device_output_presented ? 0 : 1)
                 .animation(.easeInOut(duration: 0.2), value: entity_selector_presented)
                 #endif
             }
@@ -108,6 +108,9 @@ struct RobotModuleDesigner: View
             {
                 document_handler.update_robots()
             }
+            #if os(visionOS)
+            .frame(width: 320)
+            #endif
             #else
             if horizontal_size_class != .compact
             {

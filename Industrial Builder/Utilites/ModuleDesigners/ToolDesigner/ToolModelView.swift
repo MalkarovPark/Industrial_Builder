@@ -44,8 +44,6 @@ struct ToolModelView: View
                 workspace.add_tool(previewed_tool)
                 
                 place_entity(entity)
-                
-                //workspace.select_tool(name: "preview")
             }
             .realityViewCameraControls(is_pan ? .pan : .orbit)
             .gesture(

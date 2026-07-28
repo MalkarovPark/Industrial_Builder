@@ -87,6 +87,9 @@ struct PartModuleDesigner: View
             {
                 document_handler.update_parts()
             }
+            #if os(visionOS)
+            .frame(width: 320)
+            #endif
             #else
             if horizontal_size_class != .compact
             {

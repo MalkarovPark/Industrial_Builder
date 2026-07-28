@@ -15,18 +15,17 @@ struct PartModelView: View
 {
     let entity: Entity?
     
-    #if os(macOS) || os(iOS)
+    @StateObject var previewed_part = Part(name: "preview", entity: Entity())
+    
     @State private var previewed_entity: Entity?
     
+    #if os(macOS) || os(iOS)
     @StateObject var workspace = Workspace()
-    @StateObject var previewed_part = Part(name: "preview", entity: Entity())
     
     @Binding var is_pan: Bool
     
     @State private var scene_content: RealityViewCameraContent?
     @State private var scene_camera = PerspectiveCamera()
-    #else
-    @State private var view_id = UUID()
     #endif
     
     var body: some View
@@ -54,8 +53,8 @@ struct PartModelView: View
             )
             .ignoresSafeArea(.container, edges: .vertical)
             #else
-            DesignRealityView(entity: entity)
-                .id(view_id)
+            DesignRealityView(entity: previewed_part.model_entity)
+                .onAppear(perform: { place_entity(entity) })
             #endif
         }
         .onChange(of: entity)
@@ -64,7 +63,6 @@ struct PartModelView: View
         }
     }
     
-    #if os(macOS) || os(iOS)
     private func place_entity(_ new_entity: Entity?)
     {
         if let new_entity = new_entity?.clone(recursive: true)
@@ -73,20 +71,17 @@ struct PartModelView: View
             previewed_part.model_entity?.addChild(new_entity)
         }
         
+        #if os(macOS) || os(iOS)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
         {
             workspace.focus(on: previewed_part.model_entity)
         }
+        #endif
     }
-    #endif
     
     private func update_entity(_ new_entity: Entity?)
     {
-        #if os(macOS) || os(iOS)
         previewed_entity?.removeFromParent()
         place_entity(new_entity)
-        #else
-        view_id = UUID()
-        #endif
     }
 }

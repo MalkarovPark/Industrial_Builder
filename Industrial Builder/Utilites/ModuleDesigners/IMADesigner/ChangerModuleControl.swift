@@ -155,6 +155,10 @@ public struct ChangerModuleControl: View
                             ZStack
                             {
                                 CodeView(text: code, language: .javascript())
+                                #if os(visionOS)
+                                    .background(.thinMaterial)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                #endif
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                             .overlay(alignment: .bottomLeading)

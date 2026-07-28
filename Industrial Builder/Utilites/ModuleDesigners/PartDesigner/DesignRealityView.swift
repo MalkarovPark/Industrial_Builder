@@ -41,6 +41,14 @@ public struct DesignRealityView: View
                 view_size = new_size
                 update_scale()
             }
+            .onAppear
+            {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)
+                {
+                    view_size = geometry.size
+                    update_scale()
+                }
+            }
         }
         .background
         {
@@ -53,18 +61,17 @@ public struct DesignRealityView: View
         guard let previewed_entity = entity else { return }
         guard model_size != .zero else { return }
         
-        let viewWidth = Float(view_size.width) * 0.001
-        let viewHeight = Float(view_size.height) * 0.001
+        let view_width = Float(view_size.width) * 0.001
+        let view_height = Float(view_size.height) * 0.001
         
-        let minViewDimension = min(viewWidth, viewHeight)
+        let min_view_dimension = min(view_width, view_height)
         
-        let modelRadius = length(model_size) * 0.5
+        let model_radius = length(model_size) * 0.5
         
-        guard modelRadius > 0,
-              minViewDimension > 0
+        guard model_radius > 0, min_view_dimension > 0
         else { return }
         
-        scale = (minViewDimension / length(model_size)) * factor
+        scale = (min_view_dimension / length(model_size)) * factor
         
         previewed_entity.scale = SIMD3<Float>(repeating: scale)
     }
@@ -176,11 +183,139 @@ public struct InfiniteGridView: View
     }
 }
 
+public struct PortalCardView: View
+{
+    let entity: Entity?
+    
+    @State private var previewed_entity: Entity?
+    @State private var model_size: SIMD3<Float> = .zero
+    @State private var scale: Float = 1
+    @State private var portal_entity = Entity()
+    
+    private let factor: Float = 0.5
+    private let shift: Float = 200
+    private let grid_factor: Float = 0.675
+    
+    public var body: some View
+    {
+        GeometryReader
+        { geometry in
+            RealityView
+            { content in
+                if let previewed_entity = entity
+                {
+                    let bounds = previewed_entity.visualBounds(relativeTo: nil)
+                    model_size = bounds.extents
+                    
+                    let world = make_world(with: previewed_entity)
+                    portal_entity = make_portal(world: world)
+                    
+                    content.add(world)
+                    content.add(portal_entity)
+                }
+            }
+            .frame(depth: 2)
+            .onChange(of: geometry.size)
+            { _, new_size in
+                update_scale(with: geometry.size)
+                update_portal(with: geometry.size)
+            }
+            .onAppear
+            {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)
+                {
+                    update_scale(with: geometry.size)
+                    update_portal(with: geometry.size)
+                }
+            }
+        }
+        .background
+        {
+            InfiniteGridView(scale: CGFloat(scale * grid_factor))
+        }
+    }
+    
+    private func update_scale(with size: CGSize = .zero)
+    {
+        guard let previewed_entity = entity else { return }
+        guard model_size != .zero else { return }
+        
+        let view_width = Float(size.width) * 0.001
+        let view_height = Float(size.height) * 0.001
+        
+        let min_view_dimension = min(view_width, view_height)
+        
+        let model_radius = length(model_size) * 0.5
+        
+        guard model_radius > 0, min_view_dimension > 0
+        else { return }
+        
+        scale = (min_view_dimension / length(model_size)) * factor
+        
+        previewed_entity.scale = SIMD3<Float>(repeating: scale)
+    }
+    
+    private func make_world(with entity: Entity) -> Entity
+    {
+        let world = Entity()
+        world.components[WorldComponent.self] = .init()
+        
+        let material = UnlitMaterial(color: .white)
+        let background = Entity()
+        background.components.set(ModelComponent(
+            mesh: .generateSphere(radius: 0.8),
+            materials: [material]))
+        background.scale.x *= -1
+        world.addChild(background)
+        
+        entity.components[PortalCrossingComponent.self] = .init()
+        
+        world.addChild(entity)
+        
+        return world
+    }
+    
+    private func make_portal(world: Entity) -> Entity
+    {
+        let portal = Entity()
+        portal.components[PortalComponent.self] = .init(target: world)
+        
+        let portalComponent = PortalComponent(
+            target: world,
+            clippingMode: .disabled,
+            crossingMode: .disabled
+        )
+        portal.components.set(portalComponent)
+        
+        return portal
+    }
+    
+    func update_portal(with size: CGSize = .zero)
+    {
+        portal_entity.components.remove(ModelComponent.self)
+        portal_entity.components[ModelComponent.self] = .init(
+            mesh: .generatePlane(
+                width: Float(size.width / 1370),
+                height: Float(size.height / 1370)/*,
+                cornerRadius: Float(0.01)*/),
+            materials: [PortalMaterial()]
+        )
+    }
+}
+
 #Preview(windowStyle: .automatic)
 {
     PartModelView(entity: ModelEntity(
         mesh: .generateBox(size: Float(0.1)/*, cornerRadius: Float(0.01)*/),
         materials: [SimpleMaterial(color: .cyan, isMetallic: true)]
+    )) // 100mm^3
+}
+
+#Preview(windowStyle: .automatic)
+{
+    PortalCardView(entity: ModelEntity(
+        mesh: .generateBox(size: Float(0.1), cornerRadius: Float(0.01)),
+        materials: [SimpleMaterial(color: .white, isMetallic: false)]
     )) // 100mm^3
 }
 
@@ -194,7 +329,7 @@ public struct InfiniteGridView: View
         {
             Rectangle()
                 .fill(.white)
-
+            
             InfiniteGridView(scale: scale)
         }
         .frame(width: 256, height: 256)

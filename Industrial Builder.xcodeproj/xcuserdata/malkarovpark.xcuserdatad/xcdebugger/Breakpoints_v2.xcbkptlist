@@ -104,7 +104,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "51BAC18C-8FBF-4C7F-8922-BADF5032301D"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
@@ -120,7 +120,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2967A327-CF92-41D0-839C-1BDB2776E0BC"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
@@ -136,7 +136,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "F77A4C25-76D6-4BED-8F7B-756D5321CFC9"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
@@ -152,7 +152,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "DEA140D8-39A8-4293-9744-AA51387404A6"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../Library/Developer/Xcode/DerivedData/Industrial_Builder-cowklzskqhjcdeclwadaroloxxwy/SourcePackages/checkouts/IndustrialKit/Sources/IndustrialKit/ModelControllers/ModelController.swift"
