@@ -12,7 +12,7 @@ public struct DesignRealityView: View
 {
     let entity: Entity?
     
-    @State private var previewed_entity: Entity?
+    //@State private var previewed_entity: Entity?
     @State private var model_size: SIMD3<Float> = .zero
     @State private var view_size: CGSize = .zero
     @State private var scale: Float = 1
@@ -35,7 +35,7 @@ public struct DesignRealityView: View
                     content.add(previewed_entity)
                 }
             }
-            .frame(depth: CGFloat(scale * model_size.x * 1000 + shift))
+            //.frame(depth: CGFloat(scale * model_size.x * 1000 + shift * scale))
             .onChange(of: geometry.size)
             { _, new_size in
                 view_size = new_size
@@ -272,6 +272,19 @@ public struct PortalCardView: View
         
         world.addChild(entity)
         
+        // Center shift
+        let bounds = entity.visualBounds(relativeTo: nil)
+        let center = bounds.center
+        entity.position -= center// * scale
+        
+        // Light
+        let light = DirectionalLight()
+        //light.light.intensity = 4000
+        //light.light.color = .white
+        light.position = [0, 2, 2]
+        light.look(at: [0, 0, 0], from: light.position, relativeTo: nil)
+        world.addChild(light)
+        
         return world
     }
     
@@ -306,7 +319,7 @@ public struct PortalCardView: View
 #Preview(windowStyle: .automatic)
 {
     PartModelView(entity: ModelEntity(
-        mesh: .generateBox(size: Float(0.1)/*, cornerRadius: Float(0.01)*/),
+        mesh: .generateBox(width: 0.1, height: 0.2, depth: 0.1)/*mesh: .generateBox(size: Float(0.1)/*, cornerRadius: Float(0.01)*/)*/,
         materials: [SimpleMaterial(color: .cyan, isMetallic: true)]
     )) // 100mm^3
 }

@@ -45,7 +45,7 @@ struct EntitySelectorView: View
                             GlassBoxCard(
                                 title: URL(fileURLWithPath: item.name).deletingPathExtension().lastPathComponent,
                                 entity: item.entity.clone(recursive: true),
-                                vertical_repostion: true,
+                                center_entity: true,
                             )
                             .frame(height: card_height)
                             .onTapGesture

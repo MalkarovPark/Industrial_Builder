@@ -31,7 +31,7 @@ struct EntityCard<Content: View>: View
             GlassBoxCard(
                 title: URL(fileURLWithPath: entity_item.name).deletingPathExtension().lastPathComponent,
                 entity: entity_item.entity,
-                vertical_repostion: true//,
+                center_entity: true//,
                 //is_renaming: $is_renaming,
                 //on_rename: { new_name in on_rename(new_name) }
             )

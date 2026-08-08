@@ -284,7 +284,7 @@ private struct ModuleSelectionCard: View
                 GlassBoxCard(
                     title: module.name,
                     entity: previewed_entity,
-                    vertical_repostion: true
+                    center_entity: true
                 )
                 {
                     if is_selected

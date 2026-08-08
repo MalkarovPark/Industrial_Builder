@@ -117,7 +117,7 @@ private struct RobotModuleCard: View
                 GlassBoxCard(
                     title: module.name,
                     entity: previewed_entity,
-                    vertical_repostion: true,
+                    center_entity: true,
                     is_renaming: $is_renaming,
                     on_rename: { new_name in on_rename(new_name) }
                 )
