@@ -19,6 +19,8 @@ struct RobotModelView: View
     
     @State private var previewed_entity: Entity?
     
+    @State private var position_pane_is_expanded = false
+    
     #if os(macOS) || os(iOS)
     @StateObject var workspace: Workspace
     
@@ -65,11 +67,35 @@ struct RobotModelView: View
             {
                 VStack(spacing: 8)
                 {
-                    PositionPane(robot: previewed_robot)
+                    PositionPane(
+                        robot: previewed_robot,
+                        on_expand: { withAnimation { position_pane_is_expanded = true } },
+                        on_collapse: { withAnimation { position_pane_is_expanded = false } }
+                    )
+                    .zIndex(1)
                     
-                    PositionControl(robot: previewed_robot)
+                    if !position_pane_is_expanded
+                    {
+                        PositionControl(robot: previewed_robot)
+                            .frame(width: 120)
+                        #if !os(visionOS)
+                            .transition(.scale(scale: 0, anchor: .center).combined(with: .opacity))
+                        #else
+                            .transition(
+                                .asymmetric(
+                                    insertion: .identity,
+                                    removal: .offset(x: 0, y: -4) //8)
+                                        .combined(with: .scale(scale: 0, anchor: .center))
+                                        .combined(with: .opacity)
+                                )
+                            )
+                            .offset(z: position_pane_is_expanded ? -8 : 0)
+                        #endif
+                            .padding(10)
+                    }
                 }
-                .padding(8)
+                .padding([.horizontal, .bottom], position_pane_is_expanded ? 12 : 4)
+                .padding(.top, position_pane_is_expanded ? 12 : 16)
             }
             .padding(7.8)
             .ignoresSafeArea(edges: .bottom)

@@ -29,20 +29,50 @@ public struct InspectorItem<Content: View>: View
     
     public var body: some View
     {
-        DisclosureGroup(isExpanded: $is_expanded)
+        #if os(macOS) || os(iOS)
+        GroupBox
         {
-            content
-            /*#if os(visionOS)
-                .frame(width: 320)
-            #endif*/
+            DisclosureGroup(isExpanded: $is_expanded)
+            {
+                content
+                #if os(macOS)
+                    .padding(5)
+                #elseif os(iOS)
+                    .padding(.top, 10)
+                #endif
+            }
+            label:
+            {
+                Text(label)
+                #if os(macOS)
+                    .font(.system(size: 14))
+                #elseif os(iOS)
+                    .font(.system(size: 18))
+                    .tint(.black)
+                #endif
+            }
         }
-        label:
+        .padding([.horizontal, .bottom], 10)
+        #else
+        VStack(spacing: 0)
         {
-            Text(label)
-                .font(.system(size: 13, weight: .bold))
+            DisclosureGroup(isExpanded: $is_expanded)
+            {
+                content
+                    .padding([.horizontal, .bottom], 16)
+            }
+            label:
+            {
+                Text(label)
+                    .font(.system(size: 18))
+            }
         }
-        .padding(10)
-        
-        Divider()
+        .background
+        {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(.regularMaterial)
+        }
+        .padding([.horizontal, .bottom], 10)
+        #endif
     }
 }

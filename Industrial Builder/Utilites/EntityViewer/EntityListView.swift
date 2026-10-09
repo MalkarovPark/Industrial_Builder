@@ -25,6 +25,10 @@ struct EntityListView: View
     
     @State private var search_text: String = String()
     
+    #if os(macOS) || os(iOS)
+    @State private var is_pan = false
+    #endif
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -39,11 +43,35 @@ struct EntityListView: View
                         { item in
                             EntityCard(entity_item: item)
                             { is_presented in
-                                EntityFileView(entity: item.entity)
+                                EntityFileView(entity: item.entity, is_pan: $is_pan)
                                     .frame(minWidth: 320, idealWidth: 640, maxWidth: 800,
                                            minHeight: 240, idealHeight: 480, maxHeight: 600)
                                 #if !os(visionOS)
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: false))
+                                    .overlay(alignment: .topTrailing)
+                                {
+                                    Button(action: { is_pan.toggle() })
+                                    {
+                                        Image(systemName: is_pan ? "move.3d" : "rotate.3d")
+                                            .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                                            .animation(.easeInOut(duration: 0.3), value: is_pan)
+                                            .modifier(CircleButtonImageFramer())
+                                    }
+                                    .keyboardShortcut(.cancelAction)
+                                    #if !os(visionOS)
+                                    .modifier(CircleButtonGlassBorderer())
+                                    #else
+                                    .buttonBorderShape(.circle)
+                                    .controlSize(.large)
+                                    .buttonStyle(.bordered)
+                                    #endif
+                                    .keyboardShortcut(.cancelAction)
+                                    #if os(macOS) || os(iOS)
+                                    .padding(10)
+                                    #else
+                                    .padding(16)
+                                    #endif
+                                }
                                 #else
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: true))
                                 #endif

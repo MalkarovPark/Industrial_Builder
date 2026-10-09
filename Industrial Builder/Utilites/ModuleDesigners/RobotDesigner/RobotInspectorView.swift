@@ -67,8 +67,6 @@ struct RobotInspectorView: View
                     .textFieldStyle(.roundedBorder)
                     .padding(10)
                 
-                Divider()
-                
                 DescriptionItem(module: module, on_update: on_update)
                 
                 InspectorItem(label: "Entity", is_expanded: true)
@@ -162,10 +160,10 @@ struct RobotInspectorView: View
                 
                 InspectorItem(label: "Sources", is_expanded: false)
                 {
-                    VStack(alignment: .leading)
+                    VStack(alignment: .leading, spacing: 8)
                     {
                         Text("Model Controller (JS)")
-                            .font(.system(size: 13))
+                            .fontWeight(.light)
                         
                         CodeEditorPane(
                             label: "Model Controller Code",
@@ -180,8 +178,10 @@ struct RobotInspectorView: View
                             update_model_controller()
                         }
                         
+                        Spacer(minLength: 16)
+                        
                         Text("Connector (Swift)")
-                            .font(.system(size: 13))
+                            .fontWeight(.light)
                         
                         CodeEditorPane(
                             label: "Connector Code",

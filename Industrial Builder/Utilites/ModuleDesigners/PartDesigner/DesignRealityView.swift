@@ -332,6 +332,14 @@ public struct PortalCardView: View
     )) // 100mm^3
 }
 
+#Preview(windowStyle: .plain)
+{
+    PortalView(entity: ModelEntity(
+        mesh: .generateBox(size: Float(0.1), cornerRadius: Float(0.01)),
+        materials: [SimpleMaterial(color: .white, isMetallic: false)]
+    )) // 100mm^3
+}
+
 #Preview
 {
     @Previewable @State var scale: CGFloat = 1.0
@@ -349,5 +357,213 @@ public struct PortalCardView: View
         
         Slider(value: $scale, in: 0 ... 2)
             .frame(width: 256)
+    }
+}
+
+public struct PortalView: View
+{
+    let entity: Entity?
+    
+    @State private var scene_content: RealityViewContent?
+    
+    @State private var previewed_entity: Entity?
+    @State private var model_size: SIMD3<Float> = .zero
+    @State private var portal_entity = Entity()
+    @State private var portal_root = Entity()
+    
+    @State private var portal_geometry_size: CGSize = .zero
+    
+    private let factor: Float = 0.5
+    
+    @State private var is_portal = false
+    
+    public var body: some View
+    {
+        let view_type = Binding(
+            get: { is_portal },
+            set:
+                { new_value in
+                    is_portal = new_value
+                    
+                    toggle_view(new_value)
+                }
+        )
+        
+        GeometryReader
+        { geometry in
+            RealityView
+            { content in
+                scene_content = content
+                
+                build_portal()
+                //turn_entity()
+            }
+            .onChange(of: geometry.size)
+            { _, _ in
+                if !is_portal { return }
+                //portal_geometry_size = geometry.size
+                update_portal_entity_scale(with: geometry.size)
+                update_portal_size(with: geometry.size)
+            }
+            .onChange(of: is_portal)
+            { _, _ in
+                if !is_portal { return }
+                //portal_geometry_size = geometry.size
+                update_portal_entity_scale(with: geometry.size)
+                update_portal_size(with: geometry.size)
+            }
+            /*.onAppear
+            {
+                if !is_portal { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25)
+                {
+                    portal_geometry_size = geometry.size
+                    update_portal_entity_scale(with: portal_geometry_size)
+                    update_portal_size(with: portal_geometry_size)
+                }
+             
+            }*/
+        }
+        .overlay(alignment: .bottomTrailing)
+        {
+            HStack
+            {
+                Toggle(isOn: view_type)
+                {
+                    Text("Portal")
+                }
+                .frame(width: 128)
+            }
+            .padding()
+            .glassBackgroundEffect()
+            .padding()
+        }
+        /*.ornament(attachmentAnchor: .scene(.bottom))
+        {
+            HStack
+            {
+                Toggle(isOn: view_type)
+                {
+                    Text("Portal")
+                }
+            }
+            .padding()
+            .glassBackgroundEffect()
+        }*/
+    }
+    
+    private func toggle_view(_ is_portal: Bool)
+    {
+        if is_portal
+        {
+            turn_portal()
+        }
+        else
+        {
+            turn_entity()
+        }
+    }
+    
+    func turn_portal()
+    {
+        guard let previewed_entity = entity else { return }
+        
+        model_size = previewed_entity.visualBounds(relativeTo: nil).extents
+        
+        portal_entity.isEnabled = true
+        portal_root.addChild(previewed_entity)
+        
+        update_portal_entity_scale(with: portal_geometry_size)
+    }
+    
+    func turn_entity()
+    {
+        guard let previewed_entity = entity, let scene_content else { return }
+        
+        previewed_entity.scale = .init(repeating: 1)
+        portal_entity.isEnabled = false
+        scene_content.add(previewed_entity)
+    }
+    
+    private func build_portal()
+    {
+        guard let previewed_entity = entity, let scene_content else { return }
+        
+        model_size = previewed_entity.visualBounds(relativeTo: nil).extents
+        
+        let world = make_world()
+        portal_entity.components[PortalComponent.self] = .init(target: world)
+        
+        let portalComponent = PortalComponent(
+            target: world,
+            clippingMode: .disabled,
+            crossingMode: .disabled
+        )
+        portal_entity.components.set(portalComponent)
+        
+        scene_content.add(world)
+        scene_content.add(portal_entity)
+        
+        //portal_root.addChild(previewed_entity)
+        update_portal_size(with: CGSize(width: 1280, height: 720))
+        turn_entity()
+        
+        func make_world() -> Entity
+        {
+            // World
+            let world = Entity()
+            world.components[WorldComponent.self] = .init()
+            
+            // Background
+            let material = UnlitMaterial(color: .white)
+            let background = Entity()
+            background.components.set(ModelComponent(
+                mesh: .generateSphere(radius: 0.8),
+                materials: [material]))
+            background.scale.x *= -1
+            world.addChild(background)
+            
+            // Light
+            let light = DirectionalLight()
+            light.light.intensity = 4000
+            light.light.color = .white
+            light.position = [0, 2, 2]
+            light.look(at: [0, 0, 0], from: light.position, relativeTo: nil)
+            world.addChild(light)
+            
+            // Entity
+            world.addChild(portal_root)
+            
+            return world
+        }
+    }
+    
+    private func update_portal_entity_scale(with size: CGSize = .zero)
+    {
+        guard let previewed_entity = entity else { return }
+        guard model_size != .zero else { return }
+        
+        let view_width = Float(size.width) * 0.001
+        let view_height = Float(size.height) * 0.001
+        
+        let min_view_dimension = min(view_width, view_height)
+        let model_radius = length(model_size) * 0.5
+        
+        guard model_radius > 0, min_view_dimension > 0
+        else { return }
+        
+        previewed_entity.scale = SIMD3<Float>(repeating: (min_view_dimension / length(model_size)) * factor)
+    }
+    
+    private func update_portal_size(with size: CGSize = .zero)
+    {
+        portal_entity.components.remove(ModelComponent.self)
+        portal_entity.components[ModelComponent.self] = .init(
+            mesh: .generatePlane(
+                width: Float(size.width / 1370),
+                height: Float(size.height / 1370),
+                cornerRadius: Float(0.03)),
+            materials: [PortalMaterial()]
+        )
     }
 }

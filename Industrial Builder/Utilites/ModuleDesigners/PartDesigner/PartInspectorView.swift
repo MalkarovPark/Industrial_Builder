@@ -36,8 +36,6 @@ struct PartInspectorView: View
                     .textFieldStyle(.roundedBorder)
                     .padding(10)
                 
-                Divider()
-                
                 DescriptionItem(module: module, on_update: on_update)
                 
                 InspectorItem(label: "Entity", is_expanded: true)

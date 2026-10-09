@@ -45,8 +45,6 @@ struct ToolInspectorView: View
                     .textFieldStyle(.roundedBorder)
                     .padding(10)
                 
-                Divider()
-                
                 DescriptionItem(module: module, on_update: on_update)
                 
                 #if os(macOS) || os(visionOS)
@@ -120,7 +118,7 @@ struct ToolInspectorView: View
                     VStack(alignment: .leading)
                     {
                         Text("Model Controller (JS)")
-                            .font(.system(size: 13))
+                            .fontWeight(.light)
                         
                         CodeEditorPane(
                             label: "Model Controller Code",
@@ -135,8 +133,10 @@ struct ToolInspectorView: View
                             update_model_controller()
                         }
                         
+                        Spacer(minLength: 16)
+                        
                         Text("Connector (Swift)")
-                            .font(.system(size: 13))
+                            .fontWeight(.light)
                         
                         CodeEditorPane(
                             label: "Connector Code",
