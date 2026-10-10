@@ -37,8 +37,6 @@ struct ChangerInspectorView: View
                     .textFieldStyle(.roundedBorder)
                     .padding(10)
                 
-                Divider()
-                
                 DescriptionItem(module: module, on_update: on_update)
             }
         }
@@ -61,6 +59,11 @@ struct ChangerInspectorView: View
             module: module,
             on_update: {}
         )
+        #if os(macOS)
+        .inspectorColumnWidth(300)
+        #else
+        .inspectorColumnWidth(400)
+        #endif
     }
     .frame(height: 600)
 }

@@ -87,9 +87,7 @@ struct PartModuleDesigner: View
             {
                 document_handler.update_parts()
             }
-            #if os(visionOS)
-            .frame(width: 320)
-            #endif
+            .inspectorColumnWidth(300)
             #else
             if horizontal_size_class != .compact
             {
@@ -97,6 +95,7 @@ struct PartModuleDesigner: View
                 {
                     document_handler.update_parts()
                 }
+                .inspectorColumnWidth(400)
             }
             else
             {
@@ -107,6 +106,7 @@ struct PartModuleDesigner: View
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .modifier(SheetCaption(is_presented: $entity_selector_presented, label: "Part"/*object_type_name*/))
+                .inspectorColumnWidth(400)
             }
             #endif
         }

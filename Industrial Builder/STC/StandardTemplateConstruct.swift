@@ -11,7 +11,7 @@ import RealityKit
 
 import IndustrialKit
 
-public class StandardTemplateConstruct: ObservableObject
+@MainActor public class StandardTemplateConstruct: ObservableObject
 {
     @Published var package_info = STCPackageInfo()
     
@@ -37,7 +37,10 @@ public class StandardTemplateConstruct: ObservableObject
         
         load_external_entities
         {
-            self.entities_loaded = true
+            Task
+            { @MainActor in
+                self.entities_loaded = true
+            }
         }
         
         self.entities_wrapper = document.entities_wrapper
@@ -57,7 +60,10 @@ public class StandardTemplateConstruct: ObservableObject
                     }
                 }
                 
-                completion()
+                await MainActor.run
+                {
+                    completion()
+                }
             }
         }
     }
@@ -1166,3 +1172,4 @@ extension ConnectionParameter
         return ".init(name: \"\(name)\", value: \(value_string))"
     }
 }
+

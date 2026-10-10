@@ -223,6 +223,13 @@ struct ComponentsSidebarGroup: View
         {
             Label("Entities", systemImage: "cube")
                 .badge(base_stc.entity_items.count)
+            
+            /*if !base_stc.entities_loaded
+            {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(0.5)
+            }*/
         }
         
         NavigationLink(destination: ImageListView().modifier(WindowFramer()))

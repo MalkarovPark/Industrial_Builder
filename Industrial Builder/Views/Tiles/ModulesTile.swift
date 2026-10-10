@@ -34,12 +34,7 @@ struct ModulesTile: View
         {
             if stc.any_modules_avaliable
             {
-                ScrollView
-                {
-                    ModuleSelector(stc: stc, on_update: on_update)
-                    
-                    Spacer(minLength: 52)
-                }
+                ModuleSelector(stc: stc, on_update: on_update)
                 .overlay(alignment: .bottom)
                 {
                     VStack

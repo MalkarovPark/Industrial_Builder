@@ -49,29 +49,29 @@ struct EntityListView: View
                                 #if !os(visionOS)
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: false))
                                     .overlay(alignment: .topTrailing)
-                                {
-                                    Button(action: { is_pan.toggle() })
                                     {
-                                        Image(systemName: is_pan ? "move.3d" : "rotate.3d")
-                                            .contentTransition(.symbolEffect(.replace.offUp.byLayer))
-                                            .animation(.easeInOut(duration: 0.3), value: is_pan)
-                                            .modifier(CircleButtonImageFramer())
+                                        Button(action: { is_pan.toggle() })
+                                        {
+                                            Image(systemName: is_pan ? "move.3d" : "rotate.3d")
+                                                .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                                                .animation(.easeInOut(duration: 0.3), value: is_pan)
+                                                .modifier(CircleButtonImageFramer())
+                                        }
+                                        .keyboardShortcut(.cancelAction)
+                                        #if !os(visionOS)
+                                        .modifier(CircleButtonGlassBorderer())
+                                        #else
+                                        .buttonBorderShape(.circle)
+                                        .controlSize(.large)
+                                        .buttonStyle(.bordered)
+                                        #endif
+                                        .keyboardShortcut(.cancelAction)
+                                        #if os(macOS) || os(iOS)
+                                        .padding(10)
+                                        #else
+                                        .padding(16)
+                                        #endif
                                     }
-                                    .keyboardShortcut(.cancelAction)
-                                    #if !os(visionOS)
-                                    .modifier(CircleButtonGlassBorderer())
-                                    #else
-                                    .buttonBorderShape(.circle)
-                                    .controlSize(.large)
-                                    .buttonStyle(.bordered)
-                                    #endif
-                                    .keyboardShortcut(.cancelAction)
-                                    #if os(macOS) || os(iOS)
-                                    .padding(10)
-                                    #else
-                                    .padding(16)
-                                    #endif
-                                }
                                 #else
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: true))
                                 #endif
@@ -104,6 +104,10 @@ struct EntityListView: View
                 .transition(.opacity.animation(.easeInOut(duration: 0.2)))
             }
         }
+        /*.overlay
+        {
+            AssetsLoadingPane(assets_loading: !base_stc.entities_loaded)
+        }*/
         .onDrop(of: [UTType.fileURL], isTargeted: $is_targeted)
         { providers in
             
@@ -252,6 +256,44 @@ struct EntityListView: View
         }
     }
 }
+
+/*private struct AssetsLoadingPane: View
+{
+    let assets_loading: Bool
+    
+    var body: some View
+    {
+        ZStack
+        {
+            if assets_loading
+            {
+                ProgressView(
+                    label:
+                        {
+                            Text("Loading Assets...")
+                                .font(.caption)
+                                .foregroundStyle(Color.secondary)
+                        }
+                )
+                .progressViewStyle(.circular)
+                .padding()
+                #if os(macOS) || os(iOS)
+                .background
+                {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(.thinMaterial)
+                }
+                #else
+                .scaleEffect(1.05)
+                #endif
+                #if os(iOS)
+                .scaleEffect(1.25)
+                #endif
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: assets_loading)
+    }
+}*/
 
 #Preview
 {

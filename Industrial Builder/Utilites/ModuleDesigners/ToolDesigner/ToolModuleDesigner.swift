@@ -108,9 +108,7 @@ struct ToolModuleDesigner: View
             {
                 document_handler.update_tools()
             }
-            #if os(visionOS)
-            .frame(width: 320)
-            #endif
+            .inspectorColumnWidth(300)
             #else
             if horizontal_size_class != .compact
             {
@@ -122,6 +120,7 @@ struct ToolModuleDesigner: View
                 {
                     document_handler.update_tools()
                 }
+                .inspectorColumnWidth(400)
             }
             else
             {
@@ -136,6 +135,7 @@ struct ToolModuleDesigner: View
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .modifier(SheetCaption(is_presented: $inspector_presented, label: "Tool"/*object_type_name*/))
+                .inspectorColumnWidth(400)
             }
             #endif
         }

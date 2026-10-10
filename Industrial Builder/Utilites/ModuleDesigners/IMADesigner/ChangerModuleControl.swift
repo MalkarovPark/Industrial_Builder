@@ -217,6 +217,7 @@ public struct ChangerModuleControl: View
                             Button("Import...", action: { new_code_view_presented = true })
                                 .buttonStyle(.borderless)
                             #if os(iOS)
+                                .tint(.black)
                                 .padding(.vertical, 4)
                             #endif
                         }
@@ -227,7 +228,7 @@ public struct ChangerModuleControl: View
                     #else
                     .frame(height: is_expanded ? 320 : 120)
                     #endif
-                    .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16, style: .continuous))
+                    .glassEffect(.regular, in: .rect(cornerRadius: 16, style: .continuous))
                     .matchedGeometryEffect(id: "glass", in: pane_glass)
                     #if os(macOS) || os(iOS)
                     .padding(.vertical, 10)

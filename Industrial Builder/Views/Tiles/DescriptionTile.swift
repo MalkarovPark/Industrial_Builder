@@ -19,6 +19,10 @@ struct DescriptionTile: View
         {
             ScrollView
             {
+                #if os(macOS)
+                Spacer(minLength: 10)
+                #endif
+                
                 let description = Binding(
                     get: { stc.package_info.description },
                     set:

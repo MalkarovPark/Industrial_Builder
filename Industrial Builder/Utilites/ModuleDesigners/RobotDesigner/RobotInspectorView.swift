@@ -199,36 +199,17 @@ struct RobotInspectorView: View
                     }
                 }
                 
-                InspectorItem(label: "Working Area", is_expanded: false)
+                InspectorItem(label: "Working Area Shift", is_expanded: false)
                 {
-                    VStack(spacing: 10)
-                    {
-                        GroupBox
-                        {
-                            OriginShiftView(
-                                module: module,
-                                previewed_robot: previewed_robot,
-                                on_update: on_update)
-                            .padding(.horizontal, 5)
-                        }
-                        label:
-                        {
-                            Text("Origin Shift")
-                                .font(.system(size: 13))
-                        }
-                        
-                        GroupBox
-                        {
-                            PositionView(position: default_origin_position)
-                                .padding(.horizontal, 5)
-                        }
-                        label:
-                        {
-                            Text("Default Position")
-                                .font(.system(size: 13))
-                        }
-                    }
-                    .padding(.vertical, 5)
+                    OriginShiftView(
+                        module: module,
+                        previewed_robot: previewed_robot,
+                        on_update: on_update)
+                }
+                
+                InspectorItem(label: "Working Area Position", is_expanded: false)
+                {
+                    PositionView(position: default_origin_position, with_steppers: true)
                 }
             }
         }
@@ -287,33 +268,51 @@ private struct OriginShiftView: View
     
     public var body: some View
     {
-        HStack
+        VStack(spacing: 10)
         {
-            ForEach(ScaleComponents.allCases, id: \.self)
-            { component in
-                VStack
-                {
-                    HStack(spacing: 8)
+            HStack(spacing: 12)
+            {
+                ForEach(ScaleComponents.allCases, id: \.self)
+                { component in
+                    VStack
                     {
-                        TextField("0", value: binding(for: component), format: .number)
-                            .textFieldStyle(.roundedBorder)
-                        #if os(iOS)
-                            .frame(minWidth: 60)
-                            .keyboardType(.decimalPad)
-                        #elseif os(visionOS)
-                            .frame(minWidth: 80)
-                            .keyboardType(.decimalPad)
+                        #if os(macOS)
+                        HStack(spacing: 8)
+                        {
+                            TextField("0", value: binding(for: component), format: .number)
+                                .textFieldStyle(.roundedBorder)
+                            
+                            Stepper("Position", value: binding(for: component), format: .number)
+                                .labelsHidden()
+                        }
+                        #else
+                        VStack//(spacing: 8)
+                        {
+                            TextField("0", value: binding(for: component), format: .number)
+                                .textFieldStyle(.roundedBorder)
+                                .keyboardType(.decimalPad)
+                            
+                            Rectangle()
+                                .fill(.clear)
+                                .frame(height: 42)
+                                .overlay
+                                {
+                                    Stepper("Position", value: binding(for: component), format: .number)
+                                        .labelsHidden()
+                                        #if os(visionOS)
+                                        .scaleEffect(0.85)
+                                        #endif
+                                }
+                        }
                         #endif
+                        
+                        Text(component.info.text)
+                            .fontWeight(.light)
+                            .foregroundStyle(.secondary)
                     }
-                    
-                    Text(component.info.text)
-                        .fontWeight(.light)
-                        //.font(.system(size: 13, weight: .light))
-                        .foregroundStyle(.secondary)
                 }
             }
         }
-        .padding(.vertical, 12)
     }
     
     private func binding(for component: ScaleComponents) -> Binding<Float>
@@ -388,6 +387,11 @@ private struct OriginShiftView: View
             previewed_robot: Robot(),
             on_update: {}
         )
+        #if os(macOS)
+        .inspectorColumnWidth(300)
+        #else
+        .inspectorColumnWidth(400)
+        #endif
     }
     .frame(height: 600)
 }

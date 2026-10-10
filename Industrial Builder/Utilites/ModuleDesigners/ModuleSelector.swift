@@ -20,13 +20,8 @@ struct ModuleSelector: View
     @State private var targets_palette_view_presented = false
     @State private var new_panel_presented = false
     
-    #if os(macOS)
-    private let columns: [GridItem] = [.init(.adaptive(minimum: 64, maximum: .infinity), spacing: 16)]
-    private let row_spacing: CGFloat = 32
-    #else
     private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 16)]
     private let row_spacing: CGFloat = 32
-    #endif
     
     public init(
         stc: StandardTemplateConstruct,
@@ -64,6 +59,7 @@ struct ModuleSelector: View
                                 ModuleSelectionCard(
                                     module: module,
                                     is_selected: is_module_selected(module),
+                                    entities_loaded: stc.entities_loaded,
                                     on_update: on_update
                                 )
                             }
@@ -153,6 +149,8 @@ struct ModuleSelector: View
                 }
             }
             .padding()
+            
+            Spacer(minLength: 52)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -166,19 +164,19 @@ struct ModuleSelector: View
                     is_listed(module: module)
                 },
             set:
-            { is_selected in
-                var names = get_module_names(for: module)
-                if is_selected
-                {
-                    names.append(module.name)
+                { is_selected in
+                    var names = get_module_names(for: module)
+                    if is_selected
+                    {
+                        names.append(module.name)
+                    }
+                    else
+                    {
+                        names.removeAll { $0 == module.name }
+                    }
+                    
+                    set_module_names(names, for: module)
                 }
-                else
-                {
-                    names.removeAll { $0 == module.name }
-                }
-                
-                set_module_names(names, for: module)
-            }
         )
     }
     
@@ -244,6 +242,8 @@ private struct ModuleSelectionCard: View
     
     public let on_update: () -> Void
     
+    public let entities_loaded: Bool
+    
     @State private var is_renaming = false
     @State private var previewed_entity: Entity?
     @State private var symbol_name = String()
@@ -257,11 +257,14 @@ private struct ModuleSelectionCard: View
         module: IndustrialModule,
         is_selected: Binding<Bool>,
         
+        entities_loaded: Bool = true,
+        
         on_update: @escaping () -> Void
     )
     {
         self.module = module
         self._is_selected = is_selected
+        self.entities_loaded = entities_loaded
         
         self.on_update = on_update
     }
@@ -289,7 +292,7 @@ private struct ModuleSelectionCard: View
                 {
                     if is_selected
                     {
-                        ZStack(alignment: .bottomTrailing)
+                        ZStack(alignment: .topTrailing)
                         {
                             Rectangle()
                                 .fill(.clear)
@@ -321,14 +324,20 @@ private struct ModuleSelectionCard: View
             {
                 GlassBoxCard(
                     title: module.name,
-                    symbol_name: symbol_name,
+                    symbol_name: entities_loaded || module is ChangerModule ? symbol_name : "none",
                     symbol_size: 48,
                     symbol_weight: .regular
                 )
                 {
                     if is_selected
                     {
-                        ZStack(alignment: .bottomTrailing)
+                        if !(module is ChangerModule)
+                        {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        }
+                        
+                        ZStack(alignment: .topTrailing)
                         {
                             Rectangle()
                                 .fill(.clear)

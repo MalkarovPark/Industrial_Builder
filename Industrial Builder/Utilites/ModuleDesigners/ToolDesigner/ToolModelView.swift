@@ -62,7 +62,7 @@ struct ToolModelView: View
             FloatingView(alignment: .bottomTrailing)
             {
                 OperationControl(tool: previewed_tool)
-                    .padding(12)
+                    .padding(8)
             }
             .padding(7.8)
             .ignoresSafeArea(edges: .bottom)

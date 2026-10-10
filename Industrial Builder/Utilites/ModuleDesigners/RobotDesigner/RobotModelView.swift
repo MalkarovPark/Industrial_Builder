@@ -94,8 +94,8 @@ struct RobotModelView: View
                             .padding(10)
                     }
                 }
-                .padding([.horizontal, .bottom], position_pane_is_expanded ? 12 : 4)
-                .padding(.top, position_pane_is_expanded ? 12 : 16)
+                .padding([.horizontal, .bottom], position_pane_is_expanded ? 8 : 4)
+                .padding(.top, position_pane_is_expanded ? 8 : 16)
             }
             .padding(7.8)
             .ignoresSafeArea(edges: .bottom)
