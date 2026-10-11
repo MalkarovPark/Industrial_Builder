@@ -21,6 +21,8 @@ public struct DesignRealityView: View
     private let shift: Float = 200
     private let grid_factor: Float = 0.675
     
+    @State private var offset: SIMD3<Float> = .zero
+    
     public var body: some View
     {
         GeometryReader
@@ -35,7 +37,7 @@ public struct DesignRealityView: View
                     content.add(previewed_entity)
                 }
             }
-            //.frame(depth: CGFloat(scale * model_size.x * 1000 + shift * scale))
+            .frame(depth: CGFloat(scale * model_size.x * 1000 + shift * scale))
             .onChange(of: geometry.size)
             { _, new_size in
                 view_size = new_size
@@ -52,12 +54,19 @@ public struct DesignRealityView: View
         }
         .background
         {
-            InfiniteGridView(scale: CGFloat(scale * grid_factor))
+            InfiniteGridView(
+                scale: CGFloat(scale * grid_factor),
+                offset: CGSize(
+                    width: Double(offset.x * (1.35) * -1000),
+                    height: Double(offset.y * (1.35) * -1000)
+                )
+            )
         }
     }
     
     private func update_scale()
     {
+        // Scale Entity
         guard let previewed_entity = entity else { return }
         guard model_size != .zero else { return }
         
@@ -74,6 +83,14 @@ public struct DesignRealityView: View
         scale = (min_view_dimension / length(model_size)) * factor
         
         previewed_entity.scale = SIMD3<Float>(repeating: scale)
+        
+        // Center Entity
+        let bounds = previewed_entity.visualBounds(relativeTo: previewed_entity)
+        
+        offset = -bounds.center * scale
+        
+        previewed_entity.position.x = offset.x
+        previewed_entity.position.y = offset.y
     }
 }
 

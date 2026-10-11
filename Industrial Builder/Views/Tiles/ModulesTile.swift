@@ -34,6 +34,7 @@ struct ModulesTile: View
         {
             if stc.any_modules_avaliable
             {
+                #if os(macOS) || os(iOS)
                 ModuleSelector(stc: stc, on_update: on_update)
                 .overlay(alignment: .bottom)
                 {
@@ -52,6 +53,27 @@ struct ModulesTile: View
                     }
                     .background(.ultraThinMaterial)
                 }
+                #else
+                VStack(spacing: 0)
+                {
+                    ModuleSelector(stc: stc, on_update: on_update)
+                    
+                    VStack
+                    {
+                        HStack
+                        {
+                            Text("Modules")
+                                .font(.system(size: 18, design: .rounded))
+                                .foregroundStyle(.secondary)
+                                .padding(.vertical, 12)
+                                .padding(.leading, 16)
+                            
+                            Spacer()
+                        }
+                    }
+                    .background(.ultraThinMaterial)
+                }
+                #endif
             }
             else
             {
