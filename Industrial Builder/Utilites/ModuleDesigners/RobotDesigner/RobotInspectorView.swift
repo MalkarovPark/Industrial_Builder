@@ -389,7 +389,7 @@ private struct OriginShiftView: View
         )
         #if os(macOS)
         .inspectorColumnWidth(300)
-        #else
+        #elseif os(iOS)
         .inspectorColumnWidth(400)
         #endif
     }

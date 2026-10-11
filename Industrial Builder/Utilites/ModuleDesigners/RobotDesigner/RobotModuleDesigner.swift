@@ -108,7 +108,11 @@ struct RobotModuleDesigner: View
             {
                 document_handler.update_robots()
             }
+            #if os(macOS)
             .inspectorColumnWidth(300)
+            #elseif os(visionOS)
+            .frame(width: 400)
+            #endif
             #else
             if horizontal_size_class != .compact
             {

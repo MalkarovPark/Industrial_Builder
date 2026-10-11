@@ -34,7 +34,9 @@ struct PackageView: View
         }*/
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
+        #if os(iOS)
         .toolbarBackground(.visible, for: .navigationBar)
+        #endif
         #endif
     }
 }

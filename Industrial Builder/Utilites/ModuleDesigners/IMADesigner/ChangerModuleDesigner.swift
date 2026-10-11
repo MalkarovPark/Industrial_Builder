@@ -35,13 +35,11 @@ struct ChangerModuleDesigner: View
             
             FloatingView(alignment: .bottomTrailing)
             {
-                ZStack
+                ChangerModuleControl(module: module, registers: $registers)
                 {
-                    ChangerModuleControl(module: module, registers: $registers)
-                    {
-                        document_handler.update_changers()
-                    }
+                    document_handler.update_changers()
                 }
+                .padding(8)
             }
             .padding(7.8)
             .ignoresSafeArea(edges: .bottom)
@@ -61,7 +59,11 @@ struct ChangerModuleDesigner: View
             {
                 document_handler.update_changers()
             }
+            #if os(macOS)
             .inspectorColumnWidth(300)
+            #elseif os(visionOS)
+            .frame(width: 400)
+            #endif
             #else
             if horizontal_size_class != .compact
             {

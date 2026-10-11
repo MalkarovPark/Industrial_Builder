@@ -18,6 +18,8 @@ struct ContentView: View
     @StateObject private var base_stc = StandardTemplateConstruct()
     @StateObject private var document_handler = DocumentUpdateHandler()
     
+    @Environment(\.dismiss) private var dismiss
+    
     @ViewBuilder var body: some View
     {
         Sidebar(document: $document, sidebar_selection: $sidebar_selection)
@@ -54,150 +56,151 @@ struct Sidebar: View
     
     var body: some View
     {
-        VStack(spacing: 0)
+        NavigationSplitView
         {
-            NavigationSplitView
+            List(selection: $sidebar_selection)
             {
-                List(selection: $sidebar_selection)
-                {
-                    ForEach(navigation_item.allCases)
-                    { selection in
-                        if selection == .ComponentsView
+                ForEach(navigation_item.allCases)
+                { selection in
+                    if selection == .ComponentsView
+                    {
+                        #if os(macOS)
+                        DisclosureGroup(isExpanded: $components_section_expanded)
                         {
-                            #if os(macOS)
-                            DisclosureGroup(isExpanded: $components_section_expanded)
-                            {
-                                ComponentsSidebarGroup()
-                            }
-                            label:
-                            {
-                                NavigationLink(value: selection)
-                                {
-                                    if !components_section_expanded
-                                    {
-                                        Label(selection.localizedName, systemImage: selection.image_name)
-                                            .badge(components_count)
-                                    }
-                                    else
-                                    {
-                                        Label(selection.localizedName, systemImage: selection.image_name)
-                                    }
-                                }
-                            }
-                            #else
-                            Section(isExpanded: $components_section_expanded)
-                            {
-                                ComponentsSidebarGroup()
-                            }
-                            header:
-                            {
-                                Text(selection.localizedName)
-                                    .badge(components_count)
-                            }
-                            #endif
+                            ComponentsSidebarGroup()
                         }
-                        else if selection == .ModulesView
-                        {
-                            #if os(macOS)
-                            DisclosureGroup(isExpanded: $objects_section_expanded)
-                            {
-                                ModulesSidebarGroup()
-                            }
-                            label:
-                            {
-                                NavigationLink(value: selection)
-                                {
-                                    if !objects_section_expanded
-                                    {
-                                        Label(selection.localizedName, systemImage: selection.image_name)
-                                            .badge(modules_count)
-                                    }
-                                    else
-                                    {
-                                        Label(selection.localizedName, systemImage: selection.image_name)
-                                    }
-                                }
-                            }
-                            #else
-                            Section(isExpanded: $objects_section_expanded)
-                            {
-                                ModulesSidebarGroup()
-                            }
-                            header:
-                            {
-                                Text(selection.localizedName)
-                                    .badge(modules_count)
-                            }
-                            #endif
-                        }
-                        else
+                        label:
                         {
                             NavigationLink(value: selection)
                             {
-                                Label(selection.localizedName, systemImage: selection.image_name)
+                                if !components_section_expanded
+                                {
+                                    Label(selection.localizedName, systemImage: selection.image_name)
+                                        .badge(components_count)
+                                }
+                                else
+                                {
+                                    Label(selection.localizedName, systemImage: selection.image_name)
+                                }
                             }
                         }
+                        #else
+                        Section(isExpanded: $components_section_expanded)
+                        {
+                            ComponentsSidebarGroup()
+                        }
+                        header:
+                        {
+                            Text(selection.localizedName)
+                                .badge(components_count)
+                        }
+                        #endif
+                    }
+                    else if selection == .ModulesView
+                    {
+                        #if os(macOS)
+                        DisclosureGroup(isExpanded: $objects_section_expanded)
+                        {
+                            ModulesSidebarGroup()
+                        }
+                        label:
+                        {
+                            NavigationLink(value: selection)
+                            {
+                                if !objects_section_expanded
+                                {
+                                    Label(selection.localizedName, systemImage: selection.image_name)
+                                        .badge(modules_count)
+                                }
+                                else
+                                {
+                                    Label(selection.localizedName, systemImage: selection.image_name)
+                                }
+                            }
+                        }
+                        #else
+                        Section(isExpanded: $objects_section_expanded)
+                        {
+                            ModulesSidebarGroup()
+                        }
+                        header:
+                        {
+                            Text(selection.localizedName)
+                                .badge(modules_count)
+                        }
+                        #endif
+                    }
+                    else
+                    {
+                        NavigationLink(value: selection)
+                        {
+                            Label(selection.localizedName, systemImage: selection.image_name)
+                        }
                     }
                 }
-                #if !os(macOS)
-                .navigationTitle("STC")
-                .navigationBarTitleDisplayMode(.inline)
-                #else
-                .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
-                #endif
-                .listStyle(.sidebar)
-                #if os(visionOS)
-                .toolbar(id: "STC")
-                {
-                    #if os(visionOS)
-                    ToolbarItem(id: "Documents", placement: .cancellationAction)
-                    {
-                        Button(action: { dismiss() })
-                        {
-                            Label("Documents", systemImage: "chevron.left")
-                        }
-                        .buttonBorderShape(.circle)
-                    }
-                    #endif
-                    /*#if !os(macOS)
-                    ToolbarItem(id: "Settings", placement: .cancellationAction)
-                    {
-                        Button (action: { app_state.settings_view_presented = true })
-                        {
-                            Label("Settings", systemImage: "gear")
-                        }
-                    #if os(visionOS)
-                        .buttonBorderShape(.circle)
-                    #endif
-                    }
-                    #endif*/
-                }
-                #endif
             }
-            detail:
+            #if !os(macOS)
+            .navigationTitle("STC")
+            .navigationBarTitleDisplayMode(.inline)
+            #else
+            .navigationSplitViewColumnWidth(min: 150, ideal: 160, max: 180)
+            #endif
+            .listStyle(.sidebar)
+            #if os(visionOS)
+            .toolbar(id: "STC")
             {
-                switch sidebar_selection
+                #if os(visionOS)
+                ToolbarItem(id: "Documents", placement: .cancellationAction)
                 {
-                case .PackageView:
-                    PackageView(document: $document)
-                        .modifier(WindowFramer())
-                case .ComponentsView:
-                    ComponentsView()
-                        .modifier(WindowFramer())
-                case .ModulesView:
-                    ModulesView()
-                        .modifier(WindowFramer())
-                default:
-                    Text("Select an item")
-                        .font(.largeTitle)
-                        .modifier(WindowFramer())
-                #if os(macOS)
-                    .foregroundColor(Color(NSColor.quaternaryLabelColor))
-                #else
-                    .foregroundColor(Color(UIColor.quaternaryLabel))
-                #endif
-                    .padding(16)
+                    Button(action: {
+                        //dismiss()
+                        exit(0)
+                        //reopen_document_picker()
+                    })
+                    {
+                        Label("Documents", systemImage: "chevron.left")
+                    }
+                    .buttonBorderShape(.circle)
                 }
+                #endif
+                /*#if !os(macOS)
+                ToolbarItem(id: "Settings", placement: .cancellationAction)
+                {
+                    Button (action: { app_state.settings_view_presented = true })
+                    {
+                        Label("Settings", systemImage: "gear")
+                    }
+                #if os(visionOS)
+                    .buttonBorderShape(.circle)
+                #endif
+                }
+                #endif*/
+            }
+            #endif
+        }
+        detail:
+        {
+            switch sidebar_selection
+            {
+            case .PackageView:
+                PackageView(document: $document)
+                    .modifier(WindowFramer())
+            case .ComponentsView:
+                ComponentsView()
+                    .modifier(WindowFramer())
+            case .ModulesView:
+                ModulesView()
+                    .modifier(WindowFramer())
+            default:
+                Text("Select an item")
+                    .font(.largeTitle)
+                    .modifier(WindowFramer())
+            #if os(macOS)
+                .foregroundColor(Color(NSColor.quaternaryLabelColor))
+            #else
+                .foregroundColor(Color(UIColor.quaternaryLabel))
+            #endif
+                .padding(16)
             }
         }
     }

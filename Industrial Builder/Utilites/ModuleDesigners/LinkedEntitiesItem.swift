@@ -61,6 +61,9 @@ public struct LinkedEntitiesItem: View
                             }
                             .listRowInsets(.vertical, 8)
                             .textFieldStyle(.plain)
+                            #if os(visionOS)
+                            .padding(.horizontal, -32)
+                            #endif
                         }
                         .onDelete(perform: delete_items)
                         
@@ -106,11 +109,12 @@ public struct LinkedEntitiesItem: View
                             .buttonStyle(.plain)
                         }
                         .id("new_linked_entity_menu")
+                        #if os(visionOS)
+                        .padding(.horizontal, -32)
+                        #endif
                         .listRowInsets(.vertical, 8)
                     }
-                    #if !os(visionOS)
                     .listStyle(.plain)
-                    #endif
                     .onChange(of: entity_names.count)
                     {
                         withAnimation
@@ -156,5 +160,12 @@ public struct LinkedEntitiesItem: View
         {
             return []
         }
+    }
+}
+
+#Preview
+{
+    LinkedEntitiesItem(entity_names: .constant(["OwO", "UwU"]), entity_file_name: nil) {
+        
     }
 }

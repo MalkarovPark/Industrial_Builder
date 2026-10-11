@@ -88,3 +88,31 @@ let default_popover_edge_inverted: Edge = .bottom
 #else
 let default_popover_edge_inverted: Edge = .top
 #endif
+
+// MARK: - Document Reopener
+#if os(visionOS)
+import UIKit
+
+public func reopen_document_picker()
+{
+    guard let scene = UIApplication.shared.connectedScenes.first(where:
+    {
+        $0.session.role == .windowApplication
+    })
+    else { return }
+
+    UIApplication.shared.requestSceneSessionDestruction(
+        scene.session,
+        options: nil
+    )
+
+    DispatchQueue.main.async
+    {
+        UIApplication.shared.requestSceneSessionActivation(
+            nil,
+            userActivity: nil,
+            options: nil
+        )
+    }
+}
+#endif

@@ -41,9 +41,9 @@ public struct ChangerModuleControl: View
     
     public var body: some View
     {
-        HStack(spacing: 0)
+        HStack(spacing: 12)
         {
-            GlassEffectContainer
+            ZStack
             {
                 if !is_expanded
                 {
@@ -55,19 +55,17 @@ public struct ChangerModuleControl: View
                             Text("Modifier")
                                 .font(.title3.scaled(by: 0.8))
                                 .lineLimit(1)
+                            
                             Text("Changer – \(module.name)")
                                 .font(.default.scaled(by: 0.8))
                                 .foregroundColor(.secondary)
+                                //.animation(.easeInOut(duration: 0.2), value: module.name)
                                 .lineLimit(1)
                         }
                         .padding(10)
                     }
                     .background(.clear)
-                    #if os(macOS)
-                    .frame(width: 120)
-                    #else
-                    .frame(width: 160)
-                    #endif
+                    .frame(width: element_panel_width)
                     .overlay(alignment: .topTrailing)
                     {
                         if process_error != nil
@@ -86,31 +84,48 @@ public struct ChangerModuleControl: View
                             #endif
                         }
                     }
-                    .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16, style: .continuous))
-                    .matchedGeometryEffect(id: "glass", in: pane_glass)
                     .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .scaleEffect(is_central_pressed ? 0.95 : 1)
-                    #if os(iOS)
-                    .padding(.vertical, 10)
-                    #endif
-                    .animation(
-                        .interactiveSpring(response: 0.35, dampingFraction: 0.6, blendDuration: 0),
-                        value: is_central_pressed
-                    )
-                    .onTapGesture
-                    {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85))
-                        {
-                            is_central_pressed = true
-                            is_expanded = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
-                            {
-                                is_central_pressed = false
+                    .gesture(
+                        LongPressGesture(minimumDuration: 0.5)
+                            .onChanged
+                            { _ in
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.85))
+                                {
+                                    is_central_pressed = true
+                                }
                             }
-                        }
-                    }
-                    .transition(.opacity.combined(with: .scale(scale: 1.0)))
-                    .help("Changer – \(module.name)")
+                            .onEnded
+                            { _ in
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.85))
+                                {
+                                    is_expanded = true
+                                    
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
+                                    {
+                                        is_central_pressed = false
+                                    }
+                                }
+                            }
+                            .simultaneously(
+                                with:
+                                    TapGesture()
+                                    .onEnded
+                                    {
+                                        is_central_pressed = true
+                                        
+                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85))
+                                        {
+                                            is_central_pressed = true
+                                            is_expanded = true
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
+                                            {
+                                                is_central_pressed = false
+                                            }
+                                        }
+                                    }
+                                )
+                    )
+                    .help(module.name)
                 }
                 else
                 {
@@ -128,25 +143,22 @@ public struct ChangerModuleControl: View
                     VStack(spacing: 0)
                     {
                         Button(action: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75))
+                            {
                                 is_expanded = false
                             }
                         })
                         {
                             Image(systemName: "chevron.compact.down")
+                                .padding(10)
                             #if os(iOS)
                                 .font(.system(size: 16))
-                                .frame(width: 32, height: 16)
                             #endif
                         }
-                        #if !os(visionOS)
-                        .buttonStyle(.plain)
-                        #else
                         .buttonStyle(.borderless)
-                        .frame(height: 24)
+                        #if os(iOS)
+                        .tint(.black)
                         #endif
-                        .padding(.top, 10)
-                        .scaleEffect(is_expanded ? 1 : 0.01)
                         .contentShape(Rectangle())
                         .animation(.spring(response: 0.35, dampingFraction: 0.75), value: is_expanded)
                         
@@ -159,6 +171,7 @@ public struct ChangerModuleControl: View
                                     .background(.thinMaterial)
                                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                                 #endif
+                                    .frame(maxWidth: 512, maxHeight: 256)
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                             .overlay(alignment: .bottomLeading)
@@ -213,35 +226,26 @@ public struct ChangerModuleControl: View
                                     .padding(8)
                                 }
                             }
+                            .frame(width: is_expanded ? element_control_width : 120)
                             
-                            Button("Import...", action: { new_code_view_presented = true })
-                                .buttonStyle(.borderless)
+                            Button("Import...")
+                            {
+                                new_code_view_presented = true
+                            }
+                            .buttonStyle(.borderless)
                             #if os(iOS)
-                                .tint(.black)
-                                .padding(.vertical, 4)
+                            .tint(.black)
+                            .padding(.vertical, 4)
                             #endif
                         }
-                        .padding(10)
+                        .padding([.horizontal, .bottom], 10)
                     }
-                    #if os(macOS)
-                    .frame(height: is_expanded ? 280 : 120)
-                    #else
-                    .frame(height: is_expanded ? 320 : 120)
-                    #endif
-                    .glassEffect(.regular, in: .rect(cornerRadius: 16, style: .continuous))
-                    .matchedGeometryEffect(id: "glass", in: pane_glass)
-                    #if os(macOS) || os(iOS)
-                    .padding(.vertical, 10)
-                    #else
-                    .padding(.vertical, 16)
-                    #endif
                 }
             }
-            #if !os(visionOS)
-            .padding(.leading, 10)
-            #else
-            .padding(.leading, 16)
-            #endif
+            .clipShape(.rect(cornerRadius: 16, style: .continuous))
+            .glassEffect(.regular, in: .rect(cornerRadius: 16, style: .continuous))
+            .scaleEffect(is_central_pressed ? 1.05 : 1)
+            .zIndex(1)
             
             Button
             {
@@ -253,27 +257,20 @@ public struct ChangerModuleControl: View
                 {
                     Image(systemName: "wand.and.rays")
                         .foregroundColor(.white)
-                        .imageScale(.large)
+                        .font(.system(size: 18)) //.imageScale(.large)
                         .contentTransition(.symbolEffect(.replace.offUp.byLayer))
+                    #if os(macOS)
                         .frame(width: 48, height: 48)
+                    #elseif os(iOS)
+                        .frame(width: 56, height: 56)
+                    #elseif os(visionOS)
+                        .frame(width: 56, height: 56)
+                    #endif
                 }
-                .contentTransition(.symbolEffect(.replace.offUp.byLayer))
-                #if os(macOS)
-                .frame(width: 48, height: 48)
-                #elseif os(iOS)
-                .frame(width: 56, height: 56)
-                #elseif os(visionOS)
-                .frame(width: 56, height: 56)
-                #endif
                 .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .buttonStyle(.plain)
             .glassEffect(.regular.interactive().tint(.pink), in: .rect(cornerRadius: 16, style: .continuous))
-            #if !os(visionOS)
-            .padding(10)
-            #else
-            .padding(16)
-            #endif
         }
         .sheet(isPresented: $new_code_view_presented)
         {
@@ -288,6 +285,9 @@ public struct ChangerModuleControl: View
                 on_update()
             }
         }
+        #if os(visionOS)
+        .offset(z: 2)
+        #endif
     }
     
     private func process_changer()
@@ -343,6 +343,17 @@ public struct ChangerModuleControl: View
         }
     }
 }
+
+#if os(macOS)
+internal let element_control_width: CGFloat = 272
+internal let element_panel_width: CGFloat = 120
+#elseif os(iOS)
+internal let element_control_width: CGFloat = 370
+internal let element_panel_width: CGFloat = 140
+#elseif os(visionOS)
+internal let element_control_width: CGFloat = 400
+internal let element_panel_width: CGFloat = 160
+#endif
 
 #Preview
 {

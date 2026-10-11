@@ -29,6 +29,10 @@ struct EntityListView: View
     @State private var is_pan = false
     #endif
     
+    #if os(visionOS)
+    @State private var is_entity_view_presented = false
+    #endif
+    
     var body: some View
     {
         VStack(spacing: 0)
@@ -43,10 +47,10 @@ struct EntityListView: View
                         { item in
                             EntityCard(entity_item: item)
                             { is_presented in
+                                #if os(macOS) || os(iOS)
                                 EntityFileView(entity: item.entity, is_pan: $is_pan)
                                     .frame(minWidth: 320, idealWidth: 640, maxWidth: 800,
                                            minHeight: 240, idealHeight: 480, maxHeight: 600)
-                                #if !os(visionOS)
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: false))
                                     .overlay(alignment: .topTrailing)
                                     {
@@ -73,7 +77,12 @@ struct EntityListView: View
                                         #endif
                                     }
                                 #else
+                                EntityFileView(entity: item.entity)
+                                    .frame(minWidth: 320, idealWidth: 640, maxWidth: 800,
+                                           minHeight: 240, idealHeight: 480, maxHeight: 600)
                                     .modifier(SheetCaption(is_presented: is_presented, label: item.name, plain: true))
+                                    .onAppear { is_entity_view_presented = true }
+                                    .onDisappear { is_entity_view_presented = false }
                                 #endif
                             }
                         }
@@ -81,6 +90,9 @@ struct EntityListView: View
                     .padding(20)
                 }
                 .animation(.spring(), value: filtered_items)
+                #if os(visionOS)
+                .opacity(load_panel_presented || is_entity_view_presented ? 0 : 1)
+                #endif
             }
             else
             {
