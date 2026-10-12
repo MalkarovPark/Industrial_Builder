@@ -131,6 +131,11 @@ struct ConnectionParametersItem: View
                             label:
                             {
                                 Image(systemName: "plus")
+                                #if !os(iOS)
+                                    .frame(width: 16, height: 16)
+                                #else
+                                    .frame(width: 16, height: 20)
+                                #endif
                             }
                             #if os(macOS)
                             .frame(width: 48)
@@ -138,7 +143,10 @@ struct ConnectionParametersItem: View
                             .frame(width: 42)
                             #endif
                             .buttonStyle(.bordered)
-                            .buttonBorderShape(.roundedRectangle)
+                            .buttonBorderShape(.roundedRectangle(radius: 8))
+                            #if os(iOS)
+                            .tint(.black)
+                            #endif
                             .id("new_connection_parameter_menu")
                         }
                         .padding(8)
@@ -229,10 +237,18 @@ private struct ConnectionParameterEditor: View
                 Text("\(parameter.value)")
                     .foregroundStyle(.secondary)*/
             }
+            #if os(macOS) || os(visionOS)
+            .frame(height: 16)
+            #else
+            .frame(height: 20)
+            #endif
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
-        .buttonBorderShape(.roundedRectangle)
+        .buttonBorderShape(.roundedRectangle(radius: 8))
+        #if os(iOS)
+        .tint(.black)
+        #endif
         .popover(isPresented: $editor_is_presented, arrowEdge: preffered_arrow_edge)
         {
             VStack(spacing: 16)
@@ -283,7 +299,7 @@ private struct ConnectionParameterEditor: View
                     
                     Spacer()
                     
-                    TextField("Name", text: name)
+                    TextField("Nameless", text: name)
                         .textFieldStyle(.roundedBorder)
                 }
                 
@@ -370,10 +386,8 @@ private struct ConnectionParameterEditor: View
                 }
                 #endif
             }
-            #if os(macOS) || os(visionOS)
-            .frame(minWidth: 160)
-            #else
             .frame(minWidth: 240)
+            #if os(iOS)
             .presentationDetents([.height(260)])
             #endif
             .padding()

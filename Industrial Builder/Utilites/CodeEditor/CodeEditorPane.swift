@@ -93,6 +93,7 @@ public struct CodeEditorPane: View
                 }
             }
             .buttonStyle(.plain)
+            .buttonBorderShape(.roundedRectangle(radius: 4))
             .padding(10)
         }
         .sheet(isPresented: $code_editor_presented)

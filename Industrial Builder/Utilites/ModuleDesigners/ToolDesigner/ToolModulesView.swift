@@ -136,6 +136,7 @@ private struct ToolModuleCard: View
         }
         .id(view_id)
         .frame(height: 192)
+        .buttonBorderShape(.roundedRectangle(radius: 16))
         .contextMenu
         {
             RenameButton()

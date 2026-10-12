@@ -155,6 +155,9 @@ struct RobotInspectorView: View
                     }
                     .frame(maxWidth: .infinity)
                     .buttonStyle(.bordered)
+                    #if os(iOS)
+                    .tint(.black)
+                    #endif
                     .padding(.top, 5)
                 }
                 

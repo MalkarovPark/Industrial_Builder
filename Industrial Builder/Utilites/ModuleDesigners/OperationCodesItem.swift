@@ -117,7 +117,11 @@ struct OperationCodesItem: View
                             label:
                             {
                                 Image(systemName: "plus")
+                                #if !os(iOS)
                                     .frame(width: 16, height: 16)
+                                #else
+                                    .frame(width: 16, height: 20)
+                                #endif
                             }
                             #if os(macOS)
                             .frame(width: 28)
@@ -125,7 +129,10 @@ struct OperationCodesItem: View
                             .frame(width: 40)
                             #endif
                             .buttonStyle(.bordered)
-                            .buttonBorderShape(.roundedRectangle)
+                            .buttonBorderShape(.roundedRectangle(radius: 8))
+                            #if os(iOS)
+                            .tint(.black)
+                            #endif
                             .id("new_operation_code_menu")
                         }
                         .padding(8)
@@ -219,10 +226,18 @@ private struct OperationCodeEditor: View
                 Text("\(operation.value)")
                     .foregroundStyle(.secondary)
             }
+            #if os(macOS) || os(visionOS)
+            .frame(height: 16)
+            #else
+            .frame(height: 20)
+            #endif
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
-        .buttonBorderShape(.roundedRectangle)
+        .buttonBorderShape(.roundedRectangle(radius: 8))
+        #if os(iOS)
+        .tint(.black)
+        #endif
         .popover(isPresented: $editor_is_presented, arrowEdge: preffered_arrow_edge)
         {
             VStack(spacing: 16)
@@ -348,10 +363,8 @@ private struct OperationCodeEditor: View
                         .textFieldStyle(.roundedBorder)
                 }
             }
-            #if os(macOS) || os(visionOS)
-            .frame(minWidth: 160)
-            #else
             .frame(minWidth: 240)
+            #if os(iOS)
             .presentationDetents([.height(400)])
             #endif
             .padding()

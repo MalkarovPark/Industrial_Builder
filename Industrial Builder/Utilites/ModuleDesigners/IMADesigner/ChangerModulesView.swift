@@ -117,6 +117,7 @@ private struct ChangerModuleCard: View
             )
         }
         .frame(height: 192)
+        .buttonBorderShape(.roundedRectangle(radius: 16))
         .contextMenu
         {
             RenameButton()

@@ -37,6 +37,7 @@ struct EntityCard<Content: View>: View
             )
         }
         .buttonStyle(.plain)
+        .buttonBorderShape(.roundedRectangle(radius: 16))
         .sheet(isPresented: $is_presented, content: { content($is_presented).presentationSizing(.fitted) })
         .frame(height: 192)
         .contextMenu

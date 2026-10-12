@@ -137,6 +137,7 @@ struct ImageCard<Content: View>: View
             }
         }
         .buttonStyle(.plain)
+        .buttonBorderShape(.roundedRectangle(radius: 10))
         #if !os(visionOS)
         .background
         {

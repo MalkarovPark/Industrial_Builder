@@ -367,6 +367,7 @@ private struct ModuleSelectionCard: View
             }
         }
         .buttonStyle(.plain)
+        .buttonBorderShape(.roundedRectangle(radius: 4))// 16 * 0.6))
         .id(view_id)
         .frame(width: 64, height: 64)
         .onAppear

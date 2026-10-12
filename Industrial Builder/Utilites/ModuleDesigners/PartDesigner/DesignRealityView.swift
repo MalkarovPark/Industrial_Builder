@@ -211,4 +211,13 @@ public struct InfiniteGridView: View
         mesh: .generateBox(width: 0.1, height: 0.2, depth: 0.1)/*mesh: .generateBox(size: Float(0.1)/*, cornerRadius: Float(0.01)*/)*/,
         materials: [SimpleMaterial(color: .cyan, isMetallic: true)]
     )) // 100mm^3
+    .overlay(alignment: .bottomLeading)
+    {
+        Button("???")
+        {
+            
+        }
+        .buttonBorderShape(.roundedRectangle(radius: 0))
+        .padding(64)
+    }
 }

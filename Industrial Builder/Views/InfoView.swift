@@ -58,7 +58,7 @@ struct IconView<Content: View>: View
                 .scaledToFit()
         }
         .frame(width: 72, height: 72)
-        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 }
 

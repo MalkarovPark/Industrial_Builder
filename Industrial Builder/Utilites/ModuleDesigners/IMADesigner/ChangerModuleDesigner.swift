@@ -17,7 +17,7 @@ struct ChangerModuleDesigner: View
     @EnvironmentObject var base_stc: StandardTemplateConstruct
     @EnvironmentObject var document_handler: DocumentUpdateHandler
     
-    @State private var registers: [Float] = [Float](repeating: 0, count: 256)
+    @State private var registers: [Float] = [Float](repeating: 0, count: 64)
     
     @State private var inspector_presented = false
     

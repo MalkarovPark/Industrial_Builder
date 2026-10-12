@@ -70,6 +70,7 @@ struct AppDevTile: View
                         }
                     }
                     .buttonStyle(.plain)
+                    .buttonBorderShape(.roundedRectangle(radius: 16))
                     .fileExporter(
                         isPresented: $store_listing_panel_presented,
                         document: ProjectDocument(content: passed_listing_text),
@@ -201,6 +202,7 @@ struct AppDevTile: View
                         }
                     }
                     .buttonStyle(.plain)
+                    .buttonBorderShape(.roundedRectangle(radius: 16))
                     .fileExporter(
                         isPresented: $project_export_panel_presented,
                         document: ProjectDocument(content: String()),

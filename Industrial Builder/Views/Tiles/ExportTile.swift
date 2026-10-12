@@ -100,6 +100,7 @@ struct ExportTile: View
                     }
                 }
                 .buttonStyle(.plain)
+                .buttonBorderShape(.roundedRectangle(radius: 16))
                 .disabled(!stc.any_modules_avaliable)
                 .fileImporter(
                     isPresented: $file_exporter_presented,

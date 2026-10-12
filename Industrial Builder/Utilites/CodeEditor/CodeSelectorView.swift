@@ -247,6 +247,7 @@ private struct CodeTileView: View
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
+            .buttonBorderShape(.roundedRectangle(radius: 4))
             .offset(y: hovered ? -2 : 0)
         }
         .buttonStyle(.plain)

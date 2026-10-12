@@ -141,6 +141,7 @@ struct ListingCard<Content: View>: View
             .offset(y: hovered ? -2 : 0)
         }
         .buttonStyle(.plain)
+        .buttonBorderShape(.roundedRectangle(radius: 10))
         #if !os(visionOS)
         .background
         {
