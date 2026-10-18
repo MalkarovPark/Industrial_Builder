@@ -101,7 +101,7 @@ struct EntityFileView: View
             }
             #if os(iOS)
             .background(.white)
-            #elseif os(visionOS)
+            /*#elseif os(visionOS)
             .background
             {
                 InfiniteGridView(
@@ -111,7 +111,7 @@ struct EntityFileView: View
                         height: Double(offset.y * (1.35) * -1000)
                     )
                 )
-            }
+            }*/
             #endif
         }
     }

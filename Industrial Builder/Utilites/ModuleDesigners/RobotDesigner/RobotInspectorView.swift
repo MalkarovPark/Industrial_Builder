@@ -204,10 +204,22 @@ struct RobotInspectorView: View
                 
                 InspectorItem(label: "Working Area Shift", is_expanded: false)
                 {
-                    OriginShiftView(
-                        module: module,
-                        previewed_robot: previewed_robot,
-                        on_update: on_update)
+                    let origin_shift = Binding(
+                        get:
+                            {
+                                (x: module.origin_shift.x,
+                                 y: module.origin_shift.y,
+                                 z: module.origin_shift.z)
+                            },
+                        set:
+                            { new_value in
+                                module.origin_shift = (x: new_value.x, y: new_value.y, z: new_value.z)
+                                previewed_robot.origin_shift = module.origin_shift
+                                on_update()
+                            }
+                    )
+                    
+                    PositionView(location: origin_shift, with_steppers: true)
                 }
                 
                 InspectorItem(label: "Working Area Position", is_expanded: false)
@@ -259,116 +271,6 @@ struct RobotInspectorView: View
         previewed_robot.origin_shift = module.origin_shift
         previewed_robot.origin_position = module.default_origin_position
         previewed_robot.update_model()
-    }
-}
-
-private struct OriginShiftView: View
-{
-    @ObservedObject var module: RobotModule
-    @ObservedObject var previewed_robot: Robot
-    
-    let on_update: () -> ()
-    
-    public var body: some View
-    {
-        VStack(spacing: 10)
-        {
-            HStack(spacing: 12)
-            {
-                ForEach(ScaleComponents.allCases, id: \.self)
-                { component in
-                    VStack
-                    {
-                        #if os(macOS)
-                        HStack(spacing: 8)
-                        {
-                            TextField("0", value: binding(for: component), format: .number)
-                                .textFieldStyle(.roundedBorder)
-                            
-                            Stepper("Position", value: binding(for: component), format: .number)
-                                .labelsHidden()
-                        }
-                        #else
-                        VStack//(spacing: 8)
-                        {
-                            TextField("0", value: binding(for: component), format: .number)
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.decimalPad)
-                            
-                            Rectangle()
-                                .fill(.clear)
-                                .frame(height: 42)
-                                .overlay
-                                {
-                                    Stepper("Position", value: binding(for: component), format: .number)
-                                        .labelsHidden()
-                                        #if os(visionOS)
-                                        .scaleEffect(0.85)
-                                        #endif
-                                }
-                        }
-                        #endif
-                        
-                        Text(component.info.text)
-                            .fontWeight(.light)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func binding(for component: ScaleComponents) -> Binding<Float>
-    {
-        switch component
-        {
-        case .x:
-            return Binding(get: { module.origin_shift.x },
-                           set: {
-                module.origin_shift.x = $0
-                previewed_robot.origin_shift = module.origin_shift
-                on_update()
-            })
-        case .y:
-            return Binding(get: { module.origin_shift.y },
-                           set: {
-                module.origin_shift.y = $0
-                previewed_robot.origin_shift = module.origin_shift
-                on_update()
-            })
-        case .z:
-            return Binding(get: { module.origin_shift.z },
-                           set: {
-                module.origin_shift.z = $0
-                previewed_robot.origin_shift = module.origin_shift
-                on_update()
-            })
-        }
-    }
-    
-    private enum ScaleComponents: Equatable, CaseIterable
-    {
-        case x
-        case y
-        case z
-        
-        var info: (text: String, order: Int)
-        {
-            switch self
-            {
-            case .x:
-                return ("X", 0)
-            case .y:
-                return ("Y", 1)
-            case .z:
-                return ("Z", 2)
-            }
-        }
-        
-        static var ordered: [ScaleComponents]
-        {
-            Self.allCases.sorted { $0.info.order < $1.info.order }
-        }
     }
 }
 
