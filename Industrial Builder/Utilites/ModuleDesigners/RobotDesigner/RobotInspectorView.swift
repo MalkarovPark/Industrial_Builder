@@ -26,6 +26,39 @@ struct RobotInspectorView: View
     @Environment(\.horizontalSizeClass) private var horizontal_size_class // Horizontal window size handler
     #endif
     
+    @State private var entity_selector_entity: Entity = ModelEntity(
+        mesh: .generateBox(size: 1),
+        materials: [
+            SimpleMaterial(
+                color: UIColor.systemGray.withAlphaComponent(0.5),
+                roughness: 1.0,
+                isMetallic: false
+            )
+        ]
+    )
+    
+    @State private var part_selector_entity: Entity = ModelEntity(
+        mesh: .generateBox(size: 1),
+        materials: [
+            SimpleMaterial(
+                color: UIColor.systemGreen.withAlphaComponent(0.5),
+                roughness: 1.0,
+                isMetallic: false
+            )
+        ]
+    )
+    
+    @State private var end_selector_entity: Entity = ModelEntity(
+        mesh: .generateBox(size: 1),
+        materials: [
+            SimpleMaterial(
+                color: UIColor.systemPink.withAlphaComponent(0.5),
+                roughness: 1.0,
+                isMetallic: false
+            )
+        ]
+    )
+    
     var body: some View
     {
         ScrollView
@@ -108,11 +141,22 @@ struct RobotInspectorView: View
                     }
                 }
                 
-                LinkedEntitiesItem(entity_names: $module.entity_names, entity_file_name: module.entity_file_name)
-                {
-                    on_update()
-                    update_model_controller()
-                }
+                LinkedEntitiesItem(
+                    entity_names: $module.entity_names, entity_file_name: module.entity_file_name,
+                    on_update:
+                        {
+                            on_update()
+                            update_model_controller()
+                        },
+                    on_menu_item_hover:
+                        { hovered, name in
+                            update_entity_selector(hovered: hovered, target_entity_name: name)
+                        },
+                    on_name_item_focused:
+                        { focused, name in
+                            update_part_selector(focused: focused, target_entity_name: name)
+                        }
+                )
                 
                 #if os(macOS) || os(visionOS)
                 ConnectionParametersItem(parameters: $module.connection_parameters, on_update: on_update)
@@ -131,7 +175,14 @@ struct RobotInspectorView: View
                                 Button(name)
                                 {
                                     module.end_entity_name = name
+                                    update_end_selector()
                                     on_update()
+                                }
+                                .onHover
+                                { hovered in
+                                    if hovered { remove_end_selector() }
+                                    update_entity_selector(hovered: hovered, target_entity_name: name)
+                                    if !hovered { update_end_selector() }
                                 }
                             }
                         }
@@ -146,12 +197,14 @@ struct RobotInspectorView: View
                         Button
                         {
                             module.end_entity_name = String()
+                            remove_end_selector()
                             on_update()
                         }
                         label:
                         {
                             Label("Clear", systemImage: "xmark")
                         }
+                        .labelStyle(.titleAndIcon)
                     }
                     .frame(maxWidth: .infinity)
                     .buttonStyle(.bordered)
@@ -233,6 +286,7 @@ struct RobotInspectorView: View
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
             {
                 update_model_controller()
+                update_end_selector()
             }
             //update_model_controller()
         }
@@ -271,6 +325,57 @@ struct RobotInspectorView: View
         previewed_robot.origin_shift = module.origin_shift
         previewed_robot.origin_position = module.default_origin_position
         previewed_robot.update_model()
+    }
+    
+    private func update_entity_selector(hovered: Bool, target_entity_name: String)
+    {
+        if hovered
+        {
+            //remove_end_selector()
+            
+            update_selector_entity(&entity_selector_entity, model_entity: previewed_robot.model_entity, target_entity_name: target_entity_name)
+        }
+        else
+        {
+            entity_selector_entity.scale = .one
+            entity_selector_entity.position = .zero
+            entity_selector_entity.removeFromParent()
+            
+            //update_end_selector()
+        }
+    }
+    
+    private func update_part_selector(focused: Bool, target_entity_name: String)
+    {
+        if focused
+        {
+            update_selector_entity(&part_selector_entity, model_entity: previewed_robot.model_entity, target_entity_name: target_entity_name)
+        }
+        else
+        {
+            part_selector_entity.scale = .one
+            part_selector_entity.position = .zero
+            part_selector_entity.removeFromParent()
+        }
+    }
+    
+    private func update_end_selector()
+    {
+        if !module.end_entity_name.isEmpty
+        {
+            update_selector_entity(&end_selector_entity, model_entity: previewed_robot.model_entity, target_entity_name: module.end_entity_name)
+        }
+        else
+        {
+            remove_end_selector()
+        }
+    }
+    
+    private func remove_end_selector()
+    {
+        end_selector_entity.scale = .one
+        end_selector_entity.position = .zero
+        end_selector_entity.removeFromParent()
     }
 }
 
