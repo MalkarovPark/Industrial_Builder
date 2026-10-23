@@ -234,7 +234,7 @@ struct RobotInspectorView: View
                             update_model_controller()
                         }
                         
-                        Spacer(minLength: 16)
+                        Spacer(minLength: 2)
                         
                         Text("Connector (Swift)")
                             .fontWeight(.light)

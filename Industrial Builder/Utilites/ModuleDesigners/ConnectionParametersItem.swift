@@ -112,21 +112,25 @@ struct ConnectionParametersItem: View
                                 {
                                     add_paramter(value: "String")
                                 }
+                                .labelStyle(.titleAndIcon)
                                 
                                 Button("Int", systemImage: "number")
                                 {
                                     add_paramter(value: 0)
                                 }
+                                .labelStyle(.titleAndIcon)
                                 
                                 Button("Float", systemImage: "percent")
                                 {
                                     add_paramter(value: Float(0.0))
                                 }
+                                .labelStyle(.titleAndIcon)
                                 
                                 Button("Bool", systemImage: "switch.2")
                                 {
                                     add_paramter(value: false)
                                 }
+                                .labelStyle(.titleAndIcon)
                             }
                             label:
                             {

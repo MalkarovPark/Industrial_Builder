@@ -148,7 +148,7 @@ struct ToolInspectorView: View
                 
                 InspectorItem(label: "Sources", is_expanded: false)
                 {
-                    VStack(alignment: .leading)
+                    VStack(alignment: .leading, spacing: 8)
                     {
                         Text("Model Controller (JS)")
                             .fontWeight(.light)
@@ -166,7 +166,7 @@ struct ToolInspectorView: View
                             update_model_controller()
                         }
                         
-                        Spacer(minLength: 16)
+                        Spacer(minLength: 2)
                         
                         Text("Connector (Swift)")
                             .fontWeight(.light)
