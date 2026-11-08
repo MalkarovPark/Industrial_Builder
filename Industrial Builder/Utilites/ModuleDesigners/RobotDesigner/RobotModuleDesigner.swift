@@ -108,11 +108,7 @@ struct RobotModuleDesigner: View
             {
                 document_handler.update_robots()
             }
-            #if os(macOS)
-            .inspectorColumnWidth(300)
-            #elseif os(visionOS)
-            .frame(width: 400)
-            #endif
+            .inspectorColumnWidth(inspector_width)
             #else
             if horizontal_size_class != .compact
             {
@@ -124,7 +120,7 @@ struct RobotModuleDesigner: View
                 {
                     document_handler.update_robots()
                 }
-                .inspectorColumnWidth(400)
+                .inspectorColumnWidth(inspector_width)
             }
             else
             {
@@ -139,13 +135,13 @@ struct RobotModuleDesigner: View
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .modifier(SheetCaption(is_presented: $inspector_presented, label: "Robot"/*object_type_name*/))
-                .inspectorColumnWidth(300)
+                .inspectorColumnWidth(inspector_width)
             }
             #endif
         }
         .toolbar
         {
-            #if !os(visionOS)
+            #if os(macOS) || os(iOS)
             ToolbarSpacer()
             #endif
             
@@ -165,6 +161,7 @@ struct RobotModuleDesigner: View
                 }
             }
             
+            #if os(macOS) || os(iOS)
             ToolbarItem(placement: .primaryAction)
             {
                 Button(action: { is_pan.toggle() })
@@ -175,6 +172,7 @@ struct RobotModuleDesigner: View
                 }
                 .disabled(module.entity_file_name == nil)
             }
+            #endif
             
             ToolbarItem(placement: .confirmationAction)
             {

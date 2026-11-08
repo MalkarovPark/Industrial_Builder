@@ -98,11 +98,7 @@ struct PartInspectorView: View
             entity_selector_presented: $entity_selector_presented,
             on_update: {}
         )
-        #if os(macOS)
-        .inspectorColumnWidth(300)
-        #elseif os(iOS)
-        .inspectorColumnWidth(400)
-        #endif
+        .inspectorColumnWidth(inspector_width)
     }
     .frame(height: 600)
 }

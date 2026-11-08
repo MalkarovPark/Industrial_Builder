@@ -59,11 +59,7 @@ struct ChangerModuleDesigner: View
             {
                 document_handler.update_changers()
             }
-            #if os(macOS)
-            .inspectorColumnWidth(300)
-            #elseif os(visionOS)
-            .frame(width: 400)
-            #endif
+            .inspectorColumnWidth(inspector_width)
             #else
             if horizontal_size_class != .compact
             {
@@ -71,7 +67,7 @@ struct ChangerModuleDesigner: View
                 {
                     document_handler.update_changers()
                 }
-                .inspectorColumnWidth(400)
+                .inspectorColumnWidth(inspector_width)
             }
             else
             {
@@ -82,7 +78,7 @@ struct ChangerModuleDesigner: View
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .modifier(SheetCaption(is_presented: $inspector_presented, label: "Part"/*object_type_name*/))
-                .inspectorColumnWidth(400)
+                .inspectorColumnWidth(inspector_width)
             }
             #endif
         }
@@ -161,7 +157,7 @@ private struct RegistersCountView: View
             #if os(macOS)
             .foregroundColor(Color.white)
             #else
-            .padding(.leading, 4)
+            .padding(.leading, 8)
             #endif
             
             TextField("\(Workspace.default_registers_count)", value: registers_count, format: .number)

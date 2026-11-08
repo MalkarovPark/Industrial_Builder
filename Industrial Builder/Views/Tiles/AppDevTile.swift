@@ -29,6 +29,10 @@ struct AppDevTile: View
     private let columns: [GridItem] = [.init(.adaptive(minimum: 240, maximum: .infinity), spacing: 16)]
     #endif
     
+    #if os(visionOS)
+    @EnvironmentObject var app_state: AppState
+    #endif
+    
     var body: some View
     {
         GlassTile(color: Color(hex: "7886C7"))
@@ -238,6 +242,29 @@ struct AppDevTile: View
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        #if os(visionOS)
+        .onChange(of: store_listing_panel_presented)
+        { _, new_value in
+            withAnimation
+            {
+                app_state.realitykit_volumes_hidden = new_value
+            }
+        }
+        .onChange(of: project_export_panel_presented)
+        { _, new_value in
+            withAnimation
+            {
+                app_state.realitykit_volumes_hidden = new_value
+            }
+        }
+        .onDisappear
+        {
+            withAnimation
+            {
+                app_state.realitykit_volumes_hidden = false
+            }
+        }
+        #endif
     }
 }
 

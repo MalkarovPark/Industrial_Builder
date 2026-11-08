@@ -87,11 +87,7 @@ struct PartModuleDesigner: View
             {
                 document_handler.update_parts()
             }
-            #if os(macOS)
-            .inspectorColumnWidth(300)
-            #elseif os(visionOS)
-            .frame(width: 400)
-            #endif
+            .inspectorColumnWidth(inspector_width)
             #else
             if horizontal_size_class != .compact
             {
@@ -99,7 +95,7 @@ struct PartModuleDesigner: View
                 {
                     document_handler.update_parts()
                 }
-                .inspectorColumnWidth(400)
+                .inspectorColumnWidth(inspector_width)
             }
             else
             {
@@ -110,15 +106,14 @@ struct PartModuleDesigner: View
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .modifier(SheetCaption(is_presented: $entity_selector_presented, label: "Part"/*object_type_name*/))
-                .inspectorColumnWidth(400)
+                .inspectorColumnWidth(inspector_width)
             }
             #endif
         }
         .toolbar
         {
-            #if !os(visionOS)
+            #if os(macOS) || os(iOS)
             ToolbarSpacer()
-            #endif
             
             ToolbarItem(placement: .primaryAction)
             {
@@ -130,6 +125,7 @@ struct PartModuleDesigner: View
                 }
                 .disabled(module.entity_file_name == nil)
             }
+            #endif
             
             ToolbarItem(placement: .confirmationAction)
             {

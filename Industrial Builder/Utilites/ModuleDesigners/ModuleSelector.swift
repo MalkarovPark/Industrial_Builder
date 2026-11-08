@@ -23,6 +23,10 @@ struct ModuleSelector: View
     private let columns: [GridItem] = [.init(.adaptive(minimum: 72, maximum: .infinity), spacing: 16)]
     private let row_spacing: CGFloat = 32
     
+    #if os(visionOS)
+    @EnvironmentObject var app_state: AppState
+    #endif
+    
     public init(
         stc: StandardTemplateConstruct,
         
@@ -153,6 +157,9 @@ struct ModuleSelector: View
             Spacer(minLength: 52)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        #if os(visionOS)
+        .opacity(app_state.realitykit_volumes_hidden ? 0 : 1)
+        #endif
     }
     
     // MARK: Module names handling

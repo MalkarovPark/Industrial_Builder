@@ -32,6 +32,10 @@ class AppState : ObservableObject
     public var object_view_was_open = false // Flag for provide model controller for model in scene
     
     @Published var view_update_state = false // Flag for update parts view grid
+    
+    #if os(visionOS)
+    @Published var realitykit_volumes_hidden = false
+    #endif
 }
 
 // MARK: - Service Functions
@@ -79,3 +83,11 @@ func color_from_string(_ text: String) -> Color
     
     return Color(red: Double(r), green: Double(g), blue: Double(b))
 }
+
+#if os(macOS)
+let inspector_width: CGFloat = 300
+#elseif os(iOS)
+let inspector_width: CGFloat = 392 //400
+#elseif os(visionOS)
+let inspector_width: CGFloat = 400
+#endif

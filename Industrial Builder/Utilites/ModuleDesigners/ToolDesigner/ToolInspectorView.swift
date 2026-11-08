@@ -276,11 +276,7 @@ struct ToolInspectorView: View
             previewed_tool: Tool(),
             on_update: {}
         )
-        #if os(macOS)
-        .inspectorColumnWidth(300)
-        #elseif os(iOS)
-        .inspectorColumnWidth(400)
-        #endif
+        .inspectorColumnWidth(inspector_width)
     }
     .frame(height: 600)
 }

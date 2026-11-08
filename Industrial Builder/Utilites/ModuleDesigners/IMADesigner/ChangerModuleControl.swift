@@ -157,16 +157,21 @@ public struct ChangerModuleControl: View
                     if process_error != nil
                     {
                         Image(systemName: "circle.fill")
-                            .foregroundStyle(.red)
+                        #if os(macOS) || os(iOS)
+                            .foregroundColor(.red)
+                        #elseif os(visionOS)
+                            .foregroundColor(.clear)
+                            .glassEffect(.regular.tint(.red).interactive(), in: .circle)
+                        #endif
                         #if os(macOS)
                             .font(.system(size: 8))
                         #else
-                            .font(.system(size: 10))
+                            .font(.system(size: 6))
                         #endif
                         #if os(macOS)
                             .padding(8)
                         #else
-                            .padding(10)
+                            .padding(6)
                         #endif
                             .allowsHitTesting(false)
                     }
@@ -221,7 +226,7 @@ public struct ChangerModuleControl: View
                             }()
                         )
                     #else
-                    Text(workspace.current_element.title)
+                    Text("Changer")
                         .font(.system(size: !is_expanded ? 16 : 18, design: .rounded))
                         .frame(maxWidth: .infinity)
                         .lineLimit(1)
@@ -569,6 +574,7 @@ private struct ChangerModuleCode: View
                         alignment: .bottom
                     )
                     .buttonStyle(.plain)
+                    .buttonBorderShape(.roundedRectangle(radius: 6))
                     .padding(8)
                 }
             }
