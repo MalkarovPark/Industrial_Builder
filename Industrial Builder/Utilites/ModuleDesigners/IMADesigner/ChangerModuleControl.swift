@@ -157,22 +157,11 @@ public struct ChangerModuleControl: View
                     if process_error != nil
                     {
                         Image(systemName: "circle.fill")
-                        #if os(macOS) || os(iOS)
-                            .foregroundColor(.red)
-                        #elseif os(visionOS)
                             .foregroundColor(.clear)
-                            .glassEffect(.regular.tint(.red).interactive(), in: .circle)
-                        #endif
-                        #if os(macOS)
-                            .font(.system(size: 8))
-                        #else
+                            .glassEffect(.regular.tint(.red), in: .circle)
+                            .brightness(0.2)
                             .font(.system(size: 6))
-                        #endif
-                        #if os(macOS)
-                            .padding(8)
-                        #else
                             .padding(6)
-                        #endif
                             .allowsHitTesting(false)
                     }
                 }
