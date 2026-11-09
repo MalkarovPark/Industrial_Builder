@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IndustrialKitUI
 
 public struct GlassTile<Content: View>: View
 {
@@ -27,6 +28,21 @@ public struct GlassTile<Content: View>: View
         {
             if let color = color
             {
+                BoxCard(color: color, depth: 4, enables_hover: false)
+                {
+                    content
+                }
+            }
+            else
+            {
+                GlassBoxCard(depth: 4, enables_hover: false)
+                {
+                    content
+                }
+            }
+            
+            /*if let color = color
+            {
                 let gradient = Gradient(stops: [
                     Gradient.Stop(color: color.opacity(0.4), location: 0.0),
                     Gradient.Stop(color: color.opacity(0.2), location: 1.0)
@@ -42,7 +58,7 @@ public struct GlassTile<Content: View>: View
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 #if !os(visionOS)
-                .shadow(color: color.opacity(0.5), radius: 16)
+                .shadow(color: color/*.opacity(0.5)*/, radius: 16)
                 #endif
             }
             else
@@ -72,6 +88,9 @@ public struct GlassTile<Content: View>: View
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            
+            GlassBoxCard(depth: 4)
+                .allowsHitTesting(false)*/
         }
     }
 }

@@ -59,27 +59,7 @@ struct ExportTile: View
                 }
                 label:
                 {
-                    IconView
-                    {
-                        ZStack
-                        {
-                            Rectangle()
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        gradient: Gradient(stops: [
-                                            Gradient.Stop(color: .white, location: 0.0),
-                                            Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
-                                        ]),
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                                .scaledToFill()
-                            
-                            Image(systemName: "folder.fill")
-                                .foregroundStyle(Color(hex: "6CC0FF"))
-                                .font(.system(size: 30))
-                        }
+                    FilesIcon()
                         .overlay(alignment: .bottomTrailing)
                         {
                             if hovered
@@ -90,14 +70,13 @@ struct ExportTile: View
                                     .padding(8)
                             }
                         }
-                    }
-                    .onHover
-                    { hovered in
-                        withAnimation(.easeInOut(duration: 0.2))
-                        {
-                            self.hovered = hovered
+                        .onHover
+                        { hovered in
+                            withAnimation(.easeInOut(duration: 0.2))
+                            {
+                                self.hovered = hovered
+                            }
                         }
-                    }
                 }
                 .buttonStyle(.plain)
                 .buttonBorderShape(.roundedRectangle(radius: 16))
@@ -189,6 +168,35 @@ struct BuildProgressView: View
             .frame(width: 224)
         }
         .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.2)))
+    }
+}
+
+struct FilesIcon: View
+{
+    var body: some View
+    {
+        IconView
+        {
+            ZStack
+            {
+                Rectangle()
+                    .foregroundStyle(
+                        LinearGradient(
+                            gradient: Gradient(stops: [
+                                Gradient.Stop(color: .white, location: 0.0),
+                                Gradient.Stop(color: Color(hex: "F1F2FA"), location: 1.0)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .scaledToFill()
+                
+                Image(systemName: "folder.fill")
+                    .foregroundStyle(Color(hex: "6CC0FF"))
+                    .font(.system(size: 30))
+            }
+        }
     }
 }
 

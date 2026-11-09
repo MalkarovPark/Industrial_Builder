@@ -70,7 +70,7 @@ struct EntitySelectorView: View
         }
         .modifier(SheetCaption(is_presented: $is_presented, label: "Select Entity", plain: false))
         #if os(macOS)
-        .frame(minWidth: 420, maxWidth: 600, minHeight: 480, maxHeight: 600)
+        .frame(minWidth: 420, maxWidth: 600, minHeight: 480, maxHeight: 520)// 600)
         //.frame(width: 420, height: 480)
         #elseif os(iOS)
         .background(.white)
