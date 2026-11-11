@@ -301,12 +301,13 @@ import IndustrialKit
         // Build external modules
         DispatchQueue.global(qos: .background).async
         {
-            self.set_build_info(list: list, as_internal: false)
-            self.on_building_modules = true
-            
-            guard folder_url.startAccessingSecurityScopedResource()
-            else
+            DispatchQueue.main.sync
             {
+                self.set_build_info(list: list, as_internal: false)
+                self.on_building_modules = true
+            }
+            
+            guard folder_url.startAccessingSecurityScopedResource() else {
                 DispatchQueue.main.async
                 {
                     self.on_building_modules = false
@@ -314,7 +315,7 @@ import IndustrialKit
                 return
             }
             
-            DispatchQueue.main.async
+            DispatchQueue.main.sync
             {
                 self.build_info = "Building modules files"
             }
@@ -324,27 +325,17 @@ import IndustrialKit
             
             DispatchQueue.main.async
             {
-                if !self.compilation_cancelled
+                self.build_info = self.compilation_cancelled ? "Canceled" : "Finished"
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.75)
                 {
-                    self.build_info = "Finished"
-                }
-                else
-                {
-                    self.build_info = "Canceled"
-                }
-            }
-            
-            let work_item = DispatchWorkItem
-            {
-                if self.compilation_cancelled { self.compilation_cancelled = false }
-                self.on_building_modules = false
-                /*DispatchQueue.main.async
-                {
-                    if self.compilation_cancelled { self.compilation_cancelled = false }
+                    if self.compilation_cancelled
+                    {
+                        self.compilation_cancelled = false
+                    }
                     self.on_building_modules = false
-                }*/
+                }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75, execute: work_item)
         }
     }
     
@@ -1172,4 +1163,3 @@ extension ConnectionParameter
         return ".init(name: \"\(name)\", value: \(value_string))"
     }
 }
-

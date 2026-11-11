@@ -14,7 +14,6 @@ struct DescriptionTile: View
     let on_update: () -> ()
     
     @FocusState private var is_focused: Bool
-    @State private var is_hovered = false
     
     var body: some View
     {
@@ -42,10 +41,6 @@ struct DescriptionTile: View
                     .frame(maxHeight: .infinity)
                     .foregroundStyle(.white)
                     .focused($is_focused)
-                    .onChange(of: is_focused)
-                    { _, new_value in
-                        if new_value { is_hovered = true }
-                    }
                     .onKeyPress(.escape)
                     {
                         is_focused = false
@@ -69,7 +64,7 @@ struct DescriptionTile: View
             }
             .background(alignment: .bottomTrailing)
             {
-                if !is_hovered && !stc.package_info.description.isEmpty
+                if !stc.package_info.description.isEmpty || is_focused
                 {
                     Image(systemName: "info")
                         .font(.system(size: 20))
@@ -84,12 +79,10 @@ struct DescriptionTile: View
             { hovered in
                 if !hovered
                 {
-                    is_hovered = false
                     is_focused = false
                 }
             }
             .animation(.easeInOut(duration: 0.1), value: is_focused)
-            .animation(.easeInOut(duration: 0.1), value: is_hovered)
         }
     }
 }
