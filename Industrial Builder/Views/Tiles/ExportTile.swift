@@ -133,7 +133,7 @@ struct BuildProgressView: View
     {
         ZStack
         {
-            Rectangle()
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.black.opacity(0.1))
                 .edgesIgnoringSafeArea(.all)
             

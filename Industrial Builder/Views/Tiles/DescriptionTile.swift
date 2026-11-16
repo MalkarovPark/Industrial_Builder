@@ -13,8 +13,6 @@ struct DescriptionTile: View
     
     let on_update: () -> ()
     
-    @FocusState private var is_focused: Bool
-    
     var body: some View
     {
         GlassTile(color: Color(hex: "8E75DE"))//"A393EB"))//"7A57D1"))
@@ -40,18 +38,13 @@ struct DescriptionTile: View
                     .font(.system(size: 16))
                     .frame(maxHeight: .infinity)
                     .foregroundStyle(.white)
-                    .focused($is_focused)
-                    .onKeyPress(.escape)
-                    {
-                        is_focused = false
-                        return .handled
-                    }
+                    .onKeyPress(.escape) { return .handled }
                 
                 Spacer(minLength: 52)
             }
-            .overlay(alignment: .center)
+            .background(alignment: .center)
             {
-                if stc.package_info.description.isEmpty && !is_focused
+                if stc.package_info.description.isEmpty
                 {
                     Text("Description")
                         .font(.system(size: 32, design: .rounded))
@@ -59,12 +52,11 @@ struct DescriptionTile: View
                         .brightness(-0.05)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .contentShape(Rectangle())
-                        .onTapGesture { is_focused = true }
                 }
             }
             .background(alignment: .bottomTrailing)
             {
-                if !stc.package_info.description.isEmpty || is_focused
+                if !stc.package_info.description.isEmpty
                 {
                     Image(systemName: "info")
                         .font(.system(size: 20))
@@ -75,14 +67,7 @@ struct DescriptionTile: View
                         .padding(10)
                 }
             }
-            .onHover
-            { hovered in
-                if !hovered
-                {
-                    is_focused = false
-                }
-            }
-            .animation(.easeInOut(duration: 0.1), value: is_focused)
+            .animation(.easeInOut(duration: 0.1), value: stc.package_info.description.isEmpty)
         }
     }
 }

@@ -432,7 +432,7 @@ private struct ParameterView: View
     {
         HStack
         {
-            Text("Value")
+            Text("Default Value")
                 .fontWeight(.light)
             
             Spacer()

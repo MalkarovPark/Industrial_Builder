@@ -12,7 +12,7 @@ public struct CodeEditorPane: View
     let label: String
     
     @State private var code: String
-    let avalable_template_names: [String]
+    let avaliable_template_names: [String]
     
     let on_update: (String) -> Void
     
@@ -30,7 +30,7 @@ public struct CodeEditorPane: View
         self.label = label
         self.code = code
         
-        self.avalable_template_names = avaliable_template_names
+        self.avaliable_template_names = avaliable_template_names
         
         self.on_update = on_update
     }
@@ -98,7 +98,12 @@ public struct CodeEditorPane: View
         }
         .sheet(isPresented: $code_editor_presented)
         {
-            CodeEditorView(is_presented: $code_editor_presented, label: label, text: $code)
+            CodeEditorView(
+                is_presented: $code_editor_presented,
+                label: label,
+                text: $code,
+                avaliable_template_names: avaliable_template_names
+            )
             {
                 on_update(code)
             }
