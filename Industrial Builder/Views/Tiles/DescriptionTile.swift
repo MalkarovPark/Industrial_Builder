@@ -13,6 +13,8 @@ struct DescriptionTile: View
     
     let on_update: () -> ()
     
+    @FocusState private var is_focused: Bool
+    
     var body: some View
     {
         GlassTile(color: Color(hex: "8E75DE"))//"A393EB"))//"7A57D1"))
@@ -38,7 +40,12 @@ struct DescriptionTile: View
                     .font(.system(size: 16))
                     .frame(maxHeight: .infinity)
                     .foregroundStyle(.white)
-                    .onKeyPress(.escape) { return .handled }
+                    .focused($is_focused)
+                    .onKeyPress(.escape)
+                    {
+                        is_focused = false
+                        return .handled
+                    }
                 
                 Spacer(minLength: 52)
             }
@@ -52,6 +59,7 @@ struct DescriptionTile: View
                         .brightness(-0.05)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .contentShape(Rectangle())
+                        .onTapGesture { is_focused = true }
                 }
             }
             .background(alignment: .bottomTrailing)
