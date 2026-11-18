@@ -23,7 +23,7 @@ import IndustrialKit
         // make_contents()
     }
     
-    func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil)
+    func document_view(_ document: STCDocument, _ bookmark_url: URL? = nil, _ completion: @escaping () -> Void = {})
     {
         self.package_info = document.package_info
         
@@ -40,6 +40,7 @@ import IndustrialKit
             Task
             { @MainActor in
                 self.entities_loaded = true
+                completion()
             }
         }
         
@@ -805,7 +806,7 @@ import IndustrialKit
     // Build modules
     private func make_internal_module_files(list: BuildModulesList, to folder_url: URL, separate_assets: Bool = false)
     {
-        // Spearated scenes folder
+        // Spearated entities folder
         if separate_assets
         {
             do

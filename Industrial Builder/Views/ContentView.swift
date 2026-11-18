@@ -30,6 +30,9 @@ struct ContentView: View
             .onAppear
             {
                 base_stc.document_view(document, document_url)
+                {
+                    document.entity_items = base_stc.entity_items
+                }
             }
             .modifier(DocumentUpdateModifier(document: $document, base_stc: base_stc))
             .environmentObject(document_handler)

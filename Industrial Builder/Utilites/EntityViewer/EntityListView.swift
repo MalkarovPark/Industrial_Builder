@@ -108,7 +108,7 @@ struct EntityListView: View
             {
                 VStack
                 {
-                    Text("Drop scenes here").foregroundColor(.secondary).padding()
+                    Text("Drop entities here").foregroundColor(.secondary).padding()
                 }
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))

@@ -31,7 +31,7 @@ struct STCDocument: FileDocument
     var changer_modules = [ChangerModule]()
     
     // MARK: Prepared scene cache
-    var scenes_data = [String: Data]()
+    var entities_data = [String: Data]()
     
     static var readableContentTypes = [UTType.stc_document]
     
